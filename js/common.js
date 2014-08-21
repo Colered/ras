@@ -1,0 +1,98 @@
+$(document).ready(function() {
+ $(function() {
+	$( "#dob" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	});
+	$( "#doj" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	});
+	$( "#exceptnClsAval" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	});
+	$( "#exceptnTeachAval" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	});
+ });			   
+});
+$(document).ready(function() {
+$(function() {
+	$( "#fromGenrtTmtbl" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#toGenrtTmtbl" ).datepicker( "option", "minDate", selectedDate );
+	}
+	});
+	$( "#toGenrtTmtbl" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#fromGenrtTmtbl" ).datepicker( "option", "maxDate", selectedDate );
+	}
+	});
+});
+$(function() {
+	$( "#fromPrgm" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#toPrgm" ).datepicker( "option", "minDate", selectedDate );
+	}
+	});
+	$( "#toPrgm" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#fromPrgm" ).datepicker( "option", "maxDate", selectedDate );
+	}
+	});
+});
+$(function() {
+	$( "#fromTeachAval" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#toTeachAval" ).datepicker( "option", "minDate", selectedDate );
+	}
+	});
+	$( "#toTeachAval" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#fromTeachAval" ).datepicker( "option", "maxDate", selectedDate );
+	}
+	});
+});
+$(function() {
+	$( "#fromclsRmAval" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#toclsRmAval" ).datepicker( "option", "minDate", selectedDate );
+	}
+	});
+	$( "#toclsRmAval" ).datepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+	$( "#fromclsRmAval" ).datepicker( "option", "maxDate", selectedDate );
+	}
+	});
+ });
+});
