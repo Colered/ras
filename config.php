@@ -2,7 +2,7 @@
 session_start();
 //database server
 define('DB_SERVER', "localhost");
-define('DB_DATABASE', "cidot_ras");
+define('DB_DATABASE', "ras");
 define('DB_USER', "root");
 define('DB_PASS', "");
 

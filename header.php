@@ -42,7 +42,17 @@ if(!isset($_SESSION['user_id'])){
                 <div id="nav">
                     <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ ?>
 					<ul>
-                        <li class="upp"><a href="">Resources</a>
+                        <li class="upp"><a href="timetable_dashboard.php">Timetable</a>
+						   <ul>
+                                <li>&#8250; <a href="generate_timetable.php">New</a></li>
+								<li>&#8250; <a href="timetable_dashboard.php">Edit</a></li>
+                                <li>&#8250; <a href="timetable_dashboard.php">open</a></li>
+                                <li>&#8250; <a href="timetable_dashboard.php">Save</a></li>
+                                <li>&#8250; <a href="timetable_dashboard.php">Publish</a></li>
+								<li>&#8250; <a href="timetable_dashboard.php">Delete</a></li>
+                           </ul> 
+						</li>
+						<li class="upp"><a href="">Resources</a>
                             <ul>
                                 <li>&#8250; <a href="programs_view.php">Programs</a></li>
 								<li>&#8250; <a href="group_view.php">Programs Group</a></li>
@@ -60,6 +70,7 @@ if(!isset($_SESSION['user_id'])){
 								<li>&#8250; <a href="timetable.php">Timetable Management</a></li>
                             </ul>
                         </li>
+						
 						<li class="upp right"><a href="logout.php/">Logout</a></li>
                     </ul>
 					<?php } ?>

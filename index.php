@@ -1,7 +1,7 @@
 <?php 
 include('header-main.php'); 
 if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ 
-	header('Location: timetable.php');
+	header('Location: timetable_dashboard.php');
 }
 ?>
 <div id="content">

@@ -2,7 +2,7 @@
 <div id="content">
     <div id="main">
         <div class="full_w" >
-            <div class="h_title">Timetable Dashboard</div>
+            <div class="h_title">Manage Timetable</div>
             <form action="" method="post">
                 <div>
                     <div class="custtd_left1">
