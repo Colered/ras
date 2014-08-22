@@ -14,9 +14,10 @@ class Users {
 			$encPwd = md5($_POST['txtPwd']);
 			$login_query="select * from user where username='".$_POST['txtUName']."' and password='".$encPwd."'";
 			$q_res = mysqli_query($db, $login_query);
-			if(count($q_res)>0)
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0)
 			{
-				while($data=mysqli_fetch_assoc($q_res))
+				foreach($dataAll as $data)
 	  			{
 					$_SESSION['user_id']=$data['id'];
 					$_SESSION['username']=$data['username'];
