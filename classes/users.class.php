@@ -1,19 +1,19 @@
 <?php
 class Users {
-    public function __construct() {
-    
-	}
+   	// database connection and table name
+   	private $conn;
+   	public function __construct(){
+   	    global $db;
+   		$this->conn = $db;
+   	}
 	/*function for user login*/
 	public function userLogin() {
-		session_start();
 		if(isset($_POST['txtUName']))
 		{
 			//check if user account exists
-			$database = new Database();
-			$db = $database->getConnection();
 			$encPwd = md5($_POST['txtPwd']);
 			$login_query="select * from user where username='".$_POST['txtUName']."' and password='".$encPwd."'";
-			$q_res = mysqli_query($db, $login_query);
+			$q_res = mysqli_query($this->conn, $login_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)
 			{

@@ -1,7 +1,6 @@
 <?php
-session_start();
 require_once('config.php');
-if(!isset($_SESSION['user_id'])){ 
+if(!isset($_SESSION['user_id'])){
 	header('Location: index.php');
 }
 ?>
@@ -26,14 +25,14 @@ if(!isset($_SESSION['user_id'])){
                     $(this).next("ul").slideToggle();
                 });
             });
-        </script> 
+        </script>
 	  </head>
     <body>
         <div class="wrap">
             <div id="header">
                 <div id="top">
                     <div class="left">
-                        <a href="index.php"><img src="images/logo.png"  border="0" class="logo-img"/></a> 
+                        <a href="index.php"><img src="images/logo.png"  border="0" class="logo-img"/></a>
                     </div>
                     <div class="right">
                         <div class="align-right">
@@ -43,7 +42,7 @@ if(!isset($_SESSION['user_id'])){
                 <div id="nav">
                     <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ ?>
 					<ul>
-                        <li class="upp"><a href="">Resources</a>	
+                        <li class="upp"><a href="">Resources</a>
                             <ul>
                                 <li>&#8250; <a href="programs_view.php">Programs</a></li>
 								<li>&#8250; <a href="group_view.php">Programs Group</a></li>
@@ -59,7 +58,7 @@ if(!isset($_SESSION['user_id'])){
                                 <li>&#8250; <a href="roles_management_view.php">Role Management</a></li>
                                 <li>&#8250; <a href="user_management_view.php">User Management</a></li>
 								<li>&#8250; <a href="timetable.php">Timetable Management</a></li>
-                            </ul> 
+                            </ul>
                         </li>
 						<li class="upp right"><a href="logout.php/">Logout</a></li>
                     </ul>

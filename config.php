@@ -1,26 +1,8 @@
 <?php
-//include classes
-//require_once('classes/users.class.php');
-//DB connection
-/*$db_user='root';
-$db_password='';
-$db_host='localhost';
-$db_name='ras';
-$http_root="http://localhost/";
-$link = mysql_connect($db_host, $db_user, $db_password);
-if (!$link) {
-    die('Not connected : ' . mysql_error());
-}
-$db_selected = mysql_select_db($db_name, $link);
-if (!$db_selected) {
-    die ('Can\'t use foo : ' . mysql_error());
-}*/
-
-
-require_once('classes/users.class.php');
+session_start();
 //database server
 define('DB_SERVER', "localhost");
-define('DB_DATABASE', "ras");
+define('DB_DATABASE', "cidot_ras");
 define('DB_USER', "root");
 define('DB_PASS', "");
 
@@ -37,4 +19,6 @@ spl_autoload_register('classAutoLoader');
 // instantiate database object
 $database = new Database();
 $db = $database->getConnection();
+
+
 ?>

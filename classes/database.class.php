@@ -7,20 +7,22 @@ class Database{
 	private $username = DB_USER;
 	private $password = DB_PASS;
 	public $conn;
-	
-	public function __construct(){
-      global $db;
-	  $this->conn = $db;
-	 }
 
 	// get the database connection
 	public function getConnection(){
 		$this->conn = null;
-		$this->conn = mysqli_connect($this->host,$this->username,$this->password,$this->db_name);
-		if (mysqli_connect_errno()) {
-		  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+
+		$this->conn = new mysqli($this->host, $this->username, $this->password, $this->db_name);
+
+		// Error handling
+		if(mysqli_connect_error()) {
+			trigger_error("Failed to conencto to MySQL: " . mysqli_connect_error(),E_USER_ERROR);
 		}
+
 		return $this->conn;
+
+
+
 	}
 
 
