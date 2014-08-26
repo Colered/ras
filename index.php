@@ -9,6 +9,7 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
         <div class="full_w">
             <div class="h_title">Login</div>
             <form action="postdata.php" method="post" autocomplete="off">
+				<input type="hidden" name="form_action" value="Login" />
                 <div class="custtable_left">
                     <img src="images/lock.jpg" id="lock-img" class="lock-img" />
                 </div>
@@ -35,7 +36,7 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
                     </div>
                     <div class="clear"></div>
                     <div class="txtfield1">
-                        <input type="submit" name="btnName" class="buttonsub" value="Login">
+                        <input type="submit" name="login" class="buttonsub" value="Login">
                     </div>
                 </div>	
             </form>

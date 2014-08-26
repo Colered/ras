@@ -405,8 +405,18 @@ div.radiobutt h2 {
 #main form .err{
 	border: 1px solid #FF5252;
 }
+#main .center{
+	text-align:center;
+}
+
 #main form .red{
 	color: #FF5252;
+}
+#main .green{
+	color: #009900;
+}
+#main .red{
+	color: #FF0000;
 }
 
 /* MAIN NOTIFY */
@@ -541,7 +551,7 @@ table .chb{
     font-size: 12px;
     font-weight: normal;}
 .gird-addnew{
-float:right;}
+float:right; padding-right:20px; color:#006e2f;}
 
 .table1{ 
 	border: 1px solid #CCCCCC; 
