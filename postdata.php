@@ -15,7 +15,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$_SESSION['error_msg'] = $message;
 				header('Location: index.php');
 			}
-			break;
+		break;
 		case 'Area':
 			//adding new areas
 			if($_POST['txtAreaName']!="" && $_POST['txtAreaCode']!="" ){
@@ -28,14 +28,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$_SESSION['error_msg'] = $message;
 				header('Location: areas.php');
 			}
-			break;
+		break;
 		case 'EditArea':
 			//adding new areas
 			$obj = new Areas();
 			$resp = $obj->updateArea();
 			$location = ($resp == 1) ? "areas_view.php" : "areas.php";
 			header('Location: '.$location);
-			break;
+		break;
 		case 'Buld':
 			//adding new building
 			if($_POST['txtBname']!="" ){
@@ -48,27 +48,21 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$_SESSION['error_msg'] = $message;
 				header('Location: areas.php');
 			}
-			break;
+		break;
 		case 'EditBuld':
 			//adding new building
 			$obj = new Buildings();
 			$resp = $obj->updateBuld();
 			$location = ($resp == 1) ? "buildings_view.php" : "buildings.php";
 			header('Location: '.$location);
-			break;
-		 case "add_edit_professor":
+		break;
+		case "add_edit_professor":
 			//add and edit professor
 			$obj = new Teacher();
-
 			if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
-
 			    $resp = $obj->editProfessor();
-
-
 				header('Location: professor.php?edit='.$_POST['form_edit_id']);
 				exit();
-
-
 			}else{
 				$resp = $obj->addProfessor();
 				if($resp==0){
@@ -88,11 +82,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					header('Location: professor.php');
 					exit();
 				}
-
 			}
-
-
-			break;
+		break;
 	}
 }
 ?>
