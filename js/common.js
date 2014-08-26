@@ -104,6 +104,7 @@ function validateEmail(sEmail) {
     else {
         return false;
     }
+}
 //Ajax delete the areas function 
 function deleteArea($id){
 	if($id==""){
