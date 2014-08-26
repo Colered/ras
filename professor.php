@@ -30,6 +30,7 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
 
 
 ?>
+
 <script type="text/javascript">
    $(document).ready(function() {
         $("#frmProff").submit(function(){

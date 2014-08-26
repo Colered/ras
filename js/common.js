@@ -175,11 +175,10 @@ function deleteTeacher($id){
                 success: function($succ){
 					if($succ==1){
                         $('#'+$id).closest( 'tr').remove();
-                        window.location.reload();
-						//$('.green, .red').hide();
+						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected.");
-						//$('.green, .red').hide();
+						$('.green, .red').hide();
 					}
                 }
         });

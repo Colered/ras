@@ -20,6 +20,9 @@ $(document).ready(function(){
 
 <div id="content">
     <div id="main">
+         <div class="full_w green center">
+		 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; $_SESSION['succ_msg']="";} ?>
+		</div>
         <div class="full_w">
             <div class="h_title">Teachers View<a href="professor.php" class="gird-addnew" title="Add New Teacher">Add new</a></div>
 
@@ -56,7 +59,7 @@ $(document).ready(function(){
                         <td><?php echo $objT->printTeacherExp($row['experience']);?></td>
                         <td><?php echo $row['email'];?></td>
                         <td><?php echo $row['username'];?></td>
-                        <td class="align-center">
+                        <td class="align-center" id="<?php echo $row['id'] ?>">
                             <a href="professor.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
                             <a href="#" class="table-icon delete" onClick="deleteTeacher(<?php echo $row['id'] ?>)"></a>
                         </td>
@@ -65,6 +68,9 @@ $(document).ready(function(){
 
                 </tbody>
             </table>
+
+            <?php if(isset($_SESSION['error_msg'])) ?>
+				<div><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
         </div>
         <div class="clear"></div>
     </div>

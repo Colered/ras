@@ -61,7 +61,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			$obj = new Teacher();
 			if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
 			    $resp = $obj->editProfessor();
-				header('Location: professor.php?edit='.$_POST['form_edit_id']);
+				header('Location: teacher_view.php');
 				exit();
 			}else{
 				$resp = $obj->addProfessor();
@@ -79,7 +79,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					exit();
 				//end return back
 				}else{
-					header('Location: professor.php');
+					header('Location: teacher_view.php');
 					exit();
 				}
 			}

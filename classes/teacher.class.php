@@ -52,7 +52,7 @@ class Teacher {
            }else{
              $this->conn->close();
              $message="Record has been added successfully.";
-			 $_SESSION['error_msg'] = $message;
+			 $_SESSION['succ_msg'] = $message;
              return 1;
            }
 
@@ -94,7 +94,7 @@ class Teacher {
 	   }else{
 		 $this->conn->close();
 		 $message="Record has been updated successfully.";
-		 $_SESSION['error_msg'] = $message;
+		 $_SESSION['succ_msg'] = $message;
 		 return 1;
 	   }
 
