@@ -36,6 +36,26 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			$location = ($resp == 1) ? "areas_view.php" : "areas.php";
 			header('Location: '.$location);
 			break;
+		case 'Buld':
+			//adding new building
+			if($_POST['txtBname']!="" ){
+				$obj = new Buildings();
+				$resp = $obj->addBuilding();
+				$location = ($resp == 1) ? "buildings_view.php" : "buildings.php";
+				header('Location: '.$location);
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: areas.php');
+			}
+			break;
+		case 'EditBuld':
+			//adding new building
+			$obj = new Buildings();
+			$resp = $obj->updateBuld();
+			$location = ($resp == 1) ? "buildings_view.php" : "buildings.php";
+			header('Location: '.$location);
+			break;
 		 case "add_edit_professor":
 			//add and edit professor
 			$obj = new Teacher();

@@ -123,7 +123,34 @@ function deleteArea($id){
                         $('#'+$id).closest( 'tr').remove();
 						$('.green, .red').hide();
 					}else{
-						alert("Cannot delete the selected.");
+						alert("Cannot delete the selected Area.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
+
+//ajax delete the building
+function deleteBuld($id){
+	if($id==""){
+		alert("Please select a building to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Building?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_buld',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Building.");
 						$('.green, .red').hide();
 					}
                 }
