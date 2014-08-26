@@ -39,26 +39,39 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		 case "add_edit_professor":
 			//add and edit professor
 			$obj = new Teacher();
-			$resp = $obj->addProfessor();
-			if($resp==0){
-				//return back data to the form
-				echo "<html><head></head><body>";
-				echo "<form name='form55' method='post' action='professor.php'>";
-				reset($_POST);
-				while(list($iname,$ival) = each($_REQUEST)) {
-					echo "<input type='hidden' name='$iname' value='$ival'>";
-				}
-				echo "</form>";
-				echo "</body></html>";
-				echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
+
+			if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
+
+			    $resp = $obj->editProfessor();
+
+
+				header('Location: professor.php?edit='.$_POST['form_edit_id']);
 				exit();
-			//end return back
+
+
 			}else{
-				header('Location: professor.php');
-				exit();
+				$resp = $obj->addProfessor();
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='form55' method='post' action='professor.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_REQUEST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
+					exit();
+				//end return back
+				}else{
+					header('Location: professor.php');
+					exit();
+				}
+
 			}
-			
-			
+
+
 			break;
 	}
 }

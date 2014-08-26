@@ -1,7 +1,5 @@
 <?php include('header.php');
 $objT = new Teacher();
-
-
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -43,14 +41,9 @@ $(document).ready(function(){
                 </thead>
                 <tbody>
                 <?php
-
-
-
-                $result =  $db->query("select * from teacher order by id");
-                $row_cnt = $result->num_rows;
-
-                while($row = $result->fetch_assoc()){
-
+					$result =  $db->query("select * from teacher order by id");
+					$row_cnt = $result->num_rows;
+					while($row = $result->fetch_assoc()){
                 ?>
                     <tr>
                         <td class="align-center"><?php echo $row['id'];?></td>
@@ -65,7 +58,7 @@ $(document).ready(function(){
                         <td><?php echo $row['username'];?></td>
                         <td class="align-center">
                             <a href="professor.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-                            <a href="#" class="table-icon delete" title="Delete"></a>
+                            <a href="#" class="table-icon delete" onClick="deleteTeacher(<?php echo $row['id'] ?>)"></a>
                         </td>
                     </tr>
               <?php }?>

@@ -6,7 +6,7 @@ class Teacher {
    	    global $db;
    		$this->conn = $db;
    	}
-	/*function for user login*/
+	/*function for add professor*/
 	public function addProfessor() {
 
 		$txtPname = trim($_POST['txtPname']);
@@ -17,9 +17,9 @@ class Teacher {
 		$txtDegination = trim($_POST['txtDegination']);
 		$txtQualification = trim($_POST['txtQualification']);
 		$years = $_POST['years'];
-		$month = $_POST['month'];
+		$months = $_POST['months'];
 
-		$totalmonthExp = $years*12+$month;
+		$totalmonthExp = $years*12+$months;
 
 		$txtEmail = trim($_POST['txtEmail']);
 		$txtUname = trim($_POST['txtUname']);
@@ -60,11 +60,54 @@ class Teacher {
 
 	}
 
+	/*function for edit professor*/
+	public function editProfessor() {
+
+		$edit_id = base64_decode($_POST['form_edit_id']);
+		$txtPname = trim($_POST['txtPname']);
+		$txtAreaAddress = trim($_POST['txtAreaAddress']);
+		$dob = date("Y-m-d h:i:s", strtotime($_POST['dob']));
+		$doj = date("Y-m-d h:i:s", strtotime($_POST['doj']));
+		$sex = trim($_POST['sex']);
+		$txtDegination = trim($_POST['txtDegination']);
+		$txtQualification = trim($_POST['txtQualification']);
+		$years = $_POST['years'];
+		$months = $_POST['months'];
+
+		$totalmonthExp = $years*12+$months;
+
+
+	   $sql = "UPDATE teacher SET
+	   	                teacher_name='".$txtPname."',
+	   	                address='".$txtAreaAddress."',
+	   	                dob='".$dob."',
+	   	                doj='".$doj."',
+	   	                gender='".$sex."',
+	   	                designation='".$txtDegination."',
+	   	                qualification='".$txtQualification."',
+	   	                experience='".$totalmonthExp."',
+	   	                date_update=now() WHERE id=$edit_id";
+	   $rel = $this->conn->query($sql);
+	   if(!$rel){
+		  printf("%s\n", $this->conn->error);
+		  exit();
+	   }else{
+		 $this->conn->close();
+		 $message="Record has been updated successfully.";
+		 $_SESSION['error_msg'] = $message;
+		 return 1;
+	   }
+
+
+
+	}
+
+    //funtion to formate teacher experiance
 	public function printTeacherExp($experience){
 
-	    $year = floor($experience/12);
-		$months = $experience-$year*12;
-	    $yearexp = ($year > 0) ? $year.' year':'';
+	    $years= floor($experience/12);
+		$months = $experience-$years*12;
+	    $yearexp = ($years > 0) ? $years.' year':'';
 
 	    return $yearexp.' '.$months.' month';
 

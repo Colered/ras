@@ -131,3 +131,31 @@ function deleteArea($id){
     }
     return false;
 }
+
+//Ajax delete the teacher function 
+function deleteTeacher($id){
+	if($id==""){
+		alert("Please select a teacher to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_teacher',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+                        window.location.reload();
+						//$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected.");
+						//$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
