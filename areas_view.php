@@ -3,6 +3,20 @@ include('header.php');
 $obj = new Areas();
 $result = $obj->viewArea();
 ?>
+<script src="js/jquery.dataTables.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	$('#datatables').dataTable({
+		"sPaginationType":"full_numbers",
+		"aaSorting":[[0, "asc"]],
+		"bJQueryUI":true
+	});
+})
+</script>
+<style type="text/css">
+	@import "css/demo_table_jui.css";
+	@import "css/jquery-ui-1.8.4.custom.css";
+</style>
 <div id="content">
     <div id="main">
 		<div class="full_w green center">
@@ -10,7 +24,7 @@ $result = $obj->viewArea();
 		</div>
         <div class="full_w">
             <div class="h_title">Areas View<a href="areas.php" class="gird-addnew" title="Add New Area">Add New</a></div>
-            <table>
+            <table id="datatables" class="display">
                 <thead>
                     <tr>
                         <th >ID</th>
@@ -37,14 +51,13 @@ $result = $obj->viewArea();
                         </td>
                     </tr>
 				<?php }?>
-				<?php if(isset($_SESSION['error_msg'])) ?>
-				<tr><td colspan="7" align="center"><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></tr>
                 </tbody>
             </table>
+			<?php if(isset($_SESSION['error_msg'])) ?>
+				<div><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
         </div>
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
 </div>
 <?php include('footer.php'); ?>
-
