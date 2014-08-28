@@ -98,6 +98,7 @@ $(function() {
 //validate form for area
 $(document).ready(function(){
 			$("#areaForm").validate();
+			$("#subjectForm").validate();
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {

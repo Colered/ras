@@ -111,6 +111,19 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				}
 			}
 		break;
+		case 'Subject':
+			//adding new subjects
+			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
+				$obj = new Subjects();
+				$resp = $obj->addSubject();
+				$location = ($resp == 1) ? "subject_view.php" : "subjects.php";
+				header('Location: '.$location);
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: subjects.php');
+			}
+		break;
 	}
 }
 ?>
