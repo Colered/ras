@@ -4,18 +4,17 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$buldId = base64_decode($_GET['edit']);
 	$obj = new Buildings();
 	$result = $obj->getDataByBuldID($buldId);
-	while ($data = $result->fetch_assoc()){
-			$buldName = $data['building_name'];
-	}
+	$row = $result->fetch_assoc();
 }
-$hiddenVal = ($buldName!="") ? "EditBuld":"Buld";
+$buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBname'])? $_POST['txtBname']:'');
+//$hiddenVal = ($buldName!="") ? "EditBuld":"Buld";
 ?>
 <div id="content">
     <div id="main">
         <div class="full_w">
             <div class="h_title">Building</div>
             <form action="postdata.php" method="post">
-				<input type="hidden" name="form_action" value="<?php echo $hiddenVal; ?>" />
+				<input type="hidden" name="form_action" value="addEditBuild" />
 				<input type="hidden" name="buldId" value="<?php echo $buldId; ?>" />
                 <div class="custtable_left">
                     <div class="custtd_left red">

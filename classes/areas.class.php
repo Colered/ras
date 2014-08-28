@@ -53,7 +53,16 @@ class Areas {
 	}
 	/*function for Update Area*/
 	public function updateArea() {
-			if ($result = mysqli_query($this->conn, "Update area  Set area_name = '".$_POST['txtAreaName']."', area_code = '".$_POST['txtAreaCode']."', area_color = '".$_POST['txtAColor']."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['areaId']."'")) {
+			//check if the area code already exists
+			$area_query="select area_name, area_code from area where area_code='".$_POST['txtAreaCode']."' and id !='".$_POST['areaId']."'";
+			$q_res = mysqli_query($this->conn, $area_query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0)
+			{
+				$message="Area code already exists.";
+				$_SESSION['error_msg'] = $message;
+				return 0;
+			}elseif ($result = mysqli_query($this->conn, "Update area  Set area_name = '".$_POST['txtAreaName']."', area_code = '".$_POST['txtAreaCode']."', area_color = '".$_POST['txtAColor']."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['areaId']."'")) {
    					$message="Area has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;

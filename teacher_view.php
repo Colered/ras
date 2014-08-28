@@ -69,8 +69,9 @@ $(document).ready(function(){
                 </tbody>
             </table>
 
-            <?php if(isset($_SESSION['error_msg'])) ?>
+            <?php if(isset($_SESSION['error_msg'])){ ?>
 				<div><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
+			<?php } ?>
         </div>
         <div class="clear"></div>
     </div>

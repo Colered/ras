@@ -16,45 +16,72 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: index.php');
 			}
 		break;
-		case 'Area':
+		case 'addEditArea':
 			//adding new areas
 			if($_POST['txtAreaName']!="" && $_POST['txtAreaCode']!="" ){
 				$obj = new Areas();
-				$resp = $obj->addArea();
-				$location = ($resp == 1) ? "areas_view.php" : "areas.php";
-				header('Location: '.$location);
+				if(isset($_POST['areaId']) && $_POST['areaId']!=''){
+					//update area
+					$resp = $obj->updateArea();
+				}else{
+					//add new area
+					$resp = $obj->addArea();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formarea' method='post' action='areas.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_REQUEST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formarea.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: areas_view.php');
+					exit();
+				}
 			}else{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
 				header('Location: areas.php');
 			}
 		break;
-		case 'EditArea':
-			//adding new areas
-			$obj = new Areas();
-			$resp = $obj->updateArea();
-			$location = ($resp == 1) ? "areas_view.php" : "areas.php";
-			header('Location: '.$location);
-		break;
-		case 'Buld':
-			//adding new building
+		case 'addEditBuild':
 			if($_POST['txtBname']!="" ){
 				$obj = new Buildings();
-				$resp = $obj->addBuilding();
-				$location = ($resp == 1) ? "buildings_view.php" : "buildings.php";
-				header('Location: '.$location);
+				if(isset($_POST['buldId']) && $_POST['buldId']!=''){
+					//update new building
+					$resp = $obj->updateBuld();
+				}else{
+					//add new building
+					$resp = $obj->addBuilding();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formbuild' method='post' action='buildings.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_REQUEST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formbuild.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: buildings_view.php');
+					exit();
+				}
 			}else{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
 				header('Location: areas.php');
 			}
-		break;
-		case 'EditBuld':
-			//adding new building
-			$obj = new Buildings();
-			$resp = $obj->updateBuld();
-			$location = ($resp == 1) ? "buildings_view.php" : "buildings.php";
-			header('Location: '.$location);
 		break;
 		case "add_edit_professor":
 			//add and edit professor

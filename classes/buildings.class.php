@@ -53,7 +53,16 @@ class Buildings {
 	}
 	/*function for Update Building*/
 	public function updateBuld() {
-			if ($result = mysqli_query($this->conn, "Update building  Set building_name = '".$_POST['txtBname']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
+			//check if the building name exists
+			$area_query="select id, building_name from building where building_name='".$_POST['txtBname']."' and id !='".$_POST['buldId']."'";
+			$q_res = mysqli_query($this->conn, $area_query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0)
+			{
+				$message="Building Name already exists.";
+				$_SESSION['error_msg'] = $message;
+				return 0;
+			}elseif ($result = mysqli_query($this->conn, "Update building  Set building_name = '".$_POST['txtBname']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
    					$message="Building has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
