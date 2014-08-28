@@ -24,7 +24,7 @@ class Teacher {
 		$txtEmail = trim($_POST['txtEmail']);
 		$txtUname = trim($_POST['txtUname']);
 
-		$result =  $this->conn->query("select email from teacher where username='".$txtEmail."'");
+		$result =  $this->conn->query("select email from teacher where email='".$txtEmail."'");
         $row_cnt_email = $result->num_rows;
 
         $result =  $this->conn->query("select username from teacher where username='".$txtUname."'");
