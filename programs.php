@@ -3,7 +3,7 @@ include('header.php');
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
     $objP = new Programs();
-    $result = $obj->getProgramById($programId);
+    $result = $objP->getProgramById($programId);
 
     // set the value
     $button_save = 'Edit Program';
@@ -54,6 +54,10 @@ $(document).ready(function() {
 			  	<input type="hidden" name="programId" value="<?php echo $programId;?>" />
 			  <?php } ?>
                 <div class="custtable_left">
+                    <div class="custtd_left red">
+						<?php if(isset($_SESSION['error_msg'])) echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
+					</div>
+					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Program Name <span class="redstar">*</span></h2>
                     </div>
@@ -69,7 +73,7 @@ $(document).ready(function() {
                             <option value="" selected="selected">--Select Program--</option>
                             <option value="1 year">One Year</option>
                             <option value="2 year">Two Year</option>
-							<option value="2 year">Two Year</option>
+							<option value="3 year">Three Year</option>
                         </select>
                     </div>
                     <div class="clear"></div>
@@ -122,7 +126,7 @@ $(document).ready(function() {
 						</div>
 						<div class="cylcebox">
 							<h3>Days</h3>
-							<select id="slctDays1" name="slctDays1" class="ts-avail" multiple="multiple" required="true">
+							<select id="slctDays1" name="slctDays1[]" class="ts-avail" multiple="multiple" required="true">
 								<option value="0">Mon</option>
 								<option value="1">Tue</option>
 								<option value="2">Wed</option>
@@ -163,7 +167,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>
-								<select id="slctDays2" name="slctDays2" class="ts-avail" multiple="multiple" required="true">
+								<select id="slctDays2" name="slctDays2[]" class="ts-avail" multiple="multiple" required="true">
 									<option value="0">Mon</option>
 									<option value="1">Tue</option>
 									<option value="2">Wed</option>
@@ -204,7 +208,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>
-								<select id="slctDays3" name="slctDays3" class="ts-avail" multiple="multiple" required="true">
+								<select id="slctDays3" name="slctDays3[]" class="ts-avail" multiple="multiple" required="true">
 									<option value="0">Mon</option>
 									<option value="1">Tue</option>
 									<option value="2">Wed</option>

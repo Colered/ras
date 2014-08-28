@@ -95,7 +95,6 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
               		<input type="hidden" name="form_edit_id" value="<?php echo $_GET['edit'];?>" />
               <?php } ?>
                 <div class="custtable_left" >
-
                     <div class="custtd_left red">
 						<?php if(isset($_SESSION['error_msg'])) echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
 					</div>

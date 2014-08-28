@@ -16,8 +16,6 @@ $(document).ready(function(){
 	@import "css/demo_table_jui.css";
 	@import "css/jquery-ui-1.8.4.custom.css";
 </style>
-
-
 <div id="content">
     <div id="main">
          <div class="full_w green center">

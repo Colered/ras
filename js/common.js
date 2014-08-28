@@ -190,3 +190,29 @@ function deleteTeacher($id){
     }
     return false;
 }
+//Ajax delete the program function 
+function deleteProgram($id){
+	if($id==""){
+		alert("Please select a program to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_program',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
