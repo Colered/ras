@@ -80,7 +80,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}else{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
-				header('Location: areas.php');
+				header('Location: buildings.php');
 			}
 		break;
 		case "add_edit_professor":
