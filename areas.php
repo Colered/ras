@@ -16,7 +16,7 @@ $hiddenVal = ($areaName!="") ? "EditArea":"Area";
     <div id="main">
         <div class="full_w">
             <div class="h_title">Area</div>
-            <form action="postdata.php" method="post">
+            <form name="areaForm" id="areaForm" action="postdata.php" method="post">
 				<input type="hidden" name="form_action" value="<?php echo $hiddenVal; ?>" />
 				<input type="hidden" name="areaId" value="<?php echo $areaId; ?>" />
                 <div class="custtable_left">
@@ -29,14 +29,14 @@ $hiddenVal = ($areaName!="") ? "EditArea":"Area";
                         <h2>Area Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtAreaName" maxlength="50" name="txtAreaName" value="<?php echo $areaName; ?>">
+                        <input type="text" class="inp_txt required" id="txtAreaName" maxlength="50" name="txtAreaName" value="<?php echo $areaName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Area Code<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtAreaCode" maxlength="50" name="txtAreaCode" value="<?php echo $areaCode; ?>">
+                        <input type="text" class="inp_txt required" id="txtAreaCode" maxlength="50" name="txtAreaCode" value="<?php echo $areaCode; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

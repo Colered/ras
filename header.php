@@ -16,6 +16,7 @@ if(!isset($_SESSION['user_id'])){
 		<link rel="stylesheet" href="js/jquery-ui.css">
         <script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui.js"></script>
+		<script src="js/jquery.validate.js"></script>
 		<script src="js/common.js"></script>
 		<script type="text/javascript">
             $(function() {
@@ -65,9 +66,9 @@ if(!isset($_SESSION['user_id'])){
                                 <li>&#8250; <a href="rooms_view.php">Classrooms</a></li>
 								<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
 								<li>&#8250; <a href="areas_view.php">Areas</a></li>
-                                <li>&#8250; <a href="roles_management_view.php">Role Management</a></li>
-                                <li>&#8250; <a href="user_management_view.php">User Management</a></li>
-								<li>&#8250; <a href="timetable.php">Timetable Management</a></li>
+                               <!-- <li>&#8250; <a href="roles_management_view.php">Role Management</a></li>
+                                <li>&#8250; <a href="user_management_view.php">User Management</a></li>-->
+								<!--<li>&#8250; <a href="timetable.php">Timetable Management</a></li>-->
                             </ul>
                         </li>
 						

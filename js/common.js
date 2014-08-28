@@ -95,6 +95,10 @@ $(function() {
 	});
  });
 });
+//validate form for area
+$(document).ready(function(){
+			$("#areaForm").validate();
+});
 //Function to validate the email ID
 function validateEmail(sEmail) {
     var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;

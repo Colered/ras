@@ -1,12 +1,9 @@
 <?php
 include('header.php');
-
 if(isset($_GET['edit']) && $_GET['edit']!=''){
-
     $result =  $db->query("select * from teacher where id='".base64_decode($_GET['edit'])."'");
 	$row_cnt = $result->num_rows;
     $row = $result->fetch_assoc();
-
     // set the value
     $button_save = 'Edit Professor';
     $years = floor($row['experience']/12);
@@ -16,8 +13,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $years = isset($_POST['years']) ? $_POST['years']:'';
     $months = isset($_POST['months']) ? $_POST['months']:'';
 }
-
-
 $teachername = isset($_GET['edit']) ? $row['teacher_name'] : (isset($_POST['txtPname'])? $_POST['txtPname']:'');
 $address = isset($_GET['edit']) ? $row['address'] : (isset($_POST['txtAreaAddress'])? $_POST['txtAreaAddress']:'');
 $dob = isset($_GET['edit'])? $row['dob'] : (isset($_POST['dob']) ? $_POST['dob']:'');
@@ -27,10 +22,7 @@ $degination = isset($_GET['edit'])? $row['designation'] : (isset($_POST['txtDegi
 $qualification = isset($_GET['edit'])? $row['qualification'] : (isset($_POST['txtQualification'])? $_POST['txtQualification'] : '');
 $email = isset($_GET['edit'])? $row['email'] : (isset($_POST['txtEmail'])? $_POST['txtEmail'] : '');
 $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])? $_POST['txtUname'] : '');
-
-
 ?>
-
 <script type="text/javascript">
    $(document).ready(function() {
         $("#frmProff").submit(function(){
