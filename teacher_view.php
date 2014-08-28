@@ -24,7 +24,7 @@ $(document).ready(function(){
 		 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; $_SESSION['succ_msg']="";} ?>
 		</div>
         <div class="full_w">
-            <div class="h_title">Teachers View<a href="professor.php" class="gird-addnew" title="Add New Teacher">Add new</a></div>
+            <div class="h_title">Teachers View<a href="professor.php" class="gird-addnew" title="Add New Teacher">Add New</a></div>
 
             <table id="datatables" class="display">
                 <thead>
