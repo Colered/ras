@@ -97,7 +97,7 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
                 <div class="custtable_left" >
 
                     <div class="custtd_left red">
-						<?php if(isset($_SESSION['error_msg'])) echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?>
+						<?php if(isset($_SESSION['error_msg'])) echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
 					</div>
 					<div class="clear"></div>
 

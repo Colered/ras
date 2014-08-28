@@ -20,7 +20,7 @@ $(document).ready(function(){
 <div id="content">
     <div id="main">
 		<div class="full_w green center">
-		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; $_SESSION['succ_msg']="";} ?>
+		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
 		</div>
         <div class="full_w">
             <div class="h_title">Areas View<a href="areas.php" class="gird-addnew" title="Add New Area">Add New</a></div>
@@ -54,7 +54,7 @@ $(document).ready(function(){
                 </tbody>
             </table>
 			<?php if(isset($_SESSION['error_msg'])) ?>
-				<div><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
+				<div><span class="red"><?php echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?></span></div>
         </div>
         <div class="clear"></div>
     </div>

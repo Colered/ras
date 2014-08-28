@@ -23,7 +23,7 @@ $roomData = $obj->getAllRoomType();
                 <div class="custtable_left">
                     <div class="custtd_left red">
 							<?php if(isset($_SESSION['error_msg']))
-								echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?>
+								echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
 					</div>
 					<div class="clear"></div>
                     <div class="custtd_left">
