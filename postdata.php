@@ -124,6 +124,19 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: subjects.php');
 			}
 		break;
+		case "add_program":
+			//adding new areas
+			if(trim($_POST['txtPrgmName'])!=""){
+				$obj = new Programs();
+				$resp = $obj->addProgram();
+				$location = ($resp == 1) ? "programs_view.php" : "programs.php";
+				header('Location: '.$location);
+			}else{
+				$message="Please fill all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: programs.php');
+			}
+		break;
 	}
 }
 ?>
