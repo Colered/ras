@@ -216,3 +216,17 @@ function deleteProgram($id){
     }
     return false;
 }
+
+//function to show hide program cycles
+function show_hide_cycle(selval){
+	if(selval==1){
+	  $('#firstCycle').show();
+	}else if(selval==2){
+	  $('#firstCycle').show();
+	  $('#secondCycle').show();
+	}else if(selval==3){
+	  $('#firstCycle').show();
+	  $('#secondCycle').show();
+	  $('#thirdCycle').show();
+	}
+}

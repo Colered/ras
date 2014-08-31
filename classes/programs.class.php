@@ -34,7 +34,7 @@ class Programs {
 		}else{
 			for($i=1; $i<=$slctNumcycle; $i++){
 			   $days = implode(',',$_POST['slctDays'.$i]);
-			   $sql = "INSERT INTO cycle (program_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_ins_id."', '".$slctNumcycle."', '".$_POST['startweek'.$i]."', '".$_POST['endweek1'.$i]."', '".$days."', now())";
+			   $sql = "INSERT INTO cycle (program_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_ins_id."', '".$slctNumcycle."', '".$_POST['startweek'.$i]."', '".$_POST['endweek'.$i]."', '".$days."', now())";
 			   $rel = $this->conn->query($sql);
 			   if(!$rel){
 					$_SESSION['error_msg'] = $this->conn->error;
@@ -60,7 +60,12 @@ class Programs {
 	//function to  get all cycles data related to a program
 	public function getProgramCycleList($prog_id){
 		$result =  $this->conn->query("select * from cycle where program_id='".$prog_id."'");
+		return $result;
+    }
+    //function to get no of cycle
+    public function getCyclesInProgram($prog_id){
+    	$result =  $this->conn->query("select no_of_cycle from cycle where program_id='".$prog_id."'");
 		$row = $result->fetch_assoc();
-		return $row;
+		return $row['no_of_cycle'];
     }
 }
