@@ -36,7 +36,6 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	break;
-<<<<<<< HEAD
 	case "del_program":
 	if(isset($_POST['id'])){
 		$id = $_POST['id'];
@@ -51,7 +50,6 @@ switch ($codeBlock) {
 			echo 0;
 	    }
 	}
-=======
 	case "getRooms":
 		if(isset($_POST['roomTypeValue']) && $_POST['roomTypeValue']!=""){
 			$room_type_val=explode(",",$_POST['roomTypeValue']);
@@ -68,7 +66,6 @@ switch ($codeBlock) {
 			}
 		}
 		echo $options;
->>>>>>> changes in subject management module
 	break;
 }
 ?>

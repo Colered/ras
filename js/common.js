@@ -194,7 +194,7 @@ function deleteTeacher($id){
     }
     return false;
 }
-<<<<<<< HEAD
+
 //Ajax delete the program function 
 function deleteProgram($id){
 	if($id==""){
@@ -235,7 +235,6 @@ function show_hide_cycle(selval){
 	  $('#thirdCycle').show();
 	}
 }
-=======
 
 $(document).ready(function() {
    $('#slctClsType').on('change', function(){
@@ -260,6 +259,3 @@ $(document).ready(function() {
 });
 });
 
-
-
->>>>>>> changes in subject management module
