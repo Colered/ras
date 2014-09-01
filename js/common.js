@@ -99,6 +99,9 @@ $(function() {
 $(document).ready(function(){
 			$("#areaForm").validate();
 			$("#subjectForm").validate();
+			$("#roomsForm").validate();
+			$("#buildings").validate();
+			
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {

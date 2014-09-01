@@ -113,7 +113,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case 'Subject':
 			//adding new subjects
-			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
+			if((isset($_POST['txtSubjName']) && $_POST['txtSubjName']!="") && (isset($_POST['txtSubjName']) && $_POST['txtSubjCode']!="")){
 				$obj = new Subjects();
 				$resp = $obj->addSubject();
 				$location = ($resp == 1) ? "subject_view.php" : "subjects.php";
@@ -135,6 +135,40 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$message="Please fill all required fields";
 				$_SESSION['error_msg'] = $message;
 				header('Location: programs.php');
+			}
+		break;
+		case 'addEditClassroom':
+			//adding new areas
+			if(isset($_POST['txtRmName']) && $_POST['txtRmName']!="" ){
+				$obj = new Classroom();
+				if(isset($_POST['roomId']) && $_POST['roomId']!=''){
+					//update area
+					$resp = $obj->updateRoom();
+				}else{
+					//add new area
+					$resp = $obj->addRoom();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formroom' method='post' action='areas.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_REQUEST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formroom.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: rooms_view.php');
+					exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: rooms.php');
 			}
 		break;
 	}

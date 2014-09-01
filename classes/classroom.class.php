@@ -6,26 +6,26 @@ class Classroom {
    	    global $db;
    		$this->conn = $db;
    	}
-	/*function for adding Area*/
+	/*function for adding room*/
 	public function addRoom() {
-			//check if the area code already exists
-			$area_query="select area_name, area_code from area where area_code='".$_POST['txtAreaCode']."'";
+			//check if the room already exists
+			$area_query="select room_name, id from room where room_name='".$_POST['txtRmName']."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)
 			{
-				$message="Area code already exists.";
+				$message="Room with same name already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
 			}else{
 				//add the new area
 				$currentDateTime = date("Y-m-d H:i:s");
-				if ($result = mysqli_query($this->conn, "INSERT INTO area VALUES ('', '".$_POST['txtAreaName']."', '".$_POST['txtAreaCode']."', '".$_POST['txtAColor']."', '".$currentDateTime."', '".$currentDateTime."');")) {
-   					$message="New area has been added successfully";
+				if ($result = mysqli_query($this->conn, "INSERT INTO room VALUES ('', '".$_POST['slctBuilding']."', '".$_POST['slctRmType']."', '".$_POST['txtRmName']."', '".$currentDateTime."', '".$currentDateTime."');")) {
+   					$message="New room has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
 				}else{
-					$message="Cannot add the area";
+					$message="Cannot add the room";
 					$_SESSION['error_msg'] = $message;
 					return 0;
 				}
@@ -33,10 +33,10 @@ class Classroom {
 	}
 	/*function for listing Area*/
 	public function viewRoom() {
-			$area_query="select * from area order by date_update DESC";
+			$area_query="select * from room order by date_update DESC";
 			$q_res = mysqli_query($this->conn, $area_query);
 			if(mysqli_num_rows($q_res)<=0){
-				$message="There is not any area exists.";
+				$message="There is not any room exists.";
 				$_SESSION['error_msg'] = $message;
 			}
 			return $q_res;
