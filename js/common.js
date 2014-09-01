@@ -194,6 +194,7 @@ function deleteTeacher($id){
     }
     return false;
 }
+<<<<<<< HEAD
 //Ajax delete the program function 
 function deleteProgram($id){
 	if($id==""){
@@ -234,3 +235,31 @@ function show_hide_cycle(selval){
 	  $('#thirdCycle').show();
 	}
 }
+=======
+
+$(document).ready(function() {
+   $('#slctClsType').on('change', function(){
+    var selected=$("#slctClsType option:selected").map(function(){ return this.value }).get().join(",");
+	//alert(selected);
+    $.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'roomTypeValue': selected,
+			'codeBlock': 'getRooms',
+            },
+        success: function(data) {
+			 $("#slctRoom").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+	
+    
+});
+});
+
+
+
+>>>>>>> changes in subject management module

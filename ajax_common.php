@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+$options = '';
 $codeBlock = trim($_POST['codeBlock']);
 switch ($codeBlock) {
     case "del_area":
@@ -35,6 +36,7 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	break;
+<<<<<<< HEAD
 	case "del_program":
 	if(isset($_POST['id'])){
 		$id = $_POST['id'];
@@ -49,6 +51,24 @@ switch ($codeBlock) {
 			echo 0;
 	    }
 	}
+=======
+	case "getRooms":
+		if(isset($_POST['roomTypeValue']) && $_POST['roomTypeValue']!=""){
+			$room_type_val=explode(",",$_POST['roomTypeValue']);
+			for($i=0;$i<count($room_type_val);$i++){
+			$room_val=explode("#",$room_type_val[$i]);
+			$room_type_id=$room_val['0'];
+			$room_type_name=$room_val['1'];
+			$options .='<option value="'.$room_type_name.'">'.'--'.$room_type_name.'--'.'</option>';
+			$room_query="select id,room_name from  room where room_type_id='".trim($room_type_id)."'";
+			$qry = mysqli_query($db, $room_query);
+			while($room_data= mysqli_fetch_array($qry)){
+			  $options .='<option value="'.$room_data['id'].'">'.$room_data['room_name'].'</option>';
+			 }
+			}
+		}
+		echo $options;
+>>>>>>> changes in subject management module
 	break;
 }
 ?>

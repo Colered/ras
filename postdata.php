@@ -111,9 +111,47 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				}
 			}
 		break;
+<<<<<<< HEAD
 		case 'Subject':
 			//adding new subjects
 			if((isset($_POST['txtSubjName']) && $_POST['txtSubjName']!="") && (isset($_POST['txtSubjName']) && $_POST['txtSubjCode']!="")){
+=======
+		case 'addEditSubject':
+		//adding new subject
+			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
+				$obj = new Subjects();
+				if(isset($_POST['subjectId']) && $_POST['subjectId']!=''){
+					//update subject
+					$resp = $obj->updateSubject();
+				}else{
+					//add new subject
+					$resp = $obj->addSubject();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formsubject' method='post' action='subjects.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_REQUEST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: subject_view.php');
+					exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: subjects.php');
+			}
+			/*//adding new subjects
+			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
+>>>>>>> changes in subject management module
 				$obj = new Subjects();
 				$resp = $obj->addSubject();
 				$location = ($resp == 1) ? "subject_view.php" : "subjects.php";
@@ -123,6 +161,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$_SESSION['error_msg'] = $message;
 				header('Location: subjects.php');
 			}
+<<<<<<< HEAD
 		break;
 		case "add_program":
 			//adding new areas
@@ -212,6 +251,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: rooms.php');
 			}
 		break;
+=======
+		break;*/
+>>>>>>> changes in subject management module
 	}
 }
 ?>
