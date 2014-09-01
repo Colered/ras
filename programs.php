@@ -30,9 +30,9 @@ $program_to_date = isset($_GET['edit']) ? $row['end_date'] : (isset($_POST['prog
 
 $no_of_cycles = isset($_GET['edit']) ? $totcycle : (isset($_POST['slctNumcycle'])? $_POST['slctNumcycle']:'');
 
-$daysArr1 = isset($_GET['edit']) ? (isset($daysArr[0])? $daysArr[0]:'') : (!empty($_POST['slctDays1']) ? $_POST['slctDays1'] : array());
-$daysArr2 = isset($_GET['edit']) ? (isset($daysArr[1])? $daysArr[1]:'') : (!empty($_POST['slctDays2']) ? $_POST['slctDays2'] : array());
-$daysArr3 = isset($_GET['edit']) ? (isset($daysArr[2])? $daysArr[2]:'') : (!empty($_POST['slctDays3']) ? $_POST['slctDays3'] : array());
+$daysArr1 = isset($_GET['edit']) ? (isset($daysArr[0])? $daysArr[0]: array()) : (!empty($_POST['slctDays1']) ? $_POST['slctDays1'] : array());
+$daysArr2 = isset($_GET['edit']) ? (isset($daysArr[1])? $daysArr[1]: array()) : (!empty($_POST['slctDays2']) ? $_POST['slctDays2'] : array());
+$daysArr3 = isset($_GET['edit']) ? (isset($daysArr[2])? $daysArr[2]: array()) : (!empty($_POST['slctDays3']) ? $_POST['slctDays3'] : array());
 
 $startweek_1 = isset($_GET['edit']) ? (isset($start_week[0])? $start_week[0]:'') : (isset($_POST['startweek1'])? $_POST['startweek1']:'');
 $startweek_2 = isset($_GET['edit']) ? (isset($start_week[1])? $start_week[1]:'') : (isset($_POST['startweek2'])? $_POST['startweek2']:'');
@@ -51,9 +51,6 @@ $(document).ready(function() {
 		$("#frmProgram").validate().settings.ignore = ':hidden';
 	});
 
-	$("#frmProff").submit(function(){
-		$("#frmProgram").validate();
-	});
 	$('#slctNumCycle').on('change', function() {
 		$('#firstCycle').hide();
 		$('#secondCycle').hide();
@@ -72,8 +69,8 @@ $(document).ready(function() {
             <div class="h_title">Program</div>
 			<form name="frmProgram" id="frmProgram" action="postdata.php" method="post">
 			  <input type="hidden" name="form_action" value="<?php echo $form_action;?>" />
-			  <?php if(isset($programId)){?>
-			  	<input type="hidden" name="programId" value="<?php echo $programId;?>" />
+			  <?php if(isset($_GET['edit'])){?>
+			  	<input type="hidden" name="programId" value="<?php echo $_GET['edit'];?>" />
 			  <?php } ?>
                 <div class="custtable_left">
                     <div class="custtd_left red">
@@ -111,10 +108,10 @@ $(document).ready(function() {
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>No. of Cycle<span class="redstar">*</span></h2>
+                        <h2>No. of Cycles</h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctNumCycle" name="slctNumcycle" class="select" required="true">
+                        <select id="slctNumCycle" name="slctNumcycle" class="select">
                             <option value="">--Select Cycles--</option>
                             <option value="1">1 </option>
                             <option value="2">2 </option>

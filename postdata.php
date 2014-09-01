@@ -32,7 +32,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<html><head></head><body>";
 					echo "<form name='formarea' method='post' action='areas.php'>";
 					reset($_POST);
-					while(list($iname,$ival) = each($_REQUEST)) {
+					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";
@@ -65,7 +65,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<html><head></head><body>";
 					echo "<form name='formbuild' method='post' action='buildings.php'>";
 					reset($_POST);
-					while(list($iname,$ival) = each($_REQUEST)) {
+					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";
@@ -97,7 +97,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<html><head></head><body>";
 					echo "<form name='form55' method='post' action='professor.php'>";
 					reset($_POST);
-					while(list($iname,$ival) = each($_REQUEST)) {
+					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";
@@ -129,8 +129,49 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			if(trim($_POST['txtPrgmName'])!=""){
 				$obj = new Programs();
 				$resp = $obj->addProgram();
-				$location = ($resp == 1) ? "programs_view.php" : "programs.php";
-				header('Location: '.$location);
+
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='form55' method='post' action='programs.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+					    if($iname=='slctDays1' || $iname=='slctDays2' || $iname=='slctDays2'){
+					        foreach($_POST[$iname] as $value){
+							  echo '<input type="hidden" name="'.$iname.'[]" value="'. $value. '">';
+							}
+					    }else{
+							echo "<input type='hidden' name='$iname' value='$ival'>";
+						}
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
+					exit();
+				//end return back
+				}else{
+					header('Location: programs_view.php');
+					exit();
+				}
+
+			}else{
+				$message="Please fill all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: programs.php');
+			}
+		break;
+		case "edit_program":
+			//adding new areas
+			if(isset($_POST['programId']) && $_POST['programId']<>''){
+				$obj = new Programs();
+				$resp = $obj->editProgram();
+				if($resp==0){
+					header('Location: programs.php?edit='.$_POST['programId']);
+					exit();
+				}else{
+					header('Location: programs_view.php');
+					exit();
+				}
 			}else{
 				$message="Please fill all required fields";
 				$_SESSION['error_msg'] = $message;
@@ -153,7 +194,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<html><head></head><body>";
 					echo "<form name='formroom' method='post' action='areas.php'>";
 					reset($_POST);
-					while(list($iname,$ival) = each($_REQUEST)) {
+					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";

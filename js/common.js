@@ -97,11 +97,12 @@ $(function() {
 });
 //validate form for area
 $(document).ready(function(){
-			$("#areaForm").validate();
-			$("#subjectForm").validate();
-			$("#roomsForm").validate();
-			$("#buildings").validate();
-			
+		$("#areaForm").validate();
+		$("#subjectForm").validate();
+		$("#roomsForm").validate();
+		$("#buildings").validate();
+		$("#frmProgram").validate();
+		$("#frmProff").validate();
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {
