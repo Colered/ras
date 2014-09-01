@@ -3,6 +3,7 @@ include('header.php');
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
     $objP = new Programs();
+<<<<<<< Updated upstream
     $result = $objP->getProgramById($programId);
     $row = $result->fetch_assoc();
     //get all the cycles related to data
@@ -12,6 +13,9 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
        $start_week[] = $data['start_week'];
        $end_week[] = $data['end_week'];
     }
+=======
+    $result = $obj->getProgramById($programId);
+>>>>>>> Stashed changes
 
     // set the value
     $totcycle = $objP->getCyclesInProgram($programId);
@@ -46,21 +50,46 @@ $endweek_3 = isset($_GET['edit']) ? (isset($end_week[2])? $end_week[2]:'') : (is
 
 <script type="text/javascript">
 $(document).ready(function() {
+<<<<<<< Updated upstream
     show_hide_cycle('<?php echo $no_of_cycles;?>');
+=======
+>>>>>>> Stashed changes
 	$(function () {
 		$("#frmProgram").validate().settings.ignore = ':hidden';
 	});
 
+<<<<<<< Updated upstream
+=======
+	$("#frmProff").submit(function(){
+		$("#frmProgram").validate();
+	});
+>>>>>>> Stashed changes
 	$('#slctNumCycle').on('change', function() {
 		$('#firstCycle').hide();
 		$('#secondCycle').hide();
 		$('#thirdCycle').hide();
+<<<<<<< Updated upstream
 		show_hide_cycle(this.value);
 
 	});
 
 });
 
+=======
+		if(this.value==1){
+		  $('#firstCycle').show();
+		}else if(this.value==2){
+		  $('#firstCycle').show();
+		  $('#secondCycle').show();
+		}else if(this.value==3){
+		  $('#firstCycle').show();
+		  $('#secondCycle').show();
+		  $('#thirdCycle').show();
+		}
+	});
+
+});
+>>>>>>> Stashed changes
 </script>
 
 <div id="content">
@@ -69,8 +98,13 @@ $(document).ready(function() {
             <div class="h_title">Program</div>
 			<form name="frmProgram" id="frmProgram" action="postdata.php" method="post">
 			  <input type="hidden" name="form_action" value="<?php echo $form_action;?>" />
+<<<<<<< Updated upstream
 			  <?php if(isset($_GET['edit'])){?>
 			  	<input type="hidden" name="programId" value="<?php echo $_GET['edit'];?>" />
+=======
+			  <?php if(isset($programId)){?>
+			  	<input type="hidden" name="programId" value="<?php echo $programId;?>" />
+>>>>>>> Stashed changes
 			  <?php } ?>
                 <div class="custtable_left">
                     <div class="custtd_left red">
@@ -81,7 +115,11 @@ $(document).ready(function() {
                         <h2>Program Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
+<<<<<<< Updated upstream
                         <input type="text" class="inp_txt" id="txtPrgmName" maxlength="50" name="txtPrgmName" value="<?php echo $program_name;?>" required="true">
+=======
+                        <input type="text" class="inp_txt" id="txtPrgmName" maxlength="50" name="txtPrgmName" required="true">
+>>>>>>> Stashed changes
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -111,7 +149,7 @@ $(document).ready(function() {
                         <h2>No. of Cycles</h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctNumCycle" name="slctNumcycle" class="select">
+                        <select id="slctNumCycle" name="slctNumcycle" class="select" required="true">
                             <option value="">--Select Cycles--</option>
                             <option value="1">1 </option>
                             <option value="2">2 </option>
@@ -157,6 +195,7 @@ $(document).ready(function() {
 						</div>
 						<div class="cylcebox">
 							<h3>Days</h3>
+<<<<<<< Updated upstream
 							<select id="slctDays1" name="slctDays1[]" class="ts-avail" multiple="multiple" required="true">
 								<option value="0" <?php echo in_array(0,$daysArr1) ? 'selected' : ''?>>Mon</option>
 								<option value="1" <?php echo in_array(1,$daysArr1) ? 'selected' : ''?>>Tue</option>
@@ -164,6 +203,15 @@ $(document).ready(function() {
 								<option value="3" <?php echo in_array(3,$daysArr1) ? 'selected' : ''?>>Thu</option>
 								<option value="4" <?php echo in_array(4,$daysArr1) ? 'selected' : ''?>>Fri</option>
 								<option value="5" <?php echo in_array(5,$daysArr1) ? 'selected' : ''?>>Sat</option>
+=======
+							<select id="slctDays1" name="slctDays1" class="ts-avail" multiple="multiple" required="true">
+								<option value="0">Mon</option>
+								<option value="1">Tue</option>
+								<option value="2">Wed</option>
+								<option value="3">Thu</option>
+								<option value="4">Fri</option>
+								<option value="5">Sat</option>
+>>>>>>> Stashed changes
 							</select>
 							</div>
 						</div>
@@ -204,6 +252,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>
+<<<<<<< Updated upstream
 								<select id="slctDays2" name="slctDays2[]" class="ts-avail" multiple="multiple" required="true">
 								<option value="0" <?php echo in_array(0,$daysArr2) ? 'selected' : ''?>>Mon</option>
 								<option value="1" <?php echo in_array(1,$daysArr2) ? 'selected' : ''?>>Tue</option>
@@ -211,6 +260,15 @@ $(document).ready(function() {
 								<option value="3" <?php echo in_array(3,$daysArr2) ? 'selected' : ''?>>Thu</option>
 								<option value="4" <?php echo in_array(4,$daysArr2) ? 'selected' : ''?>>Fri</option>
 								<option value="5" <?php echo in_array(5,$daysArr2) ? 'selected' : ''?>>Sat</option>
+=======
+								<select id="slctDays2" name="slctDays2" class="ts-avail" multiple="multiple" required="true">
+									<option value="0">Mon</option>
+									<option value="1">Tue</option>
+									<option value="2">Wed</option>
+									<option value="3">Thu</option>
+									<option value="4">Fri</option>
+									<option value="5">Sat</option>
+>>>>>>> Stashed changes
 								</select>
 							</div>
 						</div>
@@ -251,6 +309,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>
+<<<<<<< Updated upstream
 								<select id="slctDays3" name="slctDays3[]" class="ts-avail" multiple="multiple" required="true">
 								<option value="0" <?php echo in_array(0,$daysArr3) ? 'selected' : ''?>>Mon</option>
 								<option value="1" <?php echo in_array(1,$daysArr3) ? 'selected' : ''?>>Tue</option>
@@ -258,6 +317,15 @@ $(document).ready(function() {
 								<option value="3" <?php echo in_array(3,$daysArr3) ? 'selected' : ''?>>Thu</option>
 								<option value="4" <?php echo in_array(4,$daysArr3) ? 'selected' : ''?>>Fri</option>
 								<option value="5" <?php echo in_array(5,$daysArr3) ? 'selected' : ''?>>Sat</option>
+=======
+								<select id="slctDays3" name="slctDays3" class="ts-avail" multiple="multiple" required="true">
+									<option value="0">Mon</option>
+									<option value="1">Tue</option>
+									<option value="2">Wed</option>
+									<option value="3">Thu</option>
+									<option value="4">Fri</option>
+									<option value="5">Sat</option>
+>>>>>>> Stashed changes
 								</select>
 							</div>
 						</div>
