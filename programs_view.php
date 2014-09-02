@@ -45,7 +45,7 @@ $(document).ready(function(){
 							<td class="align-center"><?php echo $row['id'];?></td>
 							<td><?php echo $row['program_name'];?></td>
 							<td><?php echo $row['program_type'];?></td>
-							<td class="align-center"><?php echo $row['start_date'];?>-<?php echo $row['end_date'];?></td>
+							<td class="align-center"><?php echo $objP->formatDate($row['start_date']);?> - <?php echo $objP->formatDate($row['end_date']);?></td>
 							<td><?php echo $no_of_cycle;?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>

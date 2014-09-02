@@ -1,10 +1,7 @@
 <?php
-class Buildings {
-   	//Creating Db connection object
-   	private $conn;
-   	public function __construct(){
-   	    global $db;
-   		$this->conn = $db;
+class Buildings extends Base {
+    public function __construct(){
+   		 parent::__construct();
    	}
 	/*function for adding Building*/
 	public function addBuilding() {
@@ -41,7 +38,7 @@ class Buildings {
 			}
 			return $q_res;
 	}
-	
+
 	/*function for fetch data using building ID*/
 	public function getDataByBuldID($id) {
 			$area_query="select * from building where id='".$id."' limit 1";

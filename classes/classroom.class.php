@@ -1,10 +1,7 @@
 <?php
-class Classroom {
-   	//Creating Db connection object
-   	private $conn;
-   	public function __construct(){
-   	    global $db;
-   		$this->conn = $db;
+class Classroom extends Base {
+    public function __construct(){
+   		 parent::__construct();
    	}
 	/*function for adding room*/
 	public function addRoom() {
@@ -41,8 +38,13 @@ class Classroom {
 			}
 			return $q_res;
 	}
+<<<<<<< Updated upstream
 	
 	/*function for fetch data using room ID*/
+=======
+
+	/*function for fetch data using area ID*/
+>>>>>>> Stashed changes
 	public function getDataByRoomID($id) {
 			$area_query="select * from room where id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $area_query);
@@ -72,7 +74,7 @@ class Classroom {
 					return 0;
 				}
 			}
-			
+
 	/*function to get all room type*/
 	public function getAllRoomType() {
 			$query="select * from room_type order by id ASC";

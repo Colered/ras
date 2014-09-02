@@ -1,10 +1,7 @@
 <?php
-class Users {
-   	// database connection and table name
-   	private $conn;
-   	public function __construct(){
-   	    global $db;
-   		$this->conn = $db;
+class Users extends Base {
+    public function __construct(){
+   		 parent::__construct();
    	}
 	/*function for user login*/
 	public function userLogin() {

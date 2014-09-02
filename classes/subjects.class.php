@@ -1,10 +1,7 @@
 <?php
-class Subjects {
-   	//Creating Db connection object
-   	private $conn;
-   	public function __construct(){
-   	    global $db;
-   		$this->conn = $db;
+class Subjects extends Base {
+    public function __construct(){
+   		 parent::__construct();
    	}
 	/*function for adding Subject*/
 	public function addSubject() {
@@ -69,8 +66,13 @@ class Subjects {
 				$_SESSION['error_msg'] = $message;
 			}
 			return $q_res;
+<<<<<<< Updated upstream
 	
 	}
+=======
+	}
+
+>>>>>>> Stashed changes
 	/*function for fetch data using area ID*/
 	public function getDataBySubjectID($id) {
 			$subject_query="select * from subject where id='".$id."' limit 1";

@@ -1,10 +1,7 @@
 <?php
-class Teacher {
-   	// database connection and table name
-   	private $conn;
-   	public function __construct(){
-   	    global $db;
-   		$this->conn = $db;
+class Teacher extends Base {
+    public function __construct(){
+   		 parent::__construct();
    	}
 	/*function for add professor*/
 	public function addProfessor() {

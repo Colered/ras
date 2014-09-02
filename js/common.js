@@ -1,21 +1,25 @@
 $(document).ready(function() {
  $(function() {
 	$( "#dob" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
 	});
 	$( "#doj" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
 	});
 	$( "#exceptnClsAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
 	});
 	$( "#exceptnTeachAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -24,6 +28,7 @@ $(document).ready(function() {
 
 $(function() {
 	$( "#fromGenrtTmtbl" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -32,6 +37,7 @@ $(function() {
 		}
 	});
 	$( "#toGenrtTmtbl" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -42,6 +48,7 @@ $(function() {
 });
 $(function() {
 	$( "#fromPrgm" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -50,6 +57,7 @@ $(function() {
 		}
 	});
 	$( "#toPrgm" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -60,6 +68,7 @@ $(function() {
 });
 $(function() {
 	$( "#fromTeachAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -68,6 +77,7 @@ $(function() {
 		}
 	});
 	$( "#toTeachAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -78,6 +88,7 @@ $(function() {
 });
 $(function() {
 	$( "#fromclsRmAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -86,6 +97,7 @@ $(function() {
 		}
 	});
 	$( "#toclsRmAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -103,6 +115,7 @@ $(document).ready(function(){
 		$("#buildings").validate();
 		$("#frmProgram").validate();
 		$("#frmProff").validate();
+		$("#frmSgroup").validate();
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {

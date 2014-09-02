@@ -24,6 +24,9 @@ $email = isset($_GET['edit'])? $row['email'] : (isset($_POST['txtEmail'])? $_POS
 $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])? $_POST['txtUname'] : '');
 
 ?>
+<script>
+$("#dob").datepicker( "setDate" , "dd-mm-YYYY" );
+</script>
 
 <div id="content">
     <div id="main">
