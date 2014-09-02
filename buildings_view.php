@@ -19,6 +19,9 @@ $(document).ready(function(){
 </style>
 <div id="content">
     <div id="main">
+		<div class="full_w green center">
+		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
+		</div>
         <div class="full_w">
             <div class="h_title">Buildings View<a href="buildings.php" class="gird-addnew" title="Add New Building">Add New</a></div>
             <table id="datatables" class="display">

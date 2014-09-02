@@ -78,5 +78,16 @@ switch ($codeBlock) {
 			echo 0;
 	}
     break;
+	case "del_group":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_area_query="delete from group_master where id='".$id."'";
+			$qry = mysqli_query($db, $del_area_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+	break;
 }
 ?>

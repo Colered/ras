@@ -293,3 +293,30 @@ function deleteRoom($id){
     }
     return false;
 }
+
+//ajax delete the group
+function deleteGroup($id){
+	if($id==""){
+		alert("Please select a group to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Group?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_group',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Group.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
