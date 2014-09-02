@@ -264,11 +264,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					header('Location: subject_view.php');
 					exit();
 				}
-			}else{
-				$message="Please enter all required fields";
-				$_SESSION['error_msg'] = $message;
-				header('Location: subjects.php');
 			}
+
 		break;
 	}
 }
