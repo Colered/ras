@@ -67,5 +67,16 @@ switch ($codeBlock) {
 		}
 		echo $options;
 	break;
+	case "del_room":
+	if(isset($_POST['id'])){
+		$id = $_POST['id'];
+		$del_room_query="delete from room where id='".$id."'";
+		$qry = mysqli_query($db, $del_room_query);
+		if(mysqli_affected_rows($db)>0)
+			echo 1;
+		else
+			echo 0;
+	}
+    break;
 }
 ?>

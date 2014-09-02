@@ -4,15 +4,20 @@ $obj = new Classroom();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$roomId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByRoomID($roomId);
-	while ($data = $result->fetch_assoc()){
+	/*while ($data = $result->fetch_assoc()){
 			$room_type = $data['room_type'];
 			$room_name = $data['room_name'];
 			$building_name = $data['building_name'];
-	}
+	}*/
+	$row = $result->fetch_assoc();
 }
 $roomData = $obj->getAllRoomType();
 $objBuld = new Buildings();  
 $buildData = $objBuld->viewBuld();
+$slctRmType = isset($_GET['edit']) ? $row['room_type_id'] : (isset($_POST['slctRmType'])? $_POST['slctRmType']:'');
+$txtRmName = isset($_GET['edit']) ? $row['room_name'] : (isset($_POST['txtRmName'])? $_POST['txtRmName']:'');
+$slctBuilding = isset($_GET['edit']) ? $row['building_id'] : (isset($_POST['slctBuilding'])? $_POST['slctBuilding']:'');
+
 ?>
 <div id="content">
     <div id="main">
@@ -34,7 +39,7 @@ $buildData = $objBuld->viewBuld();
                         <select id="slctRmType" name="slctRmType" class="select1 required">
 							<?php if($roomData!=0){
 								while($data = $roomData->fetch_assoc()){ ?>
-										<option value="<?php echo $data['id']; ?>"><?php echo $data['room_type']; ?></option>
+										<option value="<?php echo $data['id']; ?>" <?php if($slctRmType == $data['id']){echo "selected"; }?>><?php echo $data['room_type']; ?></option>
 							<?php }}else{ ?>
 								<option value="">Not room type available</option>
                             <?php } ?>
@@ -45,7 +50,7 @@ $buildData = $objBuld->viewBuld();
                         <h2>Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtRmName" maxlength="50" name="txtRmName">
+                        <input type="text" class="inp_txt required" id="txtRmName" maxlength="50" name="txtRmName" value="<?php echo $txtRmName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -67,10 +72,10 @@ $buildData = $objBuld->viewBuld();
                             <span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield">
-                        <input type="submit" name="btnAddRoom" class="buttonsub" value="<?php echo $buttonName = ($room_name!="") ? "Update Room":"Add Room" ?>">
+                        <input type="submit" name="btnAddRoom" class="buttonsub" value="<?php echo $buttonName = ($txtRmName!="") ? "Update Room":"Add Room" ?>">
                     </div>
                     <div class="txtfield">
-                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel">
+                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'rooms_view.php';">
                     </div>
                 </div>	
             </form>

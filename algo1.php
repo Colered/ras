@@ -1,7 +1,9 @@
 <?php
 $link = mysql_connect('172.16.220.164', 'root', 'cidot@123');
+//$link = mysql_connect('localhost', 'root', '');
 if($link) {
    mysql_select_db('cidot_ras' ,$link);
+   //mysql_select_db('ras' ,$link);
 }
 $reserved_activities = array();
 $last_day = '';
@@ -20,33 +22,44 @@ while($result_pgm = mysql_fetch_array($sql_pgm)){
 			$reserved_array = array();
 			$reserved_groups = array();
 			$teachers = search_teachers($result_slot['timeslot_range'],$shuffled_days);
-			//print"<pre>";print_r($teachers);die;
 			foreach($teachers as $teacher)
 			{	
-				$sql_act = mysql_query("select name,program_id,subject_id,group_id from teacher_activity where teacher_id=".$teacher);
+				$sql_act = mysql_query("select name,program_id,subject_id,group_id from teacher_activity where teacher_id='".$teacher."' ORDER BY RAND()");
 				while($result_act = mysql_fetch_array($sql_act))
 				{						
-					//print"<pre>";print_r($result_act);
 					$rooms = search_room($result_slot['timeslot_range'],$shuffled_days);
-					if(!search_array($result_act['group_id'],$reserved_groups) && !search_array($result_act['name'],$reserved_activities))
+					$subject_cnt = get_subject_count($result_act['subject_id'], $result_act['group_id']);
+					if(array_key_exists($result_act['subject_id'], $counter) && array_key_exists($result_act['group_id'], $counter[$result_act['subject_id']]))
+					{
+						$count = $counter[$result_act['subject_id']][$result_act['group_id']];
+					}else{
+						$count = 0;
+					}
+					
+					
+					if(!search_array($result_act['group_id'],$reserved_groups) && (!search_array($result_act['name'],$reserved_activities) || $count <$subject_cnt['count']))
 					{							
-							
 							$reserved_array[$result_slot['timeslot_range']][$shuffled_days][$i]['name'] = $result_act['name'];
 							$reserved_activities[$result_slot['timeslot_range']][++$cnt] = $result_act['name'];
 							$reserved_array[$result_slot['timeslot_range']][$shuffled_days][$i]['teacher_id'] = $teacher;
 							$reserved_array[$result_slot['timeslot_range']][$shuffled_days][$i]['program_id'] = $result_act['program_id'];
 							$reserved_array[$result_slot['timeslot_range']][$shuffled_days][$i]['subject_id'] = $result_act['subject_id'];							
 							$reserved_array[$result_slot['timeslot_range']][$shuffled_days][$i]['group_id'] = $result_act['group_id'];
-
 							if(array_key_exists($result_act['subject_id'], $counter))
 							{
 								
+								if(array_key_exists($result_act['group_id'], $counter[$result_act['subject_id']]))
+								{
+									 $counter[$result_act['subject_id']][$result_act['group_id']]=$counter[$result_act['subject_id']][$result_act['group_id']]+1;
+								}else{
+									$counter[$result_act['subject_id']][$result_act['group_id']] = 1;
+								}
 							}
 							else{
 								$counter[$result_act['subject_id']][$result_act['group_id']] = 1;
 							}
 								
-								//$counter[$result_act['subject_id']][$result_act['group_id']] = ++$cnt;
+								
 							
 							
 							$reserved_groups[$result_slot['timeslot_range']][$i] = $result_act['group_id'];
@@ -57,8 +70,8 @@ while($result_pgm = mysql_fetch_array($sql_pgm)){
 					}
 				}			
 			}
-			//print"<pre>";print_r($reserved_activities);
-			print"<pre>";print_r($counter);die;
+			print"<pre>";print_r($reserved_array);
+			//print"<pre>";print_r($counter);
 			
 		}
 

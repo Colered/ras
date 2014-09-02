@@ -140,7 +140,6 @@ function deleteArea($id){
     }
     return false;
 }
-
 //ajax delete the building
 function deleteBuld($id){
 	if($id==""){
@@ -167,7 +166,6 @@ function deleteBuld($id){
     }
     return false;
 }
-
 //Ajax delete the teacher function 
 function deleteTeacher($id){
 	if($id==""){
@@ -194,7 +192,6 @@ function deleteTeacher($id){
     }
     return false;
 }
-
 //Ajax delete the program function 
 function deleteProgram($id){
 	if($id==""){
@@ -239,7 +236,6 @@ function show_hide_cycle(selval){
 $(document).ready(function() {
    $('#slctClsType').on('change', function(){
     var selected=$("#slctClsType option:selected").map(function(){ return this.value }).get().join(",");
-	//alert(selected);
     $.ajax({
         url: "./ajax_common.php",
         type: "POST",
@@ -258,4 +254,29 @@ $(document).ready(function() {
     
 });
 });
-
+//Ajax delete the room function 
+function deleteRoom($id){
+	if($id==""){
+		alert("Please select a room to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Room?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_room',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Room.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}

@@ -179,7 +179,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if($resp==0){
 					//return back data to the form
 					echo "<html><head></head><body>";
-					echo "<form name='formroom' method='post' action='areas.php'>";
+					echo "<form name='formroom' method='post' action='rooms.php'>";
 					reset($_POST);
 					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
