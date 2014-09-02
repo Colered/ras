@@ -199,7 +199,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: rooms.php');
 			}
 		break;
-<<<<<<< Updated upstream
 		case 'addEditSubject':
 		//adding new subject
 			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
@@ -217,7 +216,23 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<form name='formsubject' method='post' action='subjects.php'>";
 					reset($_POST);
 					while(list($iname,$ival) = each($_REQUEST)) {
-=======
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: subject_view.php');
+					exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: subjects.php');
+			}
+		break;
 		case "add_edit_student_group":
 			//add and edit professor
 			$obj = new Programs();
@@ -238,12 +253,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<form name='form55' method='post' action='group.php'>";
 					reset($_POST);
 					while(list($iname,$ival) = each($_POST)) {
->>>>>>> Stashed changes
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";
 					echo "</body></html>";
-<<<<<<< Updated upstream
 					echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
 					exit();
 					//end return back
@@ -257,18 +270,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: subjects.php');
 			}
 		break;
-=======
-					echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
-					exit();
-				//end return back
-				}else{
-					header('Location: group_view.php');
-					exit();
-				}
-			}
-		break;
-
->>>>>>> Stashed changes
 	}
 }
 ?>

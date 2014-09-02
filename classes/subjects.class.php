@@ -41,8 +41,8 @@ class Subjects extends Base {
 				foreach($_POST['slctRoom'] as $value)
 				{
 				$room_id=$value;
-				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."', '".$room_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtSessionNum']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {	
-					$j++;		
+				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."', '".$room_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtSessionNum']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {
+					$j++;
    					$message="New subject has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					if($j==count($_POST['slctRoom'])){
@@ -58,7 +58,7 @@ class Subjects extends Base {
 	}
 	/*function for listing Area*/
 	public function viewSubject(){
-	    	
+
 			$subject_query="select * from subject order by date_update DESC";
 			$q_res = mysqli_query($this->conn, $subject_query);
 			if(mysqli_num_rows($q_res)<=0){
@@ -66,13 +66,8 @@ class Subjects extends Base {
 				$_SESSION['error_msg'] = $message;
 			}
 			return $q_res;
-<<<<<<< Updated upstream
-	
-	}
-=======
-	}
 
->>>>>>> Stashed changes
+	}
 	/*function for fetch data using area ID*/
 	public function getDataBySubjectID($id) {
 			$subject_query="select * from subject where id='".$id."' limit 1";

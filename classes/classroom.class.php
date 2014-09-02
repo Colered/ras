@@ -38,13 +38,7 @@ class Classroom extends Base {
 			}
 			return $q_res;
 	}
-<<<<<<< Updated upstream
-	
 	/*function for fetch data using room ID*/
-=======
-
-	/*function for fetch data using area ID*/
->>>>>>> Stashed changes
 	public function getDataByRoomID($id) {
 			$area_query="select * from room where id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $area_query);
