@@ -19,7 +19,10 @@ abstract class Base
 			if($date=="0000-00-00") {
 				$date="";
 			} else  {
-				list($year,$month,$day) = split("-", $date);
+				$dateArr = explode("-", $date);
+				$year=$dateArr[0];
+				$month=$dateArr[1];
+				$day=$dateArr[2];
 				$date_mktime = mktime(0, 0, 0, $month, $day, $year);
 				$date = date("d-m-Y",$date_mktime);
 			}
