@@ -49,9 +49,10 @@ $(document).ready(function(){
                         <td class="align-center"><?php echo $data['subject_code'] ?></td>
                         <td class="align-center">
 						<?php 
-							$area_query="select area_name from area where id='".$data['area_id']."'";
+							$area_query="select area_name,area_code from area where id='".$data['area_id']."'";
 							$area_result= mysqli_query($db, $area_query);
 							$area_data = mysqli_fetch_assoc($area_result);
+							$area_detail=$area_data['area_code'].'#'.$area_data['area_name'];
 							echo $area_data['area_name'];
 						?>
 						</td>
@@ -82,8 +83,8 @@ $(document).ready(function(){
 						<td class="align-center"><?php echo $data['date_add'] ?></td>
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">
-                            <a href="subjects.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
-							<a href="#" class="table-icon delete" onClick="deleteArea(<?php echo $data['id'] ?>)"></a>
+                            <a href="subjects.php?edit=<?php echo base64_encode($data['id'].'#'.$area_detail.'#'.$program_data['program_name'].'#'.$room_type_data['room_type'].'#'.$room_data['room_name']) ?>" class="table-icon edit" title="Edit"></a>
+							<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)"></a>
                         </td>
                     </tr>
 					<?php }?>

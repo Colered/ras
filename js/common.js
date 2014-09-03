@@ -389,3 +389,53 @@ function deleteTimeslot($id){
     }
     return false;
 }
+
+$(document).ready(function() {
+	var selected=$("#slctClsType option:selected").map(function(){ return this.value }).get().join(",");
+	$.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'roomTypeValue': selected,
+			'codeBlock': 'getRooms',
+            },
+        success: function(data) {
+			 $("#slctRoom").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+});
+//function for addind session number with subject
+$(document).ready(function() {
+    var max_fields      = 10; 
+    var wrapper         = $(".divSession"); 
+    var add_button      = $(".btnSession"); 
+    var x = 1,y=0; 
+    $(add_button).click(function(e){ 
+		var sessionName='',sessionOrder='',sessionDesc='';						 
+		sessionName=$('#txtSessionName').val();
+		sessionDesc=$('#txtareaSessionDesp').val();
+		sessionOrder=$('#txtOrderNum').val();
+        e.preventDefault();
+        if(x < max_fields){ 
+			x++;
+			y++;
+			if(sessionName!=''){
+				if(y==1){
+				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th></tr></thead><tbody>');	
+				}
+            	$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td></tr></tbody></table></div>');
+				$(wrapper).append('<input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionDesc+'"/>');
+				$('#txtSessionName').val('');
+				$('#txtOrderNum').val('');
+				$('#txtareaSessionDesp').val('');
+			}
+	 }
+});
+   
+    /*$(sessionList).on("click","#datatables.tr", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })*/
+});

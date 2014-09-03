@@ -54,6 +54,18 @@ switch ($codeBlock) {
 			echo 0;
 	    }
 	}
+	break;
+	case "del_subject":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_subject_query="delete from  subject where id='".$id."'";
+			$qry = mysqli_query($db, $del_subject_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+    break;
 	case "getRooms":
 		if(isset($_POST['roomTypeValue']) && $_POST['roomTypeValue']!=""){
 			$room_type_val=explode(",",$_POST['roomTypeValue']);

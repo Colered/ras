@@ -17,6 +17,7 @@ class Subjects extends Base {
 			}else{
 				//add the new subject
 				$currentDateTime = date("Y-m-d H:i:s");
+				//fectching area id
 				$area_query="select id from area where area_code='".$_POST['slctArea']."'";
 				$area_result= mysqli_query($this->conn, $area_query);
 				$area_data = mysqli_fetch_assoc($area_result);
@@ -26,6 +27,7 @@ class Subjects extends Base {
 				   $message="Area does not exists.";
 				   $_SESSION['error_msg'] = $message;
 				}
+				//fectching program id
 				$program_query="select id from program where program_name='".$_POST['slctProgram']."'";
 				$program_result= mysqli_query($this->conn, $program_query);
 				$program_data = mysqli_fetch_assoc($program_result);
@@ -35,15 +37,17 @@ class Subjects extends Base {
 				   $message="Program does not exists.";
 				   $_SESSION['error_msg'] = $message;
 				}
-				$room_id="";
-				//echo "room=".count($_POST['slctRoom']);die;
-				$j=0;
-				foreach($_POST['slctRoom'] as $value)
-				{
-				$room_id=$value;
-				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."', '".$room_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtSessionNum']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {
-					$j++;
-   					$message="New subject has been added successfully";
+				
+				/*$result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')");
+				$rel = $this->conn->query($sql);*/
+				
+				
+				
+				
+				
+				
+				/*if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {	
+					$message="New subject has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					if($j==count($_POST['slctRoom'])){
 					 return 1;
@@ -52,13 +56,13 @@ class Subjects extends Base {
 				    $message="Cannot add the subject";
 					$_SESSION['error_msg'] = $message;
 					return 0;
-				  }
-				}
+				  }*/
+			
 			}
 	}
 	/*function for listing Area*/
 	public function viewSubject(){
-
+	    	
 			$subject_query="select * from subject order by date_update DESC";
 			$q_res = mysqli_query($this->conn, $subject_query);
 			if(mysqli_num_rows($q_res)<=0){
@@ -66,7 +70,7 @@ class Subjects extends Base {
 				$_SESSION['error_msg'] = $message;
 			}
 			return $q_res;
-
+	
 	}
 	/*function for fetch data using area ID*/
 	public function getDataBySubjectID($id) {
@@ -77,4 +81,5 @@ class Subjects extends Base {
 			else
 				return $q_res;
 	}
+	public function updateSubject() {}
 }
