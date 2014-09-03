@@ -233,38 +233,12 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: subjects.php');
 			}
 		break;
-		case "add_edit_student_group":
-			//add and edit professor
+		case "add_edit_program_group":
+			//add and edit program groups
 			$obj = new Programs();
-			if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
-				$resp = $obj->editStudentGroup();
-				if($resp==0){
-					header('Location: group.php?edit='.$_POST['form_edit_id']);
-					exit();
-				}else{
-					header('Location: group_view.php');
-					exit();
-				}
-			}else{
-				$resp = $obj->addStudentGroup();
-				if($resp==0){
-					//return back data to the form
-					echo "<html><head></head><body>";
-					echo "<form name='form55' method='post' action='group.php'>";
-					reset($_POST);
-					while(list($iname,$ival) = each($_POST)) {
-						echo "<input type='hidden' name='$iname' value='$ival'>";
-					}
-					echo "</form>";
-					echo "</body></html>";
-					echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
-					exit();
-					//end return back
-				}else{
-					header('Location: subject_view.php');
-					exit();
-				}
-			}
+			$resp = $obj->associateStudentGroup();
+			header('Location: group_view.php');
+			exit();
 
 		break;
 		//add edit master group

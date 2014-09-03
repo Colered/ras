@@ -293,7 +293,6 @@ function deleteRoom($id){
     }
     return false;
 }
-
 //ajax delete the group
 function deleteGroup($id){
 	if($id==""){
@@ -320,3 +319,47 @@ function deleteGroup($id){
     }
     return false;
 }
+//function to show groups at the time of associatiuon with programs
+function showGroups(selval){
+    $.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'program_id': selval,
+			'codeBlock': 'getGroups',
+            },
+        success: function(data) {
+			 $("#slctSgroups").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+}
+//Ajax delete the associated groups with a program 
+function del_associated_prog_group($id){
+	if($id==""){
+		alert("Please select a program to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_associated_prog_group',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
+

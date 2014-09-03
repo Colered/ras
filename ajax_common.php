@@ -45,6 +45,10 @@ switch ($codeBlock) {
 		    // delete all the cycles related to this program
 		    $del_cycle_query="delete from cycle where program_id='".$id."'";
 		    $qry = mysqli_query($db, $del_cycle_query);
+		    //delete associated groups
+			$del_pg_query="delete from program_group where program_id='".$id."'";
+			$qry = mysqli_query($db, $del_pg_query);
+
 			echo 1;
 		}else{
 			echo 0;
@@ -89,5 +93,36 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	break;
+	case "getGroups":
+	    $options = '';
+	    $dataArr = array();
+		if(isset($_POST['program_id']) && $_POST['program_id']!=""){
+		    //fetch all the groups related to a program
+		    $query="SELECT * FROM program_group WHERE program_id = '".$_POST['program_id']."'";
+			$result = mysqli_query($db, $query);
+			while($data= mysqli_fetch_array($result)){
+				 $dataArr[] = $data['group_id'];
+			}
+	    }
+
+		$query="select id,name from group_master";
+		$result = mysqli_query($db, $query);
+		while($data= mysqli_fetch_array($result)){
+			 $selected = in_array($data['id'],$dataArr) ? "selected":"";
+			 $options .='<option value="'.$data['id'].'" '.$selected.'>'.$data['name'].'</option>';
+		}
+		echo $options;
+	break;
+	case "del_associated_prog_group":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_query="delete from program_group where program_id='".$id."'";
+			$qry = mysqli_query($db, $del_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+    break;
 }
 ?>
