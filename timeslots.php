@@ -1,9 +1,32 @@
-<?php include('header.php'); ?>
+<?php 	
+include('header.php'); 
+$obj = new Timeslot();
+$result = $obj->viewTimeslot();
+?>
+<script src="js/jquery.dataTables.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	$('#datatables').dataTable({
+		"sPaginationType":"full_numbers",
+		"aaSorting":[[0, "asc"]],
+		"bJQueryUI":true
+	});
+})
+</script>
+<style type="text/css">
+	@import "css/demo_table_jui.css";
+	@import "css/jquery-ui-1.8.4.custom.css";
+</style>
 <div id="content">
     <div id="main">
+		 <div class="full_w green center">
+		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
+		</div>
+
         <div class="full_w">
             <div class="h_title">Timeslot</div>
-            <form action="" method="post">
+            <form name="timetable" id="timetable" action="postdata.php" method="post">
+				<input type="hidden" name="form_action" value="addTimeslot" />
                 <div>
                     <div class="custtd_left">
                         <h2>Timeslot <span class="redstar">*</span></h2>
@@ -11,8 +34,8 @@
                     <div class="from">
                         <span class="float"> From</span>
                         <div class="tsHrMin" >
-                            <select id="hours" name="hours" class="selctTimeslot">
-                                <option value="" selected="selected">Hr</option>
+                            <select id="fromhour" name="fromhour" class="selctTimeslot">
+                                <option value="" selected="selected">Hr </option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -40,8 +63,8 @@
                             </select>
                         </div>
                         <div class="tsHrMin" >
-                            <select id="min" name="min" class="selctTimeslot">
-                                <option value="" selected="selected">Min</option>
+                            <select id="frommin" name="frommin" class="selctTimeslot">
+                                <option value="" selected="selected">Min </option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -108,7 +131,7 @@
                     <div class="to">
                         <span class="float"> To</span>
                         <div class="tsHrMin" >
-                            <select id="hours" name="hours" class="selctTimeslot">
+                            <select id="tohour" name="tohour" class="selctTimeslot">
                                 <option value="" selected="selected">Hr</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -137,7 +160,7 @@
                             </select>
                         </div>
                         <div class="tsHrMin" >
-                            <select id="min" name="min" class="selctTimeslot">
+                            <select id="tomin" name="tomin" class="selctTimeslot">
                                 <option value="" selected="selected">Min</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -207,14 +230,14 @@
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield">
-                        <input type="button" name="btnGenrtTime" class="buttonsub" value="Add Timeslot">
+                        <input type="submit" name="btnGenrtTime" class="buttonsub" value="Add Timeslot">
                     </div>
-                    <div class="txtfield">
-                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel">
-                    </div>
+                   <!-- <div class="txtfield">
+                        <input type="submit" name="btnCancel" class="buttonsub" value="Cancel">
+                    </div>-->
                     <div class="clear"></div>
                     <div>
-                        <table>
+                        <table id="datatables" class="display">
                             <thead>
                                 <tr>
                                     <th >ID</th>
@@ -223,27 +246,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="align-center">1</td>
-                                    <td>--</td>
-                                    <td class="align-center">
-                                        <a href="#" class="table-icon delete" title="Delete"></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-center">2</td>
-                                    <td>--</td>
-                                    <td class="align-center">
-                                        <a href="#" class="table-icon delete" title="Delete"></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-center">3</td>
-                                    <td>--</td>
-                                    <td class="align-center">
-                                        <a href="#" class="table-icon delete" title="Delete"></a>
-                                    </td>
-                                </tr>
+                                <?php while ($data = $result->fetch_assoc()){ ?>
+									<tr>
+										<td class="align-center"><?php echo $data['id'] ?></td>
+										<td><?php echo $data['timeslot_range'] ?></td>
+										<td class="align-center" id="<?php echo $data['id'] ?>">
+											<a href="#" class="table-icon delete" onClick="deleteTimeslot(<?php echo $data['id'] ?>)"></a>
+										</td>
+									</tr>
+								<?php }?>
                             </tbody>
                         </table>
                     </div>

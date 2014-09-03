@@ -363,3 +363,29 @@ function del_associated_prog_group($id){
     return false;
 }
 
+//ajax delete timeslot
+function deleteTimeslot($id){
+	if($id==""){
+		alert("Please select a timeslot to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Timeslot?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_timeslot',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Group.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
