@@ -17,7 +17,7 @@ abstract class Base
 			$tempdate=explode(" ",$date);
 			$date=$tempdate[0];
 			if($date=="0000-00-00") {
-				$date="";
+				$date="N/A";
 			} else  {
 				$dateArr = explode("-", $date);
 				$year=$dateArr[0];
@@ -32,5 +32,12 @@ abstract class Base
 		}
 
 	}//end of formatDate function
+
+	//function to clean input text
+	public function cleanText($txt){
+	    $str = addslashes($txt);
+		$str = strip_tags($str);
+		return $str;
+	}
 
 }

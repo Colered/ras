@@ -18,12 +18,9 @@ $(document).ready(function(){
 </style>
 <div id="content">
     <div id="main">
-         <div class="full_w green center">
-		 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; $_SESSION['succ_msg']="";} ?>
-		</div>
+		<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
         <div class="full_w">
             <div class="h_title">Teachers View<a href="professor.php" class="gird-addnew" title="Add New Teacher">Add New</a></div>
-
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -50,8 +47,8 @@ $(document).ready(function(){
                         <td class="align-center"><?php echo $row['id'];?></td>
                         <td><?php echo $row['teacher_name'];?></td>
                         <td><?php echo $row['address'];?></td>
-                        <td><?php echo $row['dob'];?></td>
-                        <td><?php echo $row['doj'];?></td>
+                        <td><?php echo $objT->formatDate($row['dob']);?></td>
+                        <td><?php echo $objT->formatDate($row['doj']);?></td>
                         <td><?php echo $row['designation'];?></td>
                         <td><?php echo $row['qualification'];?></td>
                         <td><?php echo $objT->printTeacherExp($row['experience']);?></td>

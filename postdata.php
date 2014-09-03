@@ -85,31 +85,37 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case "add_edit_professor":
 			//add and edit professor
-			$obj = new Teacher();
-			if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
-			    $resp = $obj->editProfessor();
-				header('Location: teacher_view.php');
-				exit();
-			}else{
-				$resp = $obj->addProfessor();
-				if($resp==0){
-					//return back data to the form
-					echo "<html><head></head><body>";
-					echo "<form name='form55' method='post' action='professor.php'>";
-					reset($_POST);
-					while(list($iname,$ival) = each($_POST)) {
-						echo "<input type='hidden' name='$iname' value='$ival'>";
-					}
-					echo "</form>";
-					echo "</body></html>";
-					echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
-					exit();
-				//end return back
-				}else{
+		  if(trim($_POST['txtPname'])!="" ){
+				$obj = new Teacher();
+				if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
+					$resp = $obj->editProfessor();
 					header('Location: teacher_view.php');
 					exit();
+				}else{
+					$resp = $obj->addProfessor();
+					if($resp==0){
+						//return back data to the form
+						echo "<html><head></head><body>";
+						echo "<form name='form55' method='post' action='professor.php'>";
+						reset($_POST);
+						while(list($iname,$ival) = each($_POST)) {
+							echo "<input type='hidden' name='$iname' value='$ival'>";
+						}
+						echo "</form>";
+						echo "</body></html>";
+						echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
+						exit();
+					//end return back
+					}else{
+						header('Location: teacher_view.php');
+						exit();
+					}
 				}
-			}
+		   }else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: buildings.php');
+		   }
 		break;
 		case "add_program":
 			//adding new areas
@@ -237,7 +243,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			//add and edit program groups
 			$obj = new Programs();
 			$resp = $obj->associateStudentGroup();
-			header('Location: group_view.php');
+			header('Location: program_group_view.php');
 			exit();
 
 		break;

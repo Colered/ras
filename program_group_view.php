@@ -23,7 +23,7 @@ $(document).ready(function(){
 					<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; $_SESSION['succ_msg']="";} ?>
 			</div>
 			<div class="full_w">
-				<div class="h_title">Group View<a href="group.php" class="gird-addnew" title="Add New Group">Add new</a></div>
+				<div class="h_title">Group View<a href="program_group.php" class="gird-addnew" title="Add New Group">Add new</a></div>
 				<table id="datatables" class="display">
 					<thead>
 						<tr>
@@ -50,7 +50,7 @@ $(document).ready(function(){
                      		 ?>
 							</td>
 							<td class="align-center" id="<?php echo $row['program_id']; ?>">
-								<a href="group.php?edit=<?php echo base64_encode($row['program_id']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="program_group.php?edit=<?php echo base64_encode($row['program_id']);?>" class="table-icon edit" title="Edit"></a>
 								<a href="#" class="table-icon delete" title="Delete" onClick="del_associated_prog_group('<?php echo $row['program_id'];?>')"></a>
 							</td>
 						</tr>

@@ -54,7 +54,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
                         <input type="submit" name="btnAddRoom" class="buttonsub" value="<?php echo $button_save;?>">
                     </div>
                     <div class="txtfield">
-                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href='group_view.php';">
+                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href='program_group_view.php';">
                     </div>
                 </div>
             </form>
