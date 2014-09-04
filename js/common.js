@@ -5,24 +5,33 @@ $(document).ready(function() {
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		maxDate: new Date(),
+		changeMonth: true, 
+		changeYear: true,
 	});
 	$( "#doj" ).datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 	});
 	$( "#exceptnClsAval" ).datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 	});
 	$( "#exceptnTeachAval" ).datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 	});
  });			   
 
@@ -32,6 +41,8 @@ $(function() {
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 		onClose: function( selectedDate ) {
 			$( "#toGenrtTmtbl" ).datepicker( "option", "minDate", selectedDate );
 		}
@@ -41,30 +52,31 @@ $(function() {
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 		onClose: function( selectedDate ) {
 			$( "#fromGenrtTmtbl" ).datepicker( "option", "maxDate", selectedDate );
 		}
 	});
 });
 $(function() {
-	$( "#fromPrgm" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		onClose: function( selectedDate ) {
-			$( "#toPrgm" ).datepicker( "option", "minDate", selectedDate );
-		}
+	$("#fromPrgm").datepicker({
+			dateFormat: 'dd-mm-yy',
+			defaultDate: "+1w",
+			changeMonth: true,
+			numberOfMonths: 1,
+			changeMonth: true, 
+			changeYear: true,
+	        onSelect: function (date) {
+	            var ptype = $('#slctPrgmType').val(); 
+	            var date2 = $('#fromPrgm').datepicker('getDate');
+	            date2.setDate(date2.getDate() + ptype*365);
+	            dateString = $.datepicker.formatDate('dd-mm-yy', new Date(date2));
+	            $('#toPrgm').val(dateString);
+	        }
 	});
-	$( "#toPrgm" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		onClose: function( selectedDate ) {
-			$( "#fromPrgm" ).datepicker( "option", "maxDate", selectedDate );
-		}
-	});
+
+	
 });
 $(function() {
 	$( "#fromTeachAval" ).datepicker({
@@ -72,6 +84,8 @@ $(function() {
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 		onClose: function( selectedDate ) {
 			$( "#toTeachAval" ).datepicker( "option", "minDate", selectedDate );
 		}
@@ -81,6 +95,8 @@ $(function() {
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 		onClose: function( selectedDate ) {
 			$( "#fromTeachAval" ).datepicker( "option", "maxDate", selectedDate );
 		}
@@ -92,6 +108,8 @@ $(function() {
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 		onClose: function( selectedDate ) {
 			$( "#toclsRmAval" ).datepicker( "option", "minDate", selectedDate );
 		}
@@ -101,6 +119,8 @@ $(function() {
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
 		onClose: function( selectedDate ) {
 			$( "#fromclsRmAval" ).datepicker( "option", "maxDate", selectedDate );
 		}

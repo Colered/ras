@@ -1,8 +1,8 @@
 <?php
 include('header.php');
+$objP = new Programs();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
-    $objP = new Programs();
     $result = $objP->getProgramById($programId);
     $row = $result->fetch_assoc();
     //get all the cycles related to data
@@ -41,9 +41,7 @@ $endweek_1 = isset($_GET['edit']) ? (isset($end_week[0])? $end_week[0]:'') : (is
 $endweek_2 = isset($_GET['edit']) ? (isset($end_week[1])? $end_week[1]:'') : (isset($_POST['endweek2'])? $_POST['endweek2']:'');
 $endweek_3 = isset($_GET['edit']) ? (isset($end_week[2])? $end_week[2]:'') : (isset($_POST['endweek3'])? $_POST['endweek3']:'');
 
-
 ?>
-
 <script type="text/javascript">
 $(document).ready(function() {
     show_hide_cycle('<?php echo $no_of_cycles;?>');
@@ -59,10 +57,12 @@ $(document).ready(function() {
 
 	});
 
+	$('#slctPrgmType').on('change', function() {
+           $('#fromPrgm').val('');
+		   $('#toPrgm').val('');
+	});
 });
-
 </script>
-
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -89,10 +89,10 @@ $(document).ready(function() {
                     </div>
                     <div class="txtfield">
                         <select id="slctPrgmType" name="slctPrgmType" class="select1" required="true">
-                            <option value="" selected="selected">--Select Program--</option>
-                            <option value="1 year">One Year</option>
-                            <option value="2 year">Two Year</option>
-							<option value="3 year">Three Year</option>
+                            <option value="">--Select Program--</option>
+                            <option value="1">One Year</option>
+                            <option value="2">Two Year</option>
+							<option value="3">Three Year</option>
                         </select>
 						<script type="text/javascript">
 							jQuery('#slctPrgmType').val("<?php echo $program_type;?>");
@@ -103,8 +103,8 @@ $(document).ready(function() {
                         <h2>Program Duration <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        From:<input type="text" size="12" id="fromPrgm" name="prog_from_date" value="<?php echo $program_from_date;?>" required="true"/>
-                        To:<input type="text" size="12" id="toPrgm" name="prog_to_date" value="<?php echo $program_to_date;?>" required="true"/>
+                        From:<input type="text" size="12" id="fromPrgm" name="prog_from_date" value="<?php echo $objP->formatDate($program_from_date);?>" required="true" readonly/>
+                        To:<input type="text" size="12" id="toPrgm" name="prog_to_date" value="<?php echo $objP->formatDate($program_to_date);?>" required="true" readonly/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

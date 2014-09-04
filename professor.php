@@ -1,5 +1,6 @@
 <?php
 include('header.php');
+$objT = new Teacher();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $result =  $db->query("select * from teacher where id='".base64_decode($_GET['edit'])."'");
 	$row_cnt = $result->num_rows;
@@ -24,10 +25,6 @@ $email = isset($_GET['edit'])? $row['email'] : (isset($_POST['txtEmail'])? $_POS
 $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])? $_POST['txtUname'] : '');
 
 ?>
-<script>
-$("#dob").datepicker( "setDate" , "dd-mm-YYYY" );
-</script>
-
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -61,14 +58,14 @@ $("#dob").datepicker( "setDate" , "dd-mm-YYYY" );
                         <h2>Date of Birth</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" id="dob" name="dob" size="12" value="<?php echo $dob;?>" >
+                        <input type="text" id="dob" name="dob" size="12" value="<?php echo $objT->formatDate($dob);?>" readonly />
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Joining Date</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" id="doj" name="doj" size="12" value="<?php echo $doj; ?>">
+                        <input type="text" id="doj" name="doj" size="12" value="<?php echo $objT->formatDate($doj);?>" readonly />
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

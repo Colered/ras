@@ -17,7 +17,7 @@ abstract class Base
 			$tempdate=explode(" ",$date);
 			$date=$tempdate[0];
 			if($date=="0000-00-00") {
-				$date="N/A";
+				$date="";
 			} else  {
 				$dateArr = explode("-", $date);
 				$year=$dateArr[0];
@@ -27,8 +27,6 @@ abstract class Base
 				$date = date("d-m-Y",$date_mktime);
 			}
 			return $date;
-		} else {
-			return "N/A";
 		}
 
 	}//end of formatDate function
