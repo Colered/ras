@@ -32,6 +32,7 @@ class Programs extends Base {
 			for($j=1; $j<=$slctPrgmType; $j++){
 				$progName = $txtPrgmName.'-'.$j;
 				$start_year = date("Y", strtotime($prog_from_date));
+				$start_year = $start_year + ($j-1);
 				$end_year = $start_year + $j;
 				$sql = "INSERT INTO program_years (program_id, name, start_year, end_year) VALUES ('".$last_ins_id."', '".$progName."', '".$start_year."', '".$end_year."')";
 				$rel = $this->conn->query($sql);
@@ -94,6 +95,7 @@ class Programs extends Base {
 			for($j=1; $j<=$slctPrgmType; $j++){
 				$progName = $txtPrgmName.'-'.$j;
 				$start_year = date("Y", strtotime($prog_from_date));
+				$start_year = $start_year + ($j-1);
 				$end_year = $start_year + $j;
 				$sql = "INSERT INTO program_years (program_id, name, start_year, end_year) VALUES ('".$edit_id."', '".$progName."', '".$start_year."', '".$end_year."')";
 				$rel = $this->conn->query($sql);
