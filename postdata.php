@@ -245,7 +245,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			$resp = $obj->associateStudentGroup();
 			header('Location: program_group_view.php');
 			exit();
-
 		break;
 		//add edit master group
 		case 'addEditGroup':
@@ -283,20 +282,23 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		//add timeslot
 		case 'addTimeslot':
-			print_r($_POST); die;
-			if($_POST['fromhour']!="" && $_POST['tohour']!="" ){
+			/*print_r($_POST); 
+			echo $start = strtotime($_POST['start_time']);
+			echo $end = strtotime($_POST['end_time']);
+			
+			if($start >$end){
+			echo 'yes';
+			}else{
+			echo 'no';
+			}*/
+			if($_POST['start_time']!="" && $_POST['end_time']!="" ){
 				$obj = new Timeslot();
-				if(isset($_POST['groupId']) && $_POST['groupId']!=''){
-					//update group
-					$resp = $obj->updateGroup();
-				}else{
-					//add new group
-					$resp = $obj->addGroup();
-				}
+				//add new timeslot
+				$resp = $obj->addTimeslot();
 				if($resp==0){
 					//return back data to the form
 					echo "<html><head></head><body>";
-					echo "<form name='formbuild' method='post' action='group.php'>";
+					echo "<form name='formbuild' method='post' action='timeslots.php'>";
 					reset($_POST);
 					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";

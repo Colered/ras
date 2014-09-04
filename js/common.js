@@ -459,3 +459,8 @@ $(document).ready(function() {
         e.preventDefault(); $(this).parent('div').remove(); x--;
     })*/
 });
+
+//function to change the time range
+function changeTimeRange(){
+	alert('Hi');
+	}
