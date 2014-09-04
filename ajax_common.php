@@ -58,7 +58,7 @@ switch ($codeBlock) {
 	case "del_subject":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
-			$del_subject_query="delete from  subject where id='".$id."'";
+			$del_subject_query="DELETE subject,subject_session  FROM subject  INNER JOIN subject_session WHERE subject.id= subject_session.subject_id and subject.id = '".$id."'";
 			$qry = mysqli_query($db, $del_subject_query);
 			if(mysqli_affected_rows($db)>0)
 				echo 1;

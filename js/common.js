@@ -410,6 +410,32 @@ function deleteTimeslot($id){
     return false;
 }
 
+//Ajax delete the Subject function 
+function deleteSubject($id){
+	if($id==""){
+		alert("Please select a subject to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Subject?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_subject',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected subject.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
 $(document).ready(function() {
 	var selected=$("#slctClsType option:selected").map(function(){ return this.value }).get().join(",");
 	$.ajax({
@@ -439,21 +465,39 @@ $(document).ready(function() {
 		sessionDesc=$('#txtareaSessionDesp').val();
 		sessionOrder=$('#txtOrderNum').val();
         e.preventDefault();
-        if(x < max_fields){ 
+		var subjectID=$('#subjectId').val();
+		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
+		if(subjectID!=""){
+			var maxSerialNumVal=maxSerialNum + 1;
+			alert(maxSerialNumVal);
+			$('#maxSessionListVal').val(maxSerialNumVal);
+			if(sessionName!=''){
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td><a href="#" class="remove_field">Remove</a></td></tr></tbody></table></div>');
+				$(wrapper).append('<input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionDesc+'"/>');
+				$('#txtSessionName').val('');
+				$('#txtOrderNum').val('');
+				$('#txtareaSessionDesp').val('');
+			}
+	    }else{
+			if(x < max_fields){ 
 			x++;
 			y++;
 			if(sessionName!=''){
 				if(y==1){
-				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th></tr></thead><tbody>');	
+				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>');	
 				}
-            	$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td></tr></tbody></table></div>');
+            	$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td><a href="#" class="remove_field">Remove</a></td></tr></tbody></table></div>');
 				$(wrapper).append('<input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionDesc+'"/>');
 				$('#txtSessionName').val('');
 				$('#txtOrderNum').val('');
 				$('#txtareaSessionDesp').val('');
 			}
 	 }
+   }
 });
+	/*$('.sessionList').on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('tr').remove(); x--;
+    })*/
    
     /*$(sessionList).on("click","#datatables.tr", function(e){ //user click on remove text
         e.preventDefault(); $(this).parent('div').remove(); x--;

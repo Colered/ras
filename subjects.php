@@ -2,7 +2,7 @@
 include('header.php'); 
 require_once('config.php');
 global $db;
-$subjectName=""; $subjectCode=""; $sessionNum=""; $subjectCode="";$caseNum=""; $technicalNotes="";$areaCode="";$areaName="";$programName="";$roomType="";$roomName="";
+$subjectName=""; $subjectCode=""; $sessionNum=""; $subjectCode="";$caseNum=""; $technicalNotes="";$areaCode="";$areaName="";$programName="";$roomType="";$roomName="";$subjectId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$subjectData= base64_decode($_GET['edit']);
 	$subjectDetails=explode('#',$subjectData);
@@ -10,16 +10,13 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$areaCode=$subjectDetails['1'];
 	$areaName=$subjectDetails['2'];
 	$programName=$subjectDetails['3'];
-	$roomType=$subjectDetails['4'];
-	$roomName=$subjectDetails['5'];
 	$obj = new Subjects();
 	$result = $obj->getDataBySubjectID($subjectId);
 	$row = $result->fetch_assoc();
 }
 $subjectName = isset($_GET['edit']) ? $row['subject_name'] : (isset($_POST['txtSubjName'])? $_POST['txtSubjName']:'');
 $subjectCode = isset($_GET['edit']) ? $row['subject_code'] : (isset($_POST['txtSubjCode'])? $_POST['txtSubjCode']:'');
-$sessionNum = isset($_GET['edit']) ? $row['session_no.'] : (isset($_POST['txtSessionNum'])? $_POST['txtSessionNum']:'');
-$caseNum = isset($_GET['edit']) ? $row['case_no.'] : (isset($_POST['txtCaseNum'])? $_POST['txtCaseNum']:'');
+$caseNum = isset($_GET['edit']) ? $row['case_number'] : (isset($_POST['txtCaseNum'])? $_POST['txtCaseNum']:'');
 $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST['txtTechNotes'])? $_POST['txtTechNotes']:'');
 ?>
 <div id="content">
@@ -28,7 +25,7 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
             <div class="h_title">Subject</div>
             <form name="subjectForm" id="subjectForm" action="postdata.php" method="post">
 			<input type="hidden" name="form_action" value="addEditSubject" />
-			<input type="hidden" name="areaId" value="<?php echo $subjectId; ?>" />
+			<input type="hidden" id="subjectId" name="subjectId" value="<?php echo $subjectId; ?>" />
                 <div class="custtable_left">
 					<div class="custtd_left">
                         <h2>Choose Program<span class="redstar">*</span></h2>
@@ -112,7 +109,45 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                        </div>
 					<div class="clear"></div>
 					<div class="custtd_left"></div>
-					<div class="txtfield divSession"></div>
+					<div class="divSession">
+					<?php 
+					if($subjectId!=""){
+						$x=0;
+						$sessionHtml='';
+						$subj_session_query="select * from  subject_session where subject_id='".$subjectId."'";
+						$subj_session_result= mysqli_query($db, $subj_session_query);
+						while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
+						$x++;
+						if($x==1){
+							$sessionHtml.='<div class="sessionList">
+   							<table id="datatables" class="display">
+       						  <thead>
+          					   <tr>
+								<th>Sr. No.</th>
+          						<th >Session Name</th>
+          						<th >Order Number</th>
+          						<th >Description</th>
+								<th >Remove</th>
+							   </tr>
+       					      </thead>
+       					      <tbody>';}
+						 	$sessionHtml.='<tr>
+           						<td>'.$x.'</td>
+	   							<td>'.$subj_session_data['session_name'].'</td>
+	   							<td>'.$subj_session_data['order_number'].'</td>
+	   							<td>'.$subj_session_data['description'].'</td>
+								<td><a href="#" class="remove_field">Remove</a></td>
+        						</tr>';
+							$sessionHtml.='<input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
+								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['order_number'].'"/>
+								<input type="hidden" name="sessionOrder[]" id="sessionOrder'.$x.'"  value="'.$subj_session_data['description'].'"/>
+								<input type="hidden" name="sessionRowId[]" id="sessionRowId'.$x.'"  value="'.$subj_session_data['id'].'"/>';
+       					}	
+					$sessionHtml.='<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="'.$x.'"/>';
+					$sessionHtml.='</tbody></table></div>';	
+					echo $sessionHtml;
+				 }?>
+					</div>
 					<div class="clear"></div>
                     <div class="custtd_left">
                      </div>
@@ -120,7 +155,7 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                         <input type="submit" name="btnAddSubject" class="buttonsub" value="<?php echo $buttonName = ($subjectName!="") ? "Update Subject":"Add Subject" ?>">
                     </div>
                     <div class="txtfield">
-                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel">
+						<input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'subject_view.php';">
                     </div>
                 </div>	
             </form>

@@ -29,13 +29,13 @@ $(document).ready(function(){
                         <th >ID</th>
                         <th >Subject Name</th>
                         <th >Subject Code </th>
-                        <th >Choose Area</th>
-                        <th >Choose Program</th>
-                        <th >Session No.</th>
-                        <th >Case No. </th>
+                        <th >Area</th>
+                        <th >Program</th>
+                        <th >Case Number</th>
                         <th >Technical Notes </th>
-                        <th >Classroom Type</th>
-						<th >Classroom</th>
+                        <th >Session Name</th>
+						<th >Order Number</th>
+						<th >Description</th>
                         <th >Add Date</th>
 						<th >Update Date</th>
                         <th >Action</th>
@@ -64,26 +64,22 @@ $(document).ready(function(){
 							echo $program_data['program_name'];
 						?>
 						</td>
-						<td class="align-center"><?php echo $data['session_no.'] ?></td>
-						<td class="align-center"><?php echo $data['case_no.'] ?></td>
+						<td class="align-center"><?php echo $data['case_number'] ?></td>
 						<td class="align-center"><?php echo $data['technical_notes'] ?></td>
 						<td class="align-center">
 						<?php 
-							$room_query="select room_type_id,room_name from  room where id='".$data['room_id']."'";
-							$room_result= mysqli_query($db, $room_query);
-							$room_data = mysqli_fetch_assoc($room_result);
-							$room_type_query="select room_type from room_type where id='".$room_data['room_type_id']."'";
-							$room__type_result= mysqli_query($db, $room_type_query);
-							$room_type_data = mysqli_fetch_assoc($room__type_result);
-							echo $room_type_data['room_type'];
-							
+							$subj_session_query="select session_name, order_number,description from subject_session where subject_id='".$data['id']."'";
+							$subj_session_result= mysqli_query($db, $subj_session_query);
+							$subj_session_data = mysqli_fetch_assoc($subj_session_result);
+						    echo $subj_session_data['session_name'];
 						?>
 						</td>
-						<td class="align-center"><?php echo $room_data['room_name'] ?></td>
+						<td class="align-center"><?php echo $subj_session_data['order_number'] ?></td>
+						<td class="align-center"><?php echo $subj_session_data['description'] ?></td>
 						<td class="align-center"><?php echo $data['date_add'] ?></td>
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">
-                            <a href="subjects.php?edit=<?php echo base64_encode($data['id'].'#'.$area_detail.'#'.$program_data['program_name'].'#'.$room_type_data['room_type'].'#'.$room_data['room_name']) ?>" class="table-icon edit" title="Edit"></a>
+                            <a href="subjects.php?edit=<?php echo base64_encode($data['id'].'#'.$area_detail.'#'.$program_data['program_name'])?>" class="table-icon edit" title="Edit"></a>
 							<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)"></a>
                         </td>
                     </tr>

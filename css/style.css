@@ -576,4 +576,10 @@ float:right; padding-right:20px; color:#006e2f;}
     padding-left: 10px;
     width: 136px;
 }
-.addbtnSession{padding-top:16px;}
+div.divSession{
+    float: left;
+    padding-bottom: 10px;
+    padding-left: 2px;
+    text-align: right;
+
+}
