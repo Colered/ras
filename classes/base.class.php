@@ -35,7 +35,7 @@ abstract class Base
 	public function cleanText($txt){
 	    $str = addslashes($txt);
 		$str = strip_tags($str);
-		return $str;
+		return trim($str);
 	}
 
 }

@@ -17,7 +17,7 @@ class Areas extends Base {
 			}else{
 				//add the new area
 				$currentDateTime = date("Y-m-d H:i:s");
-				if ($result = mysqli_query($this->conn, "INSERT INTO area VALUES ('', '".$_POST['txtAreaName']."', '".$_POST['txtAreaCode']."', '".$_POST['txtAColor']."', '".$currentDateTime."', '".$currentDateTime."');")) {
+				if ($result = mysqli_query($this->conn, "INSERT INTO area VALUES ('', '".Base::cleanText($_POST['txtAreaName'])."', '".Base::cleanText($_POST['txtAreaCode'])."', '".$_POST['txtAColor']."', '".$currentDateTime."', '".$currentDateTime."');")) {
    					$message="New area has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
@@ -59,7 +59,7 @@ class Areas extends Base {
 				$message="Area code already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
-			}elseif ($result = mysqli_query($this->conn, "Update area  Set area_name = '".$_POST['txtAreaName']."', area_code = '".$_POST['txtAreaCode']."', area_color = '".$_POST['txtAColor']."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['areaId']."'")) {
+			}elseif ($result = mysqli_query($this->conn, "Update area  Set area_name = '".Base::cleanText($_POST['txtAreaName'])."', area_code = '".Base::cleanText($_POST['txtAreaCode'])."', area_color = '".$_POST['txtAColor']."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['areaId']."'")) {
    					$message="Area has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;

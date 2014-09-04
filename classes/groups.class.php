@@ -17,7 +17,7 @@ class Groups extends Base {
 			}else{
 				//add the new group
 				$currentDateTime = date("Y-m-d H:i:s");
-				if ($result = mysqli_query($this->conn, "INSERT INTO group_master VALUES ('', '".$_POST['txtGname']."', '".$currentDateTime."', '".$currentDateTime."');")) {
+				if ($result = mysqli_query($this->conn, "INSERT INTO group_master VALUES ('', '".Base::cleanText($_POST['txtGname'])."', '".$currentDateTime."', '".$currentDateTime."');")) {
    					$message="New Group has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
@@ -59,7 +59,7 @@ class Groups extends Base {
 				$message="Group Name already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
-			}elseif ($result = mysqli_query($this->conn, "Update group_master Set name = '".$_POST['txtGname']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['groupId']."'")) {
+			}elseif ($result = mysqli_query($this->conn, "Update group_master Set name = '".Base::cleanText($_POST['txtGname'])."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['groupId']."'")) {
    					$message="Group has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;

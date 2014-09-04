@@ -17,7 +17,7 @@ class Buildings extends Base {
 			}else{
 				//add the new building
 				$currentDateTime = date("Y-m-d H:i:s");
-				if ($result = mysqli_query($this->conn, "INSERT INTO building VALUES ('', '".$_POST['txtBname']."', '".$currentDateTime."', '".$currentDateTime."');")) {
+				if ($result = mysqli_query($this->conn, "INSERT INTO building VALUES ('', '".Base::cleanText($_POST['txtBname'])."', '".$currentDateTime."', '".$currentDateTime."');")) {
    					$message="New building has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
@@ -59,7 +59,7 @@ class Buildings extends Base {
 				$message="Building Name already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
-			}elseif ($result = mysqli_query($this->conn, "Update building  Set building_name = '".$_POST['txtBname']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
+			}elseif ($result = mysqli_query($this->conn, "Update building  Set building_name = '".Base::cleanText($_POST['txtBname'])."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
    					$message="Building has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;

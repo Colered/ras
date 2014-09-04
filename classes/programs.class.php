@@ -144,13 +144,16 @@ class Programs extends Base {
 		$slctProgram = trim($_POST['slctProgram']);
 		$slctSgroups = $_POST['slctSgroups'];
 
-		//delete all the previous programs cycles and insert again
-		$del_query="DELETE FROM program_group WHERE program_id ='".$slctProgram."'";
+		//delete all the previous program groups and insert again
+		$del_query="DELETE FROM program_group WHERE program_year_id in(select id from program_years where program_id='".$slctProgram."')";
 		$qry = mysqli_query($this->conn, $del_query);
 
 		foreach($slctSgroups as $val){
-		  $sql = "INSERT INTO program_group (program_id, group_id) VALUES ('".$slctProgram."', '".$val."')";
-		  $rel = $this->conn->query($sql);
+		  $result =  $this->conn->query("select id from program_years where program_id='".$slctProgram."'");
+		  while($row = $result->fetch_assoc()){
+			  $sql = "INSERT INTO program_group (program_year_id, group_id) VALUES ('".$row['id']."', '".$val."')";
+			  $rel = $this->conn->query($sql);
+		  }
 		}
 
 		$message="Program has been associated successfully";
@@ -163,14 +166,14 @@ class Programs extends Base {
 		$result =  $this->conn->query("select * from group_master");
 		return $result;
 	}
-	//Function to list associated programs
-	public function getProgAssociateGroup(){
-		$result =  $this->conn->query("SELECT pg.program_id,p.program_name FROM program_group pg INNER JOIN program p on(pg.program_id=p.id) GROUP BY pg.program_id");
+	//Function to list sub programs
+	public function getSubPrograms($pid){
+		$result =  $this->conn->query("SELECT * FROM program_years WHERE program_id='".$pid."' ");
 		return $result;
 	}
 	//Function to list all groups of a program
 	public function getAllGroupByProgId($prog_id){
-		$result =  $this->conn->query("SELECT pg.group_id, gm.name FROM program_group pg LEFT JOIN group_master gm ON ( gm.id = pg.group_id ) WHERE pg.program_id = '".$prog_id."'");
+		$result =  $this->conn->query("select * from group_master where id in(select group_id FROM program_group WHERE program_year_id in(select id from program_years where program_id='".$prog_id."'))");
 		return $result;
 	}
 

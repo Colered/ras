@@ -29,32 +29,41 @@ $(document).ready(function(){
 						<tr>
 							<th >ID</th>
 							<th >Program</th>
+							<th >Sub Program</th>
 							<th >Group Name</th>
 							<th >Action</th>
 						</tr>
 					</thead>
 					<tbody>
 			         <?php
-						$result = $objP->getProgAssociateGroup();
+						$result = $objP->getProgramListData();
 						while($row = $result->fetch_assoc()){
                      ?>
 						<tr>
-							<td class="align-center"><?php echo $row['program_id'];?></td>
+							<td class="align-center"><?php echo $row['id'];?></td>
 							<td><?php echo $row['program_name'];?></td>
 							<td>
 							 <?php
-								$pgresult = $objP->getAllGroupByProgId($row['program_id']);
+								$pgresult = $objP->getSubPrograms($row['id']);
+								while($pgrow = $pgresult->fetch_assoc()){
+									echo '<div>'.$pgrow['name'].'<div>';
+								}
+							 ?>
+							</td>
+							<td>
+							 <?php
+								$pgresult = $objP->getAllGroupByProgId($row['id']);
 								while($pgrow = $pgresult->fetch_assoc()){
 								  	echo '<div>'.$pgrow['name'].'<div>';
 								}
                      		 ?>
 							</td>
-							<td class="align-center" id="<?php echo $row['program_id']; ?>">
-								<a href="program_group.php?edit=<?php echo base64_encode($row['program_id']);?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" title="Delete" onClick="del_associated_prog_group('<?php echo $row['program_id'];?>')"></a>
+							<td class="align-center" id="<?php echo $row['id']; ?>">
+								<a href="program_group.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="#" class="table-icon delete" title="Delete" onClick="del_associated_prog_group('<?php echo $row['id'];?>')"></a>
 							</td>
 						</tr>
-				    <?php }?>
+				    <?php } ?>
 
 					</tbody>
 				</table>

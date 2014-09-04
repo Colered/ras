@@ -17,7 +17,7 @@ class Classroom extends Base {
 			}else{
 				//add the new Room
 				$currentDateTime = date("Y-m-d H:i:s");
-				if ($result = mysqli_query($this->conn, "INSERT INTO room VALUES ('', '".$_POST['slctBuilding']."', '".$_POST['slctRmType']."', '".$_POST['txtRmName']."', '".$currentDateTime."', '".$currentDateTime."');")) {
+				if ($result = mysqli_query($this->conn, "INSERT INTO room VALUES ('', '".$_POST['slctBuilding']."', '".$_POST['slctRmType']."', '".Base::cleanText($_POST['txtRmName'])."', '".$currentDateTime."', '".$currentDateTime."');")) {
    					$message="New room has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
@@ -58,7 +58,7 @@ class Classroom extends Base {
 				$message="Room with same neam already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
-			}elseif ($result = mysqli_query($this->conn, "Update room  Set building_id = '".$_POST['slctBuilding']."', room_type_id = '".$_POST['slctRmType']."', room_name = '".$_POST['txtRmName']."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['roomId']."'")) {
+			}elseif ($result = mysqli_query($this->conn, "Update room  Set building_id = '".$_POST['slctBuilding']."', room_type_id = '".$_POST['slctRmType']."', room_name = '".Base::cleanText($_POST['txtRmName'])."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['roomId']."'")) {
    					$message="Room has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
