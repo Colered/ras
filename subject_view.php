@@ -66,16 +66,49 @@ $(document).ready(function(){
 						</td>
 						<td class="align-center"><?php echo $data['case_number'] ?></td>
 						<td class="align-center"><?php echo $data['technical_notes'] ?></td>
-						<td class="align-center">
-						<?php 
-							$subj_session_query="select session_name, order_number,description from subject_session where subject_id='".$data['id']."'";
+						<?php
+						    $sessionNameHtml='';
+							$subj_session_query="select session_name from subject_session where subject_id='".$data['id']."'";
 							$subj_session_result= mysqli_query($db, $subj_session_query);
-							$subj_session_data = mysqli_fetch_assoc($subj_session_result);
-						    echo $subj_session_data['session_name'];
+							$sessionNameHtml.='<table width="200" border="1">';
+							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
+			   					$sessionNameHtml.='<tr><td>'.$subj_session_data['session_name'].'</td></tr>';
+							}
+		   					$sessionNameHtml.='</table>';
+							
 						?>
+						<td class="align-center">
+						 	<img id="sessionNameImg<?php echo $data['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="getSessionName(<?php echo $data['id']?>);"> 
+						  	<div id="divSessionName<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionNameHtml;?></div>
 						</td>
-						<td class="align-center"><?php echo $subj_session_data['order_number'] ?></td>
-						<td class="align-center"><?php echo $subj_session_data['description'] ?></td>
+						<?php
+						    $sessionOrderNumHtml='';
+							$subj_session_query="select order_number from subject_session where subject_id='".$data['id']."'";
+							$subj_session_result= mysqli_query($db, $subj_session_query);
+							$sessionOrderNumHtml.='<table width="200" border="1">';
+							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
+			   					$sessionOrderNumHtml.='<tr><td>'.$subj_session_data['order_number'].'</td></tr>';
+							}
+		   					$sessionOrderNumHtml.='</table>';
+						?>
+						<td class="align-center">
+							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionOrderNumImg<?php echo $data['id'];?>" onclick="getSessionOrderNum(<?php echo $data['id']?>);"> 
+							<div id="divSessionDesc<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionNameHtml;?></div>
+						</td>
+						<?php
+						    $sessionDescHtml='';
+							$subj_session_query="select description from subject_session where subject_id='".$data['id']."'";
+							$subj_session_result= mysqli_query($db, $subj_session_query);
+							$sessionDescHtml.='<table id="sessionTbl" border="1">';
+  							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
+			   					$sessionDescHtml.='<tr><td>'.$subj_session_data['description'].'</td></tr>';
+ 							}
+		   					$sessionDescHtml.='</table>';
+						?>
+						<td class="align-center">
+							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionDescImg<?php echo $data['id'];?>" onclick="getSessionDesc(<?php echo $data['id']?>);"> 
+							<div id="divSessionDesc<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionDescHtml;?></div>
+						</td>
 						<td class="align-center"><?php echo $data['date_add'] ?></td>
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">

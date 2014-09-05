@@ -136,12 +136,13 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 	   							<td>'.$subj_session_data['session_name'].'</td>
 	   							<td>'.$subj_session_data['order_number'].'</td>
 	   							<td>'.$subj_session_data['description'].'</td>
-								<td><a href="#" class="remove_field">Remove</a></td>
-        						</tr>';
-							$sessionHtml.='<input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
+								
+        						';
+							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
 								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['order_number'].'"/>
 								<input type="hidden" name="sessionOrder[]" id="sessionOrder'.$x.'"  value="'.$subj_session_data['description'].'"/>
-								<input type="hidden" name="sessionRowId[]" id="sessionRowId'.$x.'"  value="'.$subj_session_data['id'].'"/>';
+								<input type="hidden" name="sessionRowId[]" id="sessionRowId'.$x.'"  value="'.$subj_session_data['id'].'"/></td>
+								<td id='.$subj_session_data['id'].'><a class="remove_field" onclick="removeSession('.$subj_session_data['id'].', 0);">Remove</a></td></tr>';
        					}	
 					$sessionHtml.='<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="'.$x.'"/>';
 					$sessionHtml.='</tbody></table></div>';	

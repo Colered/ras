@@ -455,6 +455,7 @@ $(document).ready(function() {
 });
 //function for addind session number with subject
 $(document).ready(function() {
+	$('.subjectSession').hide();
     var max_fields      = 10; 
     var wrapper         = $(".divSession"); 
     var add_button      = $(".btnSession"); 
@@ -472,8 +473,8 @@ $(document).ready(function() {
 			alert(maxSerialNumVal);
 			$('#maxSessionListVal').val(maxSerialNumVal);
 			if(sessionName!=''){
-				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td><a href="#" class="remove_field">Remove</a></td></tr></tbody></table></div>');
-				$(wrapper).append('<input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionDesc+'"/>');
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionDesc+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+				//$(wrapper).append('');
 				$('#txtSessionName').val('');
 				$('#txtOrderNum').val('');
 				$('#txtareaSessionDesp').val('');
@@ -486,8 +487,7 @@ $(document).ready(function() {
 				if(y==1){
 				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>');	
 				}
-            	$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td><a href="#" class="remove_field">Remove</a></td></tr></tbody></table></div>');
-				$(wrapper).append('<input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionDesc+'"/>');
+            	$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionDesc+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSession(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
 				$('#txtSessionName').val('');
 				$('#txtOrderNum').val('');
 				$('#txtareaSessionDesp').val('');
@@ -503,3 +503,76 @@ $(document).ready(function() {
         e.preventDefault(); $(this).parent('div').remove(); x--;
     })*/
 });
+
+function getSessionName(subjectId)
+{
+	var divSessionName = '#divSessionName'+subjectId;
+    var imageId='#sessionNameImg'+subjectId;
+		if($(divSessionName).css('display') == 'none') {
+		//close all the open links
+		$(".subjectSession").slideUp("slow");
+		$(".sessionNameImg").attr({src: 'images/plus_icon.png'});
+		//open the clicked link
+		$(divSessionName).slideDown("slow");
+        $(imageId).attr({src: 'images/minus_icon.png'});
+    }
+    else {
+        $(divSessionName).slideUp("slow");
+        $(imageId).attr({src: 'images/plus_icon.png'});
+	}
+}
+function getSessionOrderNum(subjectId)
+{
+	var divOrderNum = '.divSessionOrderNum'+subjectId;
+    var image='.sessionOrderNumImg'+subjectId;
+		if($(divOrderNum).css('display') == 'none') {
+		$(divOrderNum).slideDown("fast");
+        $(image).attr({src: 'images/minus_icon.png'});
+    }
+    else {
+        $(divOrderNum).slideUp("fast");
+        $(image).attr({src: 'images/plus_icon.png'});
+	}
+}
+function getSessionDesc(subjectId)
+{
+	var divSessionDesc = '.divSessionDesc'+subjectId;
+    var image='.sessionDescImg'+subjectId;
+		if($(divSessionDesc).css('display') == 'none') {
+		$(divSessionDesc).slideDown("fast");
+        $(image).attr({src: 'images/minus_icon.png'});
+    }
+    else {
+        $(divSessionDesc).slideUp("fast");
+        $(image).attr({src: 'images/plus_icon.png'});
+	}
+}
+
+//Ajax delete the Subject function 
+function removeSession($sessionId, $serialId){
+	if(confirm("Are you sure you want to delete the Subject?")) {
+	    	if($sessionId == 0){
+				$('#'+$serialId).closest( 'tr').remove();
+				$('.green, .red').hide();
+			}else{
+				$.ajax({
+						type: "POST",
+						url: "ajax_common.php",
+						data: {
+							'id': $sessionId,
+							'codeBlock': 'del_session',
+						},
+						success: function($succ){
+							if($succ==1){
+								$('#'+$sessionId).closest( 'tr').remove();
+								$('.green, .red').hide();
+							}else{
+								alert("Cannot delete the selected session.");
+								$('.green, .red').hide();
+							}
+						}
+				});
+    		}
+	}
+    return false;
+}
