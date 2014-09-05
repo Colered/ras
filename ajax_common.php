@@ -116,7 +116,6 @@ switch ($codeBlock) {
 				 $dataArr[] = $data['group_id'];
 			}
 	    }
-
 		$query="select id,name from group_master";
 		$result = mysqli_query($db, $query);
 		while($data= mysqli_fetch_array($result)){
@@ -199,7 +198,21 @@ switch ($codeBlock) {
 			else
 				echo 0;
 		}
+    break;
+	case "getSubjects":
+		$options = '';
+		if(isset($_POST['program_id']) && $_POST['program_id']!=""){
+		    $program_id = $_POST['program_id'];
+			$options='<option value="">--Select Subject--</option>';
+			$query="select id,subject_name from subject where program_id='".$program_id."'";
+			$result = mysqli_query($db, $query);
+			while($data= mysqli_fetch_array($result)){
+				 $options .='<option value="'.$data['id'].'">'.$data['subject_name'].'</option>';
+			}
+		}
+		echo $options;
 	break;
 
 }
+
 ?>

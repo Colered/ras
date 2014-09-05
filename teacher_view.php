@@ -1,5 +1,7 @@
-<?php include('header.php');
+<?php
+include('header.php');
 $objT = new Teacher();
+$result = $objT->getTeachers();
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -38,11 +40,7 @@ $(document).ready(function(){
                     </tr>
                 </thead>
                 <tbody>
-                <?php
-					$result =  $db->query("select * from teacher order by id");
-					$row_cnt = $result->num_rows;
-					while($row = $result->fetch_assoc()){
-                ?>
+                <?php while($row = $result->fetch_assoc()){ ?>
                     <tr>
                         <td class="align-center"><?php echo $row['id'];?></td>
                         <td><?php echo $row['teacher_name'];?></td>
@@ -60,7 +58,6 @@ $(document).ready(function(){
                         </td>
                     </tr>
               <?php }?>
-
                 </tbody>
             </table>
 

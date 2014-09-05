@@ -1,4 +1,13 @@
-<?php include('header.php'); ?>
+<?php
+include('header.php');
+$objP = new Programs();
+$objS = new Subjects();
+$objT = new Teacher();
+$rel_teacher = $objT->getTeachers();
+$rel_prog = $objP->getProgramListData();
+$rel_subject = $objS->getSubjects();
+
+?>
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -9,41 +18,57 @@
                         <h2>Program<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctProgram" name="slctProgram" class="select1">
-                            <option value="" selected="selected">--Select Program--</option>
-                            <option value="MBA">MBA</option>
-                            <option value="MCA">MCA</option>
-                            <option value="BTech">BTech</option>
-                            <option value="MTech">MTech</option>
-                        </select>
+					<select id="slctProgram" name="slctProgram" class="select1 required" onChange="showSubjects(this.value);">
+					<option value="" selected="selected">--Select Program--</option>
+					<?php
+						while($row = $rel_prog->fetch_assoc()){
+							$selectedProg = (isset($programId) && $programId==$row['id']) ? 'selected' : '';
+							echo '<option value="'.$row['id'].'" '.$selectedProg.'>'.$row['program_name'].'</option>';
+						}
+					?>
+					</select>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Subject <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctSubject" name="slctSubject" class="select1">
-                            <option value="" selected="selected">--Select Subject--</option>
-                            <option value="Physics">Physics</option>
-                            <option value="Checmistry">Checmistry</option>
-                            <option value="Computer Science">Computer Science</option>
-                            <option value="Micro Computer">Micro Computer</option>
-                        </select>
+					<select id="slctSubject" name="slctSubject" class="select1">
+					<option value="" selected="selected">--Select Subject--</option>
+					 <?php
+						while($row = $rel_subject->fetch_assoc()){
+							echo '<option value="'.$row['id'].'">'.$row['subject_name'].'</option>';
+						}
+					 ?>
+					</select>
                     </div>
+                    <div class="clear"></div>
+                    <div class="custtd_left">
+						<h2>Session<span class="redstar">*</span></h2>
+					</div>
+					<div class="txtfield">
+					<select id="slctProgram" name="slctProgram" class="select1 required" onChange="showSubjects(this.value);">
+					<option value="" selected="selected">--Select Program--</option>
+					<?php
+						while($row = $rel_prog->fetch_assoc()){
+							$selectedProg = (isset($programId) && $programId==$row['id']) ? 'selected' : '';
+							echo '<option value="'.$row['id'].'" '.$selectedProg.'>'.$row['program_name'].'</option>';
+						}
+					?>
+					</select>
+					</div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Teacher <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctTeacher" name="slctTeacher"  class="selectMultiple"  multiple >
-                            <option value="Dwarikesh Sharma">Dwarikesh Sharma</option>
-                            <option value="Ravendra Singh">Ravendra Singh</option>
-                            <option value="Kalicharan Sikarwar">Kalicharan Sikarwar</option>
-                            <option value="Deepali Kakkar">Deepali Kakkar</option>
-                            <option value="Tanaya Vashisth">Tanaya Vashisth</option>
-                            <option value="Luis Rao">Luis Rao</option>
-                            <option value="Navish Nirwania">Navish Nirwania</option>
-                        </select> 
+                        <select id="slctTeacher" name="slctTeacher" class="selectMultiple" size="10" multiple>
+                        <?php
+							while($row = $rel_teacher->fetch_assoc()){
+								echo '<option value="'.$row['id'].'">'.$row['teacher_name'].'</option>';
+							}
+						?>
+                        </select>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -55,7 +80,7 @@
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel">
                     </div>
-                </div>	
+                </div>
             </form>
         </div>
         <div class="clear"></div>

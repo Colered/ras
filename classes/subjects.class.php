@@ -27,7 +27,7 @@ class Subjects extends Base {
 				//fectching program id
 				$program_id=$this->getProgramId();
 				//inserting values
-				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {	
+				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {
 					$last_ins_id=mysqli_insert_id($this->conn);
 					if($last_ins_id!=""){
 					$j=0;
@@ -56,16 +56,14 @@ class Subjects extends Base {
 		}
 	}
 	/*function for listing Subject*/
-	public function viewSubject(){
-	    	
-			$subject_query="select * from subject order by date_update DESC";
-			$q_res = mysqli_query($this->conn, $subject_query);
-			if(mysqli_num_rows($q_res)<=0){
-				$message="There is not any subject exists.";
-				$_SESSION['error_msg'] = $message;
-			}
-			return $q_res;
-	
+	public function viewSubject()
+	{
+		$subject_query="select * from subject order by date_update DESC";
+		$q_res = mysqli_query($this->conn, $subject_query);
+		if(mysqli_num_rows($q_res)<=0){
+			return 0;
+		}
+		return $q_res;
 	}
 	/*function for fetch data using area ID*/
 	public function getDataBySubjectID($id) {
@@ -99,7 +97,7 @@ class Subjects extends Base {
 			$sessionRowId = (isset($_POST['sessionRowId'])) ? ($_POST['sessionRowId']) : '';
 			$sessionRowIdArr=$this->formingArray($sessionRowId);
 			//updating subject values
-			if ($result = mysqli_query($this->conn, "Update subject  Set area_id = '".$area_id."', program_id = '".$program_id."', subject_name= '".$_POST['txtSubjName']."' , subject_code= '".$_POST['txtSubjCode']."',case_number = '".$_POST['txtCaseNum']."',technical_notes = '".$_POST['txtTechNotes']."',date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['subjectId']."'")) {	
+			if ($result = mysqli_query($this->conn, "Update subject  Set area_id = '".$area_id."', program_id = '".$program_id."', subject_name= '".$_POST['txtSubjName']."' , subject_code= '".$_POST['txtSubjCode']."',case_number = '".$_POST['txtCaseNum']."',technical_notes = '".$_POST['txtTechNotes']."',date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['subjectId']."'")) {
 			        if($_POST['subjectId']!=""){
 					$j=0;
 					$k=0;
@@ -110,7 +108,7 @@ class Subjects extends Base {
 							if($seesion_result = mysqli_query($this->conn, "Update  subject_session  Set session_name = '".$sessionNameval."', order_number = '".$orderNumberArr[$j]."', description= '".$sessionDespArr[$j]."',date_update = '".date("Y-m-d H:i:s")."' where id='".$sessionRowIdArr[$j]."'")){
 								$j++;
 								$k=$j;
-								}	
+								}
 					 	}else{
 						   if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$_POST['subjectId']."', '".$sessionNameval."','".$orderNumberArr[$k]."','".$sessionDespArr[$k]."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')")){
 						     $k++;
@@ -119,13 +117,13 @@ class Subjects extends Base {
 						   			$_SESSION['error_msg'] = $message;
 									return 1;
 							 }
-							
+
 						  }else{
 								echo $message="Subject's session cannot be added";
 						   		$_SESSION['error_msg'] = $message;
 								return 0;
 							}
-						}		
+						}
 				    }
 				}else{
 					echo $message="Cannot update the subject1";
@@ -173,5 +171,17 @@ class Subjects extends Base {
 		}
 		return $newArr;
 
+	}
+	//get all subje
+
+	/*function for all subjects for add form*/
+	public function getSubjects()
+	{
+		$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
+		$result = $this->conn->query($sql);
+		if(!$result->num_rows){
+			return 0;
+		}
+		return $result;
 	}
 }

@@ -1,7 +1,5 @@
-<?php 
-include('header.php'); 
-require_once('config.php');
-global $db;
+<?php
+include('header.php');
 $subjectName=""; $subjectCode=""; $sessionNum=""; $subjectCode="";$caseNum=""; $technicalNotes="";$areaCode="";$areaName="";$programName="";$roomType="";$roomName="";$subjectId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$subjectData= base64_decode($_GET['edit']);
@@ -33,7 +31,7 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                     <div class="txtfield">
                         <select id="slctProgram" name="slctProgram" class="select1 required">
                             <option value="" selected="selected">--Select Program--</option>
-                             <?php 
+                             <?php
 					          $program_qry="select * from  program";
 					          $program_result= mysqli_query($db, $program_qry);
 					          while ($program_data = mysqli_fetch_assoc($program_result)){
@@ -49,7 +47,7 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                     <div class="txtfield">
 					     <select id="slctArea" name="slctArea" class="select1 required">
 						 	  <option value="" selected="selected">--Select Area--</option>
-					         <?php 
+					         <?php
 					          $area_qry="select * from area";
 					          $area_result= mysqli_query($db, $area_qry);
 					          while ($area_data = mysqli_fetch_assoc($area_result)){
@@ -110,7 +108,7 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 					<div class="clear"></div>
 					<div class="custtd_left"></div>
 					<div class="divSession">
-					<?php 
+					<?php
 					if($subjectId!=""){
 						$x=0;
 						$sessionHtml='';
@@ -136,16 +134,16 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 	   							<td>'.$subj_session_data['session_name'].'</td>
 	   							<td>'.$subj_session_data['order_number'].'</td>
 	   							<td>'.$subj_session_data['description'].'</td>
-								
+
         						';
 							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
 								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['order_number'].'"/>
 								<input type="hidden" name="sessionOrder[]" id="sessionOrder'.$x.'"  value="'.$subj_session_data['description'].'"/>
 								<input type="hidden" name="sessionRowId[]" id="sessionRowId'.$x.'"  value="'.$subj_session_data['id'].'"/></td>
 								<td id='.$subj_session_data['id'].'><a class="remove_field" onclick="removeSession('.$subj_session_data['id'].', 0);">Remove</a></td></tr>';
-       					}	
+       					}
 					$sessionHtml.='<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="'.$x.'"/>';
-					$sessionHtml.='</tbody></table></div>';	
+					$sessionHtml.='</tbody></table></div>';
 					echo $sessionHtml;
 				 }?>
 					</div>
@@ -158,7 +156,7 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                     <div class="txtfield">
 						<input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'subject_view.php';">
                     </div>
-                </div>	
+                </div>
             </form>
         </div>
         <div class="clear"></div>

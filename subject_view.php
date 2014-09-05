@@ -1,7 +1,5 @@
-<?php 
+<?php
 include('header.php');
-require_once('config.php');
-global $db; 
 $obj=new Subjects();
 $result=$obj->viewSubject();
 ?>
@@ -48,7 +46,7 @@ $(document).ready(function(){
                         <td class="align-center"><?php echo $data['subject_name'] ?></td>
                         <td class="align-center"><?php echo $data['subject_code'] ?></td>
                         <td class="align-center">
-						<?php 
+						<?php
 							$area_query="select area_name,area_code from area where id='".$data['area_id']."'";
 							$area_result= mysqli_query($db, $area_query);
 							$area_data = mysqli_fetch_assoc($area_result);
@@ -57,7 +55,7 @@ $(document).ready(function(){
 						?>
 						</td>
 						<td class="align-center">
-						<?php 
+						<?php
 							$program_query="select program_name from program where id='".$data['program_id']."'";
 							$program_result= mysqli_query($db, $program_query);
 							$program_data = mysqli_fetch_assoc($program_result);
@@ -75,10 +73,10 @@ $(document).ready(function(){
 			   					$sessionNameHtml.='<tr><td>'.$subj_session_data['session_name'].'</td></tr>';
 							}
 		   					$sessionNameHtml.='</table>';
-							
+
 						?>
 						<td class="align-center">
-						 	<img id="sessionNameImg<?php echo $data['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="getSessionName(<?php echo $data['id']?>);"> 
+						 	<img id="sessionNameImg<?php echo $data['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="getSessionName(<?php echo $data['id']?>);">
 						  	<div id="divSessionName<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionNameHtml;?></div>
 						</td>
 						<?php
@@ -92,7 +90,7 @@ $(document).ready(function(){
 		   					$sessionOrderNumHtml.='</table>';
 						?>
 						<td class="align-center">
-							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionOrderNumImg<?php echo $data['id'];?>" onclick="getSessionOrderNum(<?php echo $data['id']?>);"> 
+							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionOrderNumImg<?php echo $data['id'];?>" onclick="getSessionOrderNum(<?php echo $data['id']?>);">
 							<div id="divSessionDesc<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionNameHtml;?></div>
 						</td>
 						<?php
@@ -106,7 +104,7 @@ $(document).ready(function(){
 		   					$sessionDescHtml.='</table>';
 						?>
 						<td class="align-center">
-							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionDescImg<?php echo $data['id'];?>" onclick="getSessionDesc(<?php echo $data['id']?>);"> 
+							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionDescImg<?php echo $data['id'];?>" onclick="getSessionDesc(<?php echo $data['id']?>);">
 							<div id="divSessionDesc<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionDescHtml;?></div>
 						</td>
 						<td class="align-center"><?php echo $data['date_add'] ?></td>

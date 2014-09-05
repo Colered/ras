@@ -95,9 +95,6 @@ class Teacher extends Base {
 		 $_SESSION['succ_msg'] = $message;
 		 return 1;
 	   }
-
-
-
 	}
 
     //funtion to formate teacher experiance
@@ -108,6 +105,17 @@ class Teacher extends Base {
 	    $yearexp = ($years > 0) ? $years.' year':'';
 
 	    return $yearexp.' '.$months.' month';
+
+	}
+
+	//funtion to get all the teachers
+	public function getTeachers()
+	{
+		$result =  $this->conn->query("select * from teacher order by teacher_name");
+		if(!$result->num_rows){
+			return 0;
+		}
+		return $result;
 
 	}
 

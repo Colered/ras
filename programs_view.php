@@ -1,5 +1,6 @@
 <?php include('header.php');
 $objP = new Programs();
+$result = $objP->getProgramListData();
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -26,12 +27,12 @@ $(document).ready(function(){
 				<table id="datatables" class="display">
 					<thead>
 						<tr>
-							<th >ID</th>
-							<th >Program Name</th>
-							<th >Program Type</th>
-							<th >Program Duration</th>
-							<th >No. of Cycle</th>
-							<th >Action</th>
+							<th>ID</th>
+							<th>Program Name</th>
+							<th>Program Type</th>
+							<th>Program Duration</th>
+							<th>No. of Cycle</th>
+							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>

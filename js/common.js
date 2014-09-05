@@ -287,6 +287,7 @@ $(document).ready(function() {
     
 });
 });
+
 //Ajax delete the room function 
 function deleteRoom($id){
 	if($id==""){
@@ -339,7 +340,7 @@ function deleteGroup($id){
     }
     return false;
 }
-//function to show groups at the time of associatiuon with programs
+//function to show groups at the time of association with programs
 function showGroups(selval){
     $.ajax({
         url: "./ajax_common.php",
@@ -481,19 +482,25 @@ $(document).ready(function() {
 			}
 	    }else{
 			if(x < max_fields){ 
-			x++;
-			y++;
-			if(sessionName!=''){
-				if(y==1){
-				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>');	
+				x++;
+				y++;
+				if(sessionName!=''){
+					if(y==1){
+					$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>');	
+					}
+					$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td><a href="#" class="remove_field">Remove</a></td></tr></tbody></table></div>');
+					$(wrapper).append('<input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionDesc+'"/>');
+					$('#txtSessionName').val('');
+					$('#txtOrderNum').val('');
+					$('#txtareaSessionDesp').val('');
 				}
             	$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionDesc+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSession(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
 				$('#txtSessionName').val('');
 				$('#txtOrderNum').val('');
 				$('#txtareaSessionDesp').val('');
 			}
-	 }
-   }
+	   }
+    }
 });
 	/*$('.sessionList').on("click",".remove_field", function(e){ //user click on remove text
         e.preventDefault(); $(this).parent('tr').remove(); x--;
@@ -575,4 +582,21 @@ function removeSession($sessionId, $serialId){
     		}
 	}
     return false;
+}
+//function to show subjects by program
+function showSubjects(selval){
+    $.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'program_id': selval,
+			'codeBlock': 'getSubjects',
+            },
+        success: function(data) {
+			 $("#slctSgroups").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+    });
 }
