@@ -1,5 +1,7 @@
-<?php
+<?php 
 include('header.php');
+require_once('config.php');
+global $db; 
 $obj=new Subjects();
 $result=$obj->viewSubject();
 ?>
@@ -19,6 +21,7 @@ $(document).ready(function(){
 </style>
 <div id="content">
     <div id="main">
+	<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
         <div class="full_w">
             <div class="h_title">Subjects View <a href="subjects.php" class="gird-addnew" title="Add New Subject"> Add New</a></div>
             <table id="datatables" class="display">
@@ -31,10 +34,8 @@ $(document).ready(function(){
                         <th >Program</th>
                         <th >Case Number</th>
                         <th >Technical Notes </th>
-                        <th >Session Name</th>
-						<th >Order Number</th>
-						<th >Description</th>
-                        <th >Add Date</th>
+                        <th width="200">Session</th>
+						<th >Add Date</th>
 						<th >Update Date</th>
                         <th >Action</th>
                     </tr>
@@ -46,7 +47,7 @@ $(document).ready(function(){
                         <td class="align-center"><?php echo $data['subject_name'] ?></td>
                         <td class="align-center"><?php echo $data['subject_code'] ?></td>
                         <td class="align-center">
-						<?php
+						<?php 
 							$area_query="select area_name,area_code from area where id='".$data['area_id']."'";
 							$area_result= mysqli_query($db, $area_query);
 							$area_data = mysqli_fetch_assoc($area_result);
@@ -55,7 +56,7 @@ $(document).ready(function(){
 						?>
 						</td>
 						<td class="align-center">
-						<?php
+						<?php 
 							$program_query="select program_name from program where id='".$data['program_id']."'";
 							$program_result= mysqli_query($db, $program_query);
 							$program_data = mysqli_fetch_assoc($program_result);
@@ -65,47 +66,23 @@ $(document).ready(function(){
 						<td class="align-center"><?php echo $data['case_number'] ?></td>
 						<td class="align-center"><?php echo $data['technical_notes'] ?></td>
 						<?php
-						    $sessionNameHtml='';
-							$subj_session_query="select session_name from subject_session where subject_id='".$data['id']."'";
+						    $sessionHtml='';
+							$subj_session_query="select session_name,order_number,description from subject_session where subject_id='".$data['id']."'";
 							$subj_session_result= mysqli_query($db, $subj_session_query);
-							$sessionNameHtml.='<table width="200" border="1">';
+							$sessionHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Session Name</th><th >Order No.</th><th >Description</th></tr></thead><tbody>';
 							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
-			   					$sessionNameHtml.='<tr><td>'.$subj_session_data['session_name'].'</td></tr>';
+							//$subj_session_order_num = (isset($subj_session_data['order_number'])) ? $subj_session_data['order_number'] : '&nbsp;';
+								    $sessionHtml.='<tr>
+														<td>'.$subj_session_data['session_name'].'</td>
+		  												<td>'.$subj_session_data['order_number'].'</td>
+		   												<td>'.$subj_session_data['description'].'</td>
+                								  </tr> ';   
 							}
-		   					$sessionNameHtml.='</table>';
-
+		   					$sessionHtml.='</tbody></table>';
 						?>
-						<td class="align-center">
-						 	<img id="sessionNameImg<?php echo $data['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="getSessionName(<?php echo $data['id']?>);">
-						  	<div id="divSessionName<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionNameHtml;?></div>
-						</td>
-						<?php
-						    $sessionOrderNumHtml='';
-							$subj_session_query="select order_number from subject_session where subject_id='".$data['id']."'";
-							$subj_session_result= mysqli_query($db, $subj_session_query);
-							$sessionOrderNumHtml.='<table width="200" border="1">';
-							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
-			   					$sessionOrderNumHtml.='<tr><td>'.$subj_session_data['order_number'].'</td></tr>';
-							}
-		   					$sessionOrderNumHtml.='</table>';
-						?>
-						<td class="align-center">
-							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionOrderNumImg<?php echo $data['id'];?>" onclick="getSessionOrderNum(<?php echo $data['id']?>);">
-							<div id="divSessionDesc<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionNameHtml;?></div>
-						</td>
-						<?php
-						    $sessionDescHtml='';
-							$subj_session_query="select description from subject_session where subject_id='".$data['id']."'";
-							$subj_session_result= mysqli_query($db, $subj_session_query);
-							$sessionDescHtml.='<table id="sessionTbl" border="1">';
-  							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
-			   					$sessionDescHtml.='<tr><td>'.$subj_session_data['description'].'</td></tr>';
- 							}
-		   					$sessionDescHtml.='</table>';
-						?>
-						<td class="align-center">
-							<img src="images/plus_icon.png" alt="Smiley face"  class="sessionDescImg<?php echo $data['id'];?>" onclick="getSessionDesc(<?php echo $data['id']?>);">
-							<div id="divSessionDesc<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionDescHtml;?></div>
+						<td class="align-center" width="200">
+						 	<img id="sessionNameImg<?php echo $data['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="getSessionName(<?php echo $data['id']?>);"> 
+						  	<div id="divSessionName<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionHtml;?></div>
 						</td>
 						<td class="align-center"><?php echo $data['date_add'] ?></td>
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
@@ -117,10 +94,12 @@ $(document).ready(function(){
 					<?php }?>
                 </tbody>
             </table>
+			 <?php if(isset($_SESSION['error_msg'])){ ?>
+				<div><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
+			<?php } ?>
         </div>
         <div class="clear"></div>
     </div>
     <div class="clear"></div>
 </div>
 <?php include('footer.php'); ?>
-

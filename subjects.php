@@ -19,7 +19,11 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 ?>
 <div id="content">
     <div id="main">
-        <div class="full_w">
+		<div class="custtd_left red">
+			<?php if(isset($_SESSION['error_msg']))
+				  echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
+		</div>
+	    <div class="full_w">
             <div class="h_title">Subject</div>
             <form name="subjectForm" id="subjectForm" action="postdata.php" method="post">
 			<input type="hidden" name="form_action" value="addEditSubject" />
@@ -91,15 +95,15 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 						<div class="txtfield ">
 						<div class="sessionbox">
 						<h3>Session Name<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session required" id="txtSessionName" maxlength="50" name="txtSessionName" value="">
+							<input type="text" class="inp_txt_session" id="txtSessionName" maxlength="50" name="txtSessionName" value="">
 						</div>
 						<div class="sessionbox">
 						<h3>Order Number<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session required" id="txtOrderNum" maxlength="10" name="txtOrderNum" value="">
+							<input type="text" class="inp_txt_session" id="txtOrderNum" maxlength="10" name="txtOrderNum" value="">
 						</div>
 						<div class="sessionbox">
 						<h3>Description<span class="redstar">*</span></h3>
-							 <textarea style="height:40px;" class="inp_txt_session required" id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"></textarea>
+							 <textarea style="height:40px;" class="inp_txt_session" id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"></textarea>
 						</div>
 					   </div>
 					   <div class="sessionbox addbtnSession">

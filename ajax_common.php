@@ -58,12 +58,23 @@ switch ($codeBlock) {
 	case "del_subject":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
-			$del_subject_query="DELETE subject,subject_session  FROM subject  INNER JOIN subject_session WHERE subject.id= subject_session.subject_id and subject.id = '".$id."'";
+			$sclt_query="select * from subject_session where subject_id='".$id."'";
+			$session_detail_qry = mysqli_query($db, $sclt_query);
+			if(mysqli_affected_rows($db)>0){
+			   $del_subject_query="DELETE subject,subject_session  FROM subject  INNER JOIN subject_session WHERE subject.id= subject_session.subject_id and subject.id = '".$id."'";
+			   $qry = mysqli_query($db, $del_subject_query);
+			   if(mysqli_affected_rows($db)>0)
+				   echo 1;
+			   else
+				   echo 0;
+		   	}else{
+			$del_subject_query="delete from subject where id='".$id."'";
 			$qry = mysqli_query($db, $del_subject_query);
-			if(mysqli_affected_rows($db)>0)
-				echo 1;
-			else
-				echo 0;
+				if(mysqli_affected_rows($db)>0)
+					echo 1;
+				else
+					echo 0;
+			}
 		}
     break;
 	case "getRooms":
@@ -146,48 +157,6 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	break;
-	case "getSessionName":
-		if(isset($_POST['program_id'])){
-			$subj_session_query="select session_name from subject_session where subject_id='".$_POST['program_id']."'";
-			$subj_session_result= mysqli_query($db, $subj_session_query);
-			$data = mysqli_fetch_assoc($subj_session_result);
-			$html='';
-			$html.='<table width="200" border="1">';
-  			while($data = mysqli_fetch_assoc($subj_session_result)){
-			   		$html.='<tr><td>'.$data['session_name'].'</td></tr>';
- 			}
-		   $html.='</table>';
-	    }
-		echo $html;
-	break;
-	case "getSessionOrderNum":
-		if(isset($_POST['program_id'])){
-			$subj_session_query="select order_number from subject_session where subject_id='".$_POST['program_id']."'";
-			$subj_session_result= mysqli_query($db, $subj_session_query);
-			$data = mysqli_fetch_assoc($subj_session_result);
-			$html='';
-			$html.='<table width="200" border="1">';
-  			while($data = mysqli_fetch_assoc($subj_session_result)){
-			   		$html.='<tr><td>'.$data['order_number'].'</td></tr>';
- 			}
-		   $html.='</table>';
-	    }
-		echo $html;
-	break;
-	case "getSessionDesc":
-		if(isset($_POST['program_id'])){
-			$subj_session_query="select description from subject_session where subject_id='".$_POST['program_id']."'";
-			$subj_session_result= mysqli_query($db, $subj_session_query);
-			$data = mysqli_fetch_assoc($subj_session_result);
-			$html='';
-			$html.='<table width="200" border="1">';
-  			while($data = mysqli_fetch_assoc($subj_session_result)){
-			   		$html.='<tr><td>'.$data['description'].'</td></tr>';
- 			}
-		   $html.='</table>';
-	    }
-		echo $html;
-	break;
 	case "del_session":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
@@ -212,7 +181,6 @@ switch ($codeBlock) {
 		}
 		echo $options;
 	break;
-
 }
 
 ?>

@@ -31,13 +31,14 @@ class Subjects extends Base {
 					$last_ins_id=mysqli_insert_id($this->conn);
 					if($last_ins_id!=""){
 					$j=0;
+					if($sessionName!=""){
 					foreach ($sessionNameArr as $key => $value) {
 						$sessionNameval=$value;
 						//inserting subject session values
 						if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$last_ins_id."', '".$sessionNameval."','".$orderNumberArr[$j]."','".$sessionDespArr[$j]."','".$currentDateTime."', '".$currentDateTime."')")){
 						$j++;
 						if($j==count($sessionNameArr)){
-						 $message="New subject has been added successfully";
+						 $message="New subject has been added successfully with session";
 						 $_SESSION['succ_msg'] = $message;
 						 return 1;
 						 }
@@ -46,6 +47,11 @@ class Subjects extends Base {
 						 $_SESSION['succ_msg'] = $message;
 						 return 0;
 						}
+					  }
+					}else{
+						$message="New subject has been added successfully";
+						$_SESSION['succ_msg'] = $message;
+						return 1;
 					}
 				  }
 				}else{
@@ -80,8 +86,8 @@ class Subjects extends Base {
 			$q_res = mysqli_query($this->conn, $subject_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0){
-				echo $message="Subject code already exists.";
-				$_SESSION['error_msg'] = $message;die;
+				$message="Subject code already exists.";
+				$_SESSION['error_msg'] = $message;
 				return 0;
 			}else{
 			//get area id
@@ -102,6 +108,7 @@ class Subjects extends Base {
 					$j=0;
 					$k=0;
 					//updating session values
+				if($sessionName!=""){
 					foreach ($sessionNameArr as $key => $value) {
 						$sessionNameval=$value;
 						if($j!=count($sessionRowIdArr)){
@@ -113,8 +120,8 @@ class Subjects extends Base {
 						   if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$_POST['subjectId']."', '".$sessionNameval."','".$orderNumberArr[$k]."','".$sessionDespArr[$k]."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')")){
 						     $k++;
 							 if($k == (count($sessionNameArr))){
-						   			echo $message="Subject has been updated successfully";
-						   			$_SESSION['error_msg'] = $message;
+						   			$message="Subject has been updated successfully with session";
+						   			$_SESSION['succ_msg'] = $message;
 									return 1;
 							 }
 
@@ -125,14 +132,19 @@ class Subjects extends Base {
 							}
 						}
 				    }
+				  }else{
+				  		$message="Subject has been updated successfully ";
+						$_SESSION['succ_msg'] = $message;
+						return 1;
+				  }
 				}else{
-					echo $message="Cannot update the subject1";
+					echo $message="Cannot update the subject";
 					$_SESSION['error_msg'] = $message;die;
 					return 0;
 				}
 		}else{
-			echo $message="Cannot update the subject";
-			$_SESSION['error_msg'] = $message;die;
+			$message="Cannot update the subject";
+			$_SESSION['error_msg'] = $message;
 			return 0;
 		}
 	}
@@ -161,27 +173,23 @@ class Subjects extends Base {
 			$_SESSION['error_msg'] = $message;
 		}
 	}
-	public function formingArray($dataArr)
-	{
-	    $newArr = array();
-		foreach ($dataArr as $key => $val) {
-			if (trim($val) <> "") {
-				$newArr[] = trim($val);
+	public function formingArray($dataArr){
+		 $newArr = array();
+			foreach ($dataArr as $key => $val) {
+					if (trim($val) <> "") {
+					 $newArr[] = trim($val);
+					}
 			}
-		}
-		return $newArr;
-
+  		return $newArr;
 	}
-	//get all subje
-
-	/*function for all subjects for add form*/
-	public function getSubjects()
-	{
-		$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
-		$result = $this->conn->query($sql);
-		if(!$result->num_rows){
-			return 0;
-		}
-		return $result;
-	}
+ 
+ /*function for all subjects for add form*/
+ 	public function getSubjects(){
+  	$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
+  	$result = $this->conn->query($sql);
+  	if(!$result->num_rows){
+   		return 0;
+  	}
+  	return $result;
+   }
 }

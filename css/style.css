@@ -584,3 +584,9 @@ div.divSession{
 
 }
 .remove_field{cursor:pointer;}
+#sesssionTable th, td {
+ border: 1px solid black;
+} 
+#sesssionTable th{
+ color: #383838;
+}
