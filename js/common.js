@@ -136,6 +136,7 @@ $(document).ready(function(){
 		$("#frmProgram").validate();
 		$("#frmProff").validate();
 		$("#frmSgroup").validate();
+		$("#frmTactivity").validate();
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {
@@ -437,7 +438,8 @@ function deleteSubject($id){
     }
     return false;
 }
-//function for adding session number with subject
+
+//function for addind session number with subject
 $(document).ready(function() {
 	$('.subjectSession').hide();
     var max_fields      = 10; 
@@ -486,7 +488,7 @@ $(document).ready(function() {
 	   }
  });
 });
-//To show and hide the session value at view page
+
 function getSessionName(subjectId)
 {
 	var divSessionName = '#divSessionName'+subjectId;
@@ -542,7 +544,24 @@ function showSubjects(selval){
 			'codeBlock': 'getSubjects',
             },
         success: function(data) {
-			 $("#slctSgroups").html(data);
+			 $("#slctSubject").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+}
+//function to show sessions for a subject
+function showSessions(selval){
+    $.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'subject_id': selval,
+			'codeBlock': 'getSessions',
+            },
+        success: function(data) {
+			 $("#slctSession").html(data);
         },
         error: function(errorThrown) {
             console.log(errorThrown);

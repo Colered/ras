@@ -169,14 +169,25 @@ switch ($codeBlock) {
 		}
     break;
 	case "getSubjects":
-		$options = '';
+		$options='<option value="">--Select Subject--</option>';
 		if(isset($_POST['program_id']) && $_POST['program_id']!=""){
 		    $program_id = $_POST['program_id'];
-			$options='<option value="">--Select Subject--</option>';
 			$query="select id,subject_name from subject where program_id='".$program_id."'";
 			$result = mysqli_query($db, $query);
 			while($data= mysqli_fetch_array($result)){
 				 $options .='<option value="'.$data['id'].'">'.$data['subject_name'].'</option>';
+			}
+		}
+		echo $options;
+	break;
+	case "getSessions":
+		$options='<option value="">--Select Session--</option>';
+		if(isset($_POST['subject_id']) && $_POST['subject_id']!=""){
+		    $subject_id = $_POST['subject_id'];
+			$query="SELECT id,session_name FROM subject_session WHERE subject_id = '".$subject_id."' ORDER BY order_number";
+			$result = mysqli_query($db, $query);
+			while($data= mysqli_fetch_array($result)){
+				 $options .='<option value="'.$data['id'].'">'.$data['session_name'].'</option>';
 			}
 		}
 		echo $options;
