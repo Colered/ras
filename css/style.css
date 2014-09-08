@@ -551,6 +551,13 @@ table .chb{
     font-family: 'Tahoma';
     font-size: 12px;
     font-weight: normal;}
+.sessionbox{width:178px; float:left; text-align: left;}
+.sessionbox h3{ color: #5A5A5A;
+    font-family: 'Tahoma';
+    font-size: 12px;
+    font-weight: normal;}	
+	
+	
 .gird-addnew{
 float:right; padding-right:20px; color:#006e2f;}
 
@@ -560,4 +567,26 @@ float:right; padding-right:20px; color:#006e2f;}
 	width: 98%;
 	border-spacing:0;
 	  
+}
+.inp_txt_session{
+	border: 1px solid #C0C0C0;
+    color: #666666;
+    font: 12px/25px Arial,Helvetica,sans-serif;
+    height: 25px;
+    padding-left: 10px;
+    width: 136px;
+}
+div.divSession{
+    float: left;
+    padding-bottom: 10px;
+    padding-left: 2px;
+    text-align: right;
+
+}
+.remove_field{cursor:pointer;}
+#sesssionTable th, td {
+ border: 1px solid black;
+} 
+#sesssionTable th{
+ color: #383838;
 }

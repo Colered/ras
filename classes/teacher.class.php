@@ -1,28 +1,26 @@
 <?php
-class Teacher {
-   	// database connection and table name
-   	private $conn;
-   	public function __construct(){
-   	    global $db;
-   		$this->conn = $db;
+class Teacher extends Base {
+    public function __construct(){
+   		 parent::__construct();
    	}
 	/*function for add professor*/
 	public function addProfessor() {
 
-		$txtPname = trim($_POST['txtPname']);
-		$txtAreaAddress = trim($_POST['txtAreaAddress']);
+		$txtPname = Base::cleanText($_POST['txtPname']);
+		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
 		$dob = date("Y-m-d h:i:s", strtotime($_POST['dob']));
 		$doj = date("Y-m-d h:i:s", strtotime($_POST['doj']));
-		$sex = trim($_POST['sex']);
-		$txtDegination = trim($_POST['txtDegination']);
-		$txtQualification = trim($_POST['txtQualification']);
+		$sex = $_POST['sex'];
+		$txtDegination = Base::cleanText($_POST['txtDegination']);
+		$txtQualification = Base::cleanText($_POST['txtQualification']);
 		$years = $_POST['years'];
 		$months = $_POST['months'];
 
 		$totalmonthExp = $years*12+$months;
 
-		$txtEmail = trim($_POST['txtEmail']);
-		$txtUname = trim($_POST['txtUname']);
+		$txtEmail = Base::cleanText($_POST['txtEmail']);
+		$txtUname = Base::cleanText($_POST['txtUname']);
+
 
 		$result =  $this->conn->query("select email from teacher where email='".$txtEmail."'");
         $row_cnt_email = $result->num_rows;
@@ -64,13 +62,13 @@ class Teacher {
 	public function editProfessor() {
 
 		$edit_id = base64_decode($_POST['form_edit_id']);
-		$txtPname = trim($_POST['txtPname']);
-		$txtAreaAddress = trim($_POST['txtAreaAddress']);
+		$txtPname = Base::cleanText($_POST['txtPname']);
+		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
 		$dob = date("Y-m-d h:i:s", strtotime($_POST['dob']));
 		$doj = date("Y-m-d h:i:s", strtotime($_POST['doj']));
-		$sex = trim($_POST['sex']);
-		$txtDegination = trim($_POST['txtDegination']);
-		$txtQualification = trim($_POST['txtQualification']);
+		$sex = $_POST['sex'];
+		$txtDegination = Base::cleanText($_POST['txtDegination']);
+		$txtQualification = Base::cleanText($_POST['txtQualification']);
 		$years = $_POST['years'];
 		$months = $_POST['months'];
 
@@ -97,9 +95,6 @@ class Teacher {
 		 $_SESSION['succ_msg'] = $message;
 		 return 1;
 	   }
-
-
-
 	}
 
     //funtion to formate teacher experiance
@@ -110,6 +105,17 @@ class Teacher {
 	    $yearexp = ($years > 0) ? $years.' year':'';
 
 	    return $yearexp.' '.$months.' month';
+
+	}
+
+	//funtion to get all the teachers
+	public function getTeachers()
+	{
+		$result =  $this->conn->query("select * from teacher order by teacher_name");
+		if(!$result->num_rows){
+			return 0;
+		}
+		return $result;
 
 	}
 

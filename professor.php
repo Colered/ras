@@ -1,5 +1,6 @@
 <?php
 include('header.php');
+$objT = new Teacher();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $result =  $db->query("select * from teacher where id='".base64_decode($_GET['edit'])."'");
 	$row_cnt = $result->num_rows;
@@ -22,69 +23,8 @@ $degination = isset($_GET['edit'])? $row['designation'] : (isset($_POST['txtDegi
 $qualification = isset($_GET['edit'])? $row['qualification'] : (isset($_POST['txtQualification'])? $_POST['txtQualification'] : '');
 $email = isset($_GET['edit'])? $row['email'] : (isset($_POST['txtEmail'])? $_POST['txtEmail'] : '');
 $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])? $_POST['txtUname'] : '');
+
 ?>
-<script type="text/javascript">
-   $(document).ready(function() {
-        $("#frmProff").submit(function(){
-
-            if($.trim($("#txtPname").val())==""){
-                alert('Please fill the professor name');
-                $("#txtPname").focus();
-                return false;
-            }
-			if($.trim($("#txtAreaAddress").val())==""){
-				alert('Please fill the area address');
-				$("#txtAreaAddress").focus();
-				return false;
-			}
-
-            if($.trim($("#dob").val())==""){
-                alert('Please fill the date of birth');
-                $("#dob").focus();
-                return false;
-            }
-
-            if($.trim($("#doj").val())==""){
-				alert('Please fill the date of joining');
-				$("#doj").focus();
-				return false;
-            }
-            if (!$('input[name=sex]:checked').val()) {
-               alert('Please choose the gender');
-			   return false;
-            }
-            if($.trim($("#txtQualification").val())==""){
-				alert('Please fill the qualification');
-				$("#txtQualification").focus();
-				return false;
-            }
-
-            if($.trim($("#years").val())=="" && $.trim($("#months").val())==""){
-				alert('Please choose experience');
-				$("#years").focus();
-				return false;
-            }
-    <?php if(!isset($_GET['edit'])){?>
-            if($.trim($("#txtEmail").val())==""){
-				alert('Please fill the email');
-				$("#txtEmail").focus();
-				return false;
-            }else if (!validateEmail($.trim($("#txtEmail").val()))) {
-				alert('Email is not valid');
-				$("#txtEmail").focus();
-				return false;
-	        }
-
-	        if($.trim($("#txtUname").val())==""){
-				alert('Please fill the username');
-				$("#txtUname").focus();
-				return false;
-            }
-    <?php } ?>
-
-        });
-    });
-</script>
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -95,7 +35,6 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
               		<input type="hidden" name="form_edit_id" value="<?php echo $_GET['edit'];?>" />
               <?php } ?>
                 <div class="custtable_left" >
-
                     <div class="custtd_left red">
 						<?php if(isset($_SESSION['error_msg'])) echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
 					</div>
@@ -105,32 +44,32 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
                         <h2>Professor Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
+                        <input type="text" class="inp_txt required" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>Address<span class="redstar">*</span></h2>
+                        <h2>Address</h2>
                     </div>
                     <div class="txtfield">
                         <textarea style="height:40px;" class="inp_txt" id="txtAreaAddress" cols="20" rows="2" name="txtAreaAddress"><?php echo $address;?></textarea>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>Date of Birth<span class="redstar">*</span></h2>
+                        <h2>Date of Birth</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" id="dob" name="dob" size="12" value="<?php echo $dob;?>" >
+                        <input type="text" id="dob" name="dob" size="12" value="<?php echo $objT->formatDate($dob);?>" readonly />
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>Joining Date<span class="redstar">*</span></h2>
+                        <h2>Joining Date</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" id="doj" name="doj" size="12" value="<?php echo $doj; ?>">
+                        <input type="text" id="doj" name="doj" size="12" value="<?php echo $objT->formatDate($doj);?>" readonly />
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>Gender<span class="redstar">*</span></h2>
+                        <h2>Gender</h2>
                     </div>
                     <div class="txtfield">
                         <input type="radio" name="sex" value="male" class="radiobutt" <?php echo ($sex=='male')? 'checked':'';?> />Male
@@ -145,14 +84,14 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>Qualification <span class="redstar">*</span></h2>
+                        <h2>Qualifications</h2>
                     </div>
                     <div class="txtfield">
                         <input type="text" class="inp_txt" id="txtQualification" maxlength="50" name="txtQualification" value="<?php echo $qualification;?>"/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>Experience <span class="redstar">*</span></h2>
+                        <h2>Experience </h2>
                     </div>
                     <div class="txtfield">
                         <select id="years" name="years" class="select">
@@ -182,22 +121,22 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
 
                     <?php if(!isset($_GET['edit'])){?>
 							<div class="custtd_left">
-								<h2>Email <span class="redstar">*</span></h2>
+								<h2>Email<span class="redstar">*</span></h2>
 							</div>
 							<div class="txtfield">
-								<input type="text" class="inp_txt" id="txtEmail" maxlength="50" name="txtEmail" value="<?php echo $email;?>">
+								<input type="text" class="inp_txt required email" id="txtEmail" maxlength="50" name="txtEmail" value="<?php echo $email;?>">
 							</div>
 							<div class="clear"></div>
 							<div class="custtd_left">
-								<h2>Username <span class="redstar">*</span></h2>
+								<h2>Username<span class="redstar">*</span></h2>
 							</div>
 							<div class="txtfield">
-								<input type="text" class="inp_txt" id="txtUname" maxlength="50" name="txtUname" value="<?php echo $username;?>">
+								<input type="text" class="inp_txt required" id="txtUname" maxlength="50" name="txtUname" value="<?php echo $username;?>">
 							</div>
 							<div class="clear"></div>
                     <?php } ?>
                     <div class="custtd_left">
-                        <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
+                        <h3>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield">
                         <input type="submit" name="btnAdd" id="btnAdd" class="buttonsub" value="<?php echo $button_save;?>">

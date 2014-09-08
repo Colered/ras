@@ -55,18 +55,19 @@ if(!isset($_SESSION['user_id'])){
 						</li>
 						<li class="upp"><a href="">Resources</a>
                             <ul>
-                                <li>&#8250; <a href="programs_view.php">Programs</a></li>
-								<li>&#8250; <a href="group_view.php">Programs Group</a></li>
-                                <li>&#8250; <a href="teacher_view.php">Teachers</a></li>
-                                <li>&#8250; <a href="subject_view.php">Subjects</a></li>
-                                <li>&#8250; <a href="timeslots.php">Timeslots</a></li>
-                                <li>&#8250; <a href="teacher_activity_view.php">Teacher Activity</a></li>
-                                <li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
                                 <li>&#8250; <a href="buildings_view.php">Building</a></li>
-                                <li>&#8250; <a href="rooms_view.php">Classrooms</a></li>
+								<li>&#8250; <a href="rooms_view.php">Classrooms</a></li>
 								<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
+								<li>&#8250; <a href="programs_view.php">Programs</a></li>
+								<li>&#8250; <a href="group_view.php">Student Group</a></li>
+								<li>&#8250; <a href="program_group_view.php">Program Student Group</a></li>
 								<li>&#8250; <a href="areas_view.php">Areas</a></li>
-                               <!-- <li>&#8250; <a href="roles_management_view.php">Role Management</a></li>
+								<li>&#8250; <a href="subject_view.php">Subjects</a></li>
+								<li>&#8250; <a href="timeslots.php">Timeslots</a></li>
+                                <li>&#8250; <a href="teacher_view.php">Teachers</a></li>
+                                <li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
+								<li>&#8250; <a href="teacher_activity_view.php">Teacher Activity</a></li>
+                                <!--<li>&#8250; <a href="roles_management_view.php">Role Management</a></li>
                                 <li>&#8250; <a href="user_management_view.php">User Management</a></li>-->
 								<!--<li>&#8250; <a href="timetable.php">Timetable Management</a></li>-->
                             </ul>

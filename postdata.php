@@ -32,7 +32,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<html><head></head><body>";
 					echo "<form name='formarea' method='post' action='areas.php'>";
 					reset($_POST);
-					while(list($iname,$ival) = each($_REQUEST)) {
+					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";
@@ -65,7 +65,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<html><head></head><body>";
 					echo "<form name='formbuild' method='post' action='buildings.php'>";
 					reset($_POST);
-					while(list($iname,$ival) = each($_REQUEST)) {
+					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";
@@ -85,20 +85,57 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case "add_edit_professor":
 			//add and edit professor
-			$obj = new Teacher();
-			if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
-			    $resp = $obj->editProfessor();
-				header('Location: teacher_view.php');
-				exit();
-			}else{
-				$resp = $obj->addProfessor();
+		  if(trim($_POST['txtPname'])!="" ){
+				$obj = new Teacher();
+				if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
+					$resp = $obj->editProfessor();
+					header('Location: teacher_view.php');
+					exit();
+				}else{
+					$resp = $obj->addProfessor();
+					if($resp==0){
+						//return back data to the form
+						echo "<html><head></head><body>";
+						echo "<form name='form55' method='post' action='professor.php'>";
+						reset($_POST);
+						while(list($iname,$ival) = each($_POST)) {
+							echo "<input type='hidden' name='$iname' value='$ival'>";
+						}
+						echo "</form>";
+						echo "</body></html>";
+						echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
+						exit();
+					//end return back
+					}else{
+						header('Location: teacher_view.php');
+						exit();
+					}
+				}
+		   }else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: buildings.php');
+		   }
+		break;
+		case "add_program":
+			//adding new areas
+			if(trim($_POST['txtPrgmName'])!=""){
+				$obj = new Programs();
+				$resp = $obj->addProgram();
+
 				if($resp==0){
 					//return back data to the form
 					echo "<html><head></head><body>";
-					echo "<form name='form55' method='post' action='professor.php'>";
+					echo "<form name='form55' method='post' action='programs.php'>";
 					reset($_POST);
-					while(list($iname,$ival) = each($_REQUEST)) {
-						echo "<input type='hidden' name='$iname' value='$ival'>";
+					while(list($iname,$ival) = each($_POST)) {
+					    if($iname=='slctDays1' || $iname=='slctDays2' || $iname=='slctDays2'){
+					        foreach($_POST[$iname] as $value){
+							  echo '<input type="hidden" name="'.$iname.'[]" value="'. $value. '">';
+							}
+					    }else{
+							echo "<input type='hidden' name='$iname' value='$ival'>";
+						}
 					}
 					echo "</form>";
 					echo "</body></html>";
@@ -106,35 +143,179 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					exit();
 				//end return back
 				}else{
-					header('Location: teacher_view.php');
+					header('Location: programs_view.php');
 					exit();
 				}
+
+			}else{
+				$message="Please fill all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: programs.php');
 			}
 		break;
-		case 'Subject':
-			//adding new subjects
+		case "edit_program":
+			//adding new areas
+			if(isset($_POST['programId']) && $_POST['programId']<>''){
+				$obj = new Programs();
+				$resp = $obj->editProgram();
+				if($resp==0){
+					header('Location: programs.php?edit='.$_POST['programId']);
+					exit();
+				}else{
+					header('Location: programs_view.php');
+					exit();
+				}
+			}else{
+				$message="Please fill all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: programs.php');
+			}
+		break;
+		case 'addEditClassroom':
+			//adding new areas
+			if(isset($_POST['txtRmName']) && $_POST['txtRmName']!="" ){
+				$obj = new Classroom();
+				if(isset($_POST['roomId']) && $_POST['roomId']!=''){
+					//update area
+					$resp = $obj->updateRoom();
+				}else{
+					//add new area
+					$resp = $obj->addRoom();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formroom' method='post' action='rooms.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formroom.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: rooms_view.php');
+					exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: rooms.php');
+			}
+		break;
+		case 'addEditSubject':
+		//adding new subject
 			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
 				$obj = new Subjects();
-				$resp = $obj->addSubject();
-				$location = ($resp == 1) ? "subject_view.php" : "subjects.php";
-				header('Location: '.$location);
+				if(isset($_POST['subjectId']) && $_POST['subjectId']!=''){
+					//update subject
+					$resp = $obj->updateSubject();
+				}else{
+					//add new subject
+					$resp = $obj->addSubject();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formsubject' method='post' action='subjects.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_REQUEST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: subject_view.php');
+					exit();
+				}
 			}else{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
 				header('Location: subjects.php');
 			}
 		break;
-		case "add_program":
-			//adding new areas
-			if(trim($_POST['txtPrgmName'])!=""){
-				$obj = new Programs();
-				$resp = $obj->addProgram();
-				$location = ($resp == 1) ? "programs_view.php" : "programs.php";
-				header('Location: '.$location);
+		case "add_edit_program_group":
+			//add and edit program groups
+			$obj = new Programs();
+			$resp = $obj->associateStudentGroup();
+			header('Location: program_group_view.php');
+			exit();
+		break;
+		//add edit master group
+		case 'addEditGroup':
+			if($_POST['txtGname']!="" ){
+				$obj = new Groups();
+				if(isset($_POST['groupId']) && $_POST['groupId']!=''){
+					//update group
+					$resp = $obj->updateGroup();
+				}else{
+					//add new group
+					$resp = $obj->addGroup();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formbuild' method='post' action='group.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formbuild.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: group_view.php');
+					exit();
+				}
 			}else{
-				$message="Please fill all required fields";
+				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
-				header('Location: programs.php');
+				header('Location: group.php');
+			}
+		break;
+		//add timeslot
+		case 'addTimeslot':
+			/*print_r($_POST); 
+			echo $start = strtotime($_POST['start_time']);
+			echo $end = strtotime($_POST['end_time']);
+			
+			if($start >$end){
+			echo 'yes';
+			}else{
+			echo 'no';
+			}*/
+			if($_POST['start_time']!="" && $_POST['end_time']!="" ){
+				$obj = new Timeslot();
+				//add new timeslot
+				$resp = $obj->addTimeslot();
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formbuild' method='post' action='timeslots.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formbuild.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: timeslots.php');
+					exit();
+				}
+			}else{
+				$message="Please enter a valid timeslot";
+				$_SESSION['error_msg'] = $message;
+				header('Location: timeslots.php');
 			}
 		break;
 	}

@@ -13,7 +13,7 @@ $buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBna
     <div id="main">
         <div class="full_w">
             <div class="h_title">Building</div>
-            <form action="postdata.php" method="post">
+            <form name="buildings" id="buildings" action="postdata.php" method="post">
 				<input type="hidden" name="form_action" value="addEditBuild" />
 				<input type="hidden" name="buldId" value="<?php echo $buldId; ?>" />
                 <div class="custtable_left">
@@ -26,7 +26,7 @@ $buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBna
                         <h2>Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtBname" maxlength="50" name="txtBname" value="<?php echo $buldName; ?>">
+                        <input type="text" class="inp_txt required" id="txtBname" maxlength="50" name="txtBname" value="<?php echo $buldName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

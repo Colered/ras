@@ -1,6 +1,6 @@
-<?php include('header.php');
+<?php
+include('header.php');
 $objP = new Programs();
-$result = $objP->getProgramListData();
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -23,38 +23,49 @@ $(document).ready(function(){
 					<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; $_SESSION['succ_msg']="";} ?>
 			</div>
 			<div class="full_w">
-				<div class="h_title">Programs View<a href="programs.php" class="gird-addnew" title="Add New Program">Add new</a></div>
+				<div class="h_title">Group View<a href="program_group.php" class="gird-addnew" title="Add New Group">Add new</a></div>
 				<table id="datatables" class="display">
 					<thead>
 						<tr>
-							<th>ID</th>
-							<th>Program Name</th>
-							<th>Program Type</th>
-							<th>Program Duration</th>
-							<th>No. of Cycle</th>
-							<th>Action</th>
+							<th >ID</th>
+							<th >Program</th>
+							<th >Sub Program</th>
+							<th >Group Name</th>
+							<th >Action</th>
 						</tr>
 					</thead>
 					<tbody>
-					<?php
+			         <?php
 						$result = $objP->getProgramListData();
 						while($row = $result->fetch_assoc()){
-
-						$no_of_cycle = $objP->getCyclesInProgram($row['id']);
                      ?>
 						<tr>
 							<td class="align-center"><?php echo $row['id'];?></td>
 							<td><?php echo $row['program_name'];?></td>
-							<td><?php echo $row['program_type'];?></td>
-							<td class="align-center"><?php echo $objP->formatDate($row['start_date']);?> - <?php echo $objP->formatDate($row['end_date']);?></td>
-							<td><?php echo $no_of_cycle;?></td>
-							<td class="align-center" id="<?php echo $row['id'] ?>">
-								<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" onClick="deleteProgram(<?php echo $row['id'] ?>)"></a>
+							<td>
+							 <?php
+								$pgresult = $objP->getSubPrograms($row['id']);
+								while($pgrow = $pgresult->fetch_assoc()){
+									echo '<div>'.$pgrow['name'].'<div>';
+								}
+							 ?>
+							</td>
+							<td>
+							 <?php
+								$pgresult = $objP->getAllGroupByProgId($row['id']);
+								while($pgrow = $pgresult->fetch_assoc()){
+								  	echo '<div>'.$pgrow['name'].'<div>';
+								}
+                     		 ?>
+							</td>
+							<td class="align-center" id="<?php echo $row['id']; ?>">
+								<a href="program_group.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="#" class="table-icon delete" title="Delete" onClick="del_associated_prog_group('<?php echo $row['id'];?>')"></a>
 							</td>
 						</tr>
-				<?php }?>
-				</tbody>
+				    <?php } ?>
+
+					</tbody>
 				</table>
 				<?php if(isset($_SESSION['error_msg'])){ ?>
 						<div><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>

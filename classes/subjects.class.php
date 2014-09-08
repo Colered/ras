@@ -1,78 +1,196 @@
 <?php
-class Subjects {
-   	//Creating Db connection object
-   	private $conn;
-   	public function __construct(){
-   	    global $db;
-   		$this->conn = $db;
+class Subjects extends Base {
+    public function __construct(){
+   		 parent::__construct();
    	}
 	/*function for adding Subject*/
 	public function addSubject() {
+			$sessionName = (isset($_POST['sessionName'])) ? ($_POST['sessionName']) : '';
+			$sessionNameArr=$this->formingArray($sessionName);
+			$orderNumber = (isset($_POST['sessionOrder'])) ? ($_POST['sessionOrder']) : '';
+			$orderNumberArr=$this->formingArray($orderNumber);
+			$sessionDesp = (isset($_POST['sessionDesc'])) ? ($_POST['sessionDesc']) : '';
+			$sessionDespArr=$this->formingArray($sessionDesp);
 			//check if the subject code already exists
 			$subject_query="select subject_name, subject_code from  subject where subject_code='".$_POST['txtSubjCode']."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
-			if(count($dataAll)>0)
-			{
+			if(count($dataAll)>0){
 				$message="Subject code already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
 			}else{
 				//add the new subject
 				$currentDateTime = date("Y-m-d H:i:s");
-				//$areaCode=$_POST['slctArea'];
-				//$programCode=$_POST['slctProgram'];
-				$area_query="select id from area where area_code='".$_POST['slctArea']."'";
-				$area_result= mysqli_query($this->conn, $subject_query);
-				$area_data = mysqli_fetch_assoc($area_result);
-				if(count($dataAll)>0){
-				   $area_id=$area_data['id'];
+				//fectching area id
+				$area_id=$this->getAreaId();
+				//fectching program id
+				$program_id=$this->getProgramId();
+				//inserting values
+				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {
+					$last_ins_id=mysqli_insert_id($this->conn);
+					if($last_ins_id!=""){
+					$j=0;
+					if($sessionName!=""){
+					foreach ($sessionNameArr as $key => $value) {
+						$sessionNameval=$value;
+						//inserting subject session values
+						if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$last_ins_id."', '".$sessionNameval."','".$orderNumberArr[$j]."','".$sessionDespArr[$j]."','".$currentDateTime."', '".$currentDateTime."')")){
+						$j++;
+						if($j==count($sessionNameArr)){
+						 $message="New subject has been added successfully with session";
+						 $_SESSION['succ_msg'] = $message;
+						 return 1;
+						 }
+						}else{
+						 $message="Cannot add the subject's sesssion";
+						 $_SESSION['succ_msg'] = $message;
+						 return 0;
+						}
+					  }
+					}else{
+						$message="New subject has been added successfully";
+						$_SESSION['succ_msg'] = $message;
+						return 1;
+					}
+				  }
 				}else{
-				 $message="Area code already exists.";
-				 $_SESSION['error_msg'] = $message;
-				}
-				$mysql_query="select id from program where program_name='".$_POST['slctProgram']."'";
-				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".program_id."', '".$room_id."','".$_POST['subject_name']."','".$_POST['subject_code']."','".$_POST['session_no.']."','".$_POST['case_no.']."','".$_POST['technical_notes']."','".$currentDateTime."', '".$currentDateTime."');")) {
-   					$message="New subject has been added successfully";
-					$_SESSION['succ_msg'] = $message;
-					return 1;
-				}else{
-					$message="Cannot add the subject";
+				    $message="Cannot add the subject";
 					$_SESSION['error_msg'] = $message;
 					return 0;
-				}
-			}
+				  }
+		}
 	}
-	/*function for listing Area*/
-	public function viewArea() {
-			$area_query="select * from area order by date_update DESC";
-			$q_res = mysqli_query($this->conn, $area_query);
-			if(mysqli_num_rows($q_res)<=0){
-				$message="There is not any area exists.";
-				$_SESSION['error_msg'] = $message;
-			}
-			return $q_res;
+	/*function for listing Subject*/
+	public function viewSubject()
+	{
+		$subject_query="select * from subject order by date_update DESC";
+		$q_res = mysqli_query($this->conn, $subject_query);
+		if(mysqli_num_rows($q_res)<=0){
+			return 0;
+		}
+		return $q_res;
 	}
-	
 	/*function for fetch data using area ID*/
-	public function getDataByAreaID($id) {
-			$area_query="select * from area where id='".$id."' limit 1";
-			$q_res = mysqli_query($this->conn, $area_query);
+	public function getDataBySubjectID($id) {
+			$subject_query="select * from subject where id='".$id."' limit 1";
+			$q_res = mysqli_query($this->conn, $subject_query);
 			if(mysqli_num_rows($q_res)<=0)
 				return 0;
 			else
 				return $q_res;
 	}
-	/*function for Update Area*/
-	public function updateArea() {
-			if ($result = mysqli_query($this->conn, "Update area  Set area_name = '".$_POST['txtAreaName']."', area_code = '".$_POST['txtAreaCode']."', area_color = '".$_POST['txtAColor']."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['areaId']."'")) {
-   					$message="Area has been updated successfully";
-					$_SESSION['succ_msg'] = $message;
-					return 1;
+	public function updateSubject() {
+	        //check if the subject code already exists
+			$subject_query="select subject_name, subject_code from  subject where subject_code='".$_POST['txtSubjCode']."'";
+			$q_res = mysqli_query($this->conn, $subject_query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0){
+				$message="Subject code already exists.";
+				$_SESSION['error_msg'] = $message;
+				return 0;
+			}else{
+			//get area id
+			$area_id=$this->getAreaId();
+			//get program id
+			$program_id=$this->getProgramId();
+			$sessionName = (isset($_POST['sessionName'])) ? ($_POST['sessionName']) : '';
+			$sessionNameArr=$this->formingArray($sessionName);
+			$orderNumber = (isset($_POST['sessionOrder'])) ? ($_POST['sessionOrder']) : '';
+			$orderNumberArr=$this->formingArray($orderNumber);
+			$sessionDesp = (isset($_POST['sessionDesc'])) ? ($_POST['sessionDesc']) : '';
+			$sessionDespArr=$this->formingArray($sessionDesp);
+			$sessionRowId = (isset($_POST['sessionRowId'])) ? ($_POST['sessionRowId']) : '';
+			$sessionRowIdArr=$this->formingArray($sessionRowId);
+			//updating subject values
+			if ($result = mysqli_query($this->conn, "Update subject  Set area_id = '".$area_id."', program_id = '".$program_id."', subject_name= '".$_POST['txtSubjName']."' , subject_code= '".$_POST['txtSubjCode']."',case_number = '".$_POST['txtCaseNum']."',technical_notes = '".$_POST['txtTechNotes']."',date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['subjectId']."'")) {
+			        if($_POST['subjectId']!=""){
+					$j=0;
+					$k=0;
+					//updating session values
+				if($sessionName!=""){
+					foreach ($sessionNameArr as $key => $value) {
+						$sessionNameval=$value;
+						if($j!=count($sessionRowIdArr)){
+							if($seesion_result = mysqli_query($this->conn, "Update  subject_session  Set session_name = '".$sessionNameval."', order_number = '".$orderNumberArr[$j]."', description= '".$sessionDespArr[$j]."',date_update = '".date("Y-m-d H:i:s")."' where id='".$sessionRowIdArr[$j]."'")){
+								$j++;
+								$k=$j;
+								}
+					 	}else{
+						   if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$_POST['subjectId']."', '".$sessionNameval."','".$orderNumberArr[$k]."','".$sessionDespArr[$k]."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')")){
+						     $k++;
+							 if($k == (count($sessionNameArr))){
+						   			$message="Subject has been updated successfully with session";
+						   			$_SESSION['succ_msg'] = $message;
+									return 1;
+							 }
+
+						  }else{
+								echo $message="Subject's session cannot be added";
+						   		$_SESSION['error_msg'] = $message;
+								return 0;
+							}
+						}
+				    }
+				  }else{
+				  		$message="Subject has been updated successfully ";
+						$_SESSION['succ_msg'] = $message;
+						return 1;
+				  }
 				}else{
-					$message="Cannot update the area";
-					$_SESSION['error_msg'] = $message;
+					echo $message="Cannot update the subject";
+					$_SESSION['error_msg'] = $message;die;
 					return 0;
 				}
+		}else{
+			$message="Cannot update the subject";
+			$_SESSION['error_msg'] = $message;
+			return 0;
+		}
+	}
+  }
+	public function getProgramId(){
+		$program_query="select id from program where program_name='".$_POST['slctProgram']."'";
+		$program_result= mysqli_query($this->conn, $program_query);
+		$program_data = mysqli_fetch_assoc($program_result);
+		if(count($program_data)>0){
+			$program_id=$program_data['id'];
+			return $program_id;
+		}else{
+		   echo  $message="Program does not exists.";
+		   $_SESSION['error_msg'] = $message;
+		}
+	}
+	public function getAreaId(){
+		$area_query="select id from area where area_code='".$_POST['slctArea']."'";
+		$area_result= mysqli_query($this->conn, $area_query);
+		$area_data = mysqli_fetch_assoc($area_result);
+		if(count($area_data)>0){
+			$area_id=$area_data['id'];
+			return $area_id;
+		}else{
+			$message="Area does not exists.";
+			$_SESSION['error_msg'] = $message;
+		}
+	}
+	public function formingArray($dataArr){
+		 $newArr = array();
+			foreach ($dataArr as $key => $val) {
+					if (trim($val) <> "") {
+					 $newArr[] = trim($val);
+					}
 			}
+  		return $newArr;
+	}
+ 
+ /*function for all subjects for add form*/
+ 	public function getSubjects(){
+  	$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
+  	$result = $this->conn->query($sql);
+  	if(!$result->num_rows){
+   		return 0;
+  	}
+  	return $result;
+   }
+
 }

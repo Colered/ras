@@ -1,14 +1,23 @@
 <?php
 session_start();
 //database server
-define('DB_SERVER', "localhost");
+<<<<<<< HEAD
+define('DB_SERVER', "172.16.220.164");
 define('DB_DATABASE', "cidot_ras");
 define('DB_USER', "root");
 define('DB_PASS', "");
 /*define('DB_SERVER', "localhost");
 define('DB_DATABASE', "ras");
+=======
+/*define('DB_SERVER', "172.16.220.164");
+define('DB_DATABASE', "cidot_ras");
 define('DB_USER', "root");
-define('DB_PASS', "");*/
+define('DB_PASS', "cidot@123");*/
+define('DB_SERVER', "localhost");
+define('DB_DATABASE', "cidot_ras");
+>>>>>>> 4be34cce502aab4ae265db99edccce161fa2c061
+define('DB_USER', "root");
+define('DB_PASS', "");
 
 // include database and object files
 if(!function_exists('classAutoLoader')){
