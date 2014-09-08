@@ -438,8 +438,7 @@ function deleteSubject($id){
     }
     return false;
 }
-
-//function for addind session number with subject
+//function for adding session number with subject
 $(document).ready(function() {
 	$('.subjectSession').hide();
     var max_fields      = 10; 
@@ -488,7 +487,7 @@ $(document).ready(function() {
 	   }
  });
 });
-
+//To show and hide the session value at view page
 function getSessionName(subjectId)
 {
 	var divSessionName = '#divSessionName'+subjectId;
