@@ -170,9 +170,9 @@ switch ($codeBlock) {
     break;
 	case "getSubjects":
 		$options='<option value="">--Select Subject--</option>';
-		if(isset($_POST['program_id']) && $_POST['program_id']!=""){
-		    $program_id = $_POST['program_id'];
-			$query="select id,subject_name from subject where program_id='".$program_id."'";
+		if(isset($_POST['year_id']) && $_POST['year_id']!=""){
+		    $year_id = $_POST['year_id'];
+			$query="select id,subject_name from subject where program_year_id='".$year_id."'";
 			$result = mysqli_query($db, $query);
 			while($data= mysqli_fetch_array($result)){
 				 $options .='<option value="'.$data['id'].'">'.$data['subject_name'].'</option>';

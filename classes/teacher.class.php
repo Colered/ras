@@ -157,10 +157,6 @@ class Teacher extends Base {
 					if(!$reserved_flag){
 					   $insertIdsArr[] = $this->conn->insert_id;
 					}
-					if(!$rel){
-						  printf("%s\n", $this->conn->error);
-						  exit();
-					}
 				}
 			}
 			if(!empty($insertIdsArr)){

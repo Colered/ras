@@ -5,7 +5,7 @@ $objS = new Subjects();
 $objT = new Teacher();
 
 $rel_teacher = $objT->getTeachers();
-$rel_prog = $objP->getProgramListData();
+$rel_prog = $objP->getProgramListYearWise();
 $rel_subject = $objS->getSubjects();
 
 if(isset($_GET['edit']) && $_GET['edit']!=''){
@@ -35,7 +35,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 					<option value="" selected="selected">--Select Program--</option>
 					<?php
 						while($row = $rel_prog->fetch_assoc()){
-							echo '<option value="'.$row['id'].'">'.$row['program_name'].'</option>';
+							echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
 						}
 					?>
 					</select>

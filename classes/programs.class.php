@@ -33,7 +33,7 @@ class Programs extends Base {
 				$progName = $txtPrgmName.'-'.$j;
 				$start_year = date("Y", strtotime($prog_from_date));
 				$start_year = $start_year + ($j-1);
-				$end_year = $start_year + $j;
+				$end_year = $start_year + 1;
 				$sql = "INSERT INTO program_years (program_id, name, start_year, end_year) VALUES ('".$last_ins_id."', '".$progName."', '".$start_year."', '".$end_year."')";
 				$rel = $this->conn->query($sql);
 				$last_yr_id = $this->conn->insert_id;
@@ -96,7 +96,7 @@ class Programs extends Base {
 				$progName = $txtPrgmName.'-'.$j;
 				$start_year = date("Y", strtotime($prog_from_date));
 				$start_year = $start_year + ($j-1);
-				$end_year = $start_year + $j;
+				$end_year = $start_year + 1;
 				$sql = "INSERT INTO program_years (program_id, name, start_year, end_year) VALUES ('".$edit_id."', '".$progName."', '".$start_year."', '".$end_year."')";
 				$rel = $this->conn->query($sql);
 				$last_yr_id = $this->conn->insert_id;
@@ -176,5 +176,11 @@ class Programs extends Base {
 		$result =  $this->conn->query("select * from group_master where id in(select group_id FROM program_group WHERE program_year_id in(select id from program_years where program_id='".$prog_id."'))");
 		return $result;
 	}
+	//function to  get all programs according to years
+	public function getProgramListYearWise(){
+		$result =  $this->conn->query("select * from program_years");
+		return $result;
+	}
+
 
 }

@@ -539,7 +539,7 @@ function showSubjects(selval){
         url: "./ajax_common.php",
         type: "POST",
         data: {
-            'program_id': selval,
+            'year_id': selval,
 			'codeBlock': 'getSubjects',
             },
         success: function(data) {
