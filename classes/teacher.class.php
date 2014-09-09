@@ -59,8 +59,8 @@ class Teacher extends Base {
 	}
 
 	/*function for edit professor*/
-	public function editProfessor() {
-
+	public function editProfessor()
+	{
 		$edit_id = base64_decode($_POST['form_edit_id']);
 		$txtPname = Base::cleanText($_POST['txtPname']);
 		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
@@ -75,26 +75,26 @@ class Teacher extends Base {
 		$totalmonthExp = $years*12+$months;
 
 
-	   $sql = "UPDATE teacher SET
-	   	                teacher_name='".$txtPname."',
-	   	                address='".$txtAreaAddress."',
-	   	                dob='".$dob."',
-	   	                doj='".$doj."',
-	   	                gender='".$sex."',
-	   	                designation='".$txtDegination."',
-	   	                qualification='".$txtQualification."',
-	   	                experience='".$totalmonthExp."',
-	   	                date_update=now() WHERE id=$edit_id";
-	   $rel = $this->conn->query($sql);
-	   if(!$rel){
+		$sql = "UPDATE teacher SET
+						teacher_name='".$txtPname."',
+						address='".$txtAreaAddress."',
+						dob='".$dob."',
+						doj='".$doj."',
+						gender='".$sex."',
+						designation='".$txtDegination."',
+						qualification='".$txtQualification."',
+						experience='".$totalmonthExp."',
+						date_update=now() WHERE id=$edit_id";
+		$rel = $this->conn->query($sql);
+		if(!$rel){
 		  printf("%s\n", $this->conn->error);
 		  exit();
-	   }else{
+		}else{
 		 $this->conn->close();
 		 $message="Record has been updated successfully.";
 		 $_SESSION['succ_msg'] = $message;
 		 return 1;
-	   }
+		}
 	}
 
     //funtion to formate teacher experiance
@@ -117,6 +117,80 @@ class Teacher extends Base {
 		}
 		return $result;
 
+	}
+	//function to add activity
+	public function addActivities()
+	{
+		$program_id = $_POST['slctProgram'];
+		$subject_id = $_POST['slctSubject'];
+		$sessionid = isset($_POST['slctSession']) ? $_POST['slctSession'] : 0;
+		$group_id = 0;
+
+		if(isset($program_id) && isset($subject_id)){
+		    $insertIdsArr = array();
+			foreach($_POST['slctTeacher'] AS $val){
+			   $teacher_id = $val;
+			   $room_id = isset($_POST['room_id_'.$teacher_id]) ? $_POST['room_id_'.$teacher_id] : 0;
+			   $time_slot_id = isset($_POST['tslot_id_'.$teacher_id]) ? $_POST['tslot_id_'.$teacher_id] : 0;
+			   $reserved_flag = isset($_POST['reserved_flag_'.$teacher_id]) ? $_POST['reserved_flag_'.$teacher_id] : 0;
+
+			   $sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
+			   if($program_id<>"")
+					$sqlA .= " and program_id='".$program_id."'";
+			   if($subject_id<>"")
+					$sqlA .= " and subject_id='".$subject_id."'";
+			   if($sessionid)
+					$sqlA .= " and session_id='".$sessionid."'";
+			   if($room_id)
+					$sqlA .= " and room_id='".$room_id."'";
+			   if($time_slot_id)
+					$sqlA .= " and timeslot_id='".$time_slot_id."'";
+                //echo '<br>'.$sqlA;
+				$result =  $this->conn->query($sqlA);
+				if(!$result->num_rows){
+				    $result = $this->conn->query("SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+				    $dRow = $result->fetch_assoc();
+				    $actCnt = substr($dRow['name'],1);
+				    $actName = 'A'.($actCnt+1);
+					$SQL = "INSERT INTO teacher_activity (name, program_id, subject_id, session_id, teacher_id, group_id, room_id, timeslot_id, reserved_flag, date_add) VALUES ('".$actName."', '".$program_id."', '".$subject_id."', '".$sessionid."', '".$teacher_id."', '".$group_id."', '".$room_id."', '".$time_slot_id."', '".$reserved_flag."', NOW())";
+					$rel = $this->conn->query($SQL);
+					if(!$reserved_flag){
+					   $insertIdsArr[] = $this->conn->insert_id;
+					}
+					if(!$rel){
+						  printf("%s\n", $this->conn->error);
+						  exit();
+					}
+				}
+			}
+			if(!empty($insertIdsArr)){
+               foreach($insertIdsArr as $vv){
+                  $sql22 = "update teacher_activity set reserved_flag='2' where id='".$vv."'";
+                  $this->conn->query($sql22);
+               }
+			}
+			$message="Record has been added successfully.";
+			$_SESSION['succ_msg'] = $message;
+			return 1;
+
+		}else{
+			$message="Please select program and subject.";
+			$_SESSION['succ_msg'] = $message;
+			return 0;
+		}
+	}
+	//function to get all teacher activities
+	public function getTeachersAct()
+	{
+	    $sql = "SELECT ta.id,ta.name,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,s.subject_name,ss.session_name,t.teacher_name FROM teacher_activity ta
+	            left join subject s on(s.id = ta.subject_id)
+	            left join subject_session ss on(ss.id=ta.session_id)
+	            left join teacher t on(t.id = ta.teacher_id) ORDER BY ta.name";
+		$result =  $this->conn->query($sql);
+		if(!$result->num_rows){
+			return 0;
+		}
+		return $result;
 	}
 
 }

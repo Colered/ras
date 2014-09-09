@@ -192,6 +192,70 @@ switch ($codeBlock) {
 		}
 		echo $options;
 	break;
+	case "addTeacherAct":
+	     $objS = new Subjects();
+         if($_POST['program_id']<>"" && $_POST['subject_id']<>"" && !empty($_POST['teachersArr'])){
+            $program_id = $_POST['program_id'];
+            $subject_id = $_POST['subject_id'];
+            $sessionid = $_POST['session_id'];
+
+			$slqR="SELECT r.id, r.room_name, rt.room_type, b.building_name FROM room r
+					LEFT JOIN room_type rt ON ( rt.id = r.room_type_id )
+					LEFT JOIN building b ON ( b.id = r.building_id ) ORDER BY room_type,building_name";
+			$relR = mysqli_query($db, $slqR);
+
+            $slqTS="SELECT id, timeslot_range FROM timeslot";
+			$relTS = mysqli_query($db, $slqTS);
+
+            echo '<table cellspacing="0" cellpadding="0" border="0">';
+            echo '<tr>';
+			echo '<th>Reserved</th>';
+			echo '<th>Subject</th>';
+			echo '<th>Session</th>';
+			echo '<th>Teacher</th>';
+			echo '<th>Room</th>';
+			echo '<th>Timeslot</th>';
+			echo '</tr>';
+            $slqT="SELECT id,teacher_name,email FROM teacher WHERE id IN(".implode(',',$_POST['teachersArr']).") ORDER BY teacher_name";
+			$relT = mysqli_query($db, $slqT);
+			while($data= mysqli_fetch_array($relT)){
+				echo '<tr>';
+				echo '<td align="center"><input type="radio" name="reserved_flag_'.$data['id'].'" value="1"></td>';
+				echo '<td>'.$objS->getSubjectByID($subject_id).'</td>';
+				echo '<td>'.$objS->getSessionByID($sessionid).'</td>';
+				echo '<td>'.$data['teacher_name'].' ('.$data['email'].')</td>';
+
+				echo '<td><select name="room_id_'.$data['id'].'"><option value="">--Room--</option>';
+				while($rdata= mysqli_fetch_array($relR)){
+					echo  '<option value="'.$rdata['id'].'">'.$rdata['room_name'].'-'.$rdata['building_name'].'-'.$rdata['room_type'].'</option>';
+				}
+				echo '</select></td>';
+
+				echo '<td><select name="tslot_id_'.$data['id'].'"><option value="">--Time Slot--</option>';
+				while($tsdata= mysqli_fetch_array($relTS)){
+					echo '<option value="'.$tsdata['id'].'">'.$tsdata['timeslot_range'].'</option>';
+				}
+				echo '</select></td>';
+				echo '</tr>';
+
+				mysqli_data_seek($relR,0);
+				mysqli_data_seek($relTS,0);
+			}
+            echo '</table>';
+	     }
+	break;
+	case "del_teacher_activity":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_query="delete from  teacher_activity where id='".$id."'";
+			$qry = mysqli_query($db, $del_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+	break;
+
 }
 
 ?>

@@ -438,7 +438,7 @@ function deleteSubject($id){
     }
     return false;
 }
-//function for adding session number with subject
+//function for addind session number with subject
 $(document).ready(function() {
 	$('.subjectSession').hide();
     var max_fields      = 10; 
@@ -487,7 +487,7 @@ $(document).ready(function() {
 	   }
  });
 });
-//To show and hide the session value at view page
+
 function getSessionName(subjectId)
 {
 	var divSessionName = '#divSessionName'+subjectId;
@@ -567,3 +567,58 @@ function showSessions(selval){
         }
     });
 }
+//Ajax delete the teacher activity function 
+function deleteTeacherActivity($id){
+	if($id==""){
+		alert("Please select an activity to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete?")) {
+	    $.ajax({
+			type: "POST",
+			url: "ajax_common.php",
+			data: {
+				'id': $id,
+				'codeBlock': 'del_teacher_activity',
+			},
+			success: function($succ){
+				if($succ==1){
+					$('#'+$id).closest( 'tr').remove();
+					$('.green, .red').hide();
+				}else{
+					alert("Cannot delete the selected Activity.");
+					$('.green, .red').hide();
+				}
+			}
+        });
+    }
+    return false;
+}
+//function to add activity
+$(document).ready(function() {
+    $("#slctTeacher").on("change", addTeacherActivity);
+    
+	function addTeacherActivity(){
+			 var slctProgram = $('#slctProgram').val();
+			 var slctSubject = $('#slctSubject').val();
+			 var slctSession = $('#slctSession').val();
+			 var slctTeacher = $('#slctTeacher').val();
+			 $.ajax({
+			   url: "./ajax_common.php",
+			   type: "POST",
+			   data: {
+				   'program_id': slctProgram,
+				   'subject_id': slctSubject,
+				   'session_id': slctSession,
+				   'teachersArr': slctTeacher,
+				   'codeBlock': 'addTeacherAct',
+			   },
+			   success: function(data) {
+				 $("#activityAddMore").html(data);
+			   },
+			   error: function(errorThrown) {
+				   console.log(errorThrown);
+	  	       }
+    	  });
+
+	}    
+});

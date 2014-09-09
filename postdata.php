@@ -282,10 +282,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		//add timeslot
 		case 'addTimeslot':
-			/*print_r($_POST); 
+			/*print_r($_POST);
 			echo $start = strtotime($_POST['start_time']);
 			echo $end = strtotime($_POST['end_time']);
-			
+
 			if($start >$end){
 			echo 'yes';
 			}else{
@@ -318,6 +318,35 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: timeslots.php');
 			}
 		break;
+		case "add_teacher_activity":
+		     $objT = new Teacher();
+             if($_POST['slctProgram']<>"" && $_POST['slctSubject']<>"" && !empty($_POST['slctTeacher'])){
+                   //add activities in DB
+                   $resp = $objT->addActivities();
+                   if($resp==0){
+					  header('Location: teacher_activity_view.php');
+					  exit();
+                   }else{
+                      header('Location: teacher_activity_view.php');
+					  exit();
+                   }
+             }
+		break;
+		case "edit_teacher_activity":
+			 $objT = new Teacher();
+			 if($_POST['slctProgram']<>"" && $_POST['slctSubject']<>"" && !empty($_POST['slctTeacher'])){
+				   //add activities in DB
+				   $resp = $objT->addActivities();
+				   if($resp==0){
+					  header('Location: teacher_activity_view.php');
+					  exit();
+				   }else{
+					  header('Location: teacher_activity_view.php');
+					  exit();
+				   }
+			 }
+		break;
+
 	}
 }
 ?>

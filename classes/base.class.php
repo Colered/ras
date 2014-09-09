@@ -37,5 +37,19 @@ abstract class Base
 		$str = strip_tags($str);
 		return trim($str);
 	}
+	//function to fetch a
+	public function getFielldVal($table,$field,$k,$v)
+	{
+       if($v){
+            $field = trim($field);
+			$sql = "SELECT $field FROM $table WHERE $k='".$v."' LIMIT 1";
+			$result = $this->conn->query($sql);
+			$row = $result->fetch_assoc();
+			return $row[$field];
+	   }else{
+			return '';
+	   }
+	}
+
 
 }

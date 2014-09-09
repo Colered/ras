@@ -182,15 +182,38 @@ class Subjects extends Base {
 			}
   		return $newArr;
 	}
- 
+
  /*function for all subjects for add form*/
  	public function getSubjects(){
-  	$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
-  	$result = $this->conn->query($sql);
-  	if(!$result->num_rows){
-   		return 0;
-  	}
-  	return $result;
+		$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
+		$result = $this->conn->query($sql);
+		if(!$result->num_rows){
+			return 0;
+		}
+		return $result;
+   }
+
+    /*get subject name by id*/
+	public function getSubjectByID($id){
+		$sql="SELECT id,subject_name FROM subject WHERE id='".$id."'";
+		$result = $this->conn->query($sql);
+		if(!$result->num_rows){
+			return '';
+		}else{
+		  $row = $result->fetch_assoc();
+		  return $row['subject_name'];
+		}
+   }
+   /*get session name by id*/
+   public function getSessionByID($id){
+   		$sql="SELECT id,session_name FROM subject_session WHERE id='".$id."'";
+   		$result = $this->conn->query($sql);
+   		if(!$result->num_rows){
+   			return '';
+   		}else{
+   		  $row = $result->fetch_assoc();
+   		  return $row['session_name'];
+   		}
    }
 
 }
