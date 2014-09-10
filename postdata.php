@@ -346,7 +346,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				   }
 			 }
 		break;
-		case:'addEditClassAvailability':
+		case 'addEditClassAvailability':
 		if($_POST['slctRmName']!="" && $_POST['slctRmType']!="" ){
 				$obj = new Classroom_Availability();
 				if(isset($_POST['classRmAvailId']) && $_POST['classRmAvailId']!=''){

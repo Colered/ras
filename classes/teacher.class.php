@@ -121,26 +121,32 @@ class Teacher extends Base {
 	//function to add activity
 	public function addActivities()
 	{
-		$program_id = $_POST['slctProgram'];
+		$program_year_id = $_POST['slctProgram'];
 		$subject_id = $_POST['slctSubject'];
 		$sessionid = isset($_POST['slctSession']) ? $_POST['slctSession'] : 0;
 		$group_id = 0;
 
-		if(isset($program_id) && isset($subject_id)){
+		if(isset($program_year_id) && isset($subject_id)){
 		    $insertIdsArr = array();
+		    $atleast_one_res = false;
 			foreach($_POST['slctTeacher'] AS $val){
 			   $teacher_id = $val;
 			   $room_id = isset($_POST['room_id_'.$teacher_id]) ? $_POST['room_id_'.$teacher_id] : 0;
 			   $time_slot_id = isset($_POST['tslot_id_'.$teacher_id]) ? $_POST['tslot_id_'.$teacher_id] : 0;
-			   $reserved_flag = isset($_POST['reserved_flag_'.$teacher_id]) ? $_POST['reserved_flag_'.$teacher_id] : 0;
+			   $reserved_flag = ($_POST['reserved_flag']==$teacher_id) ? 1 : 0;
+			   if($reserved_flag){
+			     	$atleast_one_res = true;
+			   }
 
 			   $sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
-			   if($program_id<>"")
-					$sqlA .= " and program_id='".$program_id."'";
-			   if($subject_id<>"")
+			   if($program_year_id)
+					$sqlA .= " and program_year_id='".$program_year_id."'";
+			   if($subject_id)
 					$sqlA .= " and subject_id='".$subject_id."'";
 			   if($sessionid)
 					$sqlA .= " and session_id='".$sessionid."'";
+			   if($teacher_id)
+					$sqlA .= " and teacher_id='".$teacher_id."'";
 			   if($room_id)
 					$sqlA .= " and room_id='".$room_id."'";
 			   if($time_slot_id)
@@ -152,14 +158,15 @@ class Teacher extends Base {
 				    $dRow = $result->fetch_assoc();
 				    $actCnt = substr($dRow['name'],1);
 				    $actName = 'A'.($actCnt+1);
-					$SQL = "INSERT INTO teacher_activity (name, program_id, subject_id, session_id, teacher_id, group_id, room_id, timeslot_id, reserved_flag, date_add) VALUES ('".$actName."', '".$program_id."', '".$subject_id."', '".$sessionid."', '".$teacher_id."', '".$group_id."', '".$room_id."', '".$time_slot_id."', '".$reserved_flag."', NOW())";
+					$SQL = "INSERT INTO teacher_activity (name, program_year_id, subject_id, session_id, teacher_id, group_id, room_id, timeslot_id, reserved_flag, date_add) VALUES ('".$actName."', '".$program_year_id."', '".$subject_id."', '".$sessionid."', '".$teacher_id."', '".$group_id."', '".$room_id."', '".$time_slot_id."', '".$reserved_flag."', NOW())";
 					$rel = $this->conn->query($SQL);
 					if(!$reserved_flag){
 					   $insertIdsArr[] = $this->conn->insert_id;
 					}
 				}
 			}
-			if(!empty($insertIdsArr)){
+
+			if(!empty($insertIdsArr) && $atleast_one_res==true){
                foreach($insertIdsArr as $vv){
                   $sql22 = "update teacher_activity set reserved_flag='2' where id='".$vv."'";
                   $this->conn->query($sql22);
@@ -178,10 +185,11 @@ class Teacher extends Base {
 	//function to get all teacher activities
 	public function getTeachersAct()
 	{
-	    $sql = "SELECT ta.id,ta.name,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,s.subject_name,ss.session_name,t.teacher_name FROM teacher_activity ta
+	    $sql = "SELECT ta.id,ta.name,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,s.subject_name,ss.session_name,t.teacher_name,py.name program_name FROM teacher_activity ta
 	            left join subject s on(s.id = ta.subject_id)
 	            left join subject_session ss on(ss.id=ta.session_id)
-	            left join teacher t on(t.id = ta.teacher_id) ORDER BY ta.name";
+	            left join teacher t on(t.id = ta.teacher_id)
+	            left join program_years py on(py.id=ta.program_year_id) ORDER BY ta.name";
 		$result =  $this->conn->query($sql);
 		if(!$result->num_rows){
 			return 0;

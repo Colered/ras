@@ -217,11 +217,12 @@ class Subjects extends Base {
    		$sql="SELECT id,session_name FROM subject_session WHERE id='".$id."'";
    		$result = $this->conn->query($sql);
    		if(!$result->num_rows){
-   			return '';
+   			return 'N/A';
    		}else{
    		  $row = $result->fetch_assoc();
-   		  return $row['session_name'];
+   		  return (trim($row['session_name'])<>"") ? $row['session_name'] : "N/A";
    		}
    }
+
 
 }

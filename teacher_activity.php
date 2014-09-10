@@ -13,7 +13,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $button_save = 'Edit Activity';
     $form_action = 'edit_teacher_activity';
 }else{
-    $button_save = 'Add Activity';
+    $button_save = 'Save Activity';
     $form_action = 'add_teacher_activity';
 }
 ?>
@@ -53,6 +53,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 						}
 					 ?>
 					</select>
+					<div id="ajaxload_subject" style="float: right;display:none;"><img src="images/loading2.gif"  /><div class="wait-text">Please Wait...</div></div>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -63,6 +64,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 					<option value="" selected="selected">--Select Session--</option>
 
 					</select>
+					<div  id="ajaxload_session" style="float: right;display:none;"><img src="images/loading2.gif"  /><div class="wait-text">Please Wait...</div></div>
 					</div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -77,8 +79,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 						?>
                         </select>
                     </div>
-                    <!--<div style="float:left;padding:133px 0px 0px 20px;"><input class="buttonsub" type="button" value="Add" name="btnTeacherAct" id="btnTeacherAct"></div>-->
+                    <div style="float:left;padding:133px 0px 0px 20px;"><input class="buttonsub" type="button" value="Add" name="btnTeacherAct" id="btnTeacherAct"></div>
+                    <div id="ajaxload_actDiv" style="padding-top:130px;float:right;display:none;"><img src="images/loading2.gif"  /><div class="wait-text">Please Wait...</div></div>
                     <div class="clear"></div>
+
                     <div id="activityAddMore"></div>
                     <div><br /><br /><br /><br /></div>
                     <div class="clear"></div>

@@ -45,7 +45,7 @@ $(document).ready(function(){
                     <tr>
                         <td class="align-center"><?php echo $row['id'];?></td>
                         <td><?php echo $row['name'];?></td>
-                        <td><?php //echo $row['program_name'];?></td>
+                        <td><?php echo $row['program_name'];?></td>
                         <td><?php echo $row['subject_name'];?></td>
                         <td><?php echo $row['session_name'];?></td>
                         <td><?php echo $row['teacher_name'];?></td>

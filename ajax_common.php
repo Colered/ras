@@ -194,8 +194,8 @@ switch ($codeBlock) {
 	break;
 	case "addTeacherAct":
 	     $objS = new Subjects();
-         if($_POST['program_id']<>"" && $_POST['subject_id']<>"" && !empty($_POST['teachersArr'])){
-            $program_id = $_POST['program_id'];
+         if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && !empty($_POST['teachersArr'])){
+            $program_year_id = $_POST['program_year_id'];
             $subject_id = $_POST['subject_id'];
             $sessionid = $_POST['session_id'];
 
@@ -210,6 +210,7 @@ switch ($codeBlock) {
             echo '<table cellspacing="0" cellpadding="0" border="0">';
             echo '<tr>';
 			echo '<th>Reserved</th>';
+			echo '<th>Program</th>';
 			echo '<th>Subject</th>';
 			echo '<th>Session</th>';
 			echo '<th>Teacher</th>';
@@ -220,7 +221,8 @@ switch ($codeBlock) {
 			$relT = mysqli_query($db, $slqT);
 			while($data= mysqli_fetch_array($relT)){
 				echo '<tr>';
-				echo '<td align="center"><input type="radio" name="reserved_flag_'.$data['id'].'" value="1"></td>';
+				echo '<td align="center"><input type="radio" name="reserved_flag" value="'.$data['id'].'"></td>';
+				echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
 				echo '<td>'.$objS->getSubjectByID($subject_id).'</td>';
 				echo '<td>'.$objS->getSessionByID($sessionid).'</td>';
 				echo '<td>'.$data['teacher_name'].' ('.$data['email'].')</td>';

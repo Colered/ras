@@ -535,14 +535,16 @@ function removeSession($sessionId, $serialId){
 }
 //function to show subjects by program
 function showSubjects(selval){
+    $("#ajaxload_subject").show();
     $.ajax({
         url: "./ajax_common.php",
         type: "POST",
         data: {
             'year_id': selval,
 			'codeBlock': 'getSubjects',
-            },
+        },
         success: function(data) {
+             $("#ajaxload_subject").hide();
 			 $("#slctSubject").html(data);
         },
         error: function(errorThrown) {
@@ -552,14 +554,16 @@ function showSubjects(selval){
 }
 //function to show sessions for a subject
 function showSessions(selval){
+    $("#ajaxload_session").show();
     $.ajax({
         url: "./ajax_common.php",
         type: "POST",
         data: {
             'subject_id': selval,
 			'codeBlock': 'getSessions',
-            },
+        },
         success: function(data) {
+             $("#ajaxload_session").hide();
 			 $("#slctSession").html(data);
         },
         error: function(errorThrown) {
@@ -595,31 +599,35 @@ function deleteTeacherActivity($id){
 }
 //function to add activity
 $(document).ready(function() {
-    $("#slctTeacher").on("change", addTeacherActivity);
+    $("#btnTeacherAct").on('click',addTeacherActivity);
     
-	function addTeacherActivity(){
+	function addTeacherActivity()
+	{
+		 if($('#frmTactivity').valid()){
 			 var slctProgram = $('#slctProgram').val();
 			 var slctSubject = $('#slctSubject').val();
 			 var slctSession = $('#slctSession').val();
 			 var slctTeacher = $('#slctTeacher').val();
+			 $("#ajaxload_actDiv").show();
 			 $.ajax({
 			   url: "./ajax_common.php",
 			   type: "POST",
 			   data: {
-				   'program_id': slctProgram,
+				   'program_year_id': slctProgram,
 				   'subject_id': slctSubject,
 				   'session_id': slctSession,
 				   'teachersArr': slctTeacher,
 				   'codeBlock': 'addTeacherAct',
 			   },
 			   success: function(data) {
+				 $("#ajaxload_actDiv").hide();
 				 $("#activityAddMore").html(data);
 			   },
 			   error: function(errorThrown) {
 				   console.log(errorThrown);
-	  	       }
-    	  });
-
+			   }
+		  });
+       }	   	  
 	}    
 });
 $(document).ready(function() {

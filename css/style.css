@@ -599,3 +599,7 @@ div.divSession{
 }
 /*.ruleOptName{color:#993300;font-weight:bold}  */
 .ruleOptDate{color:#993300;font-weight:bold} 
+.wait-text{ 
+    float: right;
+    padding-top: 12px;
+}
