@@ -36,10 +36,12 @@ width:53px;
 }
 div.divRule{
 padding-top:71px;
-padding-left:84px;
+padding-left:54px;
 }
 .rule{
-width:252px;
+width:100%px;
+overflow:visible;
+min-width:252px;
 height:164px;
 }
 button, .button{
@@ -60,8 +62,8 @@ button, .button{
 width:38px;
 height:17px;}
 div.div-arrow-img{
-padding-top:164px;
-padding-left:71px;
+padding-top:140px;
+padding-left:32px;
 }
 button:hover, .button:hover{
 	border-bottom-color: #999999;
@@ -558,9 +560,7 @@ table .chb{
     font-weight: normal;}	
 	
 	
-.gird-addnew{
-float:right; padding-right:20px; color:#006e2f;}
-
+.gird-addnew{float:right; padding-right:20px; color:#006e2f;}
 .table1{ 
 	border: 1px solid #CCCCCC; 
 	margin: 10px; 
@@ -590,3 +590,12 @@ div.divSession{
 #sesssionTable th{
  color: #383838;
 }
+.tmSlot{width:87px;float: left; text-align: left;}
+.divRulecls{
+    overflow-x: scroll;
+	overflow-y: scroll;
+ 	width:235px;
+ 	height:120px;
+}
+/*.ruleOptName{color:#993300;font-weight:bold}  */
+.ruleOptDate{color:#993300;font-weight:bold} 

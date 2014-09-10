@@ -25,9 +25,13 @@ class Subjects extends Base {
 				//fectching area id
 				$area_id=$this->getAreaId();
 				//fectching program id
-				$program_id=$this->getProgramId();
+				//$program_id=$this->getProgramId();
+				$program_name=$_POST['slctProgram'];
+				$program_Val=explode('#',$program_name);
+				$program_year_id=$program_Val[0];
+				$program_id=$program_Val[1];
 				//inserting values
-				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {
+				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {
 					$last_ins_id=mysqli_insert_id($this->conn);
 					if($last_ins_id!=""){
 					$j=0;
@@ -93,7 +97,11 @@ class Subjects extends Base {
 			//get area id
 			$area_id=$this->getAreaId();
 			//get program id
-			$program_id=$this->getProgramId();
+			//$program_id=$this->getProgramId();
+			$program_name=$_POST['slctProgram'];
+			$program_Val=explode('#',$program_name);
+			$program_year_id=$program_Val[0];
+			$program_id=$program_Val[1];
 			$sessionName = (isset($_POST['sessionName'])) ? ($_POST['sessionName']) : '';
 			$sessionNameArr=$this->formingArray($sessionName);
 			$orderNumber = (isset($_POST['sessionOrder'])) ? ($_POST['sessionOrder']) : '';
@@ -103,7 +111,7 @@ class Subjects extends Base {
 			$sessionRowId = (isset($_POST['sessionRowId'])) ? ($_POST['sessionRowId']) : '';
 			$sessionRowIdArr=$this->formingArray($sessionRowId);
 			//updating subject values
-			if ($result = mysqli_query($this->conn, "Update subject  Set area_id = '".$area_id."', program_id = '".$program_id."', subject_name= '".$_POST['txtSubjName']."' , subject_code= '".$_POST['txtSubjCode']."',case_number = '".$_POST['txtCaseNum']."',technical_notes = '".$_POST['txtTechNotes']."',date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['subjectId']."'")) {
+			if ($result = mysqli_query($this->conn, "Update subject  Set area_id = '".$area_id."', program_year_id = '".$program_year_id."', subject_name= '".$_POST['txtSubjName']."' , subject_code= '".$_POST['txtSubjCode']."',case_number = '".$_POST['txtCaseNum']."',technical_notes = '".$_POST['txtTechNotes']."',date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['subjectId']."'")) {
 			        if($_POST['subjectId']!=""){
 					$j=0;
 					$k=0;

@@ -3,108 +3,89 @@
     <div id="main">
         <div class="full_w">
             <div class="h_title">Classroom Availability</div>
-            <form action="" method="post" class="form-align">
+            <form action="postdata.php" method="post" class="form-align" id="form-clsrm-avail">
+				<input type="hidden" name="form_action" value="addEditClassAvailability" />
                 <div class="custtable_left">
                     <div class="custtd_left">
                         <h2>Room Type <span class="redstar">*</span></h2>
                     </div>
-                    <div class="txtfield">
-                        <select id="slctRmType" name="slctRmType" class="select1">
-                            <option value="" selected="selected">--Select Room Type--</option>
-                            <option value="Type1">Type1</option>
-                            <option value="Type2">Type2</option>
+					<div class="txtfield">
+						<select id="slctRmType" name="slctRmType[]"  class="selectMultiple inp_txt">
+					 		  <option value="">--Select Room Type--</option>
+                              <?php 
+					          $room_type_qry="select * from  room_type";
+					          $room_type_result= mysqli_query($db, $room_type_qry);
+					          while ($room_type_data = mysqli_fetch_assoc($room_type_result)){?>
+					          <option value="<?php echo $room_type_data['id'].'#'.$room_type_data['room_type']?>"><?php echo $room_type_data['room_type'];?></option>
+					     	 <?php } ?>
                         </select>
-                    </div>
+					</div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Room Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                         <select id="slctRmName" name="slctRmName" class="select1">
-                            <option value="" selected="selected">--Select Room Name--</option>
-                            <option value="Room1">Room1</option>
-                            <option value="Room2">Room2</option>
-                        </select>
+                         <select id="slctRmName" name="slctRmName" class="select1 inp_txt">
+						  	<option value="">--Select Room--</option>
+                         </select>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Time Interval <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        From:<input type="text" size="12" id="fromclsRmAval" />
-                        To:<input type="text" size="12" id="toclsRmAval" />
+                        From:<input type="text" size="12" id="fromTmDuratn" />
+                        To:<input type="text" size="12" id="toTmDuratn" />
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Days<span class="redstar">*</span></h2>
                     </div>
-                    <div class="txtfield">
-                        <input type="checkbox" id="Mon" name="Mon" /> Mon &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" id="Tue" name="Tue" /> Tue &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" id="Wed" name="Wed" /> Wed &nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" id="Thu" name="Thu" /> Thu &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" id="Fri" name="Fri" /> Fri &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" id="Sat" name="Sat" /> Sat 
-                    </div>
-                    <div class="clear"></div>
-                    <div class="custtd_left">
-                        <h2>Timeslots.<span class="redstar">*</span></h2>
-                    </div>
-                    <div class="txtfield">
-                        <select id="slctTs" name="slctTs" class="ts-avail" multiple="multiple">
-                            <option value="9-10">9-10</option>
-                            <option value="10-11">10-11</option>
-                            <option value="11-12">11-12</option>
-                            <option value="12-1">12-1</option>
-                            <option value="1-2">1-2</option>
-                            <option value="2-3">2-3</option>
-                            <option value="3-4">3-4</option>
+                    <div class="txtfield" >
+					    <div class="tmSlot">
+						<?php 
+							  $timslot='';
+							  $obj=new Classroom_Availability();
+							  $result=$obj->getTimeslot();
+							  while ($data = $result->fetch_assoc()){
+							  $timslot.='<option>'.$data['timeslot_range'].'</option>';
+							  }
+						?>
+                        <input type="checkbox" id="mon" name="day[]"  value="mon" class="days"/> Mon &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<select id="tsMon" name="tsAvailability[]" class="ts-avail-mon tmsloteCls" multiple="multiple">
+                           <?php echo $timslot;?>
                         </select>
-                        <select id="slctTs" name="slctTs" class="ts-avail" multiple="multiple">
-                            <option value="9-10">9-10</option>
-                            <option value="10-11">10-11</option>
-                            <option value="11-12">11-12</option>
-                            <option value="12-1">12-1</option>
-                            <option value="1-2">1-2</option>
-                            <option value="2-3">2-3</option>
-                            <option value="3-4">3-4</option>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="tue" name="day[]"  value="tue" class="days"/> Tue &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<select id="tsTue" name="tsAvailability[]" class="ts-avail-tue tmsloteCls" multiple="multiple">
+                            <?php echo $timslot;?>
                         </select>
-                        <select id="slctTs" name="slctTs" class="ts-avail" multiple="multiple">
-                            <option value="9-10">9-10</option>
-                            <option value="10-11">10-11</option>
-                            <option value="11-12">11-12</option>
-                            <option value="12-1">12-1</option>
-                            <option value="1-2">1-2</option>
-                            <option value="2-3">2-3</option>
-                            <option value="3-4">3-4</option>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="wed" name="day[]"  value="wed" class="days"/> Wed &nbsp;&nbsp;&nbsp;&nbsp;
+						 <select id="tsWed" name="tsAvailability[]" class="ts-avail-wed tmsloteCls" multiple="multiple">
+                           <?php echo $timslot;?>
                         </select>
-                        <select id="slctTs" name="slctTs" class="ts-avail" multiple="multiple">
-                            <option value="9-10">9-10</option>
-                            <option value="10-11">10-11</option>
-                            <option value="11-12">11-12</option>
-                            <option value="12-1">12-1</option>
-                            <option value="1-2">1-2</option>
-                            <option value="2-3">2-3</option>
-                            <option value="3-4">3-4</option>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="thu" name="day[]"  value="thu" class="days"/> Thu &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <select id="tsThu" name="tsAvailability[]" class="ts-avail-thu tmsloteCls" multiple="multiple">
+                            <?php echo $timslot;?>
                         </select>
-                        <select id="slctTs" name="slctTs" class="ts-avail" multiple="multiple">
-                            <option value="9-10">9-10</option>
-                            <option value="10-11">10-11</option>
-                            <option value="11-12">11-12</option>
-                            <option value="12-1">12-1</option>
-                            <option value="1-2">1-2</option>
-                            <option value="2-3">2-3</option>
-                            <option value="3-4">3-4</option>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="fri" name="day[]"  value="fri" class="days"/> Fri &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <select id="tsFri" name="tsAvailability[]" class="ts-avail-fri tmsloteCls" multiple="multiple">
+                            <?php echo $timslot;?>
                         </select>
-                        <select id="slctTs" name="slctTs" class="ts-avail" multiple="multiple">
-                            <option value="9-10">9-10</option>
-                            <option value="10-11">10-11</option>
-                            <option value="11-12">11-12</option>
-                            <option value="12-1">12-1</option>
-                            <option value="1-2">1-2</option>
-                            <option value="2-3">2-3</option>
-                            <option value="3-4">3-4</option>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="sat" name="day[]"  value="sat" class="days"/> Sat 
+						 <select id="tmSat" name="tsAvailability[]" class="ts-avail-sat tmsloteCls" multiple="multiple">
+                            <?php echo $timslot;?>
                         </select>
+						</div>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -121,22 +102,18 @@
                         <input type="button" name="btnSave" class="buttonsub" value="Save">
                     </div>
                     <div class="txtfield">
-                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel">
+                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'classroom_availability_view.php';">
                     </div>
                 </div>	
                 <div class="custtable_left div-arrow-img">
                     <img src="images/arrow.png" id="arrow-img" class="arrow-img" />
                 </div>
-                <div class="custtable_left divRule" >
-                    <select id="rules" name="rules" multiple="multiple"  class="rule">
-                        <option value="9-10">Rule1</option>
-                        <option value="27-05-2014 to 27-07-2014 Mon 9-10">27-05-2014 to 27-07-2014 Mon 9-10</option>
-                        <option value=">27-05-2014 to 27-07-2014 Tue 10-11">27-05-2014 to 27-07-2014 Tue 10-11</option>
-                        <option value="27-05-2014 to 27-07-2014 Wed 11-12">27-05-2014 to 27-07-2014 Wed 11-12</option>
-                        <option value="27-05-2014 to 27-07-2014 Mon 9-10">27-05-2014 to 27-07-2014 Mon 9-10</option>
-                        <option value=">27-05-2014 to 27-07-2014 Tue 10-11">27-05-2014 to 27-07-2014 Tue 10-11</option>
-                        <option value="27-05-2014 to 27-07-2014 Wed 11-12">27-05-2014 to 27-07-2014 Wed 11-12</option>
-                    </select>
+                <div class="custtable_left divRule">
+					<div class="divRulecls">
+                   	 	<select id="rules" name="rules" multiple="multiple" size="6" class="rule">
+                        </select>
+						<input type="hidden" id="countRule"  name="countRule" value=""></input>
+					</div>
                 </div>
             </form>
         </div>

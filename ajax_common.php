@@ -84,7 +84,7 @@ switch ($codeBlock) {
 			$room_val=explode("#",$room_type_val[$i]);
 			$room_type_id=$room_val['0'];
 			$room_type_name=$room_val['1'];
-			$options .='<option value="'.$room_type_name.'">'.'--'.$room_type_name.'--'.'</option>';
+			$options .='<option value="">--Select Room--</option>';
 			$room_query="select id,room_name from  room where room_type_id='".trim($room_type_id)."'";
 			$qry = mysqli_query($db, $room_query);
 			while($room_data= mysqli_fetch_array($qry)){
@@ -255,7 +255,19 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	break;
-
+	case "createRules":
+	$data='';
+	
+	if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!=""){
+	/*$options .='<option value="" class="ruleOptName" >Rule:-'.$_POST['countRule'].'</option>';*/
+	$options .='<option value="" class="ruleOptDate" >'.$_POST['dateRange'].'</option>';
+		   for($i=0;$i<count($_POST['days']);$i++){
+		   		$data=$_POST['days'][$i].' '.$_POST['timeSolteArr'][$i];
+				$options .='<option value="" selected="selected">'.$data.'</option>';
+			}
+		}
+	echo $options;
+	break;
 }
 
 ?>

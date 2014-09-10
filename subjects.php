@@ -1,6 +1,7 @@
 <?php
 include('header.php');
 $subjectName=""; $subjectCode=""; $sessionNum=""; $subjectCode="";$caseNum=""; $technicalNotes="";$areaCode="";$areaName="";$programName="";$roomType="";$roomName="";$subjectId="";
+$program_year_detail="";$programYearId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$subjectData= base64_decode($_GET['edit']);
 	$subjectDetails=explode('#',$subjectData);
@@ -8,6 +9,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$areaCode=$subjectDetails['1'];
 	$areaName=$subjectDetails['2'];
 	$programName=$subjectDetails['3'];
+	$programYearId=$subjectDetails['4'];
 	$obj = new Subjects();
 	$result = $obj->getDataBySubjectID($subjectId);
 	$row = $result->fetch_assoc();
@@ -36,11 +38,13 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                         <select id="slctProgram" name="slctProgram" class="select1 required">
                             <option value="" selected="selected">--Select Program--</option>
                              <?php
-					          $program_qry="select * from  program";
+					          $program_qry="select * from program_years";
 					          $program_result= mysqli_query($db, $program_qry);
-					          while ($program_data = mysqli_fetch_assoc($program_result)){
-							  $selected = (trim($programName) == trim($program_data['program_name'])) ? ' selected="selected"' : '';?>
-					          <option value="<?php echo $program_data['program_name']; ?>" <?php echo $selected;?>><?php echo $program_data['program_name'];?></option>
+							  while ($program_data = mysqli_fetch_assoc($program_result)){ 
+							  $program_year_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
+							  $selected = (trim($programName) == trim($program_year_detail)) ? ' selected="selected"' : '';
+							  ?>
+					          <option value="<?php echo $program_data['id'].'#'.$program_data['program_id'];?>" <?php echo $selected;?>><?php echo $program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];?></option>
 					     	 <?php } ?>
                         </select>
                     </div>

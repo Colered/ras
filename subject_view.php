@@ -57,10 +57,11 @@ $(document).ready(function(){
 						</td>
 						<td class="align-center">
 						<?php 
-							$program_query="select program_name from program where id='".$data['program_id']."'";
+							$program_query="select * from  program_years where id='".$data['program_year_id']."'";
 							$program_result= mysqli_query($db, $program_query);
 							$program_data = mysqli_fetch_assoc($program_result);
-							echo $program_data['program_name'];
+							$program_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
+							echo $program_detail;
 						?>
 						</td>
 						<td class="align-center"><?php echo $data['case_number'] ?></td>
@@ -87,7 +88,7 @@ $(document).ready(function(){
 						<td class="align-center"><?php echo $data['date_add'] ?></td>
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">
-                            <a href="subjects.php?edit=<?php echo base64_encode($data['id'].'#'.$area_detail.'#'.$program_data['program_name'])?>" class="table-icon edit" title="Edit"></a>
+                            <a href="subjects.php?edit=<?php echo base64_encode($data['id'].'#'.$area_detail.'#'.$program_detail.'#'.$data['program_year_id'])?>" class="table-icon edit" title="Edit"></a>
 							<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)"></a>
                         </td>
                     </tr>

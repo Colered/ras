@@ -103,7 +103,7 @@ $(function() {
 	});
 });
 $(function() {
-	$( "#fromclsRmAval" ).datepicker({
+	$( "#fromTmDuratn" ).datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -114,7 +114,7 @@ $(function() {
 			$( "#toclsRmAval" ).datepicker( "option", "minDate", selectedDate );
 		}
 	});
-	$( "#toclsRmAval" ).datepicker({
+	$( "#toTmDuratn" ).datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -622,3 +622,88 @@ $(document).ready(function() {
 
 	}    
 });
+$(document).ready(function() {
+   $('#slctRmType').on('change', function(){
+    var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
+	$.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'roomTypeValue': selected,
+			'codeBlock': 'getRooms',
+            },
+        success: function(data) {
+			 $("#slctRmName").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+      });
+	});
+});
+$(document).ready(function(){
+	$(".ts-avail-mon,.ts-avail-tue,.ts-avail-wed,.ts-avail-thu,.ts-avail-fri,.ts-avail-sat").hide();
+	   $('input[class=days]').click(function(){
+            if($(this).attr("value")=="mon"){
+				$(".ts-avail-mon").toggle();
+			}
+            if($(this).attr("value")=="tue"){
+				$(".ts-avail-tue").toggle();
+            }
+            if($(this).attr("value")=="wed"){
+				$(".ts-avail-wed").toggle();
+            }
+			if($(this).attr("value")=="thu"){
+				$(".ts-avail-thu").toggle();
+            }
+			if($(this).attr("value")=="fri"){
+				$(".ts-avail-fri").toggle();
+            }
+			if($(this).attr("value")=="sat"){
+				$(".ts-avail-sat").toggle();
+            }
+	   });
+});
+$(document).ready(function() {
+ var count=1;
+ $('#arrow-img').click(function(e){ 
+	var dateFrom=$('#fromTmDuratn').val();
+	var dateTo=$('#toTmDuratn').val();
+	var dateRange = dateFrom+' to '+dateTo;
+	var days = new Array();
+	$.each($("input[name='day[]']:checked"), function() {
+ 		days.push($(this).val());
+	});
+	var tsValArr = new Array();
+	for($i=0;$i<days.length;$i++){
+		var clsTmSlot = '.ts-avail-'+days[$i];
+		var str='option:selected';
+		var monTmSlot=$(clsTmSlot+ ' ' +str).map(function(){ return this.value }).get().join(",");
+		tsValArr.push(monTmSlot); 
+	}
+	$.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+			'countRule': count,
+			'dateFrom': dateFrom,
+			'dateTo': dateTo,
+			'dateRange': dateRange,
+            'days': days,
+			'timeSolteArr': tsValArr,
+			'codeBlock': 'createRules',
+            },
+        success: function(data) {
+			 count++;
+			 $('#fromTmDuratn, #toTmDuratn, #town1, .tmsloteCls').val('');
+			 $(".ts-avail-mon,.ts-avail-tue,.ts-avail-wed,.ts-avail-thu,.ts-avail-fri,.ts-avail-sat").hide();
+			 $('.days').prop('checked', false);
+			 $("#rules").append(data);
+		},
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+      });
+  });
+});
+

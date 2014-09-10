@@ -346,7 +346,39 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				   }
 			 }
 		break;
-
+		case:'addEditClassAvailability':
+		if($_POST['slctRmName']!="" && $_POST['slctRmType']!="" ){
+				$obj = new Classroom_Availability();
+				if(isset($_POST['classRmAvailId']) && $_POST['classRmAvailId']!=''){
+					//update classroom availabilty
+					$resp = $obj->updateClassroomAvail();
+				}else{
+					//add new clasroom availability
+					$resp = $obj->addClassroomAvail();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formsubject' method='post' action='subjects.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_REQUEST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: classroom_availability_view.php');
+					exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: classroom_availability.php');
+			}
+		break;
 	}
 }
 ?>
