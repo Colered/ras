@@ -219,7 +219,7 @@ switch ($codeBlock) {
 			$relT = mysqli_query($db, $slqT);
 			while($data= mysqli_fetch_array($relT)){
 				echo '<tr>';
-				echo '<td align="center"><input type="radio" name="reserved_flag" value="'.$data['id'].'" onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
+				echo '<td align="center"><input type="radio" class="reserved_radio" name="reserved_flag" value="'.$data['id'].'" onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
 				echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
 				echo '<td>'.$objS->getSubjectByID($subject_id).'</td>';
 				echo '<td>'.$objS->getSessionByID($sessionid).'</td>';
@@ -228,12 +228,12 @@ switch ($codeBlock) {
 				echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'" onchange="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['id'].'\');">';
 				echo '<option value="">--Room--</option>';
 				echo $room_dropDwn;
-				echo '</select><br><span id="room_validate_'.$data['id'].'" class="error" style="display:none;">Choose room</span></td>';
+				echo '</select><br><span id="room_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose room</span></td>';
 
 				echo '<td><select name="tslot_id_'.$data['id'].'" id="tslot_id_'.$data['id'].'" onchange="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['id'].'\');">';
 				echo '<option value="">--Time Slot--</option>';
 				echo $tslot_dropDwn;
-				echo '</select><br><span id="tslot_validate_'.$data['id'].'" class="error" style="display:none;">Choose time slot</span></td>';
+				echo '</select><br><span id="tslot_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose time slot</span></td>';
 				echo '</tr>';
 
 				//mysqli_data_seek($relR,0);

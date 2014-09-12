@@ -66,7 +66,6 @@ $teacher_name = $objT->getFielldVal('teacher','teacher_name','id',$teacher_id);
 						</div>
                     <?php } ?>
                     <div class="clear"></div>
-					<div id="activityReset" style="display:none;padding-left:10px;"><input class="buttonsub" type="button" value="Reset" name="btnTeacherActReset" id="btnTeacherActReset" onclick="reset_reserved_flag();"></div>
                     <div id="activityAddMore" style="padding-left:100px;">
 					<input type="hidden" name="program_year_id" value="<?php echo $program_year_id;?>" />
 					<input type="hidden" name="subject_id" value="<?php echo $subject_id;?>" />

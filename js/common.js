@@ -719,16 +719,24 @@ $(document).ready(function() {
 });
 //function to reset reserved flag
 function reset_reserved_flag(){
-	$('input[name=reserved_flag]').attr('checked',false);
+    if($("input:radio[name=reserved_flag]").is(":checked")){
+       var row_id = $('input:radio[name=reserved_flag]:checked', '#frmTactivity').val();
+       $("#room_validate_"+row_id).hide();
+       $("#tslot_validate_"+row_id).hide();
+	}
+	$('input:radio[name=reserved_flag]').attr('checked',false);
+
 }
 function roomTslotValidate(tid)
 {
    var room_id = $("#room_id_"+tid).val();
    var tslot_id = $("#tslot_id_"+tid).val();
-   $(".error").hide();
-   $("#room_validate_"+tid).show();
-   $("#tslot_validate_"+tid).show();
-   $('input[type="submit"]').attr('disabled' , true);
+   $(".rfv_error").hide();
+   if(room_id=='')
+   	  $("#room_validate_"+tid).show();
+   if(tslot_id=='')
+   	  $("#tslot_validate_"+tid).show();
+   //$('input[type="submit"]').attr('disabled' , true);
    
 }
 //Ajax to check activity availability
@@ -741,9 +749,6 @@ function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
     var tslot_id = $("#tslot_id_"+teacher_id).val();
     if(tslot_id!=''){
 	  $("#tslot_validate_"+teacher_id).hide();
-    }
-    if(($("input[name=reserved_flag]").val()==teacher_id) && (room_id=='' || tslot_id=='')){
-       $('input[type="submit"]').attr('disabled' , true);
     }
     
     if(room_id!='' || tslot_id!=''){
@@ -765,7 +770,7 @@ function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
 				 	$("#room_id_"+dataArr[1]).addClass("error");
 				 	$("#tslot_id_"+dataArr[1]).addClass("error");
 				 	$('input[type="submit"]').attr('disabled' , true);
-				 }else{
+				 }else if(room_id=='' && tslot_id==''){
 				    $('input[type="submit"]').attr('disabled' , false);
 				 }	
 			 },
