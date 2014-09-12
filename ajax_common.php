@@ -198,14 +198,23 @@ switch ($codeBlock) {
             $program_year_id = $_POST['program_year_id'];
             $subject_id = $_POST['subject_id'];
             $sessionid = $_POST['session_id'];
-
+            //room dropdown
 			$slqR="SELECT r.id, r.room_name, rt.room_type, b.building_name FROM room r
 					LEFT JOIN room_type rt ON ( rt.id = r.room_type_id )
 					LEFT JOIN building b ON ( b.id = r.building_id ) ORDER BY room_type,building_name";
 			$relR = mysqli_query($db, $slqR);
+			$room_dropDwn = '';
+			while($rdata= mysqli_fetch_array($relR)){
+				$room_dropDwn .= '<option value="'.$rdata['id'].'">'.$rdata['room_name'].'-'.$rdata['building_name'].'-'.$rdata['room_type'].'</option>';
+			}//end room dropdown
 
+			//time slot dropdown
+            $tslot_dropDwn = '';
             $slqTS="SELECT id, timeslot_range FROM timeslot";
 			$relTS = mysqli_query($db, $slqTS);
+			while($tsdata= mysqli_fetch_array($relTS)){
+				$tslot_dropDwn .= '<option value="'.$tsdata['id'].'">'.$tsdata['timeslot_range'].'</option>';
+			}//end timeslot dropdown
 
             echo '<table cellspacing="0" cellpadding="0" border="0">';
             echo '<tr>';
@@ -221,27 +230,25 @@ switch ($codeBlock) {
 			$relT = mysqli_query($db, $slqT);
 			while($data= mysqli_fetch_array($relT)){
 				echo '<tr>';
-				echo '<td align="center"><input type="radio" name="reserved_flag" value="'.$data['id'].'"></td>';
+				echo '<td align="center"><input type="radio" name="reserved_flag" value="'.$data['id'].'" onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
 				echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
 				echo '<td>'.$objS->getSubjectByID($subject_id).'</td>';
 				echo '<td>'.$objS->getSessionByID($sessionid).'</td>';
 				echo '<td>'.$data['teacher_name'].' ('.$data['email'].')</td>';
 
-				echo '<td><select name="room_id_'.$data['id'].'"><option value="">--Room--</option>';
-				while($rdata= mysqli_fetch_array($relR)){
-					echo  '<option value="'.$rdata['id'].'">'.$rdata['room_name'].'-'.$rdata['building_name'].'-'.$rdata['room_type'].'</option>';
-				}
-				echo '</select></td>';
+				echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'" onchange="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['id'].'\');">';
+				echo '<option value="">--Room--</option>';
+				echo $room_dropDwn;
+				echo '</select><br><span id="room_validate_'.$data['id'].'" class="error" style="display:none;">Choose room</span></td>';
 
-				echo '<td><select name="tslot_id_'.$data['id'].'"><option value="">--Time Slot--</option>';
-				while($tsdata= mysqli_fetch_array($relTS)){
-					echo '<option value="'.$tsdata['id'].'">'.$tsdata['timeslot_range'].'</option>';
-				}
-				echo '</select></td>';
+				echo '<td><select name="tslot_id_'.$data['id'].'" id="tslot_id_'.$data['id'].'" onchange="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['id'].'\');">';
+				echo '<option value="">--Time Slot--</option>';
+				echo $tslot_dropDwn;
+				echo '</select><br><span id="tslot_validate_'.$data['id'].'" class="error" style="display:none;">Choose time slot</span></td>';
 				echo '</tr>';
 
-				mysqli_data_seek($relR,0);
-				mysqli_data_seek($relTS,0);
+				//mysqli_data_seek($relR,0);
+				//mysqli_data_seek($relTS,0);
 			}
             echo '</table>';
 	     }
@@ -259,7 +266,7 @@ switch ($codeBlock) {
 	break;
 	case "createRules":
 	$data='';
-	
+
 	if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!=""){
 	/*$options .='<option value="" class="ruleOptName" >Rule:-'.$_POST['countRule'].'</option>';*/
 	$options .='<option value="" class="ruleOptDate" >'.$_POST['dateRange'].'</option>';
@@ -269,6 +276,38 @@ switch ($codeBlock) {
 			}
 		}
 	echo $options;
+	break;
+	case "checkActAvailability":
+	  if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && $_POST['teacher_id']<>"")
+	  {
+			$program_year_id = $_POST['program_year_id'];
+			$subject_id = $_POST['subject_id'];
+			$sessionid = $_POST['sessionid'];
+			$teacher_id = $_POST['teacher_id'];
+			$room_id = $_POST['room_id'];
+			$tslot_id = $_POST['tslot_id'];
+
+			$sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
+			if($program_year_id)
+				$sqlA .= " and program_year_id='".$program_year_id."'";
+			if($subject_id)
+				$sqlA .= " and subject_id='".$subject_id."'";
+			if($sessionid)
+				$sqlA .= " and session_id='".$sessionid."'";
+			if($teacher_id)
+				$sqlA .= " and teacher_id='".$teacher_id."'";
+			if($room_id)
+				$sqlA .= " and room_id='".$room_id."'";
+			if($tslot_id)
+				$sqlA .= " and timeslot_id='".$tslot_id."'";
+			//echo '<br>'.$sqlA;die;
+			$result =  mysqli_query($db,$sqlA);
+			if(mysqli_num_rows($result)){
+               echo '1#'.$teacher_id;
+			}else{
+			   echo '0#'.$teacher_id;
+			}
+	  }
 	break;
 }
 

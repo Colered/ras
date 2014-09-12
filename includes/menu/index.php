@@ -656,10 +656,32 @@ $menuScript .= '];
 $loginStr = translate ( 'Login' );
 $logoutStr = translate ( 'Logout' );
 
-$menuHtml .= '
+/*$menuHtml .= '
       <table width="100%" class="ThemeMenubar" cellspacing="0" cellpadding="0" summary="">
         <tr>
           <td class="ThemeMenubackgr"><div id="myMenuID"></div></td>'
+ . ( $MENU_DATE_TOP == 'Y' && $menuConfig['MENU_DATE_TOP'] ? '
+          <td class="ThemeMenubackgr ThemeMenu" align="right">
+            ' . print_menu_dates ( true ) . '
+          </td>' : '' ) . '
+          <td class="ThemeMenubackgr ThemeMenu" align="right">'
+ . ( ! empty ( $logout_url ) && $menuConfig['Login'] // Using http_auth.
+  ? '<a class="menuhref" title="'
+   . ( strlen ( $login ) && $login != '__public__'
+    ? $logoutStr . '" href="' . $logout_url . '">' . $logoutStr
+     . ':</a>&nbsp;<label>'
+     . ( $menuConfig['Login Fullname'] ? $fullname : $login ) . '</label>'
+    : // For public user.
+    $loginStr . '" href="' . $login_url . '">' . $loginStr . '</a>' )
+  : '&nbsp;&nbsp;&nbsp;' // TODO replace with something???
+  ) . '&nbsp;</td>
+        </tr>
+      </table>';*/
+
+$menuHtml .= '
+      <table width="100%" class="ThemeMenubar" cellspacing="0" cellpadding="0" summary="">
+        <tr>
+          <td class="ThemeMenubackgr"></td>'
  . ( $MENU_DATE_TOP == 'Y' && $menuConfig['MENU_DATE_TOP'] ? '
           <td class="ThemeMenubackgr ThemeMenu" align="right">
             ' . print_menu_dates ( true ) . '

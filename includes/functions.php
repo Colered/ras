@@ -4431,14 +4431,14 @@ function print_date_entries ( $date, $user, $ssi = false ) {
       $tmp = $moons[$date];
     $moon_title = ( empty ( $tmp ) ? '' : translate ( ucfirst ( $tmp )
      . ( strpos ( 'fullnew', $tmp ) !== false ? '' : ' Quarter' ) . ' Moon' ) );
-    $ret = ( $can_add ? '
+    /*$ret = ( $can_add ? '
         <a title="' . $newEntryStr . '" href="edit_entry.php?' . $userCatStr
        . 'date=' . $date . '"><img src="images/new.png" alt="' . $newEntryStr
        . '" class="new" /></a>' : '' ) . '
         <a class="dayofmonth" href="day.php?' . $userCatStr . 'date=' . $date
      . '">' . substr ( $date, 6, 2 ) . '</a>' . ( empty ( $tmp )
       ? '' : '<img src="images/' . $tmp . 'moon.gif" title="' . $moon_title
-      . '" alt="' . $moon_title . '" />' ) . "<br />\n";
+      . '" alt="' . $moon_title . '" />' ) . "<br />\n";*/
     $cnt++;
   }
   // Get, combime and sort the events for this date.
@@ -4603,7 +4603,7 @@ function print_entry ( $event, $date ) {
   static $viewEventStr, $viewTaskStr;
 
   if ( empty ( $viewEventStr ) ) {
-    $viewEventStr = translate ( 'View this event' );
+    $viewEventStr = translate ( 'vView this event' );
     $viewTaskStr = translate ( 'View this task' );
   }
 
@@ -4658,6 +4658,10 @@ function print_entry ( $event, $date ) {
     $title = ' title="' . $view_text . '" ';
   } else
     $href = $title = '';
+
+ if($cal_type == 'event'){
+	$href = '';
+ }
 
   $ret .= '
       <a ' . $title . ' class="' . $class . '" id="' . "$linkid\" $href"

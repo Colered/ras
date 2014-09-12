@@ -53,7 +53,7 @@ $(document).ready(function(){
                         <td><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
                         <td><?php echo ($row['reserved_flag']==1) ? "Reserved" : "Free";?></td>
                         <td class="align-center" id="<?php echo $row['id'];?>">
-                            <a href="#" class="table-icon edit" title="Edit"></a>
+                            <a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
                             <a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
                         </td>
                     </tr>

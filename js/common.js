@@ -600,36 +600,39 @@ function deleteTeacherActivity($id){
 //function to add activity
 $(document).ready(function() {
     $("#btnTeacherAct").on('click',addTeacherActivity);
-    
-	function addTeacherActivity()
-	{
-		 if($('#frmTactivity').valid()){
-			 var slctProgram = $('#slctProgram').val();
-			 var slctSubject = $('#slctSubject').val();
-			 var slctSession = $('#slctSession').val();
-			 var slctTeacher = $('#slctTeacher').val();
-			 $("#ajaxload_actDiv").show();
-			 $.ajax({
-			   url: "./ajax_common.php",
-			   type: "POST",
-			   data: {
-				   'program_year_id': slctProgram,
-				   'subject_id': slctSubject,
-				   'session_id': slctSession,
-				   'teachersArr': slctTeacher,
-				   'codeBlock': 'addTeacherAct',
-			   },
-			   success: function(data) {
-				 $("#ajaxload_actDiv").hide();
-				 $("#activityAddMore").html(data);
-			   },
-			   error: function(errorThrown) {
-				   console.log(errorThrown);
-			   }
-		  });
-       }	   	  
-	}    
 });
+//Ajax function to add activities
+function addTeacherActivity()
+{ 
+	 if($('#frmTactivity').valid()){
+		 var slctProgram = $('#slctProgram').val();
+		 var slctSubject = $('#slctSubject').val();
+		 var slctSession = $('#slctSession').val();
+		 var slctTeacher = $('#slctTeacher').val();
+		 $("#ajaxload_actDiv").show();
+		 $.ajax({
+		   url: "./ajax_common.php",
+		   type: "POST",
+		   data: {
+			   'program_year_id': slctProgram,
+			   'subject_id': slctSubject,
+			   'session_id': slctSession,
+			   'teachersArr': slctTeacher,
+			   'codeBlock': 'addTeacherAct',
+		   },
+		   success: function(data) {
+			 $("#ajaxload_actDiv").hide();
+			 $("#activityAddMore").html(data);
+			 $("#activityReset").show();
+		   },
+		   error: function(errorThrown) {
+			   console.log(errorThrown);
+		   }
+	  });
+   }	   	  
+}
+// end ajax add activity
+
 $(document).ready(function() {
    $('#slctRmType').on('change', function(){
     var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
@@ -714,4 +717,62 @@ $(document).ready(function() {
       });
   });
 });
+//function to reset reserved flag
+function reset_reserved_flag(){
+	$('input[name=reserved_flag]').attr('checked',false);
+}
+function roomTslotValidate(tid)
+{
+   var room_id = $("#room_id_"+tid).val();
+   var tslot_id = $("#tslot_id_"+tid).val();
+   $(".error").hide();
+   $("#room_validate_"+tid).show();
+   $("#tslot_validate_"+tid).show();
+   $('input[type="submit"]').attr('disabled' , true);
+   
+}
+//Ajax to check activity availability
+function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
+{
+    var room_id = $("#room_id_"+teacher_id).val();
+    if(room_id!=''){
+      $("#room_validate_"+teacher_id).hide();
+    }
+    var tslot_id = $("#tslot_id_"+teacher_id).val();
+    if(tslot_id!=''){
+	  $("#tslot_validate_"+teacher_id).hide();
+    }
+    if(($("input[name=reserved_flag]").val()==teacher_id) && (room_id=='' || tslot_id=='')){
+       $('input[type="submit"]').attr('disabled' , true);
+    }
+    
+    if(room_id!='' || tslot_id!=''){
+		$.ajax({
+			 url: "./ajax_common.php",
+			 type: "POST",
+			 data: {
+				'program_year_id': program_year_id,
+				'subject_id': subject_id,
+				'sessionid': sessionid,
+				'teacher_id': teacher_id,
+				'room_id': room_id,
+				'tslot_id': tslot_id,
+				'codeBlock': 'checkActAvailability',
+			 },
+			 success: function(data) {
+			     var dataArr = data.split('#');
+			     if(dataArr[0]==1){
+				 	$("#room_id_"+dataArr[1]).addClass("error");
+				 	$("#tslot_id_"+dataArr[1]).addClass("error");
+				 	$('input[type="submit"]').attr('disabled' , true);
+				 }else{
+				    $('input[type="submit"]').attr('disabled' , false);
+				 }	
+			 },
+			 error: function(errorThrown) {
+				 console.log(errorThrown);
+			 }
+		});
+   }	
+}
 
