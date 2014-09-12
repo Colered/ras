@@ -1,9 +1,9 @@
 <?php
-/* updated via install/index.php on Thu, 21 Aug 2014 05:36:13 -0400
+/* updated via install/index.php on Thu, 21 Aug 2014 05:36:13 -0400 
 install_password: 0192023a7bbd73250516f069df18b500
 db_type: mysql
 db_host: 172.16.220.164
-db_database: cidot_ras2
+db_database: cidot_ras
 db_login: root
 db_password: cidot@123
 db_persistent: false

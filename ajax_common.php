@@ -252,12 +252,20 @@ switch ($codeBlock) {
 			else
 				echo 0;
 		}
+	case "deleteExcepTeachAvail":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_ExcepTeachAvail_query="delete from teacher_availability_exception where id='".$id."'";
+			$qry = mysqli_query($db, $del_ExcepTeachAvail_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
 	break;
 	case "createRules":
 	$data='';
-
 	if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!=""){
-	/*$options .='<option value="" class="ruleOptName" >Rule:-'.$_POST['countRule'].'</option>';*/
 	$options .='<option value="" class="ruleOptDate" >'.$_POST['dateRange'].'</option>';
 		   for($i=0;$i<count($_POST['days']);$i++){
 		   		$data=$_POST['days'][$i].' '.$_POST['timeSolteArr'][$i];
@@ -297,7 +305,75 @@ switch ($codeBlock) {
 			   echo '0#'.$teacher_id;
 			}
 	  }
+    break;
+	case "createTeachAvaRule":
+		//check if the rule name exists
+		//print_r($_POST); die;
+		$rule_query="select id, rule_name from teacher_availability_rule where rule_name='".$_POST['rule_name']."'";
+		$q_res = mysqli_query($db, $rule_query);
+		$dataAll = mysqli_fetch_assoc($q_res);
+		if(count($dataAll)>0)
+		{
+			echo '0';
+		}else{
+			//Add the new rule
+			$currentDateTime = date("Y-m-d H:i:s");
+			if ($result = mysqli_query($db, "INSERT INTO teacher_availability_rule VALUES ('', '".$_POST['rule_name']."', '".$_POST['start_date']."', '".$_POST['end_date']."', '".$currentDateTime."', '".$currentDateTime."');")){
+				//insert the days and timeslots for created rulle
+				$teacher_availability_rule_id = $db->insert_id;
+				if($teacher_availability_rule_id!=""){
+						//insert values for monday
+						if(isset($_POST['timeslotMon'])){
+						$timeslotMon = substr($_POST['timeslotMon'], 1, -1);
+						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotMon."', 0, 'Mon', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Tuesday
+						if(isset($_POST['timeslotTue'])){
+						$timeslotTue = substr($_POST['timeslotTue'], 1, -1);
+						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotTue."', 1, 'Tue', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Wednesday
+						if(isset($_POST['timeslotWed'])){
+						$timeslotWed = substr($_POST['timeslotWed'], 1, -1);
+						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotWed."', 2, 'Wed', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Thursday
+						if(isset($_POST['timeslotThu'])){
+						$timeslotThu = substr($_POST['timeslotThu'], 1, -1);
+						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotThu."', 3, 'Thu', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Friday
+						if(isset($_POST['timeslotFri'])){
+						$timeslotFri = substr($_POST['timeslotFri'], 1, -1);
+						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotFri."', 4, 'Fri', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Saturday
+						if(isset($_POST['timeslotSat'])){
+						$timeslotSat =  substr($_POST['timeslotSat'], 1, -1);
+						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotSat."', 5, 'Sat', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						echo '1';
+				}else{
+						echo '0';
+				}
+			}else{
+				echo '0';
+			}
+		}
 	break;
+	case "del_teachAvailMap":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_TeachAvail_query="delete from teacher_availability_rule_teacher_map where teacher_id='".$id."'";
+			$qry = mysqli_query($db, $del_TeachAvail_query);
+			if(mysqli_affected_rows($db)>0){
+				echo 1;
+				//delete the related exception for the teacher
+				$del_ExcepTeachAvail_query="delete from teacher_availability_exception where teacher_id='".$id."'";
+				$qry = mysqli_query($db, $del_ExcepTeachAvail_query);
+			}else
+				echo 0;
+			}
+    break;
 }
-
 ?>

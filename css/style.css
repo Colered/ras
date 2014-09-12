@@ -38,11 +38,17 @@ div.divRule{
 padding-top:71px;
 padding-left:54px;
 }
-.rule{
+/*.rule{
 width:100%px;
 overflow:visible;
 min-width:252px;
 height:164px;
+padding-left: 25px;
+margin-top: 114px;
+}*/
+.rule{
+/*width:252px;*/
+/*height:164px;*/
 }
 button, .button{
 	background: #F3F3F3;
@@ -60,11 +66,16 @@ button, .button{
 }
 .arrow-img{
 width:38px;
-height:17px;}
+height:17px;
+}
 div.div-arrow-img{
 padding-top:140px;
 padding-left:32px;
 }
+/*div.div-arrow-img{
+padding-top: 140px;
+margin-left: 15px;
+}*/
 button:hover, .button:hover{
 	border-bottom-color: #999999;
 	border-left-color: #999999;
@@ -603,3 +614,14 @@ div.divSession{
     float: right;
     padding-top: 12px;
 }
+.addbtnSession{padding-top:16px;}
+.tmSlot{width:100px;float: left; text-align: left;}
+.dayName{font-size:13px; padding:5px; padding-top:0px;}
+.main-title{ list-style:none;}
+#rules{margin:0px!important;}
+.listing{margin:5px!important;}
+.sched-data{width:200px; vertical-align:top;}
+.slctTs{min-width:92px;}
+.divException{ text-align:right}
+.exceptionTbl{ width:60px;}
+.divException{ padding-left:80px}

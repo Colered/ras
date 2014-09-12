@@ -282,15 +282,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		//add timeslot
 		case 'addTimeslot':
-			/*print_r($_POST);
-			echo $start = strtotime($_POST['start_time']);
-			echo $end = strtotime($_POST['end_time']);
-
-			if($start >$end){
-			echo 'yes';
-			}else{
-			echo 'no';
-			}*/
 			if($_POST['start_time']!="" && $_POST['end_time']!="" ){
 				$obj = new Timeslot();
 				//add new timeslot
@@ -377,6 +368,34 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
 				header('Location: classroom_availability.php');
+			}
+		break;
+		//add-edit teacher availability
+		case 'addEditTeacherAvailability':
+			if($_POST['slctTeacher']!="" && isset($_POST['ruleval'])){
+					$obj = new Teacher();
+					$resp = $obj->addUpdateTeacAvail();
+					if($resp==0){
+						//return back data to the form
+						echo "<html><head></head><body>";
+						echo "<form name='formbuild' method='post' action='teacher_availability.php'>";
+						reset($_POST);
+						while(list($iname,$ival) = each($_POST)) {
+							echo "<input type='hidden' name='$iname' value='$ival'>";
+						}
+						echo "</form>";
+						echo "</body></html>";
+						echo"<script language='JavaScript'>function submit_back(){ window.document.formbuild.submit();}submit_back();</script>";
+						exit();
+						//end return back
+					}else{
+						header('Location: teacher_availability_view.php');
+						exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: teacher_availability.php');
 			}
 		break;
 	}

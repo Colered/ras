@@ -1,7 +1,7 @@
 $(document).ready(function() {
  $(function() {
 	$( "#dob" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -10,7 +10,7 @@ $(document).ready(function() {
 		changeYear: true,
 	});
 	$( "#doj" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -18,7 +18,7 @@ $(document).ready(function() {
 		changeYear: true,
 	});
 	$( "#exceptnClsAval" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -26,7 +26,7 @@ $(document).ready(function() {
 		changeYear: true,
 	});
 	$( "#exceptnTeachAval" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -80,7 +80,7 @@ $(function() {
 });
 $(function() {
 	$( "#fromTeachAval" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -91,7 +91,7 @@ $(function() {
 		}
 	});
 	$( "#toTeachAval" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -103,8 +103,30 @@ $(function() {
 	});
 });
 $(function() {
-	$( "#fromTmDuratn" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+ $( "#fromTmDuratn" ).datepicker({
+      dateFormat: 'dd-mm-yy',
+	  defaultDate: "+1w",
+	  changeMonth: true,
+	  numberOfMonths: 1,
+	  changeMonth: true, 
+	  changeYear: true,
+	  onClose: function( selectedDate ) {
+	   $( "#toclsRmAval" ).datepicker( "option", "minDate", selectedDate );
+	  }
+	 });
+ $("#toTmDuratn").datepicker({
+	  dateFormat: 'dd-mm-yy',
+	  defaultDate: "+1w",
+	  changeMonth: true,
+	  numberOfMonths: 1,
+	  changeMonth: true, 
+	  changeYear: true,
+	  onClose: function( selectedDate ) {
+	   $( "#fromclsRmAval" ).datepicker( "option", "maxDate", selectedDate );
+	  }
+	 });
+ $("#fromclsRmAval").datepicker({
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -114,8 +136,8 @@ $(function() {
 			$( "#toclsRmAval" ).datepicker( "option", "minDate", selectedDate );
 		}
 	});
-	$( "#toTmDuratn" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+ $("#toclsRmAval").datepicker({
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -125,8 +147,8 @@ $(function() {
 			$( "#fromclsRmAval" ).datepicker( "option", "maxDate", selectedDate );
 		}
 	});
- });
 });
+
 //validate form for area
 $(document).ready(function(){
 		$("#areaForm").validate();
@@ -137,6 +159,7 @@ $(document).ready(function(){
 		$("#frmProff").validate();
 		$("#frmSgroup").validate();
 		$("#frmTactivity").validate();
+		$("#teacherAvailabilityForm").validate();
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {
@@ -440,51 +463,51 @@ function deleteSubject($id){
 }
 //function for addind session number with subject
 $(document).ready(function() {
-	$('.subjectSession').hide();
+ $('.subjectSession').hide();
     var max_fields      = 10; 
     var wrapper         = $(".divSession"); 
     var add_button      = $(".btnSession"); 
     var x = 1,y=0; 
     $(add_button).click(function(e){ 
-		var sessionName='',sessionOrder='',sessionDesc='';						 
-		sessionName=$('#txtSessionName').val();
-		sessionDesc=$('#txtareaSessionDesp').val();
-		sessionOrder=$('#txtOrderNum').val();
-		if($.isNumeric(sessionOrder)){
-		e.preventDefault();
-		var subjectID=$('#subjectId').val();
-		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
-		if(subjectID!=""){
-			var maxSerialNumVal=maxSerialNum + 1;
-			$('#maxSessionListVal').val(maxSerialNumVal);
-			if(maxSerialNum==0){
-				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>');	
-			}
-			if(sessionName!=''){
-				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionOrder+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
-				//$(wrapper).append('');
-				$('#txtSessionName').val('');
-				$('#txtOrderNum').val('');
-				$('#txtareaSessionDesp').val('');
-			}
-	    }else{
-			if(x < max_fields){ 
-			x++;
-			y++;
-			if(sessionName!=''){
-				if(y==1){
-				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>');	
-				}
-            	$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionOrder+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSession(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
-				$('#txtSessionName').val('');
-				$('#txtOrderNum').val('');
-				$('#txtareaSessionDesp').val('');
-			}
-	  }
+  var sessionName='',sessionOrder='',sessionDesc='';       
+  sessionName=$('#txtSessionName').val();
+  sessionDesc=$('#txtareaSessionDesp').val();
+  sessionOrder=$('#txtOrderNum').val();
+  if($.isNumeric(sessionOrder)){
+  e.preventDefault();
+  var subjectID=$('#subjectId').val();
+  var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
+  if(subjectID!=""){
+   var maxSerialNumVal=maxSerialNum + 1;
+   $('#maxSessionListVal').val(maxSerialNumVal);
+   if(maxSerialNum==0){
+    $(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>'); 
+   }
+   if(sessionName!=''){
+    $('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionOrder+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+    //$(wrapper).append('');
+    $('#txtSessionName').val('');
+    $('#txtOrderNum').val('');
+    $('#txtareaSessionDesp').val('');
+   }
+     }else{
+   if(x < max_fields){ 
+   x++;
+   y++;
+   if(sessionName!=''){
+    if(y==1){
+    $(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>'); 
+    }
+             $('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionOrder+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSession(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
+    $('#txtSessionName').val('');
+    $('#txtOrderNum').val('');
+    $('#txtareaSessionDesp').val('');
+   }
+   }
     }
    }else{
-	     alert('Order number should be numeric');
-	   }
+      alert('Order number should be numeric');
+    }
  });
 });
 
@@ -632,7 +655,6 @@ function addTeacherActivity()
    }	   	  
 }
 // end ajax add activity
-
 $(document).ready(function() {
    $('#slctRmType').on('change', function(){
     var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
@@ -725,7 +747,6 @@ function reset_reserved_flag(){
        $("#tslot_validate_"+row_id).hide();
 	}
 	$('input:radio[name=reserved_flag]').attr('checked',false);
-
 }
 function roomTslotValidate(tid)
 {
@@ -736,8 +757,6 @@ function roomTslotValidate(tid)
    	  $("#room_validate_"+tid).show();
    if(tslot_id=='')
    	  $("#tslot_validate_"+tid).show();
-   //$('input[type="submit"]').attr('disabled' , true);
-   
 }
 //Ajax to check activity availability
 function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
@@ -750,7 +769,6 @@ function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
     if(tslot_id!=''){
 	  $("#tslot_validate_"+teacher_id).hide();
     }
-    
     if(room_id!='' || tslot_id!=''){
 		$.ajax({
 			 url: "./ajax_common.php",
@@ -780,4 +798,181 @@ function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
 		});
    }	
 }
+$(document).ready(function(){
+	$("#ts-avail-mon,#ts-avail-tue,#ts-avail-wed,#ts-avail-thu,#ts-avail-fri,#ts-avail-sat").hide();
+	   $('input[class=days]').click(function(){
+            if($(this).attr("value")=="Mon"){
+				$("#ts-avail-mon").toggle();
+			}
+            if($(this).attr("value")=="Tue"){
+				$("#ts-avail-tue").toggle();
+            }
+            if($(this).attr("value")=="Wed"){
+				$("#ts-avail-wed").toggle();
+            }
+			if($(this).attr("value")=="Thu"){
+				$("#ts-avail-thu").toggle();
+            }
+			if($(this).attr("value")=="Fri"){
+				$("#ts-avail-fri").toggle();
+            }
+			if($(this).attr("value")=="Sat"){
+				$("#ts-avail-sat").toggle();
+            }
+	   });
+});
 
+//function to show subjects by program
+function createTeachAvailRule(){
+	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
+	if($('#txtSchd').val()==""){
+			alert('Please select a valid Schedule Name.');
+	}else if($('#fromTeachAval').val()==""){
+			alert('Please select a valid From Time.');
+	}else if($('#toTeachAval').val()==""){ 
+			alert('Please select a valid To Time.');
+	}else if($('.tmSlot input:checked').length <= 0){
+			alert('Please select atleast one day and timeslot.');
+	}else{
+		//get the selected values on each days
+		if(($('#Mon:checked').length > 0) && ($('#ts-avail-mon').val() != null)){
+				var timeslotMon = '{' +$('select#ts-avail-mon').val()+ '}';
+		}
+		if(($('#Tue:checked').length > 0) && ($('#ts-avail-tue').val() != null)){
+			var timeslotTue = '{' +$('select#ts-avail-tue').val()+ '}';
+		}
+		if(($('#Wed:checked').length > 0) && ($('#ts-avail-wed').val() != null)){
+			var timeslotWed = '{' +$('select#ts-avail-wed').val()+ '}';
+		}
+		if(($('#Thu:checked').length > 0) && ($('#ts-avail-thu').val() != null)){
+			var timeslotThu = '{' +$('select#ts-avail-thu').val()+ '}';
+		}
+		if(($('#Fri:checked').length > 0) && ($('#ts-avail-fri').val() != null)){
+			var timeslotFri = '{' +$('select#ts-avail-fri').val()+ '}';
+		}
+		if(($('#Sat:checked').length > 0) && ($('#ts-avail-sat').val() != null)){
+			var timeslotSat = '{' +$('select#ts-avail-sat').val()+ '}';
+		}
+		//send ajax request to insert values into DB		
+		if(timeslotMon!="" || timeslotTue!="" || timeslotWed!="" || timeslotThu!="" || timeslotFri!="" || timeslotSat!=""){
+			$.ajax({
+				url: "./ajax_common.php",
+				type: "POST",
+				data: {
+					'rule_name': $('#txtSchd').val(),
+					'start_date': $('#fromTeachAval').val(),
+					'end_date': $('#toTeachAval').val(),
+					'codeBlock': 'createTeachAvaRule',
+					'timeslotMon': timeslotMon,
+					'timeslotTue': timeslotTue,
+					'timeslotWed': timeslotWed,
+					'timeslotThu': timeslotThu,
+					'timeslotFri': timeslotFri,
+					'timeslotSat': timeslotSat,
+					},
+				success: function($succ){
+					if($succ==1){
+						$id = "";
+						if($('#slctTeacher').val()!=""){
+							$id = '?tid='+$('#slctTeacher').val();
+						}
+						window.location.href = 'teacher_availability.php'+$id+'';
+					}else{
+						alert("Rule name already exists.");
+					}
+				},
+				error: function(errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		}else{
+			alert('Please select atleast one timeslot.');
+			}
+	}
+}
+function changeTeacherData($id){
+		$id="";
+		if($('#slctTeacher').val()!=""){
+			$id = '?tid='+$('#slctTeacher').val();
+		}
+		window.location.href = 'teacher_availability.php'+$id+'';
+	}
+
+$(document).ready(function() {
+	var max_fields = 10; 
+    var wrapper2 = $(".divException"); 
+    var add_button_class_exception = $(".btnTeachAvailExcep"); 
+    var x = 1,y=0; 
+    $(add_button_class_exception).click(function(e){ 
+		var exception_date = $('#exceptnTeachAval').val();
+		e.preventDefault();
+		var decodeTeachId=$('#decodeTeachId').val();
+		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
+		if(decodeTeachId!=""){
+			var maxSerialNumVal=maxSerialNum + 1;
+			$('#maxSessionListVal').val(maxSerialNumVal);
+			if(maxSerialNum==0){
+				$(wrapper2).append('<div class="sessionList"><table id="datatables" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th >Session Name</th><th>Remove</th></tr></thead><tbody>');	
+			}
+			if(exception_date!=''){
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+				$('#exceptnTeachAval').val('');
+			}
+	    }
+ });
+});
+
+//Ajax delete the TeachAvail function 
+function deleteExcepTeachAvail($sessionId, $serialId){
+	if(confirm("Are you sure you want to delete the Exception?")) {
+	    	if($sessionId == 0){
+				$('#'+$serialId).closest( 'tr').remove();
+				$('.green, .red').hide();
+			}else{
+				$.ajax({
+						type: "POST",
+						url: "ajax_common.php",
+						data: {
+							'id': $sessionId,
+							'codeBlock': 'deleteExcepTeachAvail',
+						},
+						success: function($succ){
+							if($succ==1){
+								$('#'+$sessionId).closest( 'tr').remove();
+								$('.green, .red').hide();
+							}else{
+								alert("Cannot delete the selected Exception.");
+								$('.green, .red').hide();
+							}
+						}
+				});
+    		}
+	}
+    return false;
+}
+//Ajax delete the Subject function 
+function deleteTeachAvail($id){
+	if($id==""){
+		alert("Please select a teacher to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the teacher availability mapping?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_teachAvailMap',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the teacher availability mapping subject.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}

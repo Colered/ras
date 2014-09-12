@@ -5,7 +5,6 @@ class Teacher extends Base {
    	}
 	/*function for add professor*/
 	public function addProfessor() {
-
 		$txtPname = Base::cleanText($_POST['txtPname']);
 		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
 		$dob = date("Y-m-d h:i:s", strtotime($_POST['dob']));
@@ -15,32 +14,23 @@ class Teacher extends Base {
 		$txtQualification = Base::cleanText($_POST['txtQualification']);
 		$years = $_POST['years'];
 		$months = $_POST['months'];
-
 		$totalmonthExp = $years*12+$months;
-
 		$txtEmail = Base::cleanText($_POST['txtEmail']);
 		$txtUname = Base::cleanText($_POST['txtUname']);
-
-
 		$result =  $this->conn->query("select email from teacher where email='".$txtEmail."'");
         $row_cnt_email = $result->num_rows;
-
         $result =  $this->conn->query("select username from teacher where username='".$txtUname."'");
 		$row_cnt = $result->num_rows;
-
-
         if($row_cnt_email > 0){
             $this->conn->close();
             $message="'".$txtEmail."' email already exist in database.";
 			$_SESSION['error_msg'] = $message;
 			return 0;
-
         }elseif($row_cnt > 0){
             $this->conn->close();
             $message="'".$txtUname."' username already exist in database.";
 			$_SESSION['error_msg'] = $message;
 			return 0;
-
         }else{
            $sql = "INSERT INTO teacher (teacher_name, address, dob, doj, gender, designation, qualification, experience, email, username, date_add, date_update) VALUES ('".$txtPname."', '".$txtAreaAddress."', '".$dob."', '".$doj."', '".$sex."', '".$txtDegination."', '".$txtQualification."', '".$totalmonthExp."', '".$txtEmail."', '".$txtUname."', now(), '')";
            $rel = $this->conn->query($sql);
@@ -53,14 +43,10 @@ class Teacher extends Base {
 			 $_SESSION['succ_msg'] = $message;
              return 1;
            }
-
         }
-
 	}
-
 	/*function for edit professor*/
-	public function editProfessor()
-	{
+	public function editProfessor() {
 		$edit_id = base64_decode($_POST['form_edit_id']);
 		$txtPname = Base::cleanText($_POST['txtPname']);
 		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
@@ -71,10 +57,7 @@ class Teacher extends Base {
 		$txtQualification = Base::cleanText($_POST['txtQualification']);
 		$years = $_POST['years'];
 		$months = $_POST['months'];
-
 		$totalmonthExp = $years*12+$months;
-
-
 		$sql = "UPDATE teacher SET
 						teacher_name='".$txtPname."',
 						address='".$txtAreaAddress."',
@@ -96,16 +79,12 @@ class Teacher extends Base {
 		 return 1;
 		}
 	}
-
     //funtion to formate teacher experiance
 	public function printTeacherExp($experience){
-
 	    $years= floor($experience/12);
 		$months = $experience-$years*12;
 	    $yearexp = ($years > 0) ? $years.' year':'';
-
 	    return $yearexp.' '.$months.' month';
-
 	}
 
 	//funtion to get all the teachers
@@ -116,7 +95,6 @@ class Teacher extends Base {
 			return 0;
 		}
 		return $result;
-
 	}
 	//function to add activity
 	public function addActivities()
@@ -248,5 +226,81 @@ class Teacher extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;
 	}
-
+	//add teacher availability
+	public function addTeacherAvailability()
+	{
+		print_r($_POST); die;
+		$result =  $this->conn->query("select * from teacher order by teacher_name");
+		if(!$result->num_rows){
+			return 0;
+		}
+		return $result;
+	}
+	//get all teachers availability
+	public function getTeacherAvailRule()
+	{
+		$teac_query="select id, rule_name, start_date, end_date from teacher_availability_rule ORDER BY id DESC"; 
+		$q_res = mysqli_query($this->conn, $teac_query);
+		if(mysqli_num_rows($q_res)<=0){
+			$message="No teacher availability rule exist.";
+			$_SESSION['error_msg'] = $message;
+		}
+		return $q_res;
+	}
+	
+	public function getTeacherAvailDay($id)
+	{
+		$area_query="select id, timeslot_id, day_name from teacher_availability_rule_day_map where teacher_availability_rule_id ='".$id."'"; 
+		$q_res = mysqli_query($this->conn, $area_query);
+		/*if(mysqli_num_rows($q_res)<=0){
+			$message="No teacher availability rule is created yet.";
+			$_SESSION['error_msg'] = $message;
+		}*/
+		return $q_res;
+	}
+	
+	public function getTeacherAvailTimeslot($ids)
+	{
+		$area_query="select id, timeslot_range from timeslot where id IN(".$ids.")"; 
+		$q_res = mysqli_query($this->conn, $area_query);
+		return $q_res;
+	}
+	
+	public function getRuleIdsForTeacher($ids)
+	{
+		$area_query="select teacher_availability_rule_id from teacher_availability_rule_teacher_map where teacher_id =".$ids; 
+		$q_res = mysqli_query($this->conn, $area_query);
+		$allIds = array();
+		while($data = $q_res->fetch_assoc()){
+			$allIds[] =  $data['teacher_availability_rule_id'];
+		}
+		return $allIds;
+	}
+	
+	public function addUpdateTeacAvail(){
+		$teacherId = base64_decode($_POST['slctTeacher']); 	
+		//delete old mapping
+		$del_teacRuleMap_query="delete from teacher_availability_rule_teacher_map where teacher_id='".$teacherId."'";
+		$qry = mysqli_query($this->conn, $del_teacRuleMap_query);
+		//add new mapping
+		foreach($_POST['ruleval'] as $ruleId){
+			$currentDateTime = date("Y-m-d H:i:s");
+			$result = mysqli_query($this->conn, "INSERT INTO teacher_availability_rule_teacher_map VALUES ('', '".$ruleId."', '".$teacherId."', '".$currentDateTime."', '".$currentDateTime."');"); 
+		} 
+		//delete old exceptions
+		$del_teacRuleMap_query="delete from teacher_availability_exception where teacher_id='".$teacherId."'";
+		$qry = mysqli_query($this->conn, $del_teacRuleMap_query);
+		//add new exceptions
+		foreach($_POST['exceptionDate'] as $exceptionDate){
+			$currentDateTime = date("Y-m-d H:i:s");
+			$result = mysqli_query($this->conn, "INSERT INTO teacher_availability_exception VALUES ('', '".$teacherId."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');"); 
+		} 
+		return 1;
+	}
+	
+	public function viewTeachAvail(){
+		$teachAvail_query="select tartm.id, tar.rule_name, tr.teacher_name, tartm.teacher_availability_rule_id, tartm.teacher_id  from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher_availability_rule as tar ON tartm.teacher_availability_rule_id = tar.id LEFT JOIN teacher as tr ON tartm.teacher_id = tr.id GROUP BY tartm.teacher_id"; 
+		$q_res = mysqli_query($this->conn, $teachAvail_query);
+		return $q_res;
+	}
 }

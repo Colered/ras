@@ -4,11 +4,6 @@ $obj = new Classroom();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$roomId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByRoomID($roomId);
-	/*while ($data = $result->fetch_assoc()){
-			$room_type = $data['room_type'];
-			$room_name = $data['room_name'];
-			$building_name = $data['building_name'];
-	}*/
 	$row = $result->fetch_assoc();
 }
 $roomData = $obj->getAllRoomType();
