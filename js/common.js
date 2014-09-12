@@ -33,6 +33,14 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
+	$( "#exceptnClsrmAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
  });			   
 
 $(function() {
@@ -160,6 +168,7 @@ $(document).ready(function(){
 		$("#frmSgroup").validate();
 		$("#frmTactivity").validate();
 		$("#teacherAvailabilityForm").validate();
+		$("#classroomAvailabilityForm").validate();
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {
@@ -656,7 +665,7 @@ function addTeacherActivity()
 }
 // end ajax add activity
 $(document).ready(function() {
-   $('#slctRmType').on('change', function(){
+	$('#slctRmType').on('change', function(){
     var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
 	$.ajax({
         url: "./ajax_common.php",
@@ -674,69 +683,98 @@ $(document).ready(function() {
       });
 	});
 });
+$(document).ready(function() {
+	var roomId=$("#roomId").val();
+	if(roomId!=""){
+	 var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
+	 $.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'roomTypeValue': selected,
+			'codeBlock': 'getRooms',
+			'roomId': roomId,
+			},
+        success: function(data) {
+			 $("#slctRmName").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+      });
+	}
+});
 $(document).ready(function(){
-	$(".ts-avail-mon,.ts-avail-tue,.ts-avail-wed,.ts-avail-thu,.ts-avail-fri,.ts-avail-sat").hide();
+	$("#ts-avail-day-0,#ts-avail-day-1,#ts-avail-day-2,#ts-avail-day-3,#ts-avail-day-4,#ts-avail-day-5").hide();
 	   $('input[class=days]').click(function(){
-            if($(this).attr("value")=="mon"){
-				$(".ts-avail-mon").toggle();
+            if($(this).attr("value")=="0"){
+				$("#ts-avail-day-0").toggle();
 			}
-            if($(this).attr("value")=="tue"){
-				$(".ts-avail-tue").toggle();
+            if($(this).attr("value")=="1"){
+				$("#ts-avail-day-1").toggle();
             }
-            if($(this).attr("value")=="wed"){
-				$(".ts-avail-wed").toggle();
+            if($(this).attr("value")=="2"){
+				$("#ts-avail-day-2").toggle();
             }
-			if($(this).attr("value")=="thu"){
-				$(".ts-avail-thu").toggle();
+			if($(this).attr("value")=="3"){
+				$("#ts-avail-day-3").toggle();
             }
-			if($(this).attr("value")=="fri"){
-				$(".ts-avail-fri").toggle();
+			if($(this).attr("value")=="4"){
+				$("#ts-avail-day-4").toggle();
             }
-			if($(this).attr("value")=="sat"){
-				$(".ts-avail-sat").toggle();
+			if($(this).attr("value")=="5"){
+				$("#ts-avail-day-5").toggle();
             }
 	   });
 });
 $(document).ready(function() {
  var count=1;
- $('#arrow-img').click(function(e){ 
+ $('.btnCreateRule').click(function(e){
+	var schdName=$('#txtSchd').val();
 	var dateFrom=$('#fromTmDuratn').val();
 	var dateTo=$('#toTmDuratn').val();
-	var dateRange = dateFrom+' to '+dateTo;
+	var dateRange = 'From '+dateFrom+' to '+dateTo;
 	var days = new Array();
 	$.each($("input[name='day[]']:checked"), function() {
  		days.push($(this).val());
 	});
+if((schdName!='') && (dateFrom!='') && (dateTo!='')){								
 	var tsValArr = new Array();
 	for($i=0;$i<days.length;$i++){
-		var clsTmSlot = '.ts-avail-'+days[$i];
+		var clsTmSlot = '#ts-avail-day-'+days[$i];
 		var str='option:selected';
-		var monTmSlot=$(clsTmSlot+ ' ' +str).map(function(){ return this.value }).get().join(",");
-		tsValArr.push(monTmSlot); 
+		var tmSlotVal=$(clsTmSlot+ ' ' +str).map(function(){ return this.value }).get().join(",");
+		tsValArr.push(tmSlotVal); 
 	}
 	$.ajax({
         url: "./ajax_common.php",
         type: "POST",
         data: {
+			'SchdName': schdName,
 			'countRule': count,
 			'dateFrom': dateFrom,
 			'dateTo': dateTo,
 			'dateRange': dateRange,
             'days': days,
-			'timeSolteArr': tsValArr,
-			'codeBlock': 'createRules',
+			'timeSoltArr': tsValArr,
+			'codeBlock': 'createClassAvailabilityRules',
             },
         success: function(data) {
 			 count++;
-			 $('#fromTmDuratn, #toTmDuratn, #town1, .tmsloteCls').val('');
-			 $(".ts-avail-mon,.ts-avail-tue,.ts-avail-wed,.ts-avail-thu,.ts-avail-fri,.ts-avail-sat").hide();
+			 $('#fromTmDuratn, #toTmDuratn,.slctTs').val('');
+			 $("#ts-avail-day-0,#ts-avail-day-1,#ts-avail-day-2,#ts-avail-day-3,#ts-avail-day-4,#ts-avail-day-5").hide();
 			 $('.days').prop('checked', false);
-			 $("#rules").append(data);
+			 $('#txtSchd').val('');
+			 location.reload(true);
+			 //$("#rules").append(data);
 		},
         error: function(errorThrown) {
             console.log(errorThrown);
         }
       });
+	}else{
+		alert('Date From ,Date To,Schedule Name and Days are required to create a rule');
+	}
   });
 });
 //function to reset reserved flag
@@ -896,8 +934,7 @@ function changeTeacherData($id){
 			$id = '?tid='+$('#slctTeacher').val();
 		}
 		window.location.href = 'teacher_availability.php'+$id+'';
-	}
-
+}
 $(document).ready(function() {
 	var max_fields = 10; 
     var wrapper2 = $(".divException"); 
@@ -921,7 +958,6 @@ $(document).ready(function() {
 	    }
  });
 });
-
 //Ajax delete the TeachAvail function 
 function deleteExcepTeachAvail($sessionId, $serialId){
 	if(confirm("Are you sure you want to delete the Exception?")) {
@@ -952,23 +988,118 @@ function deleteExcepTeachAvail($sessionId, $serialId){
 }
 //Ajax delete the Subject function 
 function deleteTeachAvail($id){
+ if($id==""){
+  alert("Please select a teacher to delete");
+  return false;
+ }else if(confirm("Are you sure you want to delete the teacher availability mapping?")) {
+     $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+     'id': $id,
+     'codeBlock': 'del_teachAvailMap',
+    },
+                success: function($succ){
+     if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+      $('.green, .red').hide();
+     }else{
+      alert("Cannot delete the teacher availability mapping subject.");
+      $('.green, .red').hide();
+     }
+                }
+        });
+    }
+    return false;
+}
+$(document).ready(function() {
+	var max_fields = 10; 
+    var wrapper = $(".divException"); 
+    var add_button_class_exception = $(".btnclsrmException"); 
+    var x = 1,y=0; 
+    $(add_button_class_exception).click(function(e){ 
+		var exceptnDate = $('#exceptnClsrmAval').val();
+		e.preventDefault();
+		var roomIdException=$('#roomIdException').val();
+		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
+		if(roomIdException!=""){
+			var maxSerialNumVal=maxSerialNum + 1;
+			$('#maxSessionListVal').val(maxSerialNumVal);
+			if(maxSerialNum==0){
+				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th>Remove</th></tr></thead><tbody>');	
+			}
+			if(exceptnDate!=''){
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptnDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exceptnDate+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeClassException(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+				//$(wrapper).append('');
+				$('#exceptnClsrmAval').val('');
+			}
+	    }else{
+			if(x < max_fields){ 
+			x++;
+			y++;
+			if(exceptnDate!=''){
+				if(y==1){
+				$(wrapper).append('<div class="exceptionList"><table id="datatables" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+						}
+				$('#datatables').append('<tr><td>'+y+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceoptionDate'+y+'"  value="'+exceptnDate+'"/></td><td id='+y+'><a class="remove_field" onclick="removeClassException(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
+				$('#exceptnClsrmAval').val('');
+			}
+	  }
+    }
+ });
+});
+function changeRoomData($id){
+		$id="";
+		if($('#slctRmName').val()!=""){
+			$id = '?rid='+$('#slctRmName').val();
+		}
+		window.location.href = 'classroom_availability.php'+$id+'';
+}
+function removeClassException($exceptionId, $serialId){
+	if(confirm("Are you sure you want to delete the classroom exception?")) {
+	    	if($exceptionId == 0){
+				$('#'+$serialId).closest( 'tr').remove();
+				$('.green, .red').hide();
+			}else{
+				$.ajax({
+						type: "POST",
+						url: "ajax_common.php",
+						data: {
+							'id': $exceptionId,
+							'codeBlock': 'del_cls_exception',
+						},
+						success: function($succ){
+							if($succ==1){
+								$('#'+$exceptionId).closest( 'tr').remove();
+								$('.green, .red').hide();
+							}else{
+								alert("Cannot delete the selected exception.");
+								$('.green, .red').hide();
+							}
+						}
+				});
+    		}
+	}
+    return false;
+}
+function deleteClassroomAvailability($id){
 	if($id==""){
-		alert("Please select a teacher to delete");
+		alert("Please select a classroom availability to delete");
 		return false;
-	}else if(confirm("Are you sure you want to delete the teacher availability mapping?")) {
+	}else if(confirm("Are you sure you want to delete the classroom availability?")) {
 	    $.ajax({
                 type: "POST",
                 url: "ajax_common.php",
                 data: {
 					'id': $id,
-					'codeBlock': 'del_teachAvailMap',
+					'codeBlock': 'del_classroom_availabilty',
 				},
                 success: function($succ){
 					if($succ==1){
                         $('#'+$id).closest( 'tr').remove();
 						$('.green, .red').hide();
 					}else{
-						alert("Cannot delete the teacher availability mapping subject.");
+						alert("Cannot delete the selected subject.");
 						$('.green, .red').hide();
 					}
                 }

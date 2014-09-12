@@ -88,7 +88,9 @@ switch ($codeBlock) {
 			$room_query="select id,room_name from  room where room_type_id='".trim($room_type_id)."'";
 			$qry = mysqli_query($db, $room_query);
 			while($room_data= mysqli_fetch_array($qry)){
-			  $options .='<option value="'.$room_data['id'].'">'.$room_data['room_name'].'</option>';
+			  $selected = ($_POST['roomId'] == $room_data['id']) ? ' selected="selected"' : '';
+			  
+			  $options .='<option value="'.$room_data['id'].'" '.$selected.' >'.$room_data['room_name'].'</option>';
 			 }
 			}
 		}
@@ -264,15 +266,59 @@ switch ($codeBlock) {
 		}
 	break;
 	case "createRules":
-	$data='';
-	if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!=""){
-	$options .='<option value="" class="ruleOptDate" >'.$_POST['dateRange'].'</option>';
-		   for($i=0;$i<count($_POST['days']);$i++){
-		   		$data=$_POST['days'][$i].' '.$_POST['timeSolteArr'][$i];
-				$options .='<option value="" selected="selected">'.$data.'</option>';
+	 $data='';
+	 if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!=""){
+	 $options .='<option value="" class="ruleOptDate" >'.$_POST['dateRange'].'</option>';
+		 for($i=0;$i<count($_POST['days']);$i++){
+		   $data=$_POST['days'][$i].' '.$_POST['timeSolteArr'][$i];
+		$options .='<option value="" selected="selected">'.$data.'</option>';
+	   }
+	  }
+	 echo $options;
+	 break;
+	case "createClassAvailabilityRules":
+			$data='';
+			$list='';
+			$currentDateTime = date("Y-m-d H:i:s");
+			/*converting the from date string into the datetime*/
+			$dateFromStr=$_POST['dateFrom'];
+			$obj = new DateTime($dateFromStr);
+			$dateFrom=$obj->format("Y-m-d H:i:s");
+			/*converting the to date string into the datetime*/
+			$dateToStr=$_POST['dateTo'];
+			$obj1 = new DateTime($dateToStr);
+			$dateTo=$obj1->format("Y-m-d H:i:s");
+			$cnt=$_POST['countRule'];
+			/*To insert the rule */
+			if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!="" && $_POST['SchdName']!=""){
+				 $rule_qry="INSERT INTO  classroom_availability_rule VALUES ('', '".$_POST['SchdName']."', '".$dateFrom."','".$dateTo."','".$currentDateTime."', '".$currentDateTime."')";
+				 $result_qry=mysqli_query($db,$rule_qry);
+				 $j=0;
+				 if($result_qry){
+					   $last_insert_id=mysqli_insert_id($db);
+					   for($i=0;$i<count($_POST['days']);$i++){
+							$rule_day_qry="INSERT INTO  classroom_availability_rule_day_map VALUES ('', '".$last_insert_id."', '".$_POST['timeSoltArr'][$i]."','".$_POST['days'][$i]."','".$currentDateTime."', '".$currentDateTime."')";
+							$rule_day_qry_rslt=mysqli_query($db,$rule_day_qry);
+							if($rule_day_qry_rslt){
+						  $j++;
+						  if($j==count($_POST['days'])){
+							$message="Rules has been added successfully";
+							$_SESSION['succ_msg'] = $message;
+							//return 1;
+						  }
+						  else{
+							 $message="Rules cannot be inserted1";
+							 $_SESSION['succ_msg'] = $message;
+							 //return 1;
+						  }
+						}
+					   }
+				 }else{
+				   $message="Rules cannot be inserted2";
+				   $_SESSION['succ_msg'] = $message;
+				   //return 1;
+				  }
 			}
-		}
-	echo $options;
 	break;
 	case "checkActAvailability":
 	  if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && $_POST['teacher_id']<>"")
@@ -308,7 +354,6 @@ switch ($codeBlock) {
     break;
 	case "createTeachAvaRule":
 		//check if the rule name exists
-		//print_r($_POST); die;
 		$rule_query="select id, rule_name from teacher_availability_rule where rule_name='".$_POST['rule_name']."'";
 		$q_res = mysqli_query($db, $rule_query);
 		$dataAll = mysqli_fetch_assoc($q_res);
@@ -374,6 +419,31 @@ switch ($codeBlock) {
 			}else
 				echo 0;
 			}
+    break;
+	case "del_cls_exception":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_class_excepton_query="delete from classroom_availability_exception where id='".$id."'";
+			$qry = mysqli_query($db, $del_class_excepton_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+    break;
+	case "del_classroom_availabilty":
+		if(isset($_POST['id'])){
+		 $id = $_POST['id'];
+		 $del_clsrmAvail_query="delete from classroom_availability_rule_room_map where room_id='".$id."'";
+		 $qry = mysqli_query($db, $del_clsrmAvail_query);
+		if(mysqli_affected_rows($db)>0){
+			echo 1;
+		 //delete the related exception for the teacher
+		$del_ExcepclsrmAvail_query="delete from classroom_availability_exception where room_id='".$id."'";
+		$qry = mysqli_query($db, $del_ExcepclsrmAvail_query);
+		}else
+		 echo 0;
+		}
     break;
 }
 ?>

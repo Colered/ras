@@ -35,17 +35,9 @@ width:177px;
 width:53px;
 }
 div.divRule{
-padding-top:71px;
-padding-left:54px;
-}
-/*.rule{
-width:100%px;
-overflow:visible;
-min-width:252px;
-height:164px;
 padding-left: 25px;
 margin-top: 114px;
-}*/
+}
 .rule{
 /*width:252px;*/
 /*height:164px;*/
@@ -66,12 +58,7 @@ button, .button{
 }
 .arrow-img{
 width:38px;
-height:17px;
-}
-div.div-arrow-img{
-padding-top:140px;
-padding-left:32px;
-}
+height:17px;}
 /*div.div-arrow-img{
 padding-top: 140px;
 margin-left: 15px;
@@ -571,7 +558,9 @@ table .chb{
     font-weight: normal;}	
 	
 	
-.gird-addnew{float:right; padding-right:20px; color:#006e2f;}
+.gird-addnew{
+float:right; padding-right:20px; color:#006e2f;}
+
 .table1{ 
 	border: 1px solid #CCCCCC; 
 	margin: 10px; 
@@ -595,25 +584,6 @@ div.divSession{
 
 }
 .remove_field{cursor:pointer;}
-#sesssionTable th, td {
- border: 1px solid black;
-} 
-#sesssionTable th{
- color: #383838;
-}
-.tmSlot{width:87px;float: left; text-align: left;}
-.divRulecls{
-    overflow-x: scroll;
-	overflow-y: scroll;
- 	width:235px;
- 	height:120px;
-}
-/*.ruleOptName{color:#993300;font-weight:bold}  */
-.ruleOptDate{color:#993300;font-weight:bold} 
-.wait-text{ 
-    float: right;
-    padding-top: 12px;
-}
 .addbtnSession{padding-top:16px;}
 .tmSlot{width:100px;float: left; text-align: left;}
 .dayName{font-size:13px; padding:5px; padding-top:0px;}
@@ -622,6 +592,28 @@ div.divSession{
 .listing{margin:5px!important;}
 .sched-data{width:200px; vertical-align:top;}
 .slctTs{min-width:92px;}
+.divException{ text-align:right}
+.exceptionTbl{ width:60px;}
+.divException{ padding-left:80px}
+#sesssionTable th, td {
+ border: 1px solid black;
+} 
+#sesssionTable th{
+ color: #383838;
+}
+.divRulecls{
+    overflow-x: scroll;
+	overflow-y: scroll;
+ 	width:235px;
+ 	height:120px;
+}
+.ruleOptDate{color:#993300;font-weight:bold} 
+.wait-text{ 
+    float: right;
+    padding-top: 12px;
+}
+.createScheduleBlock{border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px;margin-top:37px}
+.scheduleBlock{border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px}
 .divException{ text-align:right}
 .exceptionTbl{ width:60px;}
 .divException{ padding-left:80px}
