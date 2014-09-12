@@ -148,7 +148,7 @@ $(function() {
 		}
 	});
 });
-
+});
 //validate form for area
 $(document).ready(function(){
 		$("#areaForm").validate();
