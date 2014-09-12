@@ -4,8 +4,8 @@ class Timeslot extends Base {
    		 parent::__construct();
    	}
 	/*function for adding Area*/
-	public function addTimeslot() 
-	{		
+	public function addTimeslot()
+	{
 			$start = date('H:i A', strtotime($_POST['start_time']));
 			$end = date('H:i A', strtotime($_POST['end_time']));
 			$timeslot = $start.' - '.$end;
@@ -67,13 +67,24 @@ class Timeslot extends Base {
 				$_SESSION['error_msg'] = $message;
 				return 0;
 			}elseif ($result = mysqli_query($this->conn, "Update area  Set area_name = '".$_POST['txtAreaName']."', area_code = '".$_POST['txtAreaCode']."', area_color = '".$_POST['txtAColor']."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['areaId']."'")) {
-   					$message="Area has been updated successfully";
-					$_SESSION['succ_msg'] = $message;
-					return 1;
-				}else{
-					$message="Cannot update the area";
-					$_SESSION['error_msg'] = $message;
-					return 0;
-				}
+				$message="Area has been updated successfully";
+				$_SESSION['succ_msg'] = $message;
+				return 1;
+			}else{
+				$message="Cannot update the area";
+				$_SESSION['error_msg'] = $message;
+				return 0;
 			}
+	}
+	//function to get time slot dropdown
+	public function getTimeSlotDropDwn(){
+		$tslot_dropDwn = '';
+		$slqTS="SELECT id, timeslot_range FROM timeslot";
+		$relTS = mysqli_query($this->conn, $slqTS);
+		while($tsdata= mysqli_fetch_array($relTS)){
+			$tslot_dropDwn .= '<option value="'.$tsdata['id'].'">'.$tsdata['timeslot_range'].'</option>';
+		}
+		return $tslot_dropDwn;
+	}
+
 }

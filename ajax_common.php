@@ -194,28 +194,17 @@ switch ($codeBlock) {
 	break;
 	case "addTeacherAct":
 	     $objS = new Subjects();
+	     $objB = new Buildings();
+		 $objTS = new Timeslot();
+
          if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && !empty($_POST['teachersArr'])){
             $program_year_id = $_POST['program_year_id'];
             $subject_id = $_POST['subject_id'];
             $sessionid = $_POST['session_id'];
-            //room dropdown
-			$slqR="SELECT r.id, r.room_name, rt.room_type, b.building_name FROM room r
-					LEFT JOIN room_type rt ON ( rt.id = r.room_type_id )
-					LEFT JOIN building b ON ( b.id = r.building_id ) ORDER BY room_type,building_name";
-			$relR = mysqli_query($db, $slqR);
-			$room_dropDwn = '';
-			while($rdata= mysqli_fetch_array($relR)){
-				$room_dropDwn .= '<option value="'.$rdata['id'].'">'.$rdata['room_name'].'-'.$rdata['building_name'].'-'.$rdata['room_type'].'</option>';
-			}//end room dropdown
-
-			//time slot dropdown
-            $tslot_dropDwn = '';
-            $slqTS="SELECT id, timeslot_range FROM timeslot";
-			$relTS = mysqli_query($db, $slqTS);
-			while($tsdata= mysqli_fetch_array($relTS)){
-				$tslot_dropDwn .= '<option value="'.$tsdata['id'].'">'.$tsdata['timeslot_range'].'</option>';
-			}//end timeslot dropdown
-
+			//room dropdown
+			$room_dropDwn = $objB->getRoomsDropDwn();
+			//timeslot dropdown
+			$tslot_dropDwn = $objTS->getTimeSlotDropDwn();
             echo '<table cellspacing="0" cellpadding="0" border="0">';
             echo '<tr>';
 			echo '<th>Reserved</th>';

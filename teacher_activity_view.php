@@ -40,24 +40,26 @@ $(document).ready(function(){
                 <tbody>
 				<?php
 					$result = $objT->getTeachersAct();
-					while($row = $result->fetch_assoc()){
-				?>
-                    <tr>
-                        <td class="align-center"><?php echo $row['id'];?></td>
-                        <td><?php echo $row['name'];?></td>
-                        <td><?php echo $row['program_name'];?></td>
-                        <td><?php echo $row['subject_name'];?></td>
-                        <td><?php echo $row['session_name'];?></td>
-                        <td><?php echo $row['teacher_name'];?></td>
-                        <td><?php echo $objT->getFielldVal("room","room_name",'id',$row['room_id']);?></td>
-                        <td><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
-                        <td><?php echo ($row['reserved_flag']==1) ? "Reserved" : "Free";?></td>
-                        <td class="align-center" id="<?php echo $row['id'];?>">
-                            <a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-                            <a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
-                        </td>
-                    </tr>
-				<?php }?>
+					if($result->num_rows){
+						while($row = $result->fetch_assoc()){
+					?>
+						<tr>
+							<td class="align-center"><?php echo $row['id'];?></td>
+							<td><?php echo $row['name'];?></td>
+							<td><?php echo $row['program_name'];?></td>
+							<td><?php echo $row['subject_name'];?></td>
+							<td><?php echo $row['session_name'];?></td>
+							<td><?php echo $row['teacher_name'].'('.$row['email'].')';?></td>
+							<td><?php echo $objT->getFielldVal("room","room_name",'id',$row['room_id']);?></td>
+							<td><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
+							<td><?php echo ($row['reserved_flag']==1) ? "Reserved" : "Free";?></td>
+							<td class="align-center" id="<?php echo $row['id'];?>">
+								<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>&tid=<?php echo base64_encode($row['teacher_id']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
+							</td>
+						</tr>
+					<?php } ?>
+				<?php } ?>
 				</tbody>
             </table>
 			<?php if(isset($_SESSION['error_msg'])){ ?>

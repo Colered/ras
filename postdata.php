@@ -323,7 +323,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
              if($_POST['slctProgram']<>"" && $_POST['slctSubject']<>"" && !empty($_POST['slctTeacher'])){
                    //add activities in DB
                    $resp = $objT->addActivities();
-                   if($resp==0){
+                   if($resp==1){
 					  header('Location: teacher_activity_view.php');
 					  exit();
                    }else{
@@ -334,14 +334,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case "edit_teacher_activity":
 			 $objT = new Teacher();
-			 if($_POST['slctProgram']<>"" && $_POST['slctSubject']<>"" && !empty($_POST['slctTeacher'])){
-				   //add activities in DB
-				   $resp = $objT->addActivities();
+			 if($_POST['form_edit_id']<>"" && $_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && !empty($_POST['teacher_id'])){
+				   //edit activities in DB
+				   $resp = $objT->editActivities();
 				   if($resp==0){
 					  header('Location: teacher_activity_view.php');
 					  exit();
 				   }else{
-					  header('Location: teacher_activity_view.php');
+					  header('Location: edit_teacher_activity.php?edit='.base64_encode($_POST['form_edit_id']).'&pyid='.base64_encode($_POST['program_year_id']).'&sid='.base64_encode($_POST['subject_id']).'&sessId='.base64_encode($_POST['sessionid']).'&tid='.base64_encode($_POST['teacher_id']));
 					  exit();
 				   }
 			 }

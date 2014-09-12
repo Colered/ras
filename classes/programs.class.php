@@ -181,6 +181,12 @@ class Programs extends Base {
 		$result =  $this->conn->query("select * from program_years");
 		return $result;
 	}
+	//function to  get all programs according to years
+	public function getProgramYearName($year_id){
+		$result =  $this->conn->query("select name,start_year,end_year from program_years where id='".$year_id."'");
+		$row = $result->fetch_assoc();
+		return $row['name'].' '.$row['start_year'].' '.$row['end_year'];
+	}
 
 
 }

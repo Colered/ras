@@ -8,7 +8,6 @@ $rel_teacher = $objT->getTeachers();
 $rel_prog = $objP->getProgramListYearWise();
 $rel_subject = $objS->getSubjects();
 
-
 ?>
 
 <div id="content">

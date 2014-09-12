@@ -54,19 +54,31 @@ class Buildings extends Base {
 			$area_query="select id, building_name from building where building_name='".$_POST['txtBname']."' and id !='".$_POST['buldId']."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
-			if(count($dataAll)>0)
-			{
+			if(count($dataAll)>0) {
 				$message="Building Name already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
 			}elseif ($result = mysqli_query($this->conn, "Update building  Set building_name = '".Base::cleanText($_POST['txtBname'])."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
-   					$message="Building has been updated successfully";
-					$_SESSION['succ_msg'] = $message;
-					return 1;
-				}else{
-					$message="Cannot update the Building";
-					$_SESSION['error_msg'] = $message;
-					return 0;
-				}
+				$message="Building has been updated successfully";
+				$_SESSION['succ_msg'] = $message;
+				return 1;
+			}else{
+				$message="Cannot update the Building";
+				$_SESSION['error_msg'] = $message;
+				return 0;
 			}
+    }
+    //function to get rooms
+    public function getRoomsDropDwn()
+    {
+		$room_dropDwn = '';
+		$slqR="SELECT r.id, r.room_name, rt.room_type, b.building_name FROM room r
+				LEFT JOIN room_type rt ON ( rt.id = r.room_type_id )
+				LEFT JOIN building b ON ( b.id = r.building_id ) ORDER BY room_type,building_name";
+		$relR = mysqli_query($this->conn, $slqR);
+		while($rdata= mysqli_fetch_array($relR)){
+			$room_dropDwn .= '<option value="'.$rdata['id'].'">'.$rdata['room_name'].'-'.$rdata['building_name'].'-'.$rdata['room_type'].'</option>';
+		}
+		return $room_dropDwn;
+    }
 }

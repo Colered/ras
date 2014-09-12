@@ -1,12 +1,22 @@
 <?php
 include('header.php');
+$objT = new Teacher();
 $objP = new Programs();
 $objS = new Subjects();
-$objT = new Teacher();
+$objB = new Buildings();
+$objTS = new Timeslot();
 
-$rel_teacher = $objT->getTeachers();
-$rel_prog = $objP->getProgramListYearWise();
-$rel_subject = $objS->getSubjects();
+$activity_id = base64_decode($_GET['edit']);
+$program_year_id = base64_decode($_GET['pyid']);
+$subject_id = base64_decode($_GET['sid']);
+$sessionid = base64_decode($_GET['sessId']);
+$teacher_id = base64_decode($_GET['tid']);
+
+$program_name = $objP->getProgramYearName($program_year_id);
+$subject_name = $objT->getFielldVal('subject','subject_name','id',$subject_id);
+$sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessionid);
+$teacher_name = $objT->getFielldVal('teacher','teacher_name','id',$teacher_id);
+
 
 ?>
 
@@ -20,45 +30,85 @@ $rel_subject = $objS->getSubjects();
 					<input type="hidden" name="form_edit_id" value="<?php echo $_GET['edit'];?>" />
 			  <?php } ?>
                 <div class="custtable_left">
-                    <div class="custtd_left">
-                        <h2>Program:</h2>
-                    </div>
-                    <div class="txtfield">
-					   program name
-                    </div>
+                  <?php if($program_name<>""){?>
+						<div class="custtd_left">
+							<h2>Program:</h2>
+						</div>
+						<div class="txtfield">
+						   <?php echo $program_name;?>
+						</div>
+                   <?php } ?>
                     <div class="clear"></div>
-                    <div class="custtd_left">
-                        <h2>Subject</h2>
-                    </div>
-                    <div class="txtfield">
-					  Subject name
-                    </div>
+						<?php if($subject_name<>""){?>
+						<div class="custtd_left">
+							<h2>Subject</h2>
+						</div>
+						<div class="txtfield">
+						  <?php echo $subject_name;?>
+						</div>
+                    <?php } ?>
                     <div class="clear"></div>
-                    <div class="custtd_left">
-						<h2>Session:</h2>
-					</div>
-					<div class="txtfield">
-                       Session name
-					</div>
+                    <?php if($sessionName<>""){?>
+						<div class="custtd_left">
+							<h2>Session:</h2>
+						</div>
+						<div class="txtfield">
+						   <?php echo $sessionName;?>
+						</div>
+					<?php } ?>
                     <div class="clear"></div>
-                    <div class="custtd_left">
-                        <h2>Teacher <span class="redstar">*</span></h2>
-                    </div>
-                    <div class="txtfield" style="float:left">
-                        <select id="slctTeacher" name="slctTeacher[]" class="selectMultiple" size="10" multiple="multiple" required="true">
-                        <?php
-							while($row = $rel_teacher->fetch_assoc()){
-								echo '<option value="'.$row['id'].'">'.$row['teacher_name'].' ('.$row['email'].')</option>';
-							}
-						?>
-                        </select>
-                    </div>
-                    <div style="float:left;padding:133px 0px 0px 20px;"><input class="buttonsub" type="button" value="Add" name="btnTeacherAct" id="btnTeacherAct"></div>
-                    <div id="ajaxload_actDiv" style="padding-top:130px;float:right;display:none;"><img src="images/loading2.gif"  /><div class="wait-text">Please Wait...</div></div>
+                    <?php if($teacher_name<>""){?>
+						<div class="custtd_left">
+							<h2>Teacher:</h2>
+						</div>
+						<div class="txtfield" style="float:left">
+							<?php echo $teacher_name;?>
+						</div>
+                    <?php } ?>
                     <div class="clear"></div>
-
 					<div id="activityReset" style="display:none;padding-left:10px;"><input class="buttonsub" type="button" value="Reset" name="btnTeacherActReset" id="btnTeacherActReset" onclick="reset_reserved_flag();"></div>
-                    <div id="activityAddMore"></div>
+                    <div id="activityAddMore" style="padding-left:100px;">
+					<input type="hidden" name="program_year_id" value="<?php echo $program_year_id;?>" />
+					<input type="hidden" name="subject_id" value="<?php echo $subject_id;?>" />
+					<input type="hidden" name="sessionid" value="<?php echo $sessionid;?>" />
+					<input type="hidden" name="teacher_id" value="<?php echo $teacher_id;?>" />
+
+                    <?php
+						//room dropdown
+						$room_dropDwn = $objB->getRoomsDropDwn();
+						//timeslot dropdown
+						$tslot_dropDwn = $objTS->getTimeSlotDropDwn();
+						echo '<table cellspacing="0" cellpadding="0" border="0">';
+						echo '<tr>';
+						echo '<th>Reserved</th>';
+						echo '<th>Room</th>';
+						echo '<th>Timeslot</th>';
+						echo '</tr>';
+						$slqTA="SELECT * FROM teacher_activity WHERE program_year_id = '".$program_year_id."' AND subject_id='".$subject_id."' AND teacher_id='".$teacher_id."'";
+						$relT = mysqli_query($db, $slqTA);
+						while($data= mysqli_fetch_array($relT)){
+						    $reserved_flag_checked = ($data['reserved_flag']==1) ? "checked" : '';
+						    echo '<input type="hidden" name="activitiesArr[]" value="'.$data['id'].'" />';
+							echo '<tr>';
+							echo '<td align="center"><input type="radio" name="reserved_flag" value="'.$data['id'].'" '.$reserved_flag_checked.'></td>';
+							echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'">';
+							echo '<option value="0">--Room--</option>';
+							echo $room_dropDwn;
+							echo '</select>';
+							echo '<script type="text/javascript">jQuery("#room_id_'.$data['id'].'").val("'.$data['room_id'].'")</script>';
+							echo '</td>';
+							echo '<td><select name="tslot_id_'.$data['id'].'" id="tslot_id_'.$data['id'].'">';
+							echo '<option value="0">--Time Slot--</option>';
+							echo $tslot_dropDwn;
+							echo '</select><span class="error">&nbsp;'.$_SESSION['act_'.$data['id']].'</span>';
+							echo '<script type="text/javascript">jQuery("#tslot_id_'.$data['id'].'").val("'.$data['timeslot_id'].'")</script>';
+							echo '</td>';
+							echo '</tr>';
+                            unset($_SESSION['act_'.$data['id']]);
+						}
+            			echo '</table>';
+                    ?>
+                    </div>
                     <div><br /><br /><br /><br /></div>
                     <div class="clear"></div>
                     <div class="custtd_left">
