@@ -368,32 +368,32 @@ switch ($codeBlock) {
 				$teacher_availability_rule_id = $db->insert_id;
 				if($teacher_availability_rule_id!=""){
 						//insert values for monday
-						if(isset($_POST['timeslotMon'])){
+						if(isset($_POST['timeslotMon']) && ($_POST['timeslotMon'])!=""){
 						$timeslotMon = substr($_POST['timeslotMon'], 1, -1);
 						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotMon."', 0, 'Mon', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Tuesday
-						if(isset($_POST['timeslotTue'])){
+						if(isset($_POST['timeslotTue'])  && ($_POST['timeslotTue'])!=""){
 						$timeslotTue = substr($_POST['timeslotTue'], 1, -1);
 						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotTue."', 1, 'Tue', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Wednesday
-						if(isset($_POST['timeslotWed'])){
+						if(isset($_POST['timeslotWed']) && ($_POST['timeslotWed'])!=""){
 						$timeslotWed = substr($_POST['timeslotWed'], 1, -1);
 						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotWed."', 2, 'Wed', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Thursday
-						if(isset($_POST['timeslotThu'])){
+						if(isset($_POST['timeslotThu']) && ($_POST['timeslotThu'])!=""){
 						$timeslotThu = substr($_POST['timeslotThu'], 1, -1);
 						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotThu."', 3, 'Thu', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Friday
-						if(isset($_POST['timeslotFri'])){
+						if(isset($_POST['timeslotFri']) && ($_POST['timeslotFri'])!=""){
 						$timeslotFri = substr($_POST['timeslotFri'], 1, -1);
 						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotFri."', 4, 'Fri', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Saturday
-						if(isset($_POST['timeslotSat'])){
+						if(isset($_POST['timeslotSat']) && ($_POST['timeslotSat'])!=""){
 						$timeslotSat =  substr($_POST['timeslotSat'], 1, -1);
 						$result = mysqli_query($db, "INSERT INTO teacher_availability_rule_day_map VALUES ('', '".$teacher_availability_rule_id."', '".$timeslotSat."', 5, 'Sat', '".$currentDateTime."', '".$currentDateTime."');");
 						}

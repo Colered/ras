@@ -119,7 +119,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 				</div>
 				<div >
                     <ul id="rules" name="rules" class="rule">
-                       <table width="1200" border="0" >
+                       <table width="1200" border="1" >
 					   <?php
 					    $count = 0;
 					   	while($data = $teacherAvailData->fetch_assoc()){

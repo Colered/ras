@@ -318,7 +318,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					  header('Location: teacher_activity_view.php');
 					  exit();
                    }else{
-                      header('Location: teacher_activity_view.php');
+                      header('Location: teacher_activity.php');
 					  exit();
                    }
              }
@@ -373,7 +373,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		//add-edit teacher availability
 		case 'addEditTeacherAvailability':
-			if($_POST['slctTeacher']!="" && isset($_POST['ruleval'])){
+			if(($_POST['slctTeacher']!="") && ( isset($_POST['ruleval']) || isset($_POST['exceptionDate']))){
 					$obj = new Teacher();
 					$resp = $obj->addUpdateTeacAvail();
 					if($resp==0){

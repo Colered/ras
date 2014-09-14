@@ -590,7 +590,7 @@ div.divSession{
 .main-title{ list-style:none;}
 #rules{margin:0px!important;}
 .listing{margin:5px!important;}
-.sched-data{width:200px; vertical-align:top;}
+.sched-data{width:200px; vertical-align:top; border:1px solid #E3E3E3!important;}
 .slctTs{min-width:92px;}
 .divException{ text-align:right}
 .exceptionTbl{ width:60px;}
