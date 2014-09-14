@@ -29,25 +29,36 @@ $(document).ready(function(){
                     <tr>
                         <th >ID</th>
                         <th >Teacher</th>
-                        <th >Rules</th>
-                        <th >Exception</th>
+                        <th >Associated Rules</th>
+                        <th >Exception Dates</th>
                         <th >Action</th>
                     </tr>
                 </thead>
                 <tbody>
-				<?php while ($data = $result->fetch_assoc()){ ?>
+				<?php while ($data = $result->fetch_assoc()){ 
+						$teacherData = $obj->getRulesForTeacher($data['teacher_id']);
+				?>
 				<tr>
 					<td class="align-center"><?php echo $data['id']; ?></td>
 					<td class="align-center"><?php echo $data['teacher_name']; ?></td>
-					<td class="align-center"><?php echo $data['rule_name']; ?></td>
-					<td class="align-center"><?php echo $data['id']; ?></td>
+					<td class="align-center"><ul style="text-align:left;">
+					<?php while($dataTeach = $teacherData->fetch_assoc()){
+						echo '<li>'.$dataTeach['rule_name'].'</li>';
+					} ?>
+					</ul>
+					</td>
+					<td class="align-center"><?php
+					$exceptionData = $obj->getExceptionForTeacher($data['teacher_id']);
+					while($dataExcep = $exceptionData->fetch_assoc()){
+						echo $dataExcep['exception_date'].'</br>';
+					} ?>
+					</td>
 					<td class="align-center" id="<?php echo $data['teacher_id'] ?>">
                             <a href="teacher_availability.php?tid=<?php echo base64_encode($data['teacher_id']); ?>" class="table-icon edit" title="Edit"></a>
 							<a href="#" class="table-icon delete" onClick="deleteTeachAvail(<?php echo $data['teacher_id']; ?>)"></a>
                     </td>
 				</tr>
 				<?php }?>
-                    
             </table>
         </div>
         <div class="clear"></div>

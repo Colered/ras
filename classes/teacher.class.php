@@ -247,25 +247,21 @@ class Teacher extends Base {
 		}
 		return $q_res;
 	}
-	
+	//get the days for teacher availability
 	public function getTeacherAvailDay($id)
 	{
 		$area_query="select id, timeslot_id, day_name from teacher_availability_rule_day_map where teacher_availability_rule_id ='".$id."'"; 
 		$q_res = mysqli_query($this->conn, $area_query);
-		/*if(mysqli_num_rows($q_res)<=0){
-			$message="No teacher availability rule is created yet.";
-			$_SESSION['error_msg'] = $message;
-		}*/
 		return $q_res;
 	}
-	
+	//get the timeslot for teacher availability
 	public function getTeacherAvailTimeslot($ids)
 	{
 		$area_query="select id, timeslot_range from timeslot where id IN(".$ids.")"; 
 		$q_res = mysqli_query($this->conn, $area_query);
 		return $q_res;
 	}
-	
+	//get all rule ids from teacher
 	public function getRuleIdsForTeacher($ids)
 	{
 		$area_query="select teacher_availability_rule_id from teacher_availability_rule_teacher_map where teacher_id =".$ids; 
@@ -276,7 +272,7 @@ class Teacher extends Base {
 		}
 		return $allIds;
 	}
-	
+	//add and update teacher availability
 	public function addUpdateTeacAvail(){
 		$teacherId = base64_decode($_POST['slctTeacher']); 	
 		//delete old mapping
@@ -297,10 +293,24 @@ class Teacher extends Base {
 		} 
 		return 1;
 	}
-	
+	//view all teacher availability
 	public function viewTeachAvail(){
-		$teachAvail_query="select tartm.id, tar.rule_name, tr.teacher_name, tartm.teacher_availability_rule_id, tartm.teacher_id  from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher_availability_rule as tar ON tartm.teacher_availability_rule_id = tar.id LEFT JOIN teacher as tr ON tartm.teacher_id = tr.id GROUP BY tartm.teacher_id"; 
+		$teachAvail_query="select tartm.id, tr.teacher_name, tartm.teacher_availability_rule_id, tartm.teacher_id  from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher as tr ON tartm.teacher_id = tr.id GROUP BY tartm.teacher_id"; 
 		$q_res = mysqli_query($this->conn, $teachAvail_query);
 		return $q_res;
+	}
+	//get the all rule name associated by a teacher
+	public function getRulesForTeacher($ids)
+	{
+		$rule_query="select tartm.teacher_availability_rule_id, tar.rule_name from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher_availability_rule as tar on tartm.teacher_availability_rule_id = tar.id  where tartm.teacher_id =".$ids;
+		$q_res = mysqli_query($this->conn, $rule_query);
+		return $q_res;
+	}
+	//get all exception for a teacher
+	public function getExceptionForTeacher($ids)
+	{
+		$excep_query="select exception_date from teacher_availability_exception where teacher_id =".$ids;
+		$q_excep = mysqli_query($this->conn, $excep_query);
+		return $q_excep;
 	}
 }
