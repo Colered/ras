@@ -80,6 +80,7 @@ border:1px solid #8bcf54; font-size:12px;font-family:arial, helvetica, sans-seri
  background-image: -o-linear-gradient(top, #00923f, #00682d);
  background-image: linear-gradient(to bottom, #00923f, #00682d);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#00923f, endColorstr=#00682d);
  cursor:pointer;
+ min-width:70px;
 }
 
 .wrap{
