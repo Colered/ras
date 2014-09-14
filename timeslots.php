@@ -45,7 +45,7 @@ $(document).ready(function(){
 					<label for="start">Start time:</label>
 					<input name="start_time" id="start" value="8:00 AM" />
 					<label for="end" style="margin-left:3em">End time:</label>
-					<input name="end_time" id="end" value="8:30 AM"/>
+					<input name="end_time" id="end" value="8:15 AM"/>
                     <input type="submit" name="btnGenrtTime" class="buttonsub" value="Add Timeslot" style="margin-left:10px;">
                     </div></div>
                     <div class="clear"></div>
@@ -96,10 +96,14 @@ $(document).ready(function() {
 	}
 	//init start timepicker
 	var start = $("#start").kendoTimePicker({
-		change: startChange
+		change: startChange,
+		interval: 15
 	}).data("kendoTimePicker");
 	//init end timepicker
-	var end = $("#end").kendoTimePicker().data("kendoTimePicker");
+	var end = $("#end").kendoTimePicker(
+	{
+		interval: 15
+	}).data("kendoTimePicker");
 	//define min/max range
 	start.min("8:00 AM");
 	start.max("6:00 PM");
