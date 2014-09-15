@@ -367,7 +367,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}else{
 				echo $message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
-				die;
 				header('Location: classroom_availability_view.php');
 			}
 		break;

@@ -41,6 +41,14 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
+	$( "#exceptnClsrmAval" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
  });			   
 
 $(function() {
