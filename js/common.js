@@ -34,7 +34,7 @@ $(document).ready(function() {
 		changeYear: true,
 	});
 	$( "#exceptnClsrmAval" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
+	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -120,7 +120,7 @@ $(function() {
 });
 $(function() {
  $( "#fromTmDuratn" ).datepicker({
-      dateFormat: 'dd-mm-yy',
+      dateFormat: 'yy-mm-dd',
 	  defaultDate: "+1w",
 	  changeMonth: true,
 	  numberOfMonths: 1,
@@ -131,7 +131,7 @@ $(function() {
 	  }
 	 });
  $("#toTmDuratn").datepicker({
-	  dateFormat: 'dd-mm-yy',
+	  dateFormat: 'yy-mm-dd',
 	  defaultDate: "+1w",
 	  changeMonth: true,
 	  numberOfMonths: 1,
@@ -324,9 +324,7 @@ $(document).ready(function() {
             console.log(errorThrown);
         }
     });
-	
-    
-});
+  });
 });
 
 //Ajax delete the room function 
@@ -738,15 +736,45 @@ $(document).ready(function(){
 $(document).ready(function() {
  var count=1;
  $('.btnCreateRule').click(function(e){
+  	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
+	if($('#txtSchd').val()==""){
+			alert('Please select a valid Schedule Name.');
+	}else if($('#fromTmDuratn').val()==""){
+			alert('Please select a valid From Time.');
+	}else if($('#toTmDuratn').val()==""){ 
+			alert('Please select a valid To Time.');
+	}else if($('.tmSlot input:checked').length <= 0){
+			alert('Please select atleast one day and timeslot.');
+	}else{
+		//get the selected values on each days
+		if(($('#Mon:checked').length > 0) && ($('#ts-avail-day-0').val() != null)){
+				var timeslotMon = '{' +$('select#ts-avail-day-0').val()+ '}';
+		}
+		if(($('#Tue:checked').length > 0) && ($('#ts-avail-day-1').val() != null)){
+			var timeslotTue = '{' +$('select#ts-avail-day-1').val()+ '}';
+		}
+		if(($('#Wed:checked').length > 0) && ($('#ts-avail-day-2').val() != null)){
+			var timeslotWed = '{' +$('select#ts-avail-day-2').val()+ '}';
+		}
+		if(($('#Thu:checked').length > 0) && ($('#ts-avail-day-3').val() != null)){
+			var timeslotThu = '{' +$('select#ts-avail-day-3').val()+ '}';
+		}
+		if(($('#Fri:checked').length > 0) && ($('#ts-avail-day-4').val() != null)){
+			var timeslotFri = '{' +$('select#ts-avail-day-4').val()+ '}';
+		}
+		if(($('#Sat:checked').length > 0) && ($('#ts-avail-day-5').val() != null)){
+			var timeslotSat = '{' +$('select#ts-avail-day-5').val()+ '}';
+		}							
+		//send ajax request to insert values into DB		
+ if(timeslotMon!="" || timeslotTue!="" || timeslotWed!="" || timeslotThu!="" || timeslotFri!="" || timeslotSat!=""){				
 	var schdName=$('#txtSchd').val();
 	var dateFrom=$('#fromTmDuratn').val();
 	var dateTo=$('#toTmDuratn').val();
 	var dateRange = 'From '+dateFrom+' to '+dateTo;
 	var days = new Array();
 	$.each($("input[name='day[]']:checked"), function() {
- 		days.push($(this).val());
-	});
-if((schdName!='') && (dateFrom!='') && (dateTo!='')){								
+			days.push($(this).val());
+		});
 	var tsValArr = new Array();
 	for($i=0;$i<days.length;$i++){
 		var clsTmSlot = '#ts-avail-day-'+days[$i];
@@ -768,20 +796,28 @@ if((schdName!='') && (dateFrom!='') && (dateTo!='')){
 			'codeBlock': 'createClassAvailabilityRules',
             },
         success: function(data) {
+			if(data==1){
 			 count++;
 			 $('#fromTmDuratn, #toTmDuratn,.slctTs').val('');
 			 $("#ts-avail-day-0,#ts-avail-day-1,#ts-avail-day-2,#ts-avail-day-3,#ts-avail-day-4,#ts-avail-day-5").hide();
 			 $('.days').prop('checked', false);
 			 $('#txtSchd').val('');
-			 location.reload(true);
-			 //$("#rules").append(data);
+			  $id = "";
+			  if($('#slctRmName').val()!=""){
+				 $id = '?rid='+$('#slctRmName').val();
+			    }
+				window.location.href = 'classroom_availability.php'+$id+'';
+			 }else{
+				alert("Rule name already exists.");
+			 }
 		},
         error: function(errorThrown) {
             console.log(errorThrown);
         }
       });
 	}else{
-		alert('Date From ,Date To,Schedule Name and Days are required to create a rule');
+		alert('Please select atleast one timeslot.');
+	 }
 	}
   });
 });
@@ -1028,16 +1064,16 @@ $(document).ready(function() {
     $(add_button_class_exception).click(function(e){ 
 		var exceptnDate = $('#exceptnClsrmAval').val();
 		e.preventDefault();
-		var roomIdException=$('#roomIdException').val();
+		var roomIdException=$('#roomId').val();
 		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
 		if(roomIdException!=""){
 			var maxSerialNumVal=maxSerialNum + 1;
 			$('#maxSessionListVal').val(maxSerialNumVal);
 			if(maxSerialNum==0){
-				$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th>Remove</th></tr></thead><tbody>');	
+				$(wrapper).append('<div class="sessionList"><table id="datatables" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th >Session Name</th><th>Remove</th></tr></thead><tbody>');	
 			}
 			if(exceptnDate!=''){
-				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptnDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exceptnDate+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeClassException(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exceptnDate+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeClassException(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
 				//$(wrapper).append('');
 				$('#exceptnClsrmAval').val('');
 			}

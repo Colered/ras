@@ -280,17 +280,16 @@ switch ($codeBlock) {
 			$data='';
 			$list='';
 			$currentDateTime = date("Y-m-d H:i:s");
-			/*converting the from date string into the datetime*/
-			$dateFromStr=$_POST['dateFrom'];
-			$obj = new DateTime($dateFromStr);
-			$dateFrom=$obj->format("Y-m-d H:i:s");
-			/*converting the to date string into the datetime*/
-			$dateToStr=$_POST['dateTo'];
-			$obj1 = new DateTime($dateToStr);
-			$dateTo=$obj1->format("Y-m-d H:i:s");
+			$dateFrom=$_POST['dateFrom'];
+			$dateTo=$_POST['dateTo'];
 			$cnt=$_POST['countRule'];
-			/*To insert the rule */
-			if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!="" && $_POST['SchdName']!=""){
+			//check if the rule name exists
+			$rule_query="select id, rule_name from classroom_availability_rule where rule_name='".$_POST['SchdName']."'";
+			$q_res = mysqli_query($db, $rule_query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0){
+				echo '0';
+			}elseif(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!="" && $_POST['SchdName']!=""){
 				 $rule_qry="INSERT INTO  classroom_availability_rule VALUES ('', '".$_POST['SchdName']."', '".$dateFrom."','".$dateTo."','".$currentDateTime."', '".$currentDateTime."')";
 				 $result_qry=mysqli_query($db,$rule_qry);
 				 $j=0;
@@ -304,19 +303,18 @@ switch ($codeBlock) {
 						  if($j==count($_POST['days'])){
 							$message="Rules has been added successfully";
 							$_SESSION['succ_msg'] = $message;
-							//return 1;
-						  }
-						  else{
-							 $message="Rules cannot be inserted1";
+							echo '1';
+						  }else{
+							 $message="Rules cannot be add";
 							 $_SESSION['succ_msg'] = $message;
-							 //return 1;
+							 echo '0';
 						  }
 						}
 					   }
 				 }else{
-				   $message="Rules cannot be inserted2";
+				   $message="Rules cannot be add";
 				   $_SESSION['succ_msg'] = $message;
-				   //return 1;
+				   echo '0';
 				  }
 			}
 	break;

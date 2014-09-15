@@ -8,12 +8,19 @@ class Classroom_Availability extends Base {
 		    $roomId = (isset($_POST['slctRmName'])) ? ($_POST['slctRmName']) : '';
 			$ruleId = (isset($_POST['ckbruleVal'])) ? ($_POST['ckbruleVal']) : '';
 			$ruleIdArr=$this->formingArray($ruleId);
-			//echo '<pre>';
-			//print($ruleIdArr);
+			//delete old mapping
+			$del_roomRuleMap_query="delete from classroom_availability_rule_room_map where room_id='".$roomId."'";
+			$qry = mysqli_query($this->conn, $del_roomRuleMap_query);
+			
+			
 			$exceptionDate = (isset($_POST['exceptionDate'])) ? ($_POST['exceptionDate']) : '';
 			$exceptionDateArr=$this->formingArray($exceptionDate);
 			$currentDateTime = date("Y-m-d H:i:s");
 			$i=0;
+			//delete old exceptions
+			$del_roomRuleMapExceptn_query="delete from classroom_availability_exception where room_id='".$roomId."'";
+			$qry = mysqli_query($this->conn, $del_roomRuleMapExceptn_query);
+			
 			foreach($ruleIdArr as $key=>$value){
 				$ruleIdVal=$value;
 			 	$rule_room_qry="INSERT INTO  classroom_availability_rule_room_map VALUES ('', '".$ruleIdVal."', '".$roomId."','".$currentDateTime."', '".$currentDateTime."')";
@@ -24,11 +31,8 @@ class Classroom_Availability extends Base {
 					 	  if($exceptionDate!=""){
 						  	 $j=0;
 						     foreach($exceptionDateArr as $k=>$v){
-							 	//$exceptnDateVal=$v;
-							 	$dateObj = new DateTime($v);
-								$exceptnDateVal=$dateObj->format("Y-m-d H:i:s");
-							 	
-			 					$exception_qry="INSERT INTO classroom_availability_exception VALUES ('', '".$roomId."', '".$exceptnDateVal."','".$currentDateTime."', '".$currentDateTime."')";
+							 	$exceptnDateVal=$v;
+							 	$exception_qry="INSERT INTO classroom_availability_exception VALUES ('', '".$roomId."', '".$exceptnDateVal."','".$currentDateTime."', '".$currentDateTime."')";
 								$exception_qry_rslt=mysqli_query($this->conn,$exception_qry);
 								if($exception_qry_rslt){
 								  	$j++;
@@ -115,12 +119,22 @@ class Classroom_Availability extends Base {
 		return $allIds;
 	}
 	public function viewClassAvail(){
-		$classAvail_query="select tartm.id, tar.rule_name, tr.room_name, tartm.classroom_availability_rule_id, tartm.room_id  from classroom_availability_rule_room_map as tartm LEFT JOIN classroom_availability_rule as tar ON tartm.classroom_availability_rule_id = tar.id LEFT JOIN room as tr ON tartm.room_id = tr.id"; 
+		$classAvail_query="select tartm.id, tr.room_name, tr.room_name, tartm.classroom_availability_rule_id, tartm.room_id  from classroom_availability_rule_room_map as tartm LEFT JOIN room as tr ON tartm.room_id  = tr.id GROUP BY tartm.room_id"; 
 		$q_res = mysqli_query($this->conn, $classAvail_query);
-		//print_r($q_res);die;
 		return $q_res;
 	}
-	
+	public function getRulesForRoom($ids)
+	{
+		$rule_query="select tartm.classroom_availability_rule_id, tar.rule_name from classroom_availability_rule_room_map as tartm LEFT JOIN classroom_availability_rule as tar on tartm.classroom_availability_rule_id = tar.id  where tartm.room_id =".$ids;
+		$q_res = mysqli_query($this->conn, $rule_query);
+		return $q_res;
+	}
+	public function getExceptionForRoom($ids)
+	{
+		$excep_query="select exception_date from classroom_availability_exception where room_id =".$ids;
+		$q_excep = mysqli_query($this->conn, $excep_query);
+		return $q_excep;
+	}
 	public function getRoomTypeById($id){
 	  $room_type_qry="select room_type_id,room_name from  room where id='".$id."'";
 	  $q_res= mysqli_query($this->conn, $room_type_qry);

@@ -1,4 +1,5 @@
-<?php include('header.php');
+<?php 
+include('header.php');
 $obj = new Classroom_Availability();
 $result = $obj->viewClassAvail();
 ?>
@@ -18,40 +19,48 @@ $(document).ready(function(){
 </style>
 <div id="content">
     <div id="main">
+		<div class="full_w green center">
+		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
+		</div>
         <div class="full_w">
             <div class="h_title">Classroom Avalability View<a href="classroom_availability.php" class="gird-addnew" title="Add New Class Room Avalability">Add new</a></div>
-            <table id="datatables">
+            <table id="datatables" class="display">
                 <thead>
                     <tr>
                         <th >ID</th>
                         <th >Room</th>
-                        <th >Schedule Name</th>
-                        <th >Time Interval</th>
-                        <th >Days</th>
-                        <th >Timeslots</th>
-                        <th >Rules</th>
-                        <th >Exception</th>
+                        <th >Associated Rules</th>
+                        <th >Exception Dates</th>
                         <th >Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php while ($data = $result->fetch_assoc()){ ?>
+				<?php while ($data = $result->fetch_assoc()){ 
+						$roomData = $obj->getRulesForRoom($data['room_id']);
+				?>
 				<tr>
-					<td><?php echo $data['id']; ?></td>
-					<td><?php echo $data['room_name']; ?></td>
-					<td><?php echo $data['rule_name']; ?></td>
-					<td><?php echo $data['id']; ?></td>
-					<td><?php echo $data['id']; ?></td>
-					<td><?php echo $data['id']; ?></td>
-					<td><?php echo $data['id']; ?></td>
-					<td class="align-center">1</td>
+					<td class="align-center"><?php echo $data['id']; ?></td>
+					<td class="align-center"><?php echo $data['room_name']; ?></td>
+					<td class="align-center"><ul style="text-align:left;">
+					<?php while($dataRoom = $roomData->fetch_assoc()){
+						echo '<li>'.$dataRoom['rule_name'].'</li>';
+					} ?>
+					</ul>
+					</td>
+					<td class="align-center"><?php
+					$exceptionData = $obj->getExceptionForRoom($data['room_id']);
+					while($dataExcep = $exceptionData->fetch_assoc()){
+						echo $dataExcep['exception_date'].'</br>';
+					} ?>
+					</td>
 					<td class="align-center" id="<?php echo $data['room_id'] ?>">
-						<a href="classroom_availability.php?edit=<?php echo base64_encode($data['room_id'])?>" class="table-icon edit" title="Edit"></a>
+						<a href="classroom_availability.php?rid=<?php echo $data['room_id']?>" class="table-icon edit" title="Edit"></a>
 						<a href="#" class="table-icon delete" onClick="deleteClassroomAvailability(<?php echo $data['room_id'] ?>)"></a>
 					</td>
+					
+					
 				</tr>
 				<?php }?>
-                </tbody>
             </table>
         </div>
         <div class="clear"></div>

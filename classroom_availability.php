@@ -9,27 +9,16 @@ while($data = $timeslotData->fetch_assoc()){
 }
 $name="";
 $classRmAvailId="";
-$roomId="";$editRoomId="";
+$roomId="";
 $roomTypeId="";
 $mappedruleids = array();
 if(isset($_GET['rid']) && $_GET['rid']!=""){
-	//echo '<br>';
 	 $roomId = $_GET['rid'];
 	 $resultRoomTypeId=$obj->getRoomTypeById($roomId);
 	 $roomTypeIdOrigin=$resultRoomTypeId->fetch_row();
 	 $roomTypeId=$roomTypeIdOrigin[0];
-	 //echo $roomTypeId;
-	 
-	//echo 'roomId='.$roomId;
-	//echo $decodeRoomId = base64_decode($roomId);
-	//echo 'decodeRoomId='.$decodeRoomId;
-	//die;
-	$mappedruleids = $obj->getRuleIdsForRoom($roomId);
+	 $mappedruleids = $obj->getRuleIdsForRoom($roomId);
 }
-if(isset($_GET['edit']) && $_GET['edit']!=""){
-	$editRoomId= base64_decode($_GET['edit']);
-}
-
 ?>
 <div id="content">
     <div id="main">
@@ -38,8 +27,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 			<form action="postdata.php" method="post" class="form-align" name="classroomAvailabilityForm" id="classroomAvailabilityForm">
 				<input type="hidden" name="form_action" value="addEditClassAvailability" />
 				<input type="hidden" id="classRmAvailId" name="classRmAvailId" value="<?php echo $classRmAvailId; ?>" />
-				<input type="hidden" id="roomIdException" name="roomIdException" value="<?php echo $editRoomId; ?>" />
-				<input type="hidden" id="roomId" name="roomIdException" value="<?php echo $roomId; ?>" />
+				<input type="hidden" id="roomId" name="roomId" value="<?php echo $roomId; ?>" />
                 <div class="custtable_left">
 				<div class="custtd_left red">
 					<?php if(isset($_SESSION['succ_msg']))
@@ -216,10 +204,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                     </div>
 					<div class="divException"> 
 						<?php
-					if($editRoomId!=""){
+					if($roomId!=""){
 						$x=0;
 						$sessionHtml='';
-						$subj_session_query="select * from  classroom_availability_exception where room_id='".$editRoomId."'";
+						$subj_session_query="select * from  classroom_availability_exception where room_id='".$roomId."'";
 						$subj_session_result= mysqli_query($db, $subj_session_query);
 						while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
 						$x++;
