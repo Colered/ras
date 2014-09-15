@@ -24,7 +24,7 @@ $(document).ready(function(){
 		</div>
         <div class="full_w">
             <div class="h_title">Teacher Avalability View<a href="teacher_availability.php" class="gird-addnew" title="Add New Teacher Avalability">Add new</a></div>
-            <table>
+            <table id="datatables" class="display">
                 <thead>
                     <tr>
                         <th >ID</th>
