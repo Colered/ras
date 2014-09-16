@@ -88,7 +88,7 @@ $(document).ready(function() {
 		var startTime = start.value();
 		if (startTime) {
 			startTime = new Date(startTime);
-			end.max("8:00 PM");
+			end.max("10:00 PM");
 			startTime.setMinutes(startTime.getMinutes() + this.options.interval);
 			end.min(startTime);
 			end.value(startTime);
@@ -106,7 +106,7 @@ $(document).ready(function() {
 	}).data("kendoTimePicker");
 	//define min/max range
 	start.min("8:00 AM");
-	start.max("6:00 PM");
+	start.max("9:30 PM");
 	//define min/max range
 	end.min("8:00 AM");
 	end.max("7:30 PM");
