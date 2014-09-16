@@ -46,11 +46,12 @@ if(!isset($_SESSION['user_id'])){
                         <li class="upp"><a href="timetable_dashboard.php">Timetable</a>
 						   <ul>
                                 <li>&#8250; <a href="generate_timetable.php">New</a></li>
-								<li>&#8250; <a href="timetable_dashboard.php">Edit</a></li>
-                                <li>&#8250; <a href="timetable_dashboard.php">open</a></li>
-                                <li>&#8250; <a href="timetable_dashboard.php">Save</a></li>
+								<!--<li>&#8250; <a href="timetable_dashboard.php">Edit</a></li>-->
+                                <li>&#8250; <a href="month.php">open</a></li>
+                               <!-- <li>&#8250; <a href="timetable_dashboard.php">Save</a></li>
                                 <li>&#8250; <a href="timetable_dashboard.php">Publish</a></li>
-								<li>&#8250; <a href="timetable_dashboard.php">Delete</a></li>
+								<li>&#8250; <a href="timetable_dashboard.php">Delete</a></li>-->
+								<li>&#8250; <a href="timetable_view.php">View</a></li>
                            </ul> 
 						</li>
 						<li class="upp"><a href="">Resources</a>

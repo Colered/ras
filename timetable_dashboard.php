@@ -6,22 +6,23 @@
             <form action="" method="post">
                 <div>
                     <div class="custtd_left1">
-                        <a href="#"><input type="button" name="btnProgram" class="buttonsub" value="New"></a>
+                        <a href="generate_timetable.php"><input type="button" name="btnProgram" class="buttonsub" value="New"></a>
                     </div>
                     <div class="custtd_right">
-                        <a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>
+                        <!--<a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>-->
+						<a target="_blank" href="month.php"><input type="button" name="btnSubject" class="buttonsub" value="Open"></a>
                     </div>
                     <div class="custtd_right">
-                        <a target="_blank" href="month.php"><input type="button" name="btnSubject" class="buttonsub" value="Open"></a>
+                        <a target="_blank" href="timetable_view.php"><input type="button" name="btnSubject" class="buttonsub" value="View"></a>
                     </div>
                     <div class="custtd_left1">
-                        <a href="#"> <input type="button" name="btnTeacher" class="buttonsub" value="Save"></a>
+                        <!--<a href="#"> <input type="button" name="btnTeacher" class="buttonsub" value="Save"></a>-->
                     </div>
                     <div class="custtd_right">
-                        <a href="#"><input type="button" name="btnClsrm" class="buttonsub" value="Publish"></a>
+                        <!--<a href="#"><input type="button" name="btnClsrm" class="buttonsub" value="Publish"></a>-->
                     </div>
                     <div class="custtd_right">
-                        <a href="#"><input type="button" name="btnBuilding" class="buttonsub" value="Delete"></a>
+                        <!--<a href="#"><input type="button" name="btnBuilding" class="buttonsub" value="Delete"></a>-->
                     </div>
                     <div class="clear"></div>
                     <div>
