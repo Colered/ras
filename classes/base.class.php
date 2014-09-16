@@ -50,6 +50,35 @@ abstract class Base
 			return '';
 	   }
 	}
+	
+	//function to find all weeks in a date range
+	public function getWeeksInDateRange($start,$end)
+	{
+       	$dateOne = $start; $dateTwo = $end;
+		$dateStart = $dateOne; $dateEnd = $dateTwo;
+		if(strtotime($dateOne)>strtotime($dateTwo)){
+			$dateStart = $dateTwo;
+			$dateEnd = $dateOne;
+		}
+		//calculate start week
+		while (date('w', strtotime($dateStart)) != 1) {
+		  $tmp = strtotime('-1 day', strtotime($dateStart));
+		  $dateStart = date('Y-m-d', $tmp);
+		}
+		$weekStart = intval(date('W', strtotime($dateStart)));
+		//calculate end week
+		while (date('w', strtotime($dateEnd)) != 1) {
+		  $tmp = strtotime('-1 day', strtotime($dateEnd));
+		  $dateEnd = date('Y-m-d', $tmp);
+		}
+		$weekEnd = intval(date('W', strtotime($dateEnd)));
+		//prepare array for all weeks coming in the date range 
+		$allWeeks = array();
+		for($i=$weekStart; $i<=$weekEnd; $i++){
+			$allWeeks[] = $i;
+		}
+		return $allWeeks;
+	}
 
 
 }

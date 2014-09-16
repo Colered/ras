@@ -361,8 +361,15 @@ switch ($codeBlock) {
 		}else{
 			//Add the new rule
 			$currentDateTime = date("Y-m-d H:i:s");
-			if ($result = mysqli_query($db, "INSERT INTO teacher_availability_rule VALUES ('', '".$_POST['rule_name']."', '".$_POST['start_date']."', '".$_POST['end_date']."', '".$currentDateTime."', '".$currentDateTime."');")){
-				//insert the days and timeslots for created rulle
+			$weeksDataVal = "";
+			if((isset($_POST['start_date']) && $_POST['start_date']!="") && (isset($_POST['end_date']) && $_POST['end_date']!="")){
+				$weeksData = array();
+				$obj = new Teacher();
+				$weeksData = $obj->getWeeksInDateRange($_POST['start_date'], $_POST['end_date']);
+				$weeksDataVal = implode(",",$weeksData);
+			}
+			if ($result = mysqli_query($db, "INSERT INTO teacher_availability_rule VALUES ('', '".$_POST['rule_name']."', '".$_POST['start_date']."', '".$_POST['end_date']."', '".$weeksDataVal."', '".$currentDateTime."', '".$currentDateTime."');")){
+				//insert the days and timeslots for created rule
 				$teacher_availability_rule_id = $db->insert_id;
 				if($teacher_availability_rule_id!=""){
 						//insert values for monday
