@@ -7,10 +7,12 @@ class Programs extends Base {
 	public function addProgram()
 	{
      	$txtPrgmName = Base::cleanText($_POST['txtPrgmName']);
+     	$txtCompanyName = Base::cleanText($_POST['txtCompanyName']);
 		$slctPrgmType = trim($_POST['slctPrgmType']);
 		$prog_from_date = date("Y-m-d h:i:s", strtotime($_POST['prog_from_date']));
 		$prog_to_date = date("Y-m-d h:i:s", strtotime($_POST['prog_to_date']));
 		$slctNumcycle = trim($_POST['slctNumcycle']);
+		$slctUnit = implode(',',$_POST['slctUnit']);
 
 		$result =  $this->conn->query("SELECT program_name FROM program WHERE program_name='".$txtPrgmName."'");
 		$row_cnt = $result->num_rows;
@@ -21,7 +23,7 @@ class Programs extends Base {
 			return 0;
 		}
 
-		$sql = "INSERT INTO program (program_name, program_type, start_date, end_date , date_add) VALUES ('".$txtPrgmName."', '".$slctPrgmType."', '".$prog_from_date."', '".$prog_to_date."', now())";
+		$sql = "INSERT INTO program (program_name,unit,company, program_type, start_date, end_date , date_add) VALUES ('".$txtPrgmName."','".$slctUnit."','".$txtCompanyName."', '".$slctPrgmType."', '".$prog_from_date."', '".$prog_to_date."', NOW())";
 		$rel = $this->conn->query($sql);
 		$last_ins_id = $this->conn->insert_id;
 		if(!$rel){
@@ -58,10 +60,12 @@ class Programs extends Base {
 	{
 		$edit_id = base64_decode($_POST['programId']);
 		$txtPrgmName = Base::cleanText($_POST['txtPrgmName']);
+     	$txtCompanyName = Base::cleanText($_POST['txtCompanyName']);
 		$slctPrgmType = trim($_POST['slctPrgmType']);
 		$prog_from_date = date("Y-m-d h:i:s", strtotime($_POST['prog_from_date']));
 		$prog_to_date = date("Y-m-d h:i:s", strtotime($_POST['prog_to_date']));
 		$slctNumcycle = trim($_POST['slctNumcycle']);
+		$slctUnit = implode(',',$_POST['slctUnit']);
 
 		$result =  $this->conn->query("SELECT program_name FROM program WHERE program_name='".$txtPrgmName."' AND id != '".$edit_id."'");
 		$row_cnt = $result->num_rows;
@@ -74,7 +78,9 @@ class Programs extends Base {
 
 		$sql = "UPDATE program SET
 		               program_name = '".$txtPrgmName."',
-		               program_type = '".$slctPrgmType."',
+		               unit = '".$slctUnit."',
+					   company = '".$txtCompanyName."',
+					   program_type = '".$slctPrgmType."',
 		               start_date = '".$prog_from_date."',
 		               end_date = '".$prog_to_date."',
 		               date_update = now() WHERE id=$edit_id";

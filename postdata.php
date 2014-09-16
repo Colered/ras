@@ -119,7 +119,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case "add_program":
 			//adding new areas
-			if(trim($_POST['txtPrgmName'])!=""){
+			if(trim($_POST['txtPrgmName'])!="" && !empty($_POST['slctUnit']) && $_POST['slctPrgmType']<>''){
 				$obj = new Programs();
 				$resp = $obj->addProgram();
 
@@ -129,7 +129,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					echo "<form name='form55' method='post' action='programs.php'>";
 					reset($_POST);
 					while(list($iname,$ival) = each($_POST)) {
-					    if($iname=='slctDays1' || $iname=='slctDays2' || $iname=='slctDays2'){
+					    if($iname=='slctDays1' || $iname=='slctDays2' || $iname=='slctDays3' || $iname=='slctUnit'){
 					        foreach($_POST[$iname] as $value){
 							  echo '<input type="hidden" name="'.$iname.'[]" value="'. $value. '">';
 							}
@@ -155,7 +155,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case "edit_program":
 			//adding new areas
-			if(isset($_POST['programId']) && $_POST['programId']<>''){
+			if(isset($_POST['programId']) && $_POST['programId']<>'' && !empty($_POST['slctUnit']) && $_POST['slctPrgmType']<>''){
 				$obj = new Programs();
 				$resp = $obj->editProgram();
 				if($resp==0){
@@ -325,16 +325,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case "edit_teacher_activity":
 			 $objT = new Teacher();
-			 if($_POST['form_edit_id']<>"" && $_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && !empty($_POST['teacher_id'])){
-				   //edit activities in DB
-				   $resp = $objT->editActivities();
-				   if($resp==0){
-					  header('Location: teacher_activity_view.php');
-					  exit();
-				   }else{
-					  header('Location: edit_teacher_activity.php?edit='.base64_encode($_POST['form_edit_id']).'&pyid='.base64_encode($_POST['program_year_id']).'&sid='.base64_encode($_POST['subject_id']).'&sessId='.base64_encode($_POST['sessionid']).'&tid='.base64_encode($_POST['teacher_id']));
-					  exit();
-				   }
+			 if($_POST['form_edit_id']<>"" && $_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && $_POST['sessionid']<>""){
+					//edit activities in DB
+					$resp = $objT->editActivities();
+					header('Location: teacher_activity_view.php');
+					exit();
 			 }
 		break;
 		case "addEditClassAvailability":

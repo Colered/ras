@@ -89,7 +89,7 @@ switch ($codeBlock) {
 			$qry = mysqli_query($db, $room_query);
 			while($room_data= mysqli_fetch_array($qry)){
 			  $selected = ($_POST['roomId'] == $room_data['id']) ? ' selected="selected"' : '';
-			  
+
 			  $options .='<option value="'.$room_data['id'].'" '.$selected.' >'.$room_data['room_name'].'</option>';
 			 }
 			}
@@ -198,11 +198,15 @@ switch ($codeBlock) {
 	     $objS = new Subjects();
 	     $objB = new Buildings();
 		 $objTS = new Timeslot();
+		 $objT = new Teacher();
 
-         if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && !empty($_POST['teachersArr'])){
+         if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && $_POST['session_id']<>"" && !empty($_POST['teachersArr'])){
             $program_year_id = $_POST['program_year_id'];
             $subject_id = $_POST['subject_id'];
             $sessionid = $_POST['session_id'];
+
+            //add teacher activity row in table if not exist
+            $objT->insertActivityRow($program_year_id,$subject_id,$sessionid,$_POST['teachersArr']);
 			//room dropdown
 			$room_dropDwn = $objB->getRoomsDropDwn();
 			//timeslot dropdown
@@ -216,28 +220,32 @@ switch ($codeBlock) {
 			echo '<th>Teacher</th>';
 			echo '<th>Room</th>';
 			echo '<th>Timeslot</th>';
+			echo '<th>Date</th>';
+			echo '<th>&nbsp;</th>';
 			echo '</tr>';
-            $slqT="SELECT id,teacher_name,email FROM teacher WHERE id IN(".implode(',',$_POST['teachersArr']).") ORDER BY teacher_name";
+            $slqT="SELECT * FROM teacher_activity WHERE program_year_id='".$program_year_id."' AND subject_id='".$subject_id."' AND session_id='".$sessionid."' ORDER BY name";
 			$relT = mysqli_query($db, $slqT);
 			while($data= mysqli_fetch_array($relT)){
 				echo '<tr>';
-				echo '<td align="center"><input type="radio" class="reserved_radio" name="reserved_flag" value="'.$data['id'].'" onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
+				echo '<td align="center"><input type="hidden" name="activitiesArr[]" value="'.$data['id'].'"><input type="radio" name="reserved_flag" value="'.$data['id'].'" onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
 				echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
-				echo '<td>'.$objS->getSubjectByID($subject_id).'</td>';
-				echo '<td>'.$objS->getSessionByID($sessionid).'</td>';
-				echo '<td>'.$data['teacher_name'].' ('.$data['email'].')</td>';
+				echo '<td>'.$objS->getSubjectByID($data['subject_id']).'</td>';
+				echo '<td>'.$objS->getSessionByID($data['session_id']).'</td>';
+				echo '<td>'.$objT->getTeacherByID($data['teacher_id']).'<input type="hidden" name="reserved_teacher_id_'.$data['id'].'" value="'.$data['teacher_id'].'"></td>';
 
-				echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'" onchange="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['id'].'\');">';
+				echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'" class="activity_row_chk" disabled>';
 				echo '<option value="">--Room--</option>';
 				echo $room_dropDwn;
 				echo '</select><br><span id="room_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose room</span></td>';
 
-				echo '<td><select name="tslot_id_'.$data['id'].'" id="tslot_id_'.$data['id'].'" onchange="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['id'].'\');">';
+				echo '<td><select name="tslot_id_'.$data['id'].'" id="tslot_id_'.$data['id'].'" class="activity_row_chk" disabled>';
 				echo '<option value="">--Time Slot--</option>';
 				echo $tslot_dropDwn;
 				echo '</select><br><span id="tslot_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose time slot</span></td>';
+				echo '<td><input type="text" size="12" id="activityDateCal_'.$data['id'].'" class="activityDateCal" name="activityDateCal_'.$data['id'].'" readonly disabled/><br><span id="activityDate_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose date</span></td>';
+				echo '<td><input class="buttonsub btnTeacherCheckAbail" type="button" value="Check Availability" name="btnTeacherCheckAbail_'.$data['id'].'" id="btnTeacherCheckAbail_'.$data['id'].'" onclick="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['teacher_id'].'\',\''.$data['id'].'\');" style="display:none;"/>
+				<br><span class="rfv_error" id="room_tslot_availability_avail_'.$data['id'].'" style="color:#ff0000;display:none;">Available</span><span class="rfv_error" id="room_tslot_availability_not_avail_'.$data['id'].'" style="color:#ff0000;display:none;">Not Available</span></td>';
 				echo '</tr>';
-
 				//mysqli_data_seek($relR,0);
 				//mysqli_data_seek($relTS,0);
 			}
@@ -247,7 +255,7 @@ switch ($codeBlock) {
 	case "del_teacher_activity":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
-			$del_query="delete from  teacher_activity where id='".$id."'";
+			$del_query="delete from teacher_activity where id='".$id."'";
 			$qry = mysqli_query($db, $del_query);
 			if(mysqli_affected_rows($db)>0)
 				echo 1;
@@ -270,9 +278,9 @@ switch ($codeBlock) {
 	 if(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!=""){
 	 $options .='<option value="" class="ruleOptDate" >'.$_POST['dateRange'].'</option>';
 		 for($i=0;$i<count($_POST['days']);$i++){
-		   $data=$_POST['days'][$i].' '.$_POST['timeSolteArr'][$i];
-		$options .='<option value="" selected="selected">'.$data.'</option>';
-	   }
+		    $data=$_POST['days'][$i].' '.$_POST['timeSolteArr'][$i];
+			$options .='<option value="" selected="selected">'.$data.'</option>';
+	     }
 	  }
 	 echo $options;
 	 break;
@@ -327,6 +335,7 @@ switch ($codeBlock) {
 			$teacher_id = $_POST['teacher_id'];
 			$room_id = $_POST['room_id'];
 			$tslot_id = $_POST['tslot_id'];
+			$act_date_val = $_POST['act_date_val'];
 
 			$sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
 			if($program_year_id)
@@ -341,12 +350,14 @@ switch ($codeBlock) {
 				$sqlA .= " and room_id='".$room_id."'";
 			if($tslot_id)
 				$sqlA .= " and timeslot_id='".$tslot_id."'";
+			if($act_date_val<>"")
+			    $sqlA .= " and DATE_FORMAT(act_date, '%d-%m-%Y') = '".$act_date_val."'";
 			//echo '<br>'.$sqlA;die;
 			$result =  mysqli_query($db,$sqlA);
 			if(mysqli_num_rows($result)){
-               echo '1#'.$teacher_id;
+               echo '1';
 			}else{
-			   echo '0#'.$teacher_id;
+			   echo '0';
 			}
 	  }
     break;

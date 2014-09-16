@@ -9,7 +9,6 @@ $rel_prog = $objP->getProgramListYearWise();
 $rel_subject = $objS->getSubjects();
 
 ?>
-
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -17,6 +16,11 @@ $rel_subject = $objS->getSubjects();
 			<form name="frmTactivity" id="frmTactivity" action="postdata.php" method="post">
 			  <input type="hidden" name="form_action" value="add_teacher_activity" />
                 <div class="custtable_left">
+					<div class="custtd_left red">
+					<?php if(isset($_SESSION['error_msg']))
+						echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
+					</div>
+					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Program<span class="redstar">*</span></h2>
                     </div>
@@ -47,10 +51,10 @@ $rel_subject = $objS->getSubjects();
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-						<h2>Session</h2>
+						<h2>Session <span class="redstar">*</span></h2>
 					</div>
 					<div class="txtfield">
-					<select id="slctSession" name="slctSession" class="select1">
+					<select id="slctSession" name="slctSession" class="select1 required">
 					<option value="" selected="selected">--Select Session--</option>
 
 					</select>

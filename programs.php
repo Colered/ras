@@ -5,6 +5,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
     $result = $objP->getProgramById($programId);
     $row = $result->fetch_assoc();
+    $unitArr[]= explode(',',$row['unit']);
     //get all the cycles related to data
     $cycleData = $objP->getProgramCycleList($programId);
     while($data = $cycleData->fetch_assoc()){
@@ -24,11 +25,14 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 }
 
 $program_name = isset($_GET['edit']) ? $row['program_name'] : (isset($_POST['txtPrgmName'])? $_POST['txtPrgmName']:'');
+$company_name = isset($_GET['edit']) ? $row['company'] : (isset($_POST['txtCompanyName'])? $_POST['txtCompanyName']:'');
 $program_type = isset($_GET['edit']) ? $row['program_type'] : (isset($_POST['slctPrgmType'])? $_POST['slctPrgmType']:'');
 $program_from_date = isset($_GET['edit']) ? $row['start_date'] : (isset($_POST['prog_from_date'])? $_POST['prog_from_date']:'');
 $program_to_date = isset($_GET['edit']) ? $row['end_date'] : (isset($_POST['prog_to_date'])? $_POST['prog_to_date']:'');
 
 $no_of_cycles = isset($_GET['edit']) ? $totcycle : (isset($_POST['slctNumcycle'])? $_POST['slctNumcycle']:'');
+
+$unitArr1 = isset($_GET['edit']) ? (isset($unitArr[0])? $unitArr[0]: array()) : (!empty($_POST['slctUnit']) ? $_POST['slctUnit'] : array());
 
 $daysArr1 = isset($_GET['edit']) ? (isset($daysArr[0])? $daysArr[0]: array()) : (!empty($_POST['slctDays1']) ? $_POST['slctDays1'] : array());
 $daysArr2 = isset($_GET['edit']) ? (isset($daysArr[1])? $daysArr[1]: array()) : (!empty($_POST['slctDays2']) ? $_POST['slctDays2'] : array());
@@ -84,6 +88,25 @@ $(document).ready(function() {
                         <input type="text" class="inp_txt" id="txtPrgmName" maxlength="50" name="txtPrgmName" value="<?php echo $program_name;?>" required="true">
                     </div>
                     <div class="clear"></div>
+                    <div class="custtd_left">
+                        <h2>Unit <span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+                        <select id="slctUnit" name="slctUnit[]" class="selectMultiple" size="5" multiple="multiple" required="true">
+                            <option value="1" <?php echo in_array(1,$unitArr1) ? 'selected' : ''?>>Executive Education</option>
+                            <option value="2" <?php echo in_array(2,$unitArr1) ? 'selected' : ''?>>Master Programs</option>
+							<option value="3" <?php echo in_array(3,$unitArr1) ? 'selected' : ''?>>Tailored Programs</option>
+							<option value="4" <?php echo in_array(4,$unitArr1) ? 'selected' : ''?>>Activity</option>
+                        </select>
+                    </div>
+                    <div class="clear"></div>
+					<div class="custtd_left">
+						<h2>Company</h2>
+					</div>
+					<div class="txtfield">
+						<input type="text" class="inp_txt" id="txtCompanyName" maxlength="100" name="txtCompanyName" value="<?php echo $company_name;?>">
+					</div>
+					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Program Type <span class="redstar">*</span></h2>
                     </div>

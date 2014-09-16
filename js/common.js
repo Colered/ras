@@ -1,5 +1,13 @@
 $(document).ready(function() {
  $(function() {
+    $(".activityDateCal").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
 	$( "#dob" ).datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
@@ -660,7 +668,15 @@ function addTeacherActivity()
 		   },
 		   success: function(data) {
 			 $("#ajaxload_actDiv").hide();
-			 $("#activityAddMore").html(data);
+			 $("#activityAddMore").html(data).find(".activityDateCal").datepicker({
+                inline: true,
+				dateFormat: 'dd-mm-yy',
+				defaultDate: "+1w",
+				changeMonth: true,
+				numberOfMonths: 1,
+				changeMonth: true, 
+				changeYear: true
+             });
 			 $("#activityReset").show();
 		   },
 		   error: function(errorThrown) {
@@ -824,33 +840,71 @@ $(document).ready(function() {
 //function to reset reserved flag
 function reset_reserved_flag(){
     if($("input:radio[name=reserved_flag]").is(":checked")){
-       var row_id = $('input:radio[name=reserved_flag]:checked', '#frmTactivity').val();
-       $("#room_validate_"+row_id).hide();
-       $("#tslot_validate_"+row_id).hide();
+		var row_id = $('input:radio[name=reserved_flag]:checked', '#frmTactivity').val();
+		$("#room_validate_"+row_id).hide();
+		$("#tslot_validate_"+row_id).hide();
+		$("#activityDate_validate_"+row_id).hide();
+		$("#btnTeacherCheckAbail_"+row_id).hide();
+		$("#room_id_"+row_id).prop("disabled", true);
+		$("#tslot_id_"+row_id).prop("disabled", true);
+		$("#activityDateCal_"+row_id).prop("disabled", true);
 	}
+	$(".activity_row_chk").val("");
+	$(".activityDateCal").val("");
 	$('input:radio[name=reserved_flag]').attr('checked',false);
 }
 function roomTslotValidate(tid)
 {
-   var room_id = $("#room_id_"+tid).val();
-   var tslot_id = $("#tslot_id_"+tid).val();
-   $(".rfv_error").hide();
-   if(room_id=='')
-   	  $("#room_validate_"+tid).show();
-   if(tslot_id=='')
-   	  $("#tslot_validate_"+tid).show();
+	$(".rfv_error").hide();
+	$(".activity_row_chk").prop("disabled", true);
+	$(".activityDateCal").prop("disabled", true);
+	$(".btnTeacherCheckAbail").hide();
+	$("#btnTeacherCheckAbail_"+tid).show();
+
+	$(".activity_row_chk").val("");
+	$(".activityDateCal").val("");
+
+	$("#room_id_"+tid).prop("disabled", false);
+	$("#room_validate_"+tid).show();
+
+	$("#tslot_id_"+tid).prop("disabled", false);
+	$("#tslot_validate_"+tid).show();
+
+	$("#activityDateCal_"+tid).prop("disabled", false);
+	$("#activityDate_validate_"+tid).show();
+   	  
+}
+function roomTslotValidateEdit(tid)
+{
+	$(".rfv_error").hide();
+	$(".activity_row_chk").prop("disabled", true);
+	$(".activityDateCal").prop("disabled", true);
+	$(".btnTeacherCheckAbail").hide();
+	$("#btnTeacherCheckAbail_"+tid).show();
+
+	$("#room_id_"+tid).prop("disabled", false);
+	$("#tslot_id_"+tid).prop("disabled", false);
+	$("#activityDateCal_"+tid).prop("disabled", false);
+   	  
 }
 //Ajax to check activity availability
-function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
+function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id,row_id)
 {
-    var room_id = $("#room_id_"+teacher_id).val();
+    var room_id = $("#room_id_"+row_id).val();
     if(room_id!=''){
-      $("#room_validate_"+teacher_id).hide();
+      $("#room_validate_"+row_id).hide();
     }
-    var tslot_id = $("#tslot_id_"+teacher_id).val();
+    var tslot_id = $("#tslot_id_"+row_id).val();
     if(tslot_id!=''){
-	  $("#tslot_validate_"+teacher_id).hide();
+	  $("#tslot_validate_"+row_id).hide();
     }
+	var act_date_val = $("#activityDateCal_"+row_id).val();
+	if(act_date_val!=''){
+	  $("#activityDate_validate_"+row_id).hide();
+	}
+	$("#room_tslot_availability_avail_"+row_id).hide();
+	$("#room_tslot_availability_not_avail_"+row_id).hide();
+	
     if(room_id!='' || tslot_id!=''){
 		$.ajax({
 			 url: "./ajax_common.php",
@@ -862,16 +916,16 @@ function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id)
 				'teacher_id': teacher_id,
 				'room_id': room_id,
 				'tslot_id': tslot_id,
+				'act_date_val': act_date_val,
 				'codeBlock': 'checkActAvailability',
 			 },
 			 success: function(data) {
-			     var dataArr = data.split('#');
-			     if(dataArr[0]==1){
-				 	$("#room_id_"+dataArr[1]).addClass("error");
-				 	$("#tslot_id_"+dataArr[1]).addClass("error");
+			     if(data==1){
+			        $("#room_tslot_availability_not_avail_"+row_id).show();
 				 	$('input[type="submit"]').attr('disabled' , true);
-				 }else if(room_id=='' && tslot_id==''){
-				    $('input[type="submit"]').attr('disabled' , false);
+				 }else{
+				   $("#room_tslot_availability_avail_"+row_id).show();
+				   $('input[type="submit"]').attr('disabled' , false);
 				 }	
 			 },
 			 error: function(errorThrown) {

@@ -10,16 +10,12 @@ $activity_id = base64_decode($_GET['edit']);
 $program_year_id = base64_decode($_GET['pyid']);
 $subject_id = base64_decode($_GET['sid']);
 $sessionid = base64_decode($_GET['sessId']);
-$teacher_id = base64_decode($_GET['tid']);
 
 $program_name = $objP->getProgramYearName($program_year_id);
 $subject_name = $objT->getFielldVal('subject','subject_name','id',$subject_id);
 $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessionid);
-$teacher_name = $objT->getFielldVal('teacher','teacher_name','id',$teacher_id);
-
 
 ?>
-
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -57,20 +53,11 @@ $teacher_name = $objT->getFielldVal('teacher','teacher_name','id',$teacher_id);
 						</div>
 					<?php } ?>
                     <div class="clear"></div>
-                    <?php if($teacher_name<>""){?>
-						<div class="custtd_left">
-							<h2>Teacher:</h2>
-						</div>
-						<div class="txtfield" style="float:left">
-							<?php echo $teacher_name;?>
-						</div>
-                    <?php } ?>
-                    <div class="clear"></div>
-                    <div id="activityAddMore" style="padding-left:100px;">
+                    <div id="activityAddMore" style="padding:50px 0px 0px 100px;">
+                    <div id="activityReset" style="padding-left:10px;"><input class="buttonsub" type="button" value="Reset" name="btnTeacherActReset" id="btnTeacherActReset" onclick="reset_reserved_flag();"></div>
 					<input type="hidden" name="program_year_id" value="<?php echo $program_year_id;?>" />
 					<input type="hidden" name="subject_id" value="<?php echo $subject_id;?>" />
 					<input type="hidden" name="sessionid" value="<?php echo $sessionid;?>" />
-					<input type="hidden" name="teacher_id" value="<?php echo $teacher_id;?>" />
 
                     <?php
 						//room dropdown
@@ -80,30 +67,47 @@ $teacher_name = $objT->getFielldVal('teacher','teacher_name','id',$teacher_id);
 						echo '<table cellspacing="0" cellpadding="0" border="0">';
 						echo '<tr>';
 						echo '<th>Reserved</th>';
+						echo '<th>Program</th>';
+						echo '<th>Subject</th>';
+						echo '<th>Session</th>';
+						echo '<th>Teacher</th>';
 						echo '<th>Room</th>';
 						echo '<th>Timeslot</th>';
+						echo '<th>Date</th>';
+						echo '<th>&nbsp;</th>';
 						echo '</tr>';
-						$slqTA="SELECT * FROM teacher_activity WHERE program_year_id = '".$program_year_id."' AND subject_id='".$subject_id."' AND teacher_id='".$teacher_id."'";
+						$slqTA="SELECT * FROM teacher_activity WHERE program_year_id = '".$program_year_id."' AND subject_id='".$subject_id."' AND session_id='".$sessionid."'";
 						$relT = mysqli_query($db, $slqTA);
 						while($data= mysqli_fetch_array($relT)){
 						    $reserved_flag_checked = ($data['reserved_flag']==1) ? "checked" : '';
-						    echo '<input type="hidden" name="activitiesArr[]" value="'.$data['id'].'" />';
 							echo '<tr>';
-							echo '<td align="center"><input type="radio" name="reserved_flag" value="'.$data['id'].'" '.$reserved_flag_checked.'></td>';
-							echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'">';
-							echo '<option value="0">--Room--</option>';
+							echo '<td align="center"><input type="hidden" name="activitiesArr[]" value="'.$data['id'].'">';
+							echo '<input type="radio" name="reserved_flag" value="'.$data['id'].'" '.$reserved_flag_checked.' onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
+							echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
+							echo '<td>'.$objS->getSubjectByID($data['subject_id']).'</td>';
+							echo '<td>'.$objS->getSessionByID($data['session_id']).'</td>';
+							echo '<td>'.$objT->getTeacherByID($data['teacher_id']).'<input type="hidden" name="reserved_teacher_id_'.$data['id'].'" value="'.$data['teacher_id'].'"></td>';
+
+							echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'" class="activity_row_chk" disabled>';
+							echo '<option value="">--Room--</option>';
 							echo $room_dropDwn;
-							echo '</select>';
+							echo '</select><br><span id="room_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose room</span></td>';
 							echo '<script type="text/javascript">jQuery("#room_id_'.$data['id'].'").val("'.$data['room_id'].'")</script>';
-							echo '</td>';
-							echo '<td><select name="tslot_id_'.$data['id'].'" id="tslot_id_'.$data['id'].'">';
-							echo '<option value="0">--Time Slot--</option>';
+
+							echo '<td><select name="tslot_id_'.$data['id'].'" id="tslot_id_'.$data['id'].'" class="activity_row_chk" disabled>';
+							echo '<option value="">--Time Slot--</option>';
 							echo $tslot_dropDwn;
-							echo '</select><span class="error">&nbsp;'.$_SESSION['act_'.$data['id']].'</span>';
+							echo '</select><br><span id="tslot_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose time slot</span></td>';
 							echo '<script type="text/javascript">jQuery("#tslot_id_'.$data['id'].'").val("'.$data['timeslot_id'].'")</script>';
-							echo '</td>';
+
+							echo '<td><input type="text" size="12" id="activityDateCal_'.$data['id'].'" class="activityDateCal" name="activityDateCal_'.$data['id'].'" value="'.$objT->formatDate($data['act_date']).'" readonly disabled/><br><span id="activityDate_validate_'.$data['id'].'" class="rfv_error" style="display:none;color:#ff0000;">Choose date</span></td>';
+							echo '<td><input class="buttonsub btnTeacherCheckAbail" type="button" value="Check Availability" name="btnTeacherCheckAbail_'.$data['id'].'" id="btnTeacherCheckAbail_'.$data['id'].'" onclick="checkActAvailability(\''.$program_year_id.'\',\''.$subject_id.'\',\''.$sessionid.'\',\''.$data['teacher_id'].'\',\''.$data['id'].'\');" style="display:none;"/>
+							<br><span class="rfv_error" id="room_tslot_availability_avail_'.$data['id'].'" style="color:#ff0000;display:none;">Available</span><span class="rfv_error" id="room_tslot_availability_not_avail_'.$data['id'].'" style="color:#ff0000;display:none;">Not Available</span></td>';
 							echo '</tr>';
                             unset($_SESSION['act_'.$data['id']]);
+                            if($data['reserved_flag']==1){
+                              	echo '<script type="text/javascript">roomTslotValidateEdit(\''.$data['id'].'\');</script>';
+                            }
 						}
             			echo '</table>';
                     ?>

@@ -101,60 +101,57 @@ class Teacher extends Base {
 	{
 		$program_year_id = $_POST['slctProgram'];
 		$subject_id = $_POST['slctSubject'];
-		$sessionid = isset($_POST['slctSession']) ? $_POST['slctSession'] : 0;
+		$sessionid = $_POST['slctSession'];
 		$group_id = 0;
 
-		if(isset($program_year_id) && isset($subject_id) && !empty($_POST['slctTeacher'])){
-		    $insertIdsArr = array();
-		    $atleast_one_res = false;
-			foreach($_POST['slctTeacher'] AS $val){
-			   $teacher_id = $val;
-			   $room_id = isset($_POST['room_id_'.$teacher_id]) ? $_POST['room_id_'.$teacher_id] : 0;
-			   $time_slot_id = isset($_POST['tslot_id_'.$teacher_id]) ? $_POST['tslot_id_'.$teacher_id] : 0;
-			   $reserved_flag = ($_POST['reserved_flag']==$teacher_id) ? 1 : 0;
-			   if($reserved_flag){
-			     	$atleast_one_res = true;
-			   }
-			   $sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
-			   if($program_year_id)
+		if(isset($program_year_id) && isset($subject_id) && isset($sessionid) && !empty($_POST['slctTeacher'])){
+
+		    $reserved_flag = $_POST['reserved_flag'];
+		    if(isset($reserved_flag) && $reserved_flag > 0)
+		    {
+				$teacher_id = isset($_POST['reserved_teacher_id_'.$reserved_flag]) ? $_POST['reserved_teacher_id_'.$reserved_flag] : 0;
+				$room_id = isset($_POST['room_id_'.$reserved_flag]) ? $_POST['room_id_'.$reserved_flag] : 0;
+				$time_slot_id = isset($_POST['tslot_id_'.$reserved_flag]) ? $_POST['tslot_id_'.$reserved_flag] : 0;
+				$act_date = isset($_POST['activityDateCal_'.$reserved_flag]) ? $_POST['activityDateCal_'.$reserved_flag] : '';
+
+				$sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
+				if($program_year_id)
 					$sqlA .= " and program_year_id='".$program_year_id."'";
-			   if($subject_id)
+				if($subject_id)
 					$sqlA .= " and subject_id='".$subject_id."'";
-			   if($sessionid)
+				if($sessionid)
 					$sqlA .= " and session_id='".$sessionid."'";
-			   if($teacher_id)
+				if($teacher_id)
 					$sqlA .= " and teacher_id='".$teacher_id."'";
-			   if($room_id)
+				if($room_id)
 					$sqlA .= " and room_id='".$room_id."'";
-			   if($time_slot_id)
+				if($time_slot_id)
 					$sqlA .= " and timeslot_id='".$time_slot_id."'";
-                //echo '<br>'.$sqlA;
+				if($act_date<>"")
+					$sqlA .= " and DATE_FORMAT(act_date, '%d-%m-%Y') = '".$act_date."'";
+				  //echo '<br>'.$sqlA;
 				$result =  $this->conn->query($sqlA);
 				if(!$result->num_rows){
-				    $result = $this->conn->query("SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
-				    $dRow = $result->fetch_assoc();
-				    $actCnt = substr($dRow['name'],1);
-				    $actName = 'A'.($actCnt+1);
-					$SQL = "INSERT INTO teacher_activity (name, program_year_id, subject_id, session_id, teacher_id, group_id, room_id, timeslot_id, reserved_flag, date_add) VALUES ('".$actName."', '".$program_year_id."', '".$subject_id."', '".$sessionid."', '".$teacher_id."', '".$group_id."', '".$room_id."', '".$time_slot_id."', '".$reserved_flag."', NOW())";
+				    $act_date = date("Y-m-d h:i:s", strtotime($act_date));
+					$SQL = "UPDATE teacher_activity SET
+								   room_id = '".$room_id."',
+								   timeslot_id = '".$time_slot_id."',
+								   act_date = '".$act_date."',
+								   reserved_flag = '1' where id='".$reserved_flag."'";
 					$rel = $this->conn->query($SQL);
-					if(!$reserved_flag){
-					   $insertIdsArr[] = $this->conn->insert_id;
-					}
 				}
-			}
-			if(!empty($insertIdsArr) && $atleast_one_res==true){
-               foreach($insertIdsArr as $vv){
-                  $sql22 = "update teacher_activity set reserved_flag='2' where id='".$vv."'";
-                  $this->conn->query($sql22);
-               }
-			}
+				foreach($_POST['activitiesArr'] AS $val){
+				   $sql22 = "update teacher_activity set reserved_flag='2' WHERE id='".$val."' AND id != '".$reserved_flag."'";
+				   $this->conn->query($sql22);
+				}
+		    }
 			$message="Record has been added successfully.";
 			$_SESSION['succ_msg'] = $message;
 			return 1;
 
 		}else{
-			$message="Please select program , subject and teacher.";
-			$_SESSION['succ_msg'] = $message;
+			$message="Please select program , subject, session and teacher.";
+			$_SESSION['error_msg'] = $message;
 			return 0;
 		}
 	}
@@ -163,62 +160,64 @@ class Teacher extends Base {
 	{
 		$program_year_id = $_POST['program_year_id'];
 		$subject_id = $_POST['subject_id'];
-		$sessionid = isset($_POST['sessionid']) ? $_POST['sessionid'] : 0;
-		$teacher_id = $_POST['teacher_id'];
+		$sessionid = $_POST['sessionid'];
 		$group_id = 0;
 
-		if(isset($program_year_id) && isset($subject_id) && isset($teacher_id) && !empty($_POST['activitiesArr'])){
-			foreach($_POST['activitiesArr'] AS $val){
-			   $activity_id = $val;
-			   $room_id = isset($_POST['room_id_'.$activity_id]) ? $_POST['room_id_'.$activity_id] : 0;
-			   $time_slot_id = isset($_POST['tslot_id_'.$activity_id]) ? $_POST['tslot_id_'.$activity_id] : 0;
-			   $reserved_flag = ($_POST['reserved_flag']==$activity_id) ? 1 : 0;
+		if(isset($program_year_id) && isset($subject_id) && isset($sessionid)){
 
-			   //$this->conn->query("update teacher_activity set reserved_flag='".$reserved_flag."' where id='".$activity_id."'");
+		    $reserved_flag = $_POST['reserved_flag'];
+		    if(isset($reserved_flag) && $reserved_flag > 0)
+		    {
+				$teacher_id = isset($_POST['reserved_teacher_id_'.$reserved_flag]) ? $_POST['reserved_teacher_id_'.$reserved_flag] : 0;
+				$room_id = isset($_POST['room_id_'.$reserved_flag]) ? $_POST['room_id_'.$reserved_flag] : 0;
+				$time_slot_id = isset($_POST['tslot_id_'.$reserved_flag]) ? $_POST['tslot_id_'.$reserved_flag] : 0;
+				$act_date = isset($_POST['activityDateCal_'.$reserved_flag]) ? $_POST['activityDateCal_'.$reserved_flag] : '';
 
-			   $sqlA = "SELECT id FROM teacher_activity WHERE 1=1";
-			   if($program_year_id)
+				$sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
+				if($program_year_id)
 					$sqlA .= " and program_year_id='".$program_year_id."'";
-			   if($subject_id)
+				if($subject_id)
 					$sqlA .= " and subject_id='".$subject_id."'";
-			   if($sessionid)
+				if($sessionid)
 					$sqlA .= " and session_id='".$sessionid."'";
-			   if($teacher_id)
+				if($teacher_id)
 					$sqlA .= " and teacher_id='".$teacher_id."'";
-			   if($room_id)
+				if($room_id)
 					$sqlA .= " and room_id='".$room_id."'";
-			   if($time_slot_id)
+				if($time_slot_id)
 					$sqlA .= " and timeslot_id='".$time_slot_id."'";
-				//echo '<br>'.$sqlA;
+				if($act_date<>"")
+					$sqlA .= " and DATE_FORMAT(act_date, '%d-%m-%Y') = '".$act_date."'";
+				  //echo '<br>'.$sqlA;
 				$result =  $this->conn->query($sqlA);
 				if(!$result->num_rows){
+				    $act_date = date("Y-m-d h:i:s", strtotime($act_date));
 					$SQL = "UPDATE teacher_activity SET
-									room_id='".$room_id."',
-									timeslot_id='".$time_slot_id."',
-									reserved_flag='".$reserved_flag."',
-									date_update = NOW() WHERE id='".$activity_id."'";
+								   room_id = '".$room_id."',
+								   timeslot_id = '".$time_slot_id."',
+								   act_date = '".$act_date."',
+								   reserved_flag = '1' where id='".$reserved_flag."'";
 					$rel = $this->conn->query($SQL);
-
-				    $message = 'Record has been updated.';
-				    $_SESSION['act_'.$activity_id] = $message;
-				}else{
-				   $message = 'This activity is already exist.';
-				   $_SESSION['act_'.$activity_id] = $message;
 				}
-			}
-
+				foreach($_POST['activitiesArr'] AS $val){
+				   $sql22 = "update teacher_activity set reserved_flag='2' WHERE id='".$val."' AND id != '".$reserved_flag."'";
+				   $this->conn->query($sql22);
+				}
+		    }
+			$message="Record has been updated successfully.";
+			$_SESSION['succ_msg'] = $message;
 			return 1;
 
 		}else{
-			$message="There is no activity selected to edit.";
-			$_SESSION['succ_msg'] = $message;
+			$message="Please select program , subject, session and teacher.";
+			$_SESSION['error_msg'] = $message;
 			return 0;
 		}
 	}
 	//function to get all teacher activities
 	public function getTeachersAct()
 	{
-	    $sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name FROM teacher_activity ta
+	    $sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name FROM teacher_activity ta
 	            left join subject s on(s.id = ta.subject_id)
 	            left join subject_session ss on(ss.id=ta.session_id)
 	            left join teacher t on(t.id = ta.teacher_id)
@@ -239,7 +238,7 @@ class Teacher extends Base {
 	//get all teachers availability
 	public function getTeacherAvailRule()
 	{
-		$teac_query="select id, rule_name, start_date, end_date from teacher_availability_rule ORDER BY id DESC"; 
+		$teac_query="select id, rule_name, start_date, end_date from teacher_availability_rule ORDER BY id DESC";
 		$q_res = mysqli_query($this->conn, $teac_query);
 		if(mysqli_num_rows($q_res)<=0){
 			$message="No teacher availability rule exist.";
@@ -250,21 +249,21 @@ class Teacher extends Base {
 	//get the days for teacher availability
 	public function getTeacherAvailDay($id)
 	{
-		$area_query="select id, timeslot_id, day_name from teacher_availability_rule_day_map where teacher_availability_rule_id ='".$id."'"; 
+		$area_query="select id, timeslot_id, day_name from teacher_availability_rule_day_map where teacher_availability_rule_id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $area_query);
 		return $q_res;
 	}
 	//get the timeslot for teacher availability
 	public function getTeacherAvailTimeslot($ids)
 	{
-		$area_query="select id, timeslot_range from timeslot where id IN(".$ids.")"; 
+		$area_query="select id, timeslot_range from timeslot where id IN(".$ids.")";
 		$q_res = mysqli_query($this->conn, $area_query);
 		return $q_res;
 	}
 	//get all rule ids from teacher
 	public function getRuleIdsForTeacher($ids)
 	{
-		$area_query="select teacher_availability_rule_id from teacher_availability_rule_teacher_map where teacher_id =".$ids; 
+		$area_query="select teacher_availability_rule_id from teacher_availability_rule_teacher_map where teacher_id =".$ids;
 		$q_res = mysqli_query($this->conn, $area_query);
 		$allIds = array();
 		while($data = $q_res->fetch_assoc()){
@@ -274,28 +273,28 @@ class Teacher extends Base {
 	}
 	//add and update teacher availability
 	public function addUpdateTeacAvail(){
-		$teacherId = base64_decode($_POST['slctTeacher']); 	
+		$teacherId = base64_decode($_POST['slctTeacher']);
 		//delete old mapping
 		$del_teacRuleMap_query="delete from teacher_availability_rule_teacher_map where teacher_id='".$teacherId."'";
 		$qry = mysqli_query($this->conn, $del_teacRuleMap_query);
 		//add new mapping
 		foreach($_POST['ruleval'] as $ruleId){
 			$currentDateTime = date("Y-m-d H:i:s");
-			$result = mysqli_query($this->conn, "INSERT INTO teacher_availability_rule_teacher_map VALUES ('', '".$ruleId."', '".$teacherId."', '".$currentDateTime."', '".$currentDateTime."');"); 
-		} 
+			$result = mysqli_query($this->conn, "INSERT INTO teacher_availability_rule_teacher_map VALUES ('', '".$ruleId."', '".$teacherId."', '".$currentDateTime."', '".$currentDateTime."');");
+		}
 		//delete old exceptions
 		$del_teacRuleMap_query="delete from teacher_availability_exception where teacher_id='".$teacherId."'";
 		$qry = mysqli_query($this->conn, $del_teacRuleMap_query);
 		//add new exceptions
 		foreach($_POST['exceptionDate'] as $exceptionDate){
 			$currentDateTime = date("Y-m-d H:i:s");
-			$result = mysqli_query($this->conn, "INSERT INTO teacher_availability_exception VALUES ('', '".$teacherId."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');"); 
-		} 
+			$result = mysqli_query($this->conn, "INSERT INTO teacher_availability_exception VALUES ('', '".$teacherId."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');");
+		}
 		return 1;
 	}
 	//view all teacher availability
 	public function viewTeachAvail(){
-		$teachAvail_query="select tartm.id, tr.teacher_name, tartm.teacher_availability_rule_id, tartm.teacher_id  from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher as tr ON tartm.teacher_id = tr.id GROUP BY tartm.teacher_id"; 
+		$teachAvail_query="select tartm.id, tr.teacher_name, tartm.teacher_availability_rule_id, tartm.teacher_id  from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher as tr ON tartm.teacher_id = tr.id GROUP BY tartm.teacher_id";
 		$q_res = mysqli_query($this->conn, $teachAvail_query);
 		return $q_res;
 	}
@@ -313,4 +312,43 @@ class Teacher extends Base {
 		$q_excep = mysqli_query($this->conn, $excep_query);
 		return $q_excep;
 	}
+	//add teacher activity row in table if not exist
+	public function insertActivityRow($program_year_id,$subject_id,$sessionid,$teachersArr)
+	{
+		foreach($teachersArr AS $val)
+		{
+		   $teacher_id = $val;
+		   $sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
+		   if($program_year_id)
+				$sqlA .= " and program_year_id='".$program_year_id."'";
+		   if($subject_id)
+				$sqlA .= " and subject_id='".$subject_id."'";
+		   if($sessionid)
+				$sqlA .= " and session_id='".$sessionid."'";
+		   if($teacher_id)
+				$sqlA .= " and teacher_id='".$teacher_id."'";
+			//echo '<br>'.$sqlA;
+			$result =  $this->conn->query($sqlA);
+			if(!$result->num_rows){
+				$result = $this->conn->query("SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+				$dRow = $result->fetch_assoc();
+				$actCnt = substr($dRow['name'],1);
+				$actName = 'A'.($actCnt+1);
+				$SQL = "INSERT INTO teacher_activity (name, program_year_id, subject_id, session_id, teacher_id, date_add) VALUES ('".$actName."', '".$program_year_id."', '".$subject_id."', '".$sessionid."', '".$teacher_id."', NOW())";
+				$rel = $this->conn->query($SQL);
+			}
+		}
+	}
+	/*get teacher name by id*/
+	public function getTeacherByID($id)
+	{
+		$sql="SELECT id,teacher_name,email FROM teacher WHERE id='".$id."'";
+		$result = $this->conn->query($sql);
+		if(!$result->num_rows){
+			return '';
+		}else{
+		  $row = $result->fetch_assoc();
+		  return $row['teacher_name'].'('.$row['email'].')';
+		}
+    }
 }

@@ -32,6 +32,7 @@ $(document).ready(function(){
                         <th>Session</th>
                         <th>Teacher</th>
                         <th>Room</th>
+                        <th>Date</th>
                         <th>Timeslot</th>
                         <th>Reserved</th>
                         <th>Action</th>
@@ -42,6 +43,15 @@ $(document).ready(function(){
 					$result = $objT->getTeachersAct();
 					if($result->num_rows){
 						while($row = $result->fetch_assoc()){
+						$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
+						$teacher_name = $row['teacher_name'].$email;
+						if($row['reserved_flag']==1)
+						   $res_flag = "Reserved";
+						else if($row['reserved_flag']==2)
+						   $res_flag = "Not for allocation";
+						else
+						  $res_flag = "Free";
+
 					?>
 						<tr>
 							<td class="align-center"><?php echo $row['id'];?></td>
@@ -49,12 +59,13 @@ $(document).ready(function(){
 							<td><?php echo $row['program_name'];?></td>
 							<td><?php echo $row['subject_name'];?></td>
 							<td><?php echo $row['session_name'];?></td>
-							<td><?php echo $row['teacher_name'].'('.$row['email'].')';?></td>
+							<td><?php echo $teacher_name;?></td>
 							<td><?php echo $objT->getFielldVal("room","room_name",'id',$row['room_id']);?></td>
+							<td><?php echo $objT->formatDate($row['act_date']);?></td>
 							<td><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
-							<td><?php echo ($row['reserved_flag']==1) ? "Reserved" : "Free";?></td>
+							<td><?php echo $res_flag;?></td>
 							<td class="align-center" id="<?php echo $row['id'];?>">
-								<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>&tid=<?php echo base64_encode($row['teacher_id']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a>
 								<a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
 							</td>
 						</tr>
@@ -63,7 +74,7 @@ $(document).ready(function(){
 				</tbody>
             </table>
 			<?php if(isset($_SESSION['error_msg'])){ ?>
-					<div><span class="red"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
+					<div><span class="red center"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
 			<?php } ?>
         </div>
         <div class="clear"></div>
