@@ -315,6 +315,7 @@ $.extend( $.validator, {
 		number: "Please enter a valid number.",
 		digits: "Please enter only digits.",
 		creditcard: "Please enter a valid credit card number.",
+		alphanumeric: "Please enter only alphanumeric values",
 		equalTo: "Please enter the same value again.",
 		maxlength: $.validator.format( "Please enter no more than {0} characters." ),
 		minlength: $.validator.format( "Please enter at least {0} characters." ),
@@ -922,7 +923,8 @@ $.extend( $.validator, {
 		dateISO: { dateISO: true },
 		number: { number: true },
 		digits: { digits: true },
-		creditcard: { creditcard: true }
+		creditcard: { creditcard: true },
+		alphanumeric: { alphanumeric: true }
 	},
 
 	addClassRules: function( className, rules ) {
@@ -1220,6 +1222,11 @@ $.extend( $.validator, {
 		max: function( value, element, param ) {
 			return this.optional( element ) || value <= param;
 		},
+		
+		//for alphanumeric values
+		alphanumeric: function(value, element, param) {
+        	return this.optional(element) || /^[a-z0-9\- .]+$/i.test(value);
+    	},
 
 		// http://jqueryvalidation.org/range-method/
 		range: function( value, element, param ) {

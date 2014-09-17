@@ -5,27 +5,33 @@ class Buildings extends Base {
    	}
 	/*function for adding Building*/
 	public function addBuilding() {
-			//check if the building name exists
-			$area_query="select id, building_name from building where building_name='".$_POST['txtBname']."'";
-			$q_res = mysqli_query($this->conn, $area_query);
-			$dataAll = mysqli_fetch_assoc($q_res);
-			if(count($dataAll)>0)
-			{
-				$message="Building Name already exists.";
-				$_SESSION['error_msg'] = $message;
-				return 0;
-			}else{
-				//add the new building
-				$currentDateTime = date("Y-m-d H:i:s");
-				if ($result = mysqli_query($this->conn, "INSERT INTO building VALUES ('', '".Base::cleanText($_POST['txtBname'])."', '".$currentDateTime."', '".$currentDateTime."');")) {
-   					$message="New building has been added successfully";
-					$_SESSION['succ_msg'] = $message;
-					return 1;
-				}else{
-					$message="Cannot add the building";
+			if(Base::cleanText($_POST['txtBname']) !=""){
+				//check if the building name exists
+				$area_query="select id, building_name from building where building_name='".Base::cleanText($_POST['txtBname'])."'";
+				$q_res = mysqli_query($this->conn, $area_query);
+				$dataAll = mysqli_fetch_assoc($q_res);
+				if(count($dataAll)>0)
+				{
+					$message="Building Name already exists.";
 					$_SESSION['error_msg'] = $message;
 					return 0;
+				}else{
+					//add the new building
+					$currentDateTime = date("Y-m-d H:i:s");
+					if ($result = mysqli_query($this->conn, "INSERT INTO building VALUES ('', '".Base::cleanText($_POST['txtBname'])."', '".$currentDateTime."', '".$currentDateTime."');")) {
+						$message="New building has been added successfully";
+						$_SESSION['succ_msg'] = $message;
+						return 1;
+					}else{
+						$message="Cannot add the building";
+						$_SESSION['error_msg'] = $message;
+						return 0;
+					}
 				}
+			}else{
+					$message="Please enter a valid Building name";
+					$_SESSION['error_msg'] = $message;
+					return 0;
 			}
 	}
 	/*function for listing Area*/
@@ -51,7 +57,7 @@ class Buildings extends Base {
 	/*function for Update Building*/
 	public function updateBuld() {
 			//check if the building name exists
-			$area_query="select id, building_name from building where building_name='".$_POST['txtBname']."' and id !='".$_POST['buldId']."'";
+			$area_query="select id, building_name from building where building_name='".Base::cleanText($_POST['txtBname'])."' and id !='".$_POST['buldId']."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0) {

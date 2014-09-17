@@ -1,12 +1,12 @@
 <?php include('header.php'); 
 $buldName=""; $buldId="";
+$obj = new Buildings();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$buldId = base64_decode($_GET['edit']);
-	$obj = new Buildings();
 	$result = $obj->getDataByBuldID($buldId);
 	$row = $result->fetch_assoc();
 }
-$buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBname'])? $_POST['txtBname']:'');
+$buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBname'])? $obj->cleanText($_POST['txtBname']):'');
 //$hiddenVal = ($buldName!="") ? "EditBuld":"Buld";
 ?>
 <div id="content">
@@ -26,7 +26,7 @@ $buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBna
                         <h2>Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtBname" maxlength="50" name="txtBname" value="<?php echo $buldName; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtBname" maxlength="50" name="txtBname" value="<?php echo $buldName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

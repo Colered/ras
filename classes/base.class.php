@@ -33,8 +33,7 @@ abstract class Base
 
 	//function to clean input text
 	public function cleanText($txt){
-	    $str = addslashes($txt);
-		$str = strip_tags($str);
+		$str = strip_tags($txt);
 		return trim($str);
 	}
 	//function to fetch a
