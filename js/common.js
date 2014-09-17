@@ -906,7 +906,7 @@ function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id,ro
 	$("#room_tslot_availability_avail_"+row_id).hide();
 	$("#room_tslot_availability_not_avail_"+row_id).hide();
 	
-    if(room_id!='' || tslot_id!=''){
+    if(room_id!='' && tslot_id!='' && act_date_val!=''){
 		$.ajax({
 			 url: "./ajax_common.php",
 			 type: "POST",
