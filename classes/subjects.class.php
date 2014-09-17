@@ -200,6 +200,15 @@ class Subjects extends Base {
 		}
 		return $result;
    }
+ /*function for all sessions for add form*/
+ 	public function getSessions(){
+		$sql="SELECT id,session_name FROM subject_session ORDER BY session_name";
+		$result = $this->conn->query($sql);
+		if(!$result->num_rows){
+			return 0;
+		}
+		return $result;
+   }
 
     /*get subject name by id*/
 	public function getSubjectByID($id){

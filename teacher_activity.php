@@ -7,6 +7,7 @@ $objT = new Teacher();
 $rel_teacher = $objT->getTeachers();
 $rel_prog = $objP->getProgramListYearWise();
 $rel_subject = $objS->getSubjects();
+$rel_session = $objS->getSessions();
 
 ?>
 <div id="content">
@@ -56,7 +57,11 @@ $rel_subject = $objS->getSubjects();
 					<div class="txtfield">
 					<select id="slctSession" name="slctSession" class="select1 required">
 					<option value="" selected="selected">--Select Session--</option>
-
+				    <?php
+						while($row = $rel_session->fetch_assoc()){
+							echo '<option value="'.$row['id'].'">'.$row['session_name'].'</option>';
+						}
+					 ?>
 					</select>
 					<div  id="ajaxload_session" style="float: right;display:none;"><img src="images/loading2.gif"  /><div class="wait-text">Please Wait...</div></div>
 					</div>
