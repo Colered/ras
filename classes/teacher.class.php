@@ -141,7 +141,11 @@ class Teacher extends Base {
 					$rel = $this->conn->query($SQL);
 				}
 				foreach($_POST['activitiesArr'] AS $val){
-				   $sql22 = "update teacher_activity set reserved_flag='2' WHERE id='".$val."' AND id != '".$reserved_flag."'";
+				   $sql22 = "update teacher_activity set
+				                    reserved_flag='2'
+				                    room_id = '0',
+									timeslot_id='0',
+				                    act_date = '0000:00:00 00:00:00' WHERE id='".$val."' AND id != '".$reserved_flag."'";
 				   $this->conn->query($sql22);
 				}
 		    }
@@ -200,7 +204,11 @@ class Teacher extends Base {
 					$rel = $this->conn->query($SQL);
 				}
 				foreach($_POST['activitiesArr'] AS $val){
-				   $sql22 = "update teacher_activity set reserved_flag='2' WHERE id='".$val."' AND id != '".$reserved_flag."'";
+				   $sql22 = "update teacher_activity set
+				                    reserved_flag='2',
+				                    room_id = '0',
+				                    timeslot_id='0',
+				                    act_date = '0000:00:00 00:00:00' WHERE id='".$val."' AND id != '".$reserved_flag."'";
 				   $this->conn->query($sql22);
 				}
 		    }
