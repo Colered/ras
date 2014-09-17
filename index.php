@@ -14,7 +14,7 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
                     <img src="images/lock.jpg" id="lock-img" class="lock-img" />
                 </div>
                 <div class="custtable_left " >
-					<div class="custtd_left">
+					<div class="custtd_left error">
 							<?php if(isset($_SESSION['error_msg']))
 								echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?>
 					</div>
