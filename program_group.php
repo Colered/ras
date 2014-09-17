@@ -1,7 +1,7 @@
 <?php
 include('header.php');
 $objP = new Programs();
-$result = $objP->getProgramListData();
+$rel_prog = $objP->getProgramListYearWise();
 $groupRel = $objP->getGroupsList();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
@@ -26,9 +26,9 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
                         <select id="slctProgram" name="slctProgram" class="select1 required" onChange="showGroups(this.value);">
                         <option value="" selected="selected">--Select Program--</option>
                         <?php
-							while($row = $result->fetch_assoc()){
+							while($row = $rel_prog->fetch_assoc()){
 							    $selectedProg = (isset($programId) && $programId==$row['id']) ? 'selected' : '';
-								echo '<option value="'.$row['id'].'" '.$selectedProg.'>'.$row['program_name'].'</option>';
+								echo '<option value="'.$row['id'].'" '.$selectedProg.'>'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
 							}
                         ?>
                         </select>

@@ -29,38 +29,29 @@ $(document).ready(function(){
 						<tr>
 							<th >ID</th>
 							<th >Program</th>
-							<th >Sub Program</th>
 							<th >Group Name</th>
 							<th >Action</th>
 						</tr>
 					</thead>
 					<tbody>
 			         <?php
-						$result = $objP->getProgramListData();
+						$result = $objP->getAssociateProgramGroups();
 						while($row = $result->fetch_assoc()){
                      ?>
 						<tr>
-							<td class="align-center"><?php echo $row['id'];?></td>
-							<td><?php echo $row['program_name'];?></td>
+							<td class="align-center"><?php echo $row['program_year_id'];?></td>
+							<td><?php echo $objP->getProgramYearName($row['program_year_id']);?></td>
 							<td>
 							 <?php
-								$pgresult = $objP->getSubPrograms($row['id']);
-								while($pgrow = $pgresult->fetch_assoc()){
-									echo '<div>'.$pgrow['name'].'<div>';
-								}
-							 ?>
-							</td>
-							<td>
-							 <?php
-								$pgresult = $objP->getAllGroupByProgId($row['id']);
+								$pgresult = $objP->getAllGroupByProgId($row['program_year_id']);
 								while($pgrow = $pgresult->fetch_assoc()){
 								  	echo '<div>'.$pgrow['name'].'<div>';
 								}
                      		 ?>
 							</td>
-							<td class="align-center" id="<?php echo $row['id']; ?>">
-								<a href="program_group.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" title="Delete" onClick="del_associated_prog_group('<?php echo $row['id'];?>')"></a>
+							<td class="align-center" id="<?php echo $row['program_year_id']; ?>">
+								<a href="program_group.php?edit=<?php echo base64_encode($row['program_year_id']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="#" class="table-icon delete" title="Delete" onClick="del_associated_prog_group('<?php echo $row['program_year_id'];?>')"></a>
 							</td>
 						</tr>
 				    <?php } ?>

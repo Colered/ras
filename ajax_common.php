@@ -123,7 +123,7 @@ switch ($codeBlock) {
 	    $dataArr = array();
 		if(isset($_POST['program_id']) && $_POST['program_id']!=""){
 		    //fetch all the groups related to a program
-		    $query="SELECT * FROM program_group WHERE program_year_id in(select id from program_years where program_id='".$_POST['program_id']."')";
+		    $query="SELECT * FROM program_group WHERE program_year_id='".$_POST['program_id']."'";
 			$result = mysqli_query($db, $query);
 			while($data= mysqli_fetch_array($result)){
 				 $dataArr[] = $data['group_id'];
@@ -140,7 +140,7 @@ switch ($codeBlock) {
 	case "del_associated_prog_group":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
-			$del_query="delete from program_group where program_year_id in(select id from program_years where program_id='".$id."')";
+			$del_query="delete from program_group where program_year_id='".$id."'";
 			$qry = mysqli_query($db, $del_query);
 			if(mysqli_affected_rows($db)>0)
 				echo 1;

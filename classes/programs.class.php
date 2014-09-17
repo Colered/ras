@@ -151,15 +151,12 @@ class Programs extends Base {
 		$slctSgroups = $_POST['slctSgroups'];
 
 		//delete all the previous program groups and insert again
-		$del_query="DELETE FROM program_group WHERE program_year_id in(select id from program_years where program_id='".$slctProgram."')";
+		$del_query="DELETE FROM program_group WHERE program_year_id='".$slctProgram."'";
 		$qry = mysqli_query($this->conn, $del_query);
 
 		foreach($slctSgroups as $val){
-		  $result =  $this->conn->query("select id from program_years where program_id='".$slctProgram."'");
-		  while($row = $result->fetch_assoc()){
-			  $sql = "INSERT INTO program_group (program_year_id, group_id) VALUES ('".$row['id']."', '".$val."')";
-			  $rel = $this->conn->query($sql);
-		  }
+			$sql = "INSERT INTO program_group (program_year_id, group_id) VALUES ('".$slctProgram."', '".$val."')";
+			$rel = $this->conn->query($sql);
 		}
 
 		$message="Program has been associated successfully";
@@ -179,12 +176,18 @@ class Programs extends Base {
 	}
 	//Function to list all groups of a program
 	public function getAllGroupByProgId($prog_id){
-		$result =  $this->conn->query("select * from group_master where id in(select group_id FROM program_group WHERE program_year_id in(select id from program_years where program_id='".$prog_id."'))");
+	    $SQL = "select * from group_master where id in(select group_id FROM program_group WHERE program_year_id='".$prog_id."')";
+		$result =  $this->conn->query($SQL);
 		return $result;
 	}
 	//function to  get all programs according to years
 	public function getProgramListYearWise(){
 		$result =  $this->conn->query("select * from program_years");
+		return $result;
+	}
+	//function to  get all programs according to years
+	public function getAssociateProgramGroups(){
+		$result =  $this->conn->query("select * from program_group pg group by program_year_id");
 		return $result;
 	}
 	//function to  get all programs according to years

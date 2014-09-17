@@ -408,7 +408,7 @@ function showGroups(selval){
 //Ajax delete the associated groups with a program 
 function del_associated_prog_group($id){
 	if($id==""){
-		alert("Please select a program to delete");
+		alert("Please select an association to delete");
 		return false;
 	}else if(confirm("Are you sure you want to delete?")) {
 	    $.ajax({

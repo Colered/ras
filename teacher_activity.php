@@ -29,7 +29,7 @@ $rel_subject = $objS->getSubjects();
 					<option value="" selected="selected">--Select Program--</option>
 					<?php
 						while($row = $rel_prog->fetch_assoc()){
-							echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+							echo '<option value="'.$row['id'].'">'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
 						}
 					?>
 					</select>
