@@ -185,6 +185,7 @@ $(document).ready(function(){
 		$("#frmTactivity").validate();
 		$("#teacherAvailabilityForm").validate();
 		$("#classroomAvailabilityForm").validate();
+		$("#timetable").validate();
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {

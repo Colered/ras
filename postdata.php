@@ -393,6 +393,95 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: teacher_availability.php');
 			}
 		break;
+		//Generate timetable
+		case 'generateTimetable':
+			if($_POST['txtAName'] != "" && $_POST['fromGenrtTmtbl'] != "" &&  $_POST['toGenrtTmtbl'] != "")
+			{
+				$obj = new Timetable();
+				$fromGenrtTmtbl = $_POST['fromGenrtTmtbl'];
+				$toGenrtTmtbl = $_POST['toGenrtTmtbl'];
+				$name = $_POST['txtAName'];
+				$start_date = date('Y-m-d', strtotime($_POST['fromGenrtTmtbl']));
+				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
+				if(!$obj->checkName($_POST['txtAName']))
+				{
+				
+					$start_week = idate('W', strtotime($_POST['fromGenrtTmtbl']));
+					$end_week = idate('W', strtotime($_POST['toGenrtTmtbl']));
+					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
+					$output_array = $obj->generateTimetable($start_date, $end_date, $start_week, $end_week, $from_time);
+					$res = $obj->addTimetable($_POST['txtAName'], $start_date, $end_date, $start_week, $end_week);
+					if($res)
+					{
+						$obj->deleteData();
+						//print"<pre>";print_r($output_array);die;
+						foreach($output_array as $key=>$value)
+						{
+							$week = $key;
+							foreach($value as $k=>$v)
+							{
+								$day = $k;
+								foreach($v as $newkey=>$val)
+								{
+									$timeslot = $newkey;
+									$tt_id = $res;
+									$activity_id = $val['activity_id'];
+									$program_year_id = $val['program_year_id'];
+									$teacher_id = $val['teacher_id'];
+									$group_id = $val['group_id'];
+									$room_id = $val['room_id'];
+									$session_id = $val['session_id'];
+									$room_name = $val['room_name'];
+									$name = $val['name'];
+									$program_name = $val['program_name'];
+									$subject_name = $val['subject_name'];
+									$session_name = $val['session_name'];
+									$teacher_name = $val['teacher_name'];
+									$subject_id = $val['subject_id'];
+									$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
+									$date = $val['date'];
+									$date_add = date("Y-m-d H:i:s");
+									$date_upd = date("Y-m-d H:i:s");
+									
+									$resp = $obj->addTimetableDetail($week, $day, $timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd);
+									if($resp)
+									{
+										$ts_array = explode("-", $timeslot);
+										$entry_hour = $ts_array['0'];
+										if($entry_hour == '1')
+											$entry_hour = 13;
+										if($entry_hour == '2')
+											$entry_hour = 14;
+
+										$date_array = explode("-", $date);
+										$year = $date_array['0'];
+										$month = $date_array['1'];
+										$day = $date_array['2'];
+										$zone=3600*+5;//India
+										$eventstart = gmmktime ( $entry_hour, 0, 0, $month, $day, $year );
+										$cal_time = gmdate('His', $eventstart + $zone);
+										$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description);
+										if($cal_id){
+											$obj->addWebCalEntryUser($cal_id);
+											header('Location: timetable_view.php');
+										}
+									}
+								}
+							}
+						}
+						
+					}
+				}else{
+					$message="Timetable with this name already exist in database. Please choose a new one.";
+					$_SESSION['error_msg'] = $message;
+					header('Location: generate_timetable.php?fromGenrtTmtbl='.$fromGenrtTmtbl.'&toGenrtTmtbl='.$toGenrtTmtbl.'&name='.$name);
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: generate_timetable.php');
+			}
+			break;
 	}
 }
 ?>
