@@ -45,7 +45,7 @@ $slctBuilding = isset($_GET['edit']) ? $row['building_id'] : (isset($_POST['slct
                         <h2>Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtRmName" maxlength="50" name="txtRmName" value="<?php echo $txtRmName; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtRmName" maxlength="50" name="txtRmName" value="<?php echo $txtRmName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -55,7 +55,7 @@ $slctBuilding = isset($_GET['edit']) ? $row['building_id'] : (isset($_POST['slct
 						<select id="slctBuilding" name="slctBuilding" class="select1 required">
                             <?php if($buildData!=0){
 								while($data = $buildData->fetch_assoc()){ ?>
-									<option value="<?php echo $data['id']; ?>"><?php echo $data['building_name']; ?></option>
+									<option value="<?php echo $data['id']; ?>" <?php if($slctBuilding == $data['id']){echo "selected"; }?>><?php echo $data['building_name']; ?></option>
 							<?php }}else{ ?>
 									<option value="">No Building Available</option>
                             <?php } ?>
