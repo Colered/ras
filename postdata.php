@@ -406,23 +406,37 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if(!$obj->checkName($_POST['txtAName']))
 				{
 				
-					$start_week = idate('W', strtotime($_POST['fromGenrtTmtbl']));
-					$end_week = idate('W', strtotime($_POST['toGenrtTmtbl']));
+					//$start_week = idate('W', strtotime($_POST['fromGenrtTmtbl']));
+					//$end_week = idate('W', strtotime($_POST['toGenrtTmtbl']));
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
-					$output_array = $obj->generateTimetable($start_date, $end_date, $start_week, $end_week, $from_time);
-					$res = $obj->addTimetable($_POST['txtAName'], $start_date, $end_date, $start_week, $end_week);
-					if($res)
+					$output_array = $obj->generateTimetable($start_date, $end_date, $from_time);
+					//print"<pre>";print_r($output_array);die;
+					
+
+					if(isset($output_array['program_not_found'])){
+						$_SESSION['error_msg'] = $output_array['program_not_found'];
+					}elseif(isset($output_array['teacher_not_found'])){
+						$_SESSION['error_msg'] = $output_array['teacher_not_found'];
+					}elseif(isset($output_array['timeslot_not_found'])){
+						$_SESSION['error_msg'] = $output_array['timeslot_not_found'];
+					}else{
+						$_SESSION['error_msg'] = $output_array['system_error'];
+					}
+					
+					if(isset($_SESSION['error_msg']))
 					{
-						$obj->deleteData();
-						//print"<pre>";print_r($output_array);die;
-						foreach($output_array as $key=>$value)
+						header('Location: generate_timetable.php?fromGenrtTmtbl='.$fromGenrtTmtbl.'&toGenrtTmtbl='.$toGenrtTmtbl.'&name='.$name);
+					}
+					if($output_array)
+					{
+						$res = $obj->addTimetable($_POST['txtAName'], $start_date, $end_date);
+						if($res)
 						{
-							$week = $key;
-							foreach($value as $k=>$v)
+							$obj->deleteData();
+							foreach($output_array as $key=>$value)
 							{
-								$day = $k;
-								foreach($v as $newkey=>$val)
-								{
+								foreach($value as $newkey=>$val)
+								{											
 									$timeslot = $newkey;
 									$tt_id = $res;
 									$activity_id = $val['activity_id'];
@@ -443,11 +457,16 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									$date_add = date("Y-m-d H:i:s");
 									$date_upd = date("Y-m-d H:i:s");
 									
-									$resp = $obj->addTimetableDetail($week, $day, $timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd);
+									$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd);
 									if($resp)
 									{
 										$ts_array = explode("-", $timeslot);
-										$entry_hour = $ts_array['0'];
+										$entry_time = $ts_array['0'];
+										$duration = ($ts_array['1']-$ts_array['0'])*60;
+										$entry_array = explode(":", $entry_time);
+										$entry_hour = $entry_array['0'];
+										$entry_minute = $entry_array['1'];
+
 										if($entry_hour == '1')
 											$entry_hour = 13;
 										if($entry_hour == '2')
@@ -458,18 +477,18 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										$month = $date_array['1'];
 										$day = $date_array['2'];
 										$zone=3600*+5;//India
-										$eventstart = gmmktime ( $entry_hour, 0, 0, $month, $day, $year );
+										$eventstart = gmmktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
 										$cal_time = gmdate('His', $eventstart + $zone);
-										$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description);
+										$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description,$duration);
 										if($cal_id){
 											$obj->addWebCalEntryUser($cal_id);
-											header('Location: timetable_view.php');
+											
 										}
-									}
+									}									
 								}
 							}
+							header('Location: timetable_view.php');
 						}
-						
 					}
 				}else{
 					$message="Timetable with this name already exist in database. Please choose a new one.";
@@ -482,40 +501,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: generate_timetable.php');
 			}
 			break;
-			//add edit holiday
-			case 'addEditHoliday':
-			if($_POST['holiday_date']!="" ){
-				$obj = new Holidays();
-				if(isset($_POST['holidayId']) && $_POST['holidayId']!=''){
-					//update a holiday
-					$resp = $obj->updateholiday();
-				}else{
-					//add new holiday
-					$resp = $obj->addHoliday();
-				}
-				if($resp==0){
-					//return back data to the form
-					echo "<html><head></head><body>";
-					echo "<form name='formbuild' method='post' action='holidays.php'>";
-					reset($_POST);
-					while(list($iname,$ival) = each($_POST)) {
-						echo "<input type='hidden' name='$iname' value='$ival'>";
-					}
-					echo "</form>";
-					echo "</body></html>";
-					echo"<script language='JavaScript'>function submit_back(){ window.document.formbuild.submit();}submit_back();</script>";
-					exit();
-					//end return back
-				}else{
-					header('Location: holidays_view.php');
-					exit();
-				}
-			}else{
-				$message="Please enter all required fields";
-				$_SESSION['error_msg'] = $message;
-				header('Location: holidays.php');
-			}
-		break;
 
 	}
 }
