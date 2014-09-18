@@ -99,8 +99,16 @@ $(document).ready(function() {
 		change: startChange,
 		interval: 15,
 		format: "h:mm tt",
-    	parseFormats: ["hh:mm"] 
+    	parseFormats: ["hh:mm"], 
 	}).data("kendoTimePicker");
+	//making timelot readonly
+	$("#start").click(function() {
+    	start.open();
+	});
+	$("span[aria-controls='start_timeview']").click(function(){ 
+		start.open();
+	});
+  	start.readonly();
 	//init end timepicker
 	var end = $("#end").kendoTimePicker(
 	{
@@ -108,6 +116,14 @@ $(document).ready(function() {
 		format: "h:mm tt",
     	parseFormats: ["hh:mm"] 
 	}).data("kendoTimePicker");
+	//making timelot readonly
+	$("#end").click(function() {
+    	end.open();
+	});
+	$("span[aria-controls='end_timeview']").click(function(){ 
+		end.open();
+	});
+  	end.readonly();
 	//define min/max range
 	start.min("8:00 AM");
 	start.max("9:30 PM");
