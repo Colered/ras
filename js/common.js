@@ -961,10 +961,12 @@ $(document).ready(function(){
 
 //function to show subjects by program
 function createTeachAvailRule(){
-	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
-	if($('#txtSchd').val()==""){
-			alert('Please select a valid Schedule Name.');
-	}else if($('#fromTeachAval').val()==""){
+	var regx = /^[A-Za-z0-9 .]+$/;
+    if (!regx.test($('#txtSchd').val())) {
+        alert('Please select a valid schedule name with alphanumeric options.');
+		return false;
+    }
+    else if($('#fromTeachAval').val()==""){
 			alert('Please select a valid From Time.');
 	}else if($('#toTeachAval').val()==""){ 
 			alert('Please select a valid To Time.');
@@ -1205,4 +1207,17 @@ function deleteClassroomAvailability($id){
         });
     }
     return false;
+}
+//Function to validate schedule name on teacher availability
+function validateScheduleName($this) {
+	alert($("#txtSchd").val());
+	//return this.optional(element) || /^[a-z0-9\- .]+$/i.test(value);
+	var filter = /^([a-z0-9\- .])$/;
+   // var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (filter.test(this.val())) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
