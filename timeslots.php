@@ -54,9 +54,9 @@ $(document).ready(function(){
 					<thead>
 					<tr>
 						<th >ID</th>
-						<th >Start Time</th>
-						<th >End Time</th>
-						<th >Timeslot</th>
+						<th style="text-align:left" >Start Time (24 Hrs format)</th>
+						<th style="text-align:left" >End Time (24 Hrs format)</th>
+						<th style="text-align:left" >Timeslot (24 Hrs format)</th>
 						<th >Action</th>
 					</tr>
 					</thead>
@@ -66,7 +66,7 @@ $(document).ready(function(){
 						<td class="align-center"><?php echo $data['id'] ?></td>
 						<td><?php echo $data['start_time'] ?></td>
 						<td><?php echo $data['end_time'] ?></td>
-						<td><?php echo $data['timeslot_range'] ?></td>
+						<td><?php echo $data['start_time'].'-'.$data['end_time']; ?></td>
 						<td class="align-center" id="<?php echo $data['id'] ?>">
 							<a href="#" class="table-icon delete" onClick="deleteTimeslot(<?php echo $data['id'] ?>)"></a>
 						</td>
@@ -97,12 +97,16 @@ $(document).ready(function() {
 	//init start timepicker
 	var start = $("#start").kendoTimePicker({
 		change: startChange,
-		interval: 15
+		interval: 15,
+		format: "h:mm tt",
+    	parseFormats: ["hh:mm"] 
 	}).data("kendoTimePicker");
 	//init end timepicker
 	var end = $("#end").kendoTimePicker(
 	{
-		interval: 15
+		interval: 15,
+		format: "h:mm tt",
+    	parseFormats: ["hh:mm"] 
 	}).data("kendoTimePicker");
 	//define min/max range
 	start.min("8:00 AM");

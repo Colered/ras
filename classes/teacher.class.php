@@ -235,7 +235,7 @@ class Teacher extends Base {
 		return $result;
 	}
 	//add teacher availability
-	public function addTeacherAvailability()
+	/*public function addTeacherAvailability()
 	{
 		print_r($_POST); die;
 		$result =  $this->conn->query("select * from teacher order by teacher_name");
@@ -243,7 +243,7 @@ class Teacher extends Base {
 			return 0;
 		}
 		return $result;
-	}
+	}*/
 	//get all teachers availability
 	public function getTeacherAvailRule()
 	{
