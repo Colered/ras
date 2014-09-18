@@ -1,9 +1,9 @@
-<?php 
+<?php
 include('header.php');
-require_once('config.php');
-global $db; 
 $obj=new Timetable();
 $result=$obj->viewTimetable();
+$daysArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
+
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -28,75 +28,61 @@ $(document).ready(function(){
                 <thead>
                     <tr>
                         <th >ID</th>
-                        <th >Year</th>
-                        <th >Day</th>
-                        <th >Date</th>
-                        <th >Hours</th>
                         <th >Company</th>
-                        <!--<th >Cycle</th>-->
                         <th >Program</th>
 						<th >Subject</th>
 						<th >Area</th>
 						<th >Session No.</th>
-                        <th >Professor</th>
+                        <th >Teacher</th>
 						<th >Applicant</th>
                         <th >Classroom</th>
+						<th >Year</th>
+						<th >Day</th>
+						<th >Date</th>
+						<th >Hours</th>
 					</tr>
                     </tr>
                 </thead>
                 <tbody>
-                     <?php  while ($data = $result->fetch_assoc()){?>
+                <?php
+                     while ($data = $result->fetch_assoc()){
+                         $ttYear=$obj->getTimetableYear($data['tt_id']);
+						 $ttDetail=$ttYear->fetch_assoc();
+                ?>
 					<tr>
                         <td class="align-center"><?php echo $data['id']; ?></td>
-                        <td class="align-center">
-						<?php
-						 $ttYear=$obj->getTimetableYear($data['tt_id']);
-						 $ttDetail=$ttYear->fetch_assoc();
-						
-						 echo $ttDetail['start_date'].' to '.$ttDetail['end_date'] ; ?></td>
-                        <td class="align-center"><?php 
-						 if($data['day']==0){echo "Mon";}
-						 if($data['day']==1){echo "Tue";}
-						 if($data['day']==2){echo "Wed";}
-						 if($data['day']==3){echo "Thu";}
-						 if($data['day']==4){echo "Fri";}
-						 if($data['day']==5){echo "Sat";}
-						 if($data['day']==6){echo "Sun";}
-						?></td>
-                        <td class="align-center"><?php echo $data['date']; ?></td>
-						<td class="align-center"><?php echo $data['timeslot']; ?></td>
 						<td class="align-center">
-						   <?php 
+						   <?php
 							$program_year=$obj->getProgramYear($data['program_year_id']);
 							$programYearDeatil=$program_year->fetch_assoc();
 							$program=$obj->gerProgram($programYearDeatil['program_id']);
 							$programDeatil=$program->fetch_assoc();
-							//echo $programDeatil['company']; 
-							echo "NA";
+							echo $programDeatil['company'];
+							//echo "NA";
 							?>
 						</td>
 						<td class="align-center"><?php echo $programDeatil['program_name']; ?></td>
 						<td class="align-center">
-							<?php 
+							<?php
 							$subject=$obj->getSubject($data['subject_id']);
 							$subjectDeatil=$subject->fetch_assoc();
 							echo $subjectDeatil['subject_name']; ?>
 						</td>
 						<td class="align-center">
-							<?php 
+							<?php
 							$area=$obj->getArea($subjectDeatil['area_id']);
 							$areaDeatil=$area->fetch_assoc();
 							echo $areaDeatil['area_name'];?>
 						</td>
 						<td class="align-center">
-							<?php 
+							<?php
 							$session=$obj->getSession($data['session_id']);
 							$sessionDeatil=$session->fetch_assoc();
 							echo $sessionDeatil['session_name'];
 							?>
 						</td>
 						<td class="align-center">
-							<?php 
+							<?php
 							$teacher=$obj->getTeacher($data['teacher_id']);
 							$teacherDeatil=$teacher->fetch_assoc();
 							echo $teacherDeatil['teacher_name'];
@@ -104,16 +90,16 @@ $(document).ready(function(){
 						</td>
 						<td class="align-center"><?php echo "NA"; ?></td>
 						<td class="align-center">
-							<?php 
+							<?php
 							$room=$obj->getClassroom($data['room_id']);
 							$roomDeatil=$room->fetch_assoc();
 							echo $roomDeatil['room_name'];
 							?>
 						</td>
-                        <!--<td class="align-center" id="">
-                            <a href="timetable.php?edit="" class="table-icon edit" title="Edit"></a>
-							<a href="#" class="table-icon delete" onClick=""></a>
-                        </td>-->
+                        <td class="align-center"><?php echo $ttDetail['start_date'].' to '.$ttDetail['end_date'] ; ?></td>
+                        <td class="align-center"><?php echo $daysArr[$data['day']];?></td>
+                        <td class="align-center"><?php echo $data['date']; ?></td>
+						<td class="align-center"><?php echo $data['timeslot']; ?></td>
                     </tr>
 					<?php }?>
                 </tbody>
