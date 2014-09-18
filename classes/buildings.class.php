@@ -87,4 +87,18 @@ class Buildings extends Base {
 		}
 		return $room_dropDwn;
     }
+	//function to get full room name by id
+	public function getRoomFullName($rid)
+	{
+	  if($rid){
+		$slqR="SELECT r.id, r.room_name, rt.room_type, b.building_name FROM room r
+				LEFT JOIN room_type rt ON ( rt.id = r.room_type_id )
+				LEFT JOIN building b ON ( b.id = r.building_id ) WHERE r.id='".$rid."'";
+		$relR = mysqli_query($this->conn, $slqR);
+		$rdata= mysqli_fetch_array($relR);
+		return $rdata['room_name'].'-'.$rdata['building_name'].'-'.$rdata['room_type'];
+	  }else{
+	    return '';
+	  }
+	}
 }

@@ -1,6 +1,7 @@
 <?php
 include('header.php');
 $objT = new Teacher();
+$objB = new Buildings();
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -34,7 +35,8 @@ $(document).ready(function(){
                         <th>Room</th>
                         <th>Date</th>
                         <th>Timeslot</th>
-                        <th>Reserved</th>
+                        <th>PreAllocated</th>
+                        <th>Allocation Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -46,25 +48,25 @@ $(document).ready(function(){
 						$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
 						$teacher_name = $row['teacher_name'].$email;
 						if($row['reserved_flag']==1)
-						   $res_flag = "Reserved";
-						else if($row['reserved_flag']==2)
-						   $res_flag = "Not for allocation";
+						   $res_flag = "Yes";
 						else
-						  $res_flag = "Free";
+						  $res_flag = "No";
+						  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
 
 					?>
-						<tr>
+						<tr<?php echo $trBColor;?>>
 							<td class="align-center"><?php echo $row['id'];?></td>
 							<td><?php echo $row['name'];?></td>
 							<td><?php echo $row['program_name'];?></td>
 							<td><?php echo $row['subject_name'];?></td>
 							<td><?php echo $row['session_name'];?></td>
 							<td><?php echo $teacher_name;?></td>
-							<td><?php echo $objT->getFielldVal("room","room_name",'id',$row['room_id']);?></td>
+							<td><?php echo $objB->getRoomFullName($row['room_id']);?></td>
 							<td><?php echo $objT->formatDate($row['act_date']);?></td>
 							<td><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
-							<td><?php echo $res_flag;?></td>
-							<td class="align-center" id="<?php echo $row['id'];?>">
+							<td class="align-center"><?php echo $res_flag;?></td>
+							<td class="align-center"><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
+							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a>
 								<a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
 							</td>

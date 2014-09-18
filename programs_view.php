@@ -1,5 +1,8 @@
 <?php include('header.php');
 $objP = new Programs();
+$pTypeArr = array('1'=>'One Year','2'=>'Two Year','3'=>'Three Year');
+$pUnitArr = array('1'=>'Executive Education','2'=>'Master Programs','3'=>'Tailored Programs','4'=>'Activity');
+
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -26,6 +29,7 @@ $(document).ready(function(){
 						<tr>
 							<th>ID</th>
 							<th>Program Name</th>
+							<th>Unit</th>
 							<th>Program Type</th>
 							<th>Program Duration</th>
 							<th>No. of Cycle</th>
@@ -36,15 +40,23 @@ $(document).ready(function(){
 					<?php
 						$result = $objP->getProgramListData();
 						while($row = $result->fetch_assoc()){
-
 						$no_of_cycle = $objP->getCyclesInProgram($row['id']);
+						$unitDBValArr = explode(',',$row['unit']);
+						$progUnit = '<ul>';
+						if(!empty($unitDBValArr) && $unitDBValArr[0]<>''){
+							foreach($unitDBValArr as $val){
+							   $progUnit .= '<li>'.$pUnitArr[$val].'</li>';
+							}
+						}
+						$progUnit .= '<ul>';
                      ?>
 						<tr>
 							<td class="align-center"><?php echo $row['id'];?></td>
-							<td><?php echo $row['program_name'];?></td>
-							<td><?php echo $row['program_type'];?></td>
+							<td class="align-center"><?php echo $row['program_name'];?></td>
+							<td><?php echo $progUnit;?></td>
+							<td class="align-center"><?php echo $pTypeArr[$row['program_type']];?></td>
 							<td class="align-center"><?php echo $objP->formatDate($row['start_date']);?> - <?php echo $objP->formatDate($row['end_date']);?></td>
-							<td><?php echo $no_of_cycle;?></td>
+							<td class="align-center"><?php echo $no_of_cycle;?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
 								<a href="#" class="table-icon delete" onClick="deleteProgram(<?php echo $row['id'] ?>)"></a>

@@ -717,7 +717,7 @@ $(document).ready(function() {
             'roomTypeValue': selected,
 			'codeBlock': 'getRooms',
 			'roomId': roomId,
-			},
+		},
         success: function(data) {
 			 $("#slctRmName").html(data);
         },
