@@ -42,7 +42,9 @@ class Programs extends Base {
 				//INSERT CYCLES DATA
 				for($i=1; $i<=$slctNumcycle; $i++){
 				   $days = implode(',',$_POST['slctDays'.$i]);
-				   $sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_yr_id."', '".$slctNumcycle."', '".$_POST['startweek'.$i]."', '".$_POST['endweek'.$i]."', '".$days."', now())";
+				   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+				   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+				   $sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_yr_id."', '".$slctNumcycle."', '".$start_date."', '".$end_date."', '".$days."', now())";
 				   $rel = $this->conn->query($sql);
 
 				}
@@ -109,7 +111,9 @@ class Programs extends Base {
 				//INSERT CYCLES DATA
 				for($i=1; $i<=$slctNumcycle; $i++){
 				   $days = implode(',',$_POST['slctDays'.$i]);
-				   $sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_yr_id."', '".$slctNumcycle."', '".$_POST['startweek'.$i]."', '".$_POST['endweek'.$i]."', '".$days."', now())";
+				   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+				   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+				   $sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_yr_id."', '".$slctNumcycle."', '".$start_date."', '".$end_date."', '".$days."', now())";
 				   $rel = $this->conn->query($sql);
 
 				}

@@ -7,15 +7,30 @@ abstract class Base
 		$this->conn = $db;
 	}
 
-	//formatDate function
-	//reads the file contents
-	//Input parameters : 1) date
-	//Output parameters : 1) formated date string
+	//function to date format by datetime
 	public function formatDate($date)
 	{
 		if(trim($date) != "") {
 			$tempdate=explode(" ",$date);
 			$date=$tempdate[0];
+			if($date=="0000-00-00") {
+				$date="";
+			} else  {
+				$dateArr = explode("-", $date);
+				$year=$dateArr[0];
+				$month=$dateArr[1];
+				$day=$dateArr[2];
+				$date_mktime = mktime(0, 0, 0, $month, $day, $year);
+				$date = date("d-m-Y",$date_mktime);
+			}
+			return $date;
+		}
+
+	}
+    //function to date format by date
+	public function formatDateByDate($date)
+	{
+		if(trim($date) != "") {
 			if($date=="0000-00-00") {
 				$date="";
 			} else  {
@@ -49,7 +64,7 @@ abstract class Base
 			return '';
 	   }
 	}
-	
+
 	//function to find all weeks in a date range
 	public function getWeeksInDateRange($start,$end)
 	{
@@ -71,7 +86,7 @@ abstract class Base
 		  $dateEnd = date('Y-m-d', $tmp);
 		}
 		$weekEnd = intval(date('W', strtotime($dateEnd)));
-		//prepare array for all weeks coming in the date range 
+		//prepare array for all weeks coming in the date range
 		$allWeeks = array();
 		for($i=$weekStart; $i<=$weekEnd; $i++){
 			$allWeeks[] = $i;

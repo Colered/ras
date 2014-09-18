@@ -151,32 +151,12 @@ $(document).ready(function() {
 						</div>
 						<div class="txtfield">
 							<div class="cylcebox">
-							<h3>Start Week</h3>
-							<select id="startweek1" name="startweek1" class="select required">
-							<option value="">--Select Week--</option>
-							<?php
-									for($i=1;$i<=52;$i++){
-										echo '<option value="'.$i.'">'.$i.'</option>';
-									}
-							?>
-							</select>
-							<script type="text/javascript">
-								jQuery('#startweek1').val("<?php echo $startweek_1;?>");
-						    </script>
+							<h3>Start Date</h3>
+							<input type="text" size="14" id="startweek1" name="startweek1" value="<?php echo $objP->formatDateByDate($startweek_1);?>" class="required" readonly />
 						</div>
 						<div class="cylcebox">
-							<h3>End Week</h3>
-							<select id="endweek1" name="endweek1" class="select required">
-							<option value="">--Select Week--</option>
-							<?php
-									for($i=1;$i<=52;$i++){
-										echo '<option value="'.$i.'">'.$i.'</option>';
-									}
-							?>
-							</select>
-							<script type="text/javascript">
-								jQuery('#endweek1').val("<?php echo $endweek_1;?>");
-							</script>
+							<h3>End Date</h3>
+							<input type="text" size="14" id="endweek1" name="endweek1" value="<?php echo $objP->formatDateByDate($endweek_1);?>" class="required" readonly />
 						</div>
 						<div class="cylcebox">
 							<h3>Days</h3>
@@ -198,32 +178,12 @@ $(document).ready(function() {
 						</div>
 						<div class="txtfield">
 							<div class="cylcebox">
-								<h3>Start Week</h3>
-								<select id="startweek2" name="startweek2" class="select required">
-								<option value="">--Select Week--</option>
-								<?php
-										for($i=1;$i<=52;$i++){
-											echo '<option value="'.$i.'">'.$i.'</option>';
-										}
-								?>
-								</select>
-								<script type="text/javascript">
-									jQuery('#startweek2').val("<?php echo $startweek_2;?>");
-								</script>
+								<h3>Start Date</h3>
+								<input type="text" size="14" id="startweek2" name="startweek2" value="<?php echo $objP->formatDateByDate($startweek_2);?>" class="required" readonly />
 							</div>
 							<div class="cylcebox">
-								<h3>End Week</h3>
-								<select id="endweek2" name="endweek2" class="select required">
-								<option value="">--Select Week--</option>
-								<?php
-										for($i=1;$i<=52;$i++){
-											echo '<option value="'.$i.'">'.$i.'</option>';
-										}
-								?>
-								</select>
-								<script type="text/javascript">
-									jQuery('#endweek2').val("<?php echo $endweek_2;?>");
-								</script>
+								<h3>End Date</h3>
+								<input type="text" size="14" id="endweek2" name="endweek2" value="<?php echo $objP->formatDateByDate($endweek_2);?>" class="required"  readonly />
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>
@@ -245,32 +205,12 @@ $(document).ready(function() {
 						</div>
 						<div class="txtfield">
 							<div class="cylcebox">
-								<h3>Start Week</h3>
-								<select id="startweek3" name="startweek3" class="select required">
-								<option value="">--Select Week--</option>
-								<?php
-										for($i=1;$i<=52;$i++){
-											echo '<option value="'.$i.'">'.$i.'</option>';
-										}
-								?>
-								</select>
-								<script type="text/javascript">
-									jQuery('#startweek3').val("<?php echo $startweek_3;?>");
-								</script>
+								<h3>Start Date</h3>
+								<input type="text" size="14" id="startweek3" name="startweek3" value="<?php echo $objP->formatDateByDate($startweek_3);?>" class="required" readonly />
 							</div>
 							<div class="cylcebox">
-								<h3>End Week</h3>
-								<select id="endweek3" name="endweek3" class="select required">
-								<option value="">--Select Week--</option>
-								<?php
-										for($i=1;$i<=52;$i++){
-											echo '<option value="'.$i.'">'.$i.'</option>';
-										}
-								?>
-								</select>
-								<script type="text/javascript">
-									jQuery('#endweek3').val("<?php echo $endweek_3;?>");
-								</script>
+								<h3>End Date</h3>
+								<input type="text" size="14" id="endweek3" name="endweek3" value="<?php echo $objP->formatDateByDate($endweek_3);?>" class="required" readonly />
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>

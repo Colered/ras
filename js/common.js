@@ -92,6 +92,78 @@ $(function() {
 	});
 });
 $(function() {
+	$( "#startweek1" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#endweek1" ).datepicker( "option", "minDate", selectedDate );
+		}
+	});
+	$( "#endweek1" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#startweek1" ).datepicker( "option", "maxDate", selectedDate );
+		}
+	});
+});
+$(function() {
+	$( "#startweek2" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#endweek2" ).datepicker( "option", "minDate", selectedDate );
+		}
+	});
+	$( "#endweek2" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#startweek2" ).datepicker( "option", "maxDate", selectedDate );
+		}
+	});
+});
+$(function() {
+	$( "#startweek3" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#endweek3" ).datepicker( "option", "minDate", selectedDate );
+		}
+	});
+	$( "#endweek3" ).datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#startweek3" ).datepicker( "option", "maxDate", selectedDate );
+		}
+	});
+});
+$(function() {
 	$("#fromPrgm").datepicker({
 			dateFormat: 'dd-mm-yy',
 			defaultDate: "+1w",
