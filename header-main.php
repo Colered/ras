@@ -64,6 +64,7 @@ require_once('config.php');
 								<li>&#8250; <a href="timeslots.php">Timeslots</a></li>
                                 <li>&#8250; <a href="teacher_view.php">Teachers</a></li>
                                 <li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
+								<li>&#8250; <a href="holidays_view.php">Manage Holidays</a></li>
 								<li>&#8250; <a href="teacher_activity_view.php">Teacher Activity</a></li>
                                 <!--<li>&#8250; <a href="roles_management_view.php">Role Management</a></li>
                                 <li>&#8250; <a href="user_management_view.php">User Management</a></li>-->

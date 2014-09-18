@@ -57,6 +57,14 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
+	$( "#holiday_date" ).datepicker({
+	    dateFormat: 'yy-mm-dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
  });			   
 
 $(function() {
@@ -1208,16 +1216,29 @@ function deleteClassroomAvailability($id){
     }
     return false;
 }
-//Function to validate schedule name on teacher availability
-function validateScheduleName($this) {
-	alert($("#txtSchd").val());
-	//return this.optional(element) || /^[a-z0-9\- .]+$/i.test(value);
-	var filter = /^([a-z0-9\- .])$/;
-   // var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    if (filter.test(this.val())) {
-        return true;
+//ajax delete the holiday
+function deleteHoliday($id){
+	if($id==""){
+		alert("Please select a holiday to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Holiday?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_holiday',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest( 'tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Holiday.");
+						$('.green, .red').hide();
+					}
+                }
+        });
     }
-    else {
-        return false;
-    }
+    return false;
 }

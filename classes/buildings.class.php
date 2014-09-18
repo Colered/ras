@@ -38,10 +38,6 @@ class Buildings extends Base {
 	public function viewBuld() {
 			$area_query="select * from building order by date_update DESC";
 			$q_res = mysqli_query($this->conn, $area_query);
-			if(mysqli_num_rows($q_res)<=0){
-				$message="There is not any building exists.";
-				$_SESSION['error_msg'] = $message;
-			}
 			return $q_res;
 	}
 
