@@ -9,7 +9,7 @@
                         <h2>Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtRname" maxlength="50" name="txtRname">
+                        <input type="text" class="inp_txt alphanumeric" id="txtRname" maxlength="50" name="txtRname">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -21,7 +21,7 @@
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel">
                     </div>
-                </div>	
+                </div>
             </form>
         </div>
         <div class="clear"></div>

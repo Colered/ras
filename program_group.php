@@ -38,7 +38,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
                         <h2>Group Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctSgroups" name="slctSgroups[]" class="selectMultiple" multiple="multiple" required="true">
+                        <select id="slctSgroups" name="slctSgroups[]" class="selectMultiple required" multiple="multiple">
 						 <?php
 							  while($row = $groupRel->fetch_assoc()){
 							  		echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';

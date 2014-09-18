@@ -12,7 +12,7 @@ class Subjects extends Base {
 			$sessionDesp = (isset($_POST['sessionDesc'])) ? ($_POST['sessionDesc']) : '';
 			$sessionDespArr=$this->formingArray($sessionDesp);
 			//check if the subject code already exists
-			$subject_query="select subject_name, subject_code from  subject where subject_code='".$_POST['txtSubjCode']."'";
+			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0){
@@ -31,8 +31,10 @@ class Subjects extends Base {
 				$program_year_id=$program_Val[0];
 				$program_id=$program_Val[1];
 				//inserting values
-				if ($result = mysqli_query($this->conn, "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')")) {
-					$last_ins_id=mysqli_insert_id($this->conn);
+				$SQL = "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')";
+				$result = $this->conn->query($SQL);
+				$last_ins_id = $this->conn->insert_id;
+				if($last_ins_id) {
 					if($last_ins_id!=""){
 					$j=0;
 					if($sessionName!=""){

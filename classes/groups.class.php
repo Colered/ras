@@ -6,7 +6,7 @@ class Groups extends Base {
 	/*function for adding Group*/
 	public function addGroup() {
 			//check if the group name exists
-			$area_query="select id, name from group_master where name='".$_POST['txtGname']."'";
+			$area_query="select id, name from group_master where name='".Base::cleanText($_POST['txtGname'])."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)
@@ -51,7 +51,7 @@ class Groups extends Base {
 	/*function for Update Group*/
 	public function updateGroup() {
 			//check if the building name exists
-			$area_query="select id, name from group_master where name='".$_POST['txtGname']."' and id !='".$_POST['groupId']."'";
+			$area_query="select id, name from group_master where name='".Base::cleanText($_POST['txtGname'])."' and id !='".$_POST['groupId']."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)

@@ -6,7 +6,7 @@ class Classroom extends Base {
 	/*function for adding room*/
 	public function addRoom() {
 			//check if the room already exists
-			$area_query="select room_name, id from room where room_name='".$_POST['txtRmName']."'";
+			$area_query="select room_name, id from room where room_name='".Base::cleanText($_POST['txtRmName'])."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)
@@ -50,7 +50,7 @@ class Classroom extends Base {
 	/*function for Update Rooms*/
 	public function updateRoom() {
 			//check if the room name already exists
-			$room_query="select room_name from room where room_name='".$_POST['txtRmName']."' and id !='".$_POST['roomId']."'";
+			$room_query="select room_name from room where room_name='".Base::cleanText($_POST['txtRmName'])."' and id !='".$_POST['roomId']."'";
 			$q_res = mysqli_query($this->conn, $room_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)

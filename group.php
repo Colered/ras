@@ -1,4 +1,4 @@
-<?php include('header.php'); 
+<?php include('header.php');
 $groupName=""; $groupId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$groupId = base64_decode($_GET['edit']);
@@ -25,7 +25,7 @@ $groupName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtGname'])? $
                         <h2>Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtGname" maxlength="50" name="txtGname" value="<?php echo $groupName; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtGname" maxlength="50" name="txtGname" value="<?php echo $groupName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -37,7 +37,7 @@ $groupName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtGname'])? $
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'group_view.php';">
                     </div>
-                </div>	
+                </div>
             </form>
         </div>
         <div class="clear"></div>

@@ -44,7 +44,7 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
                         <h2>Professor Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -80,14 +80,14 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
                         <h2>Desigation</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtDegination" maxlength="20" name="txtDegination" value="<?php echo $degination;?>">
+                        <input type="text" class="inp_txt alphanumeric" id="txtDegination" maxlength="20" name="txtDegination" value="<?php echo $degination;?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Qualifications</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtQualification" maxlength="50" name="txtQualification" value="<?php echo $qualification;?>"/>
+                        <input type="text" class="inp_txt alphanumeric" id="txtQualification" maxlength="50" name="txtQualification" value="<?php echo $qualification;?>"/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -131,7 +131,7 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
 								<h2>Username<span class="redstar">*</span></h2>
 							</div>
 							<div class="txtfield">
-								<input type="text" class="inp_txt required" id="txtUname" maxlength="50" name="txtUname" value="<?php echo $username;?>">
+								<input type="text" class="inp_txt required alphanumeric" id="txtUname" maxlength="50" name="txtUname" value="<?php echo $username;?>">
 							</div>
 							<div class="clear"></div>
                     <?php } ?>

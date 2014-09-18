@@ -85,14 +85,14 @@ $(document).ready(function() {
                         <h2>Program Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtPrgmName" maxlength="50" name="txtPrgmName" value="<?php echo $program_name;?>" required="true">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtPrgmName" maxlength="50" name="txtPrgmName" value="<?php echo $program_name;?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Unit <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctUnit" name="slctUnit[]" class="selectMultiple" size="5" multiple="multiple" required="true">
+                        <select id="slctUnit" name="slctUnit[]" class="selectMultiple required" size="5" multiple="multiple">
                             <option value="1" <?php echo in_array(1,$unitArr1) ? 'selected' : ''?>>Executive Education</option>
                             <option value="2" <?php echo in_array(2,$unitArr1) ? 'selected' : ''?>>Master Programs</option>
 							<option value="3" <?php echo in_array(3,$unitArr1) ? 'selected' : ''?>>Tailored Programs</option>
@@ -104,14 +104,14 @@ $(document).ready(function() {
 						<h2>Company</h2>
 					</div>
 					<div class="txtfield">
-						<input type="text" class="inp_txt" id="txtCompanyName" maxlength="100" name="txtCompanyName" value="<?php echo $company_name;?>">
+						<input type="text" class="inp_txt alphanumeric" id="txtCompanyName" maxlength="100" name="txtCompanyName" value="<?php echo $company_name;?>">
 					</div>
 					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Program Type <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctPrgmType" name="slctPrgmType" class="select1" required="true">
+                        <select id="slctPrgmType" name="slctPrgmType" class="select1 required">
                             <option value="">--Select Program--</option>
                             <option value="1">One Year</option>
                             <option value="2">Two Year</option>
@@ -126,8 +126,8 @@ $(document).ready(function() {
                         <h2>Program Duration <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        From:<input type="text" size="12" id="fromPrgm" name="prog_from_date" value="<?php echo $objP->formatDate($program_from_date);?>" required="true" readonly/>
-                        To:<input type="text" size="12" id="toPrgm" name="prog_to_date" value="<?php echo $objP->formatDate($program_to_date);?>" required="true" readonly/>
+                        From:<input type="text" size="12" id="fromPrgm" name="prog_from_date" value="<?php echo $objP->formatDate($program_from_date);?>" class="required" readonly/>
+                        To:<input type="text" size="12" id="toPrgm" name="prog_to_date" value="<?php echo $objP->formatDate($program_to_date);?>" class="required" readonly/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -152,7 +152,7 @@ $(document).ready(function() {
 						<div class="txtfield">
 							<div class="cylcebox">
 							<h3>Start Week</h3>
-							<select id="startweek1" name="startweek1" class="select" required="true">
+							<select id="startweek1" name="startweek1" class="select required">
 							<option value="">--Select Week--</option>
 							<?php
 									for($i=1;$i<=52;$i++){
@@ -166,7 +166,7 @@ $(document).ready(function() {
 						</div>
 						<div class="cylcebox">
 							<h3>End Week</h3>
-							<select id="endweek1" name="endweek1" class="select" required="true">
+							<select id="endweek1" name="endweek1" class="select required">
 							<option value="">--Select Week--</option>
 							<?php
 									for($i=1;$i<=52;$i++){
@@ -180,7 +180,7 @@ $(document).ready(function() {
 						</div>
 						<div class="cylcebox">
 							<h3>Days</h3>
-							<select id="slctDays1" name="slctDays1[]" class="ts-avail" multiple="multiple" required="true">
+							<select id="slctDays1" name="slctDays1[]" class="ts-avail required" multiple="multiple">
 								<option value="0" <?php echo in_array(0,$daysArr1) ? 'selected' : ''?>>Mon</option>
 								<option value="1" <?php echo in_array(1,$daysArr1) ? 'selected' : ''?>>Tue</option>
 								<option value="2" <?php echo in_array(2,$daysArr1) ? 'selected' : ''?>>Wed</option>
@@ -199,7 +199,7 @@ $(document).ready(function() {
 						<div class="txtfield">
 							<div class="cylcebox">
 								<h3>Start Week</h3>
-								<select id="startweek2" name="startweek2" class="select" required="true">
+								<select id="startweek2" name="startweek2" class="select required">
 								<option value="">--Select Week--</option>
 								<?php
 										for($i=1;$i<=52;$i++){
@@ -213,7 +213,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>End Week</h3>
-								<select id="endweek2" name="endweek2" class="select" required="true">
+								<select id="endweek2" name="endweek2" class="select required">
 								<option value="">--Select Week--</option>
 								<?php
 										for($i=1;$i<=52;$i++){
@@ -227,7 +227,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>
-								<select id="slctDays2" name="slctDays2[]" class="ts-avail" multiple="multiple" required="true">
+								<select id="slctDays2" name="slctDays2[]" class="ts-avail required" multiple="multiple">
 								<option value="0" <?php echo in_array(0,$daysArr2) ? 'selected' : ''?>>Mon</option>
 								<option value="1" <?php echo in_array(1,$daysArr2) ? 'selected' : ''?>>Tue</option>
 								<option value="2" <?php echo in_array(2,$daysArr2) ? 'selected' : ''?>>Wed</option>
@@ -246,7 +246,7 @@ $(document).ready(function() {
 						<div class="txtfield">
 							<div class="cylcebox">
 								<h3>Start Week</h3>
-								<select id="startweek3" name="startweek3" class="select" required="true">
+								<select id="startweek3" name="startweek3" class="select required">
 								<option value="">--Select Week--</option>
 								<?php
 										for($i=1;$i<=52;$i++){
@@ -260,7 +260,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>End Week</h3>
-								<select id="endweek3" name="endweek3" class="select" required="true">
+								<select id="endweek3" name="endweek3" class="select required">
 								<option value="">--Select Week--</option>
 								<?php
 										for($i=1;$i<=52;$i++){
@@ -274,7 +274,7 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 								<h3>Days</h3>
-								<select id="slctDays3" name="slctDays3[]" class="ts-avail" multiple="multiple" required="true">
+								<select id="slctDays3" name="slctDays3[]" class="ts-avail required" multiple="multiple">
 								<option value="0" <?php echo in_array(0,$daysArr3) ? 'selected' : ''?>>Mon</option>
 								<option value="1" <?php echo in_array(1,$daysArr3) ? 'selected' : ''?>>Tue</option>
 								<option value="2" <?php echo in_array(2,$daysArr3) ? 'selected' : ''?>>Wed</option>

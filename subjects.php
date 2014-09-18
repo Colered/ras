@@ -40,7 +40,7 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                              <?php
 					          $program_qry="select * from program_years";
 					          $program_result= mysqli_query($db, $program_qry);
-							  while ($program_data = mysqli_fetch_assoc($program_result)){ 
+							  while ($program_data = mysqli_fetch_assoc($program_result)){
 							  $program_year_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
 							  $selected = (trim($programName) == trim($program_year_detail)) ? ' selected="selected"' : '';
 							  ?>
@@ -69,14 +69,14 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                         <h2>Subject Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtSubjName" maxlength="50" name="txtSubjName" value="<?php echo $subjectName; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtSubjName" maxlength="50" name="txtSubjName" value="<?php echo $subjectName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Subject Code <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>">
                     </div>
                     <div class="clear"></div>
 					<div class="custtd_left">
@@ -99,11 +99,11 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 						<div class="txtfield ">
 						<div class="sessionbox">
 						<h3>Session Name<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session" id="txtSessionName" maxlength="50" name="txtSessionName" value="">
+							<input type="text" class="inp_txt_session alphanumeric" id="txtSessionName" maxlength="50" name="txtSessionName" value="">
 						</div>
 						<div class="sessionbox">
 						<h3>Order Number<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session" id="txtOrderNum" maxlength="10" name="txtOrderNum" value="">
+							<input type="text" class="inp_txt_session alphanumeric" id="txtOrderNum" maxlength="10" name="txtOrderNum" value="">
 						</div>
 						<div class="sessionbox">
 						<h3>Description<span class="redstar">*</span></h3>

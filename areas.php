@@ -1,4 +1,4 @@
-<?php include('header.php'); 
+<?php include('header.php');
 $areaName=""; $areaCode=""; $areaColor=""; $areaId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$areaId = base64_decode($_GET['edit']);
@@ -27,14 +27,14 @@ $areaColor = isset($_GET['edit']) ? $row['area_color'] : (isset($_POST['txtAColo
                         <h2>Area Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtAreaName" maxlength="50" name="txtAreaName" value="<?php echo $areaName; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtAreaName" maxlength="50" name="txtAreaName" value="<?php echo $areaName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Area Code<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtAreaCode" maxlength="50" name="txtAreaCode" value="<?php echo $areaCode; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtAreaCode" maxlength="50" name="txtAreaCode" value="<?php echo $areaCode; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -53,7 +53,7 @@ $areaColor = isset($_GET['edit']) ? $row['area_color'] : (isset($_POST['txtAColo
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'areas_view.php';">
                     </div>
-                </div>	
+                </div>
             </form>
         </div>
         <div class="clear"></div>

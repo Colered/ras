@@ -1,4 +1,4 @@
-<?php include('header.php'); 
+<?php include('header.php');
 $obj = new Classroom_Availability();
 $classroomAvailData = $obj->getClassroomAvailRule();
 $roomTypedata=$obj->getRoomType();
@@ -67,7 +67,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                         <h2>Schedule Name <span class="redstar">*</span></h2>
                     </div>
                      <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtSchd" maxlength="50" name="txtSchd">
+                        <input type="text" class="inp_txt alphanumeric" id="txtSchd" maxlength="50" name="txtSchd">
                     </div>
                      <div class="clear"></div>
                      <div class="custtd_left">
@@ -123,7 +123,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                         </select>
 						</div>
 						<div class="tmSlot">
-                        <input type="checkbox" id="Fri" name="day[]"  value="4" class="days"/><span class="dayName"> Fri </span> 
+                        <input type="checkbox" id="Fri" name="day[]"  value="4" class="days"/><span class="dayName"> Fri </span>
 						 <select id="ts-avail-day-4" name="Fri[]" class="slctTs" multiple="multiple">
                            <?php if($timeslotData!=0){
 									echo $options;
@@ -133,7 +133,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                         </select>
 						</div>
 						<div class="tmSlot">
-                        <input type="checkbox" id="Sat" name="day[]"  value="5" class="days"/><span class="dayName"> Sat </span> 
+                        <input type="checkbox" id="Sat" name="day[]"  value="5" class="days"/><span class="dayName"> Sat </span>
 						 <select id="ts-avail-day-5" name="Sat[]" class="slctTs" multiple="multiple">
                           <?php if($timeslotData!=0){
 									echo $options;
@@ -148,8 +148,8 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                      </div>
 					 <div class="clear"></div>
                    </div>
-                </div>	
-           
+                </div>
+
 			<div class="clear"></div>
 			<div class="scheduleBlock">
 				<div >
@@ -167,17 +167,17 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 								<ul class="listing">
 									<?php //get the day and timeslot
 									$dayData = $obj->getClassroomAvailDay($data['id']);
-									while($ddata = $dayData->fetch_assoc()){ 
+									while($ddata = $dayData->fetch_assoc()){
 										$timeslotData = $obj->getClassroomAvailTimeslot($ddata['timeslot_id']);?>
-										<li><?php 
+										<li><?php
 											if($ddata['day']==0){echo $day_name="Mon ";}
 											if($ddata['day']==1){echo $day_name="Tue ";}
 											if($ddata['day']==2){echo $day_name="Wed ";}
 											if($ddata['day']==3){echo $day_name="Thu ";}
 											if($ddata['day']==4){echo $day_name="Fri ";}
 											if($ddata['day']==5){echo $day_name="Sat ";}
-											while($tsdata = $timeslotData->fetch_assoc()){ 
-											 echo $tsdata['timeslot_range'].","; 
+											while($tsdata = $timeslotData->fetch_assoc()){
+											 echo $tsdata['timeslot_range'].",";
 											 } ?>
 										</li>
 									<?php } ?>
@@ -185,7 +185,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 								</td>
 						<?php $count++; } ?>
 						</tr>
-</table> 
+</table>
                     </ul>
                 </div>
 			</div>
@@ -202,7 +202,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                     <div class="clear"></div>
 					<div class="custtd_left">
                     </div>
-					<div class="divException"> 
+					<div class="divException">
 						<?php
 					if($roomId!=""){
 						$x=0;
@@ -235,7 +235,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 					$sessionHtml.='</tbody></table></div>';
 					echo $sessionHtml;
 				 }?>
-					
+
 					</div>
 					<div class="clear"></div>
 					<div class="txtfield">

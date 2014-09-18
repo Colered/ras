@@ -70,7 +70,7 @@ $rel_session = $objS->getSessions();
                         <h2>Teacher <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield" style="float:left">
-                        <select id="slctTeacher" name="slctTeacher[]" class="selectMultiple" size="10" multiple="multiple" required="true">
+                        <select id="slctTeacher" name="slctTeacher[]" class="selectMultiple required" size="10" multiple="multiple">
                         <?php
 							while($row = $rel_teacher->fetch_assoc()){
 								echo '<option value="'.$row['id'].'">'.$row['teacher_name'].' ('.$row['email'].')</option>';
