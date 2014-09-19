@@ -167,7 +167,7 @@ class Programs extends Base {
 			   $finalDays = implode(',',$finalDays);
 			   $cycle = $numSufArr[$i];
 			   $start_date = $this->formatDateByDate($row['start_week']);
-			   $end_date = $this->formatDateByDate($row['start_week']);
+			   $end_date = $this->formatDateByDate($row['end_week']);
 
                $data .= '<li>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' ('.$finalDays.')</li>';
                $i++;
