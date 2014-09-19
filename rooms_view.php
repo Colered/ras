@@ -1,5 +1,5 @@
-<?php 	
-include('header.php'); 
+<?php
+include('header.php');
 $obj = new Classroom();
 $result = $obj->viewRoom();
 ?>
@@ -21,7 +21,7 @@ $(document).ready(function(){
 		<div id="main">
 			<div class="full_w">
 				<div class="h_title">Classrooms View<a href="rooms.php" class="gird-addnew" title="Add New Classroom">Add new</a></div>
-				<table>
+				<table id="datatables" class="display">
 					<thead>
 						<tr>
 							<th >ID</th>
