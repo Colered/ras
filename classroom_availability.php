@@ -29,7 +29,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 				<input type="hidden" id="classRmAvailId" name="classRmAvailId" value="<?php echo $classRmAvailId; ?>" />
 				<input type="hidden" id="roomId" name="roomId" value="<?php echo $roomId; ?>" />
                 <div class="custtable_left">
-				<div class="custtd_left red">
+				<div class="custtd_left green">
 					<?php if(isset($_SESSION['succ_msg']))
 						echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);?>
 				</div>
