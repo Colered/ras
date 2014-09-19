@@ -43,19 +43,13 @@ class Classroom_Availability extends Base {
 	public function getTimeslot(){
 	  $tmslot_query="select * from  timeslot";
 	  $q_res = mysqli_query($this->conn, $tmslot_query);
-		if(mysqli_num_rows($q_res)<=0)
-			return 0;
-		else
-			return $q_res;
+	  return $q_res;
 	}
 	/*function for fectching class room type */
 	public function getRoomType(){
 	  $room_type_qry="select * from  room_type";
 	  $q_res= mysqli_query($this->conn, $room_type_qry);
-		if(mysqli_num_rows($q_res)<=0)
-			return 0;
-		else
-			return $q_res;
+	  return $q_res;
 	}
 	/*function to  converting into array*/ 
 	public function formingArray($dataArr){

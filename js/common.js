@@ -1042,6 +1042,7 @@ $(document).ready(function(){
 
 //function to show subjects by program
 function createTeachAvailRule(){
+	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
 	var regx = /^[A-Za-z0-9 .]+$/;
     if (!regx.test($('#txtSchd').val())) {
         alert('Please select a valid schedule name with alphanumeric options.');

@@ -41,12 +41,12 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 					<div class="txtfield">
 						<select id="slctRmType" name="slctRmType[]"  class="selectMultiple inp_txt required" >
 					 		  <option value="">--Select Room Type--</option>
-                              <?php if($roomTypedata!="0"){
+                              <?php //if($roomTypedata!="0"){
 								while($roomTypedataResult = $roomTypedata->fetch_assoc()){ ?>
 									<option value="<?php echo $roomTypedataResult['id'].'#'.$roomTypedataResult['room_type']?>"  <?php if($roomTypeId == $roomTypedataResult['id']){echo "selected"; } ?> ><?php echo $roomTypedataResult['room_type'];?></option>
-							<?php }}else{ ?>
-								<option value="">No room type available</option>
-                            <?php } ?>
+							<?php }//}else{ ?>
+								<!--<option value="">No room type available</option>-->
+                            <?php //} ?>
                         </select>
 					</div>
                     <div class="clear"></div>
