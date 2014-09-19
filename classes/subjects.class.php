@@ -72,9 +72,6 @@ class Subjects extends Base {
 	{
 		$subject_query="select * from subject order by date_update DESC";
 		$q_res = mysqli_query($this->conn, $subject_query);
-		if(mysqli_num_rows($q_res)<=0){
-			return 0;
-		}
 		return $q_res;
 	}
 	/*function for fetch data using area ID*/
