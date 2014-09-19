@@ -30,9 +30,10 @@ $(document).ready(function(){
 							<th>ID</th>
 							<th>Program Name</th>
 							<th>Unit</th>
+							<th>Company</th>
 							<th>Program Type</th>
 							<th>Program Duration</th>
-							<th>No. of Cycle</th>
+							<th>Cycle Info</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -40,7 +41,7 @@ $(document).ready(function(){
 					<?php
 						$result = $objP->getProgramListData();
 						while($row = $result->fetch_assoc()){
-						$no_of_cycle = $objP->getCyclesInProgram($row['id']);
+						$cycleInfo = $objP->getCyclesInfo($row['id']);
 						$unitDBValArr = explode(',',$row['unit']);
 						$progUnit = '<ul>';
 						if(!empty($unitDBValArr) && $unitDBValArr[0]<>''){
@@ -54,11 +55,12 @@ $(document).ready(function(){
 							<td class="align-center"><?php echo $row['id'];?></td>
 							<td class="align-center"><?php echo $row['program_name'];?></td>
 							<td><?php echo $progUnit;?></td>
+							<td class="align-center"><?php echo ($row['company']<>"") ? $row['company']: 'N/A';?></td>
 							<td class="align-center"><?php echo $pTypeArr[$row['program_type']];?></td>
 							<td class="align-center"><?php echo $objP->formatDate($row['start_date']);?> - <?php echo $objP->formatDate($row['end_date']);?></td>
-							<td class="align-center"><?php echo $no_of_cycle;?></td>
+							<td><?php echo $cycleInfo;?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
-								<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
+								<!--<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>-->
 								<a href="#" class="table-icon delete" onClick="deleteProgram(<?php echo $row['id'] ?>)"></a>
 							</td>
 						</tr>

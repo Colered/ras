@@ -147,6 +147,35 @@ class Programs extends Base {
 		$row = $result->fetch_assoc();
 		return $row['no_of_cycle'];
     }
+    //function to get cycle info by program id
+    public function getCyclesInfo($prog_id){
+    	$result =  $this->conn->query("select * from cycle where program_year_id in(select id from program_years where program_id='".$prog_id."')");
+    	$row_cnt = $result->num_rows;
+        $data = '';
+        $numSufArr = array('1'=>'1st','2'=>'2nd','3'=>'3rd');
+        $daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
+		if($row_cnt > 0){
+		    $data .= '<ul>';
+			$data .= '<li>Number of Cycle:'.$row_cnt.'</li>';
+			$i=1;
+			while($row = $result->fetch_assoc()){
+			   $daysArr = explode(',',$row['days']);
+			   $finalDays = array();
+			   foreach($daysArr as $val){
+                  $finalDays[] = $daysDBArr[$val];
+			   }
+			   $finalDays = implode(',',$finalDays);
+			   $cycle = $numSufArr[$i];
+			   $start_date = $this->formatDateByDate($row['start_week']);
+			   $end_date = $this->formatDateByDate($row['start_week']);
+
+               $data .= '<li>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' ('.$finalDays.')</li>';
+               $i++;
+			}
+			$data .= '</ul>';
+		}
+		return $data;
+    }
 
 	/*function for add student group*/
 	public function associateStudentGroup()

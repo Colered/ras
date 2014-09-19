@@ -28,18 +28,19 @@ $(document).ready(function(){
                 <thead>
                     <tr>
                         <th >ID</th>
-                        <th >Company</th>
-                        <th >Program</th>
-						<th >Subject</th>
-						<th >Area</th>
-						<th >Session No.</th>
-                        <th >Teacher</th>
-						<th >Applicant</th>
-                        <th >Classroom</th>
 						<th >Year</th>
 						<th >Day</th>
 						<th >Date</th>
 						<th >Hours</th>
+                        <th >Company</th>
+                        <th >Program</th>
+						<th >Subject</th>
+						<th >Area</th>
+						<th >Session</th>
+                        <th >Teacher</th>
+						<th >Applicant</th>
+                        <th >Classroom</th>
+                        <th >Activity</th>
 					</tr>
                     </tr>
                 </thead>
@@ -51,6 +52,10 @@ $(document).ready(function(){
                 ?>
 					<tr>
                         <td class="align-center"><?php echo $data['id']; ?></td>
+						<td class="align-center"><?php echo $ttDetail['start_date'].' to '.$ttDetail['end_date'] ; ?></td>
+						<td class="align-center"><?php echo $daysArr[$data['day']];?></td>
+						<td class="align-center"><?php echo $data['date']; ?></td>
+						<td class="align-center"><?php echo $data['timeslot']; ?></td>
 						<td class="align-center">
 						   <?php
 							$program_year=$obj->getProgramYear($data['program_year_id']);
@@ -96,10 +101,7 @@ $(document).ready(function(){
 							echo $roomDeatil['room_name'];
 							?>
 						</td>
-                        <td class="align-center"><?php echo $ttDetail['start_date'].' to '.$ttDetail['end_date'] ; ?></td>
-                        <td class="align-center"><?php echo $daysArr[$data['day']];?></td>
-                        <td class="align-center"><?php echo $data['date']; ?></td>
-						<td class="align-center"><?php echo $data['timeslot']; ?></td>
+						<td class="align-center"><?php echo $obj->getFielldVal('teacher_activity','name','id',$data['activity_id']);?></td>
                     </tr>
 					<?php }?>
                 </tbody>

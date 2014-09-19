@@ -32,7 +32,7 @@ $(document).ready(function(){
                         <th>Subject</th>
                         <th>Session</th>
                         <th>Teacher</th>
-                        <th>Room</th>
+                        <th>Class Room</th>
                         <th>Date</th>
                         <th>Timeslot</th>
                         <th>PreAllocated</th>
