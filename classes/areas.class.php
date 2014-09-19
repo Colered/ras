@@ -32,10 +32,10 @@ class Areas extends Base {
 	public function viewArea() {
 			$area_query="select * from area order by date_update DESC";
 			$q_res = mysqli_query($this->conn, $area_query);
-			if(mysqli_num_rows($q_res)<=0){
+			/*if(mysqli_num_rows($q_res)<=0){
 				$message="There is not any area exists.";
 				$_SESSION['error_msg'] = $message;
-			}
+			}*/
 			return $q_res;
 	}
 
@@ -43,10 +43,10 @@ class Areas extends Base {
 	public function getDataByAreaID($id) {
 			$area_query="select * from area where id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $area_query);
-			if(mysqli_num_rows($q_res)<=0)
+			/*if(mysqli_num_rows($q_res)<=0)
 				return 0;
-			else
-				return $q_res;
+			else*/
+			return $q_res;
 	}
 	/*function for Update Area*/
 	public function updateArea()
