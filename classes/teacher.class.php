@@ -303,7 +303,7 @@ class Teacher extends Base {
 	}
 	//view all teacher availability
 	public function viewTeachAvail(){
-		$teachAvail_query="select tartm.id, tr.teacher_name, tartm.teacher_availability_rule_id, tartm.teacher_id  from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher as tr ON tartm.teacher_id = tr.id GROUP BY tartm.teacher_id";
+		$teachAvail_query="select tartm.id, tr.teacher_name, tr.email, tartm.teacher_availability_rule_id, tartm.teacher_id  from teacher_availability_rule_teacher_map as tartm LEFT JOIN teacher as tr ON tartm.teacher_id = tr.id GROUP BY tartm.teacher_id";
 		$q_res = mysqli_query($this->conn, $teachAvail_query);
 		return $q_res;
 	}

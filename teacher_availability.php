@@ -38,7 +38,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 					 <select id="slctTeacher" name="slctTeacher" class="required" onchange="changeTeacherData()">
 						<option value="" >Please select</option>
 						<?php while($data = $teacherData->fetch_assoc()){ ?>
-									<option value="<?php echo base64_encode($data['id']); ?>" <?php if($teachId == base64_encode($data['id'])){echo "selected"; } ?>><?php echo $data['teacher_name']; ?></option>
+									<option value="<?php echo base64_encode($data['id']); ?>" <?php if($teachId == base64_encode($data['id'])){echo "selected"; } ?>><?php echo $data['teacher_name']; ?><?php if($data['email'] !=""){echo ' ('.$data['email'].')'; } ?></option>
 						<?php } ?>
 					</select>
                     </div>

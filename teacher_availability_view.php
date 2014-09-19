@@ -40,7 +40,7 @@ $(document).ready(function(){
 				?>
 				<tr>
 					<td class="align-center"><?php echo $data['id']; ?></td>
-					<td class="align-center"><?php echo $data['teacher_name']; ?></td>
+					<td class="align-center"><?php echo $data['teacher_name']; ?><?php if($data['email'] !=""){echo ' ('.$data['email'].')'; } ?></td>
 					<td class="align-center"><ul style="text-align:left;">
 					<?php while($dataTeach = $teacherData->fetch_assoc()){
 						echo '<li>'.$dataTeach['rule_name'].'</li>';
