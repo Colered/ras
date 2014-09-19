@@ -152,12 +152,12 @@ class Programs extends Base {
     	$result =  $this->conn->query("select * from cycle where program_year_id in(select id from program_years where program_id='".$prog_id."')");
     	$row_cnt = $result->num_rows;
         $data = '';
-        $numSufArr = array('1'=>'1st','2'=>'2nd','3'=>'3rd');
+        $numSufArr = array('0'=>'1st','1'=>'2nd','2'=>'3rd');
         $daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 		if($row_cnt > 0){
 		    $data .= '<ul>';
 			$data .= '<li>Number of Cycle:'.$row_cnt.'</li>';
-			$i=1;
+			$i=0;
 			while($row = $result->fetch_assoc()){
 			   $daysArr = explode(',',$row['days']);
 			   $finalDays = array();
