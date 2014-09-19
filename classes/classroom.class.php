@@ -32,19 +32,19 @@ class Classroom extends Base {
 	public function viewRoom() {
 			$area_query="select rm.id as listId, rt.id, bd.id, rm.building_id, rm.room_type_id, rm.room_name, rt.room_type, bd.building_name FROM room as rm LEFT JOIN room_type as rt ON rm.room_type_id = rt.id LEFT JOIN building as bd ON rm.building_id = bd.id";
 			$q_res = mysqli_query($this->conn, $area_query);
-			if(mysqli_num_rows($q_res)<=0){
+			/*if(mysqli_num_rows($q_res)<=0){
 				$message="There is not any room exists.";
 				$_SESSION['error_msg'] = $message;
-			}
+			}*/
 			return $q_res;
 	}
 	/*function for fetch data using room ID*/
 	public function getDataByRoomID($id) {
 			$area_query="select * from room where id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $area_query);
-			if(mysqli_num_rows($q_res)<=0)
+			/*if(mysqli_num_rows($q_res)<=0)
 				return 0;
-			else
+			else*/
 				return $q_res;
 	}
 	/*function for Update Rooms*/
@@ -73,9 +73,9 @@ class Classroom extends Base {
 	public function getAllRoomType() {
 			$query="select * from room_type order by id ASC";
 			$q_res = mysqli_query($this->conn, $query);
-			if(mysqli_num_rows($q_res)<=0)
+			/*if(mysqli_num_rows($q_res)<=0)
 				return 0;
-			else
-				return $q_res;
+			else*/
+			return $q_res;
 	}
 }
