@@ -215,7 +215,7 @@ $(function() {
 	  changeMonth: true, 
 	  changeYear: true,
 	  onClose: function( selectedDate ) {
-	   $( "#toclsRmAval" ).datepicker( "option", "minDate", selectedDate );
+	   $( "#toTmDuratn" ).datepicker( "option", "minDate", selectedDate );
 	  }
 	 });
  $("#toTmDuratn").datepicker({
@@ -226,7 +226,7 @@ $(function() {
 	  changeMonth: true, 
 	  changeYear: true,
 	  onClose: function( selectedDate ) {
-	   $( "#fromclsRmAval" ).datepicker( "option", "maxDate", selectedDate );
+	   $( "#fromTmDuratn" ).datepicker( "option", "maxDate", selectedDate );
 	  }
 	 });
  $("#fromclsRmAval").datepicker({
@@ -396,25 +396,6 @@ function show_hide_cycle(selval){
 	}
 }
 
-$(document).ready(function() {
-   $('#slctClsType').on('change', function(){
-    var selected=$("#slctClsType option:selected").map(function(){ return this.value }).get().join(",");
-    $.ajax({
-        url: "./ajax_common.php",
-        type: "POST",
-        data: {
-            'roomTypeValue': selected,
-			'codeBlock': 'getRooms',
-            },
-        success: function(data) {
-			 $("#slctRoom").html(data);
-        },
-        error: function(errorThrown) {
-            console.log(errorThrown);
-        }
-    });
-  });
-});
 
 //Ajax delete the room function 
 function deleteRoom($id){
@@ -574,8 +555,8 @@ $(document).ready(function() {
     var x = 1,y=0; 
     $(add_button).click(function(e){ 
   var sessionName='',sessionOrder='',sessionDesc='';       
-  sessionName=$('#txtSessionName').val();
-  sessionDesc=$('#txtareaSessionDesp').val();
+  sessionName=stripslashes(strip_tags($('#txtSessionName').val()));
+  sessionDesc=stripslashes(strip_tags($('#txtareaSessionDesp').val()));
   sessionOrder=$('#txtOrderNum').val();
   if($.isNumeric(sessionOrder)){
   e.preventDefault();
@@ -768,9 +749,32 @@ function addTeacherActivity()
 }
 // end ajax add activity
 $(document).ready(function() {
-	$('#slctRmType').on('change', function(){
-    var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
-	$.ajax({
+ $('#slctClsType').on('change', function(){
+    var selected=$("#slctClsType option:selected").map(function(){ return this.value }).get().join(",");
+	var slctRoom="slctRoom";
+	ajaxCommonClassroomAvail(selected,slctRoom);
+ });
+});
+
+$(document).ready(function() {
+ $('#slctClsType').on('change', function(){
+    var selected=$("#slctClsType option:selected").map(function(){ return this.value }).get().join(",");
+	var slctRoom="slctRoom";
+	ajaxCommonClassroomAvail(selected,slctRoom);
+ });
+});
+//getting room for classroom avalability 
+$(document).ready(function() {
+  $('#slctRmType').on('change', function(){
+	var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
+	var slctRmName="slctRmName";
+	ajaxCommonClassroomAvail(selected,slctRmName);
+  });
+});
+//common ajax function of classromm availability
+function ajaxCommonClassroomAvail(selected='',slctID=''){
+	var slctID='#'+slctID;
+$.ajax({
         url: "./ajax_common.php",
         type: "POST",
         data: {
@@ -778,18 +782,16 @@ $(document).ready(function() {
 			'codeBlock': 'getRooms',
             },
         success: function(data) {
-			 $("#slctRmName").html(data);
+			 $(slctID).html(data);
         },
         error: function(errorThrown) {
             console.log(errorThrown);
         }
-      });
-	});
-});
-$(document).ready(function() {
-	var roomId=$("#roomId").val();
-	if(roomId!=""){
-	 var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
+    });	
+}
+//getting rooms in dropdown for classroom availability
+function getRoomByType(roomId){
+	var selected=$("#slctRmType option:selected").map(function(){ return this.value }).get().join(",");
 	 $.ajax({
         url: "./ajax_common.php",
         type: "POST",
@@ -805,8 +807,7 @@ $(document).ready(function() {
             console.log(errorThrown);
         }
       });
-	}
-});
+}
 $(document).ready(function(){
 	$("#ts-avail-day-0,#ts-avail-day-1,#ts-avail-day-2,#ts-avail-day-3,#ts-avail-day-4,#ts-avail-day-5").hide();
 	   $('input[class=days]').click(function(){
@@ -1313,4 +1314,17 @@ function deleteHoliday($id){
         });
     }
     return false;
+}
+function strip_tags(str, allow) {
+  // making sure the allow arg is a string containing only tags in lowercase (<a><b><c>)
+  allow = (((allow || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+
+  var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+  var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+  return str.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+    return allow.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+  });
+}
+function stripslashes(str) {
+ return str.replace(/\\'/g,'\'').replace(/\"/g,'"').replace(/\\\\/g,'\\').replace(/\\0/g,'\0');
 }

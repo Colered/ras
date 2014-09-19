@@ -53,6 +53,11 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 				    <div class="custtd_left">
                         <h2>Room Name <span class="redstar">*</span></h2>
                     </div>
+					<?php if(isset($roomId) && $roomId!=''){?>
+						<script type="text/javascript">
+							getRoomByType('<?php echo $roomId;?>');
+						</script>
+					<?php } ?>
                     <div class="txtfield">
                          <select id="slctRmName" name="slctRmName" class="select1 inp_txt required" onchange="changeRoomData()" >
 						  	<option value="">--Select Room--</option>

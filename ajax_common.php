@@ -81,17 +81,17 @@ switch ($codeBlock) {
 		if(isset($_POST['roomTypeValue']) && $_POST['roomTypeValue']!=""){
 			$room_type_val=explode(",",$_POST['roomTypeValue']);
 			for($i=0;$i<count($room_type_val);$i++){
-			$room_val=explode("#",$room_type_val[$i]);
-			$room_type_id=$room_val['0'];
-			$room_type_name=$room_val['1'];
-			$options .='<option value="">--Select Room--</option>';
-			$room_query="select id,room_name from  room where room_type_id='".trim($room_type_id)."'";
-			$qry = mysqli_query($db, $room_query);
-			while($room_data= mysqli_fetch_array($qry)){
-			  $selected = ($_POST['roomId'] == $room_data['id']) ? ' selected="selected"' : '';
-
-			  $options .='<option value="'.$room_data['id'].'" '.$selected.' >'.$room_data['room_name'].'</option>';
-			 }
+				$room_val=explode("#",$room_type_val[$i]);
+				$room_type_id=$room_val['0'];
+				$room_type_name=$room_val['1'];
+				$options .='<option value="">--Select Room--</option>';
+				$room_query="select id,room_name from  room where room_type_id='".trim($room_type_id)."'";
+				$qry = mysqli_query($db, $room_query);
+				while($room_data= mysqli_fetch_array($qry)){
+				  $selected = ($_POST['roomId'] == $room_data['id']) ? ' selected="selected"' : '';
+	
+				  $options .='<option value="'.$room_data['id'].'" '.$selected.' >'.$room_data['room_name'].'</option>';
+				 }
 			}
 		}
 		echo $options;
@@ -295,10 +295,12 @@ switch ($codeBlock) {
 			$rule_query="select id, rule_name from classroom_availability_rule where rule_name='".$_POST['SchdName']."'";
 			$q_res = mysqli_query($db, $rule_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
+			//echo "count=".count($dataAll);
 			if(count($dataAll)>0){
 				echo '0';
 			}elseif(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!="" && $_POST['SchdName']!=""){
-				 $rule_qry="INSERT INTO  classroom_availability_rule VALUES ('', '".$_POST['SchdName']."', '".$dateFrom."','".$dateTo."','".$currentDateTime."', '".$currentDateTime."')";
+			
+			 $rule_qry="INSERT INTO  classroom_availability_rule VALUES ('', '".$_POST['SchdName']."', '".$dateFrom."','".$dateTo."','".$currentDateTime."', '".$currentDateTime."')";
 				 $result_qry=mysqli_query($db,$rule_qry);
 				 $j=0;
 				 if($result_qry){

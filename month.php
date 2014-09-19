@@ -1,20 +1,23 @@
 <?php
 /* $Id: month.php,v 1.95.2.9 2010/08/15 18:54:34 cknudsen Exp $ */
 include_once 'includes/init.php';
-
+include_once 'config.php';
 //check UAC
 if ( ! access_can_access_function ( ACCESS_MONTH ) || 
-  ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )
+  ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  ){
   send_to_preferred_view ();
 
-  
+  }
 if ( ( $user != $login ) && $is_nonuser_admin )
+{ 
   load_user_layers ( $user );
-else
+  }
+else{
 if ( empty ( $user ) )
-  load_user_layers ();
-
+	load_user_layers ();
+}
 $cat_id = getValue ( 'cat_id', '-?[0-9,\-]*', true );
+$teacher_id = getValue ( 'teacher_id', '-?[0-9,\-]*', true );
 load_user_categories ();
 
 $next = mktime ( 0, 0, 0, $thismonth + 1, 1, $thisyear );
@@ -42,20 +45,21 @@ $repeated_events = read_repeated_events (
   ( ! empty ( $user ) && strlen ( $user ) )
   ? $user : $login, $startdate, $enddate, $cat_id );
 
-/* Pre-load the non-repeating events for quicker access */
 $events = read_events ( ( ! empty ( $user ) && strlen ( $user ) )
   ? $user : $login, $startdate, $enddate, $cat_id );
+  
 
-if ( $DISPLAY_TASKS_IN_GRID == 'Y' )
+if ( $DISPLAY_TASKS_IN_GRID == 'Y' ){
   /* Pre-load tasks for quicker access */
   $tasks = read_tasks ( ( ! empty ( $user ) && strlen ( $user ) &&
     $is_assistant )
     ? $user : $login, $enddate, $cat_id );
-
+	
+}
 $tableWidth = '100%';
 $monthURL = 'month.php?' . ( ! empty ( $cat_id )
   ? 'cat_id=' . $cat_id . '&amp;' : '' );
-$nextMonth1 = $nextMonth2 = $prevMonth1 = $prevMonth2 = '';
+ $nextMonth1 = $nextMonth2 = $prevMonth1 = $prevMonth2 = '';
 $printerStr = $smallTasks = $unapprovedStr = '';
 if ( empty ( $DISPLAY_TASKS ) || $DISPLAY_TASKS == 'N' &&
   $DISPLAY_SM_MONTH != 'N' ) {
@@ -79,6 +83,7 @@ if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
 }
 $eventinfo = ( ! empty ( $eventinfo ) ? $eventinfo : '' );
 $monthStr = display_month ( $thismonth, $thisyear );
+
 $navStr = display_navigation ( 'month' );
 
 if ( empty ( $friendly ) ) {
@@ -86,6 +91,7 @@ if ( empty ( $friendly ) ) {
     ( $is_assistant || $is_nonuser_admin ? $user : $login ) );
   $printerStr = generate_printer_friendly ( 'month.php' );
 }
+
 $trailerStr = print_trailer ();
 
 $HeadX = generate_refresh_meta ()

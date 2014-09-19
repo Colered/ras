@@ -335,13 +335,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		case "addEditClassAvailability":
 		if($_POST['slctRmName']!="" && $_POST['slctRmType']!="" ){
 				$obj = new Classroom_Availability();
-				if(isset($_POST['classRmAvailId']) && $_POST['classRmAvailId']!=''){
-					//update classroom availabilty
-					$resp = $obj->updateClassroomAvail();
-				}else{
-					//add new clasroom availability
-					$resp = $obj->addClassroomAvail();
-				}
+				//add new clasroom availability
+				$resp = $obj->addClassroomAvail();
 				if($resp==0){
 					//return back data to the form
 					echo "<html><head></head><body>";
@@ -360,7 +355,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					exit();
 				}
 			}else{
-				echo $message="Please enter all required fields";
+				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
 				header('Location: classroom_availability_view.php');
 			}
