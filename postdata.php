@@ -499,6 +499,40 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: generate_timetable.php');
 			}
 			break;
+			//add edit holiday
+			case 'addEditHoliday':
+			if($_POST['holiday_date']!="" ){
+				$obj = new Holidays();
+				if(isset($_POST['holidayId']) && $_POST['holidayId']!=''){
+					//update a holiday
+					$resp = $obj->updateholiday();
+				}else{
+					//add new holiday
+					$resp = $obj->addHoliday();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formbuild' method='post' action='holidays.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formbuild.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: holidays_view.php');
+					exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: holidays.php');
+			}
+		break;
 
 	}
 }
