@@ -149,7 +149,8 @@ class Programs extends Base {
     }
     //function to get cycle info by program id
     public function getCyclesInfo($prog_id){
-    	$result =  $this->conn->query("select * from cycle where program_year_id in(select id from program_years where program_id='".$prog_id."')");
+        $SQL = "select distinct start_week,end_week,days from cycle where program_year_id in(select id from program_years where program_id='".$prog_id."')";
+    	$result =  $this->conn->query($SQL);
     	$row_cnt = $result->num_rows;
         $data = '';
         $numSufArr = array('0'=>'1st','1'=>'2nd','2'=>'3rd');
