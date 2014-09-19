@@ -156,7 +156,7 @@ class Programs extends Base {
         $daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 		if($row_cnt > 0){
 		    $data .= '<ul>';
-			$data .= '<li>Number of Cycle:'.$row_cnt.'</li>';
+			$data .= '<li>Number of Cycle:'.$this->getCyclesInProgram($prog_id).'</li>';
 			$i=0;
 			while($row = $result->fetch_assoc()){
 			   $daysArr = explode(',',$row['days']);
@@ -171,6 +171,8 @@ class Programs extends Base {
 
                $data .= '<li>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' ('.$finalDays.')</li>';
                $i++;
+               if($i==3)
+               break;
 			}
 			$data .= '</ul>';
 		}
