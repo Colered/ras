@@ -433,53 +433,56 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								foreach($value as $newkey=>$val)
 								{											
 									$timeslot = $newkey;
-									$tt_id = $res;
-									$activity_id = $val['activity_id'];
-									$program_year_id = $val['program_year_id'];
-									$teacher_id = $val['teacher_id'];
-									$group_id = $val['group_id'];
-									$room_id = $val['room_id'];
-									$session_id = $val['session_id'];
-									$room_name = $val['room_name'];
-									$name = $val['name'];
-									$program_name = $val['program_name'];
-									$subject_name = $val['subject_name'];
-									$session_name = $val['session_name'];
-									$teacher_name = $val['teacher_name'];
-									$subject_id = $val['subject_id'];
-									$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
-									$date = $val['date'];
-									$date_add = date("Y-m-d H:i:s");
-									$date_upd = date("Y-m-d H:i:s");
-									
-									$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd);
-									if($resp)
+									for($cnt=0;$cnt<count($val);$cnt++)
 									{
-										$ts_array = explode("-", $timeslot);
-										$entry_time = $ts_array['0'];
-										$duration = ($ts_array['1']-$ts_array['0'])*60;
-										$entry_array = explode(":", $entry_time);
-										$entry_hour = $entry_array['0'];
-										$entry_minute = $entry_array['1'];
+										$tt_id = $res;
+										$activity_id = $val[$cnt]['activity_id'];
+										$program_year_id = $val[$cnt]['program_year_id'];
+										$teacher_id = $val[$cnt]['teacher_id'];
+										$group_id = $val[$cnt]['group_id'];
+										$room_id = $val[$cnt]['room_id'];
+										$session_id = $val[$cnt]['session_id'];
+										$room_name = $val[$cnt]['room_name'];
+										$name = $val[$cnt]['name'];
+										$program_name = $val[$cnt]['program_name'];
+										$subject_name = $val[$cnt]['subject_name'];
+										$session_name = $val[$cnt]['session_name'];
+										$teacher_name = $val[$cnt]['teacher_name'];
+										$subject_id = $val[$cnt]['subject_id'];
+										$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
+										$date = $val[$cnt]['date'];
+										$date_add = date("Y-m-d H:i:s");
+										$date_upd = date("Y-m-d H:i:s");
+										
+										$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd);
+										if($resp)
+										{
+											$ts_array = explode("-", $timeslot);
+											$entry_time = $ts_array['0'];
+											$duration = ($ts_array['1']-$ts_array['0'])*60;
+											$entry_array = explode(":", $entry_time);
+											$entry_hour = $entry_array['0'];
+											$entry_minute = $entry_array['1'];
 
-										if($entry_hour == '1')
-											$entry_hour = 13;
-										if($entry_hour == '2')
-											$entry_hour = 14;
+											if($entry_hour == '1')
+												$entry_hour = 13;
+											if($entry_hour == '2')
+												$entry_hour = 14;
 
-										$date_array = explode("-", $date);
-										$year = $date_array['0'];
-										$month = $date_array['1'];
-										$day = $date_array['2'];
-										$zone=3600*+5;//India
-										$eventstart = gmmktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
-										$cal_time = gmdate('His', $eventstart + $zone);
-										$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description,$duration);
-										if($cal_id){
-											$obj->addWebCalEntryUser($cal_id);
-											
+											$date_array = explode("-", $date);
+											$year = $date_array['0'];
+											$month = $date_array['1'];
+											$day = $date_array['2'];
+											$zone=3600*+5;//India
+											$eventstart = gmmktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
+											$cal_time = gmdate('His', $eventstart + $zone);
+											$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description,$duration);
+											if($cal_id){
+												$obj->addWebCalEntryUser($cal_id);
+												
+											}
 										}
-									}									
+									}
 								}
 							}
 							header('Location: timetable_view.php');
