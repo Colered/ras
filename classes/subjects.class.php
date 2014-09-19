@@ -76,16 +76,13 @@ class Subjects extends Base {
 	}
 	/*function for fetch data using area ID*/
 	public function getDataBySubjectID($id) {
-			$subject_query="select * from subject where id='".$id."' limit 1";
-			$q_res = mysqli_query($this->conn, $subject_query);
-			if(mysqli_num_rows($q_res)<=0)
-				return 0;
-			else
-				return $q_res;
+		$subject_query="select * from subject where id='".$id."' limit 1";
+		$q_res = mysqli_query($this->conn, $subject_query);
+		return $q_res;
 	}
 	public function updateSubject() {
 	        //check if the subject code already exists
-			$subject_query="select subject_name, subject_code from  subject where subject_code='".$_POST['txtSubjCode']."'";
+			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."' and id !='".$_POST['subjectId']."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0){
@@ -96,7 +93,6 @@ class Subjects extends Base {
 			//get area id
 			$area_id=$this->getAreaId();
 			//get program id
-			//$program_id=$this->getProgramId();
 			$program_name=$_POST['slctProgram'];
 			$program_Val=explode('#',$program_name);
 			$program_year_id=$program_Val[0];
@@ -123,7 +119,13 @@ class Subjects extends Base {
 								$j++;
 								$k=$j;
 								}
+								if($j==count($sessionRowIdArr) && ($_POST['maxSessionListVal']==$_POST['EditMaxExceptnListVal'])){
+									$message="Subject has been updated successfully ";
+						   			$_SESSION['succ_msg'] = $message;
+									return 1;
+								}
 					 	}else{
+							//echo "sdffffff";die;
 						   if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$_POST['subjectId']."', '".$sessionNameval."','".$orderNumberArr[$k]."','".$sessionDespArr[$k]."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')")){
 						     $k++;
 							 if($k == (count($sessionNameArr))){
@@ -131,21 +133,16 @@ class Subjects extends Base {
 						   			$_SESSION['succ_msg'] = $message;
 									return 1;
 							 }
-
-						  }else{
-								echo $message="Subject's session cannot be added";
+						   }else{
+								$message="Subject's session cannot be added";
 						   		$_SESSION['error_msg'] = $message;
 								return 0;
 							}
 						}
 				    }
-				  }else{
-				  		$message="Subject has been updated successfully ";
-						$_SESSION['succ_msg'] = $message;
-						return 1;
-				  }
+				 }
 				}else{
-					echo $message="Cannot update the subject";
+					$message="Please enter the session name";
 					$_SESSION['error_msg'] = $message;die;
 					return 0;
 				}

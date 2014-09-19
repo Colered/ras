@@ -75,15 +75,15 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
                     <div class="custtd_left">
                         <h2>Subject Code <span class="redstar">*</span></h2>
                     </div>
-                    <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>">
+                     <div class="txtfield">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>" <?php if($subjectId!=""){echo "readonly";} ?>>
                     </div>
                     <div class="clear"></div>
 					<div class="custtd_left">
                         <h2>Case No.<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required" id="txtCaseNum" maxlength="50" name="txtCaseNum" value="<?php echo $caseNum; ?>">
+                        <input type="text" class="inp_txt required alphanumeric" id="txtCaseNum" maxlength="50" name="txtCaseNum" value="<?php echo $caseNum; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -106,8 +106,8 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 							<input type="text" class="inp_txt_session alphanumeric" id="txtOrderNum" maxlength="10" name="txtOrderNum" value="">
 						</div>
 						<div class="sessionbox">
-						<h3>Description<span class="redstar">*</span></h3>
-							 <textarea style="height:40px;" class="inp_txt_session" id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"></textarea>
+						<h3>Description</h3>
+							 <textarea style="height:40px;" class="inp_txt_session alphanumeric" id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"></textarea>
 						</div>
 					   </div>
 					   <div class="sessionbox addbtnSession">
@@ -145,12 +145,13 @@ $technicalNotes = isset($_GET['edit']) ? $row['technical_notes'] : (isset($_POST
 
         						';
 							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
-								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['order_number'].'"/>
-								<input type="hidden" name="sessionOrder[]" id="sessionOrder'.$x.'"  value="'.$subj_session_data['description'].'"/>
+								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['description'].'"/>
+								<input type="hidden" name="sessionOrder[]" id="sessionOrder'.$x.'"  value="'.$subj_session_data['order_number'].'"/>
 								<input type="hidden" name="sessionRowId[]" id="sessionRowId'.$x.'"  value="'.$subj_session_data['id'].'"/></td>
 								<td id='.$subj_session_data['id'].'><a class="remove_field" onclick="removeSession('.$subj_session_data['id'].', 0);">Remove</a></td></tr>';
        					}
 					$sessionHtml.='<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="'.$x.'"/>';
+					$sessionHtml.='<input type="hidden" name="EditMaxExceptnListVal" id="EditMaxExceptnListVal"  value="'.$x.'"/>';
 					$sessionHtml.='</tbody></table></div>';
 					echo $sessionHtml;
 				 }?>

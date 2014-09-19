@@ -558,6 +558,13 @@ $(document).ready(function() {
   sessionName=stripslashes(strip_tags($('#txtSessionName').val()));
   sessionDesc=stripslashes(strip_tags($('#txtareaSessionDesp').val()));
   sessionOrder=$('#txtOrderNum').val();
+  if(sessionName==""){
+	 alert('Please select session name.');
+  }else if(sessionOrder==""){
+	 alert('Please select order number');
+  }else if(!$.isNumeric(sessionOrder)){
+	 alert('order number should be numeric');
+  }
   if($.isNumeric(sessionOrder)){
   e.preventDefault();
   var subjectID=$('#subjectId').val();
