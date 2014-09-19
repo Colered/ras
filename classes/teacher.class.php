@@ -246,10 +246,10 @@ class Teacher extends Base {
 	{
 		$teac_query="select id, rule_name, start_date, end_date from teacher_availability_rule ORDER BY id DESC";
 		$q_res = mysqli_query($this->conn, $teac_query);
-		if(mysqli_num_rows($q_res)<=0){
+		/*if(mysqli_num_rows($q_res)<=0){
 			$message="No teacher availability rule exist.";
 			$_SESSION['error_msg'] = $message;
-		}
+		}*/
 		return $q_res;
 	}
 	//get the days for teacher availability
