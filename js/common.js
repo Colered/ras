@@ -772,14 +772,14 @@ $(document).ready(function() {
   });
 });
 //common ajax function of classromm availability
-function ajaxCommonClassroomAvail(selected='',slctID=''){
-	var slctID='#'+slctID;
+function ajaxCommonClassroomAvail(selectedVal,slctID){
+	var slctID = '#'+slctID;
 $.ajax({
         url: "./ajax_common.php",
         type: "POST",
         data: {
-            'roomTypeValue': selected,
-			'codeBlock': 'getRooms',
+            'roomTypeValue': selectedVal,
+			'codeBlock': 'getRooms'
             },
         success: function(data) {
 			 $(slctID).html(data);
