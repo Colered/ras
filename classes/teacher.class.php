@@ -91,9 +91,6 @@ class Teacher extends Base {
 	public function getTeachers()
 	{
 		$result =  $this->conn->query("select * from teacher order by teacher_name");
-		if(!$result->num_rows){
-			return 0;
-		}
 		return $result;
 	}
 	//function to add activity

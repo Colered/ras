@@ -197,18 +197,12 @@ class Subjects extends Base {
  	public function getSubjects(){
 		$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
 		$result = $this->conn->query($sql);
-		if(!$result->num_rows){
-			return 0;
-		}
 		return $result;
    }
  /*function for all sessions for add form*/
  	public function getSessions(){
 		$sql="SELECT id,session_name FROM subject_session ORDER BY session_name";
 		$result = $this->conn->query($sql);
-		if(!$result->num_rows){
-			return 0;
-		}
 		return $result;
    }
 
