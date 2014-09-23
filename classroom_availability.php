@@ -65,7 +65,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                     </div>
 					<div class="createScheduleBlock">
 					 <div class="custtd_left">
-                        <span style="font-size:14px"><b>Create a new rule:</b></span>
+                        <span style="font-size:14px"><b>Create A New Rule(optional):</b></span>
                     </div>
 					 <div class="clear"></div>
 					 <div class="custtd_left">
@@ -158,7 +158,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 			<div class="clear"></div>
 			<div class="scheduleBlock">
 				<div >
-					<span style="font-size:14px"><b>OR select a predefined rule:</b></span>
+					<span style="font-size:14px"><b>Select A Rule For Classroom Availability:</b></span>
 				</div>
 				<div >
                     <ul id="rules" name="rules" class="rule">

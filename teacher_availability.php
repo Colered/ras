@@ -45,7 +45,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                     <div class="clear"></div>
 					<div class="scheduleBlock" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 					<div class="custtd_left">
-                        <span style="font-size:14px"><b>Create a new rule:</b></span>
+                        <span style="font-size:14px"><b>Create A New Rule(optional):</b></span>
                     </div>
 					<div class="clear"></div>
 					<div class="custtd_left">
@@ -115,7 +115,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 			<div class="clear"></div>
 			<div class="scheduleBlock" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 				<div>
-					<span style="font-size:14px"><b>OR select a predefined rule:</b></span>
+					<span style="font-size:14px"><b>Select A Rule For Teacher Availability:</b></span>
 				</div>
 				<div >
                     <ul id="rules" name="rules" class="rule">
