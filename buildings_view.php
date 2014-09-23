@@ -29,6 +29,7 @@ $(document).ready(function(){
                     <tr>
                         <th >ID</th>
                         <th >Name</th>
+						<th >Is Default</th>
                         <th >Add Date</th>
 						<th >Update Date</th>
                         <th >Action</th>
@@ -40,6 +41,7 @@ $(document).ready(function(){
 					<tr>
                         <td class="align-center"><?php echo $data['id'] ?></td>
                         <td><?php echo $data['building_name'] ?></td>
+						<td><?php if($data['is_default']=='1'){echo 'Yes';}else{echo 'No';} ?></td>
                         <td><?php echo $data['date_add'] ?></td>
 						<td><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">

@@ -18,7 +18,12 @@ class Buildings extends Base {
 				}else{
 					//add the new building
 					$currentDateTime = date("Y-m-d H:i:s");
-					if ($result = mysqli_query($this->conn, "INSERT INTO building VALUES ('', '".Base::cleanText($_POST['txtBname'])."', '".$currentDateTime."', '".$currentDateTime."');")) {
+					//update all the value of previously defualt selected building
+					if(isset($_POST['is_default']) && $_POST['is_default']=='1'){
+						$result2 = mysqli_query($this->conn, "update building set `is_default`='0' where `is_default`='1';");
+					}
+					//add the new value
+					if ($result = mysqli_query($this->conn, "INSERT INTO building VALUES ('', '".Base::cleanText($_POST['txtBname'])."', '".$_POST['is_default']."', '".$currentDateTime."', '".$currentDateTime."');")) {
 						$message="New building has been added successfully";
 						$_SESSION['succ_msg'] = $message;
 						return 1;
@@ -36,7 +41,7 @@ class Buildings extends Base {
 	}
 	/*function for listing Area*/
 	public function viewBuld() {
-			$area_query="select * from building order by date_update DESC";
+			$area_query="select * from building order by is_default DESC";
 			$q_res = mysqli_query($this->conn, $area_query);
 			return $q_res;
 	}
@@ -56,11 +61,14 @@ class Buildings extends Base {
 			$area_query="select id, building_name from building where building_name='".Base::cleanText($_POST['txtBname'])."' and id !='".$_POST['buldId']."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
+			if(isset($_POST['is_default']) && $_POST['is_default']=='1'){
+						$result2 = mysqli_query($this->conn, "update building set `is_default`='0' where `is_default`='1';");
+			}
 			if(count($dataAll)>0) {
 				$message="Building Name already exists.";
 				$_SESSION['error_msg'] = $message;
 				return 0;
-			}elseif ($result = mysqli_query($this->conn, "Update building  Set building_name = '".Base::cleanText($_POST['txtBname'])."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
+			}elseif ($result = mysqli_query($this->conn, "Update building  Set building_name = '".Base::cleanText($_POST['txtBname'])."', is_default = '".$_POST['is_default']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
 				$message="Building has been updated successfully";
 				$_SESSION['succ_msg'] = $message;
 				return 1;
