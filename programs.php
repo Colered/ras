@@ -29,18 +29,6 @@ $unitArr1 = isset($_GET['edit']) ? (isset($unitArr[0])? $unitArr[0]: array()) : 
 ?>
 <script type="text/javascript">
 $(document).ready(function() {
-	$(function () {
-		$("#frmProgram").validate().settings.ignore = ':hidden';
-	});
-
-	$('#slctNumCycle').on('change', function() {
-		$('#firstCycle').hide();
-		$('#secondCycle').hide();
-		$('#thirdCycle').hide();
-		show_hide_cycle(this.value);
-
-	});
-
 	$('#slctPrgmType').on('change', function() {
            $('#fromPrgm').val('');
 		   $('#toPrgm').val('');

@@ -20,12 +20,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 
     // set the value
     $totcycle = $objP->getCyclesInProgram($programId);
-    $button_save = 'Edit Cycle';
-    $form_action = 'edit_cycle';
 
-}else{
-    $button_save = 'Add Cycle';
-    $form_action = 'add_cycle';
 }
 
 //timeslot dropdown
@@ -60,10 +55,6 @@ $(document).ready(function() {
 
 	});
 
-	$('#slctPrgmType').on('change', function() {
-           $('#fromPrgm').val('');
-		   $('#toPrgm').val('');
-	});
 });
 </script>
 <div id="content">
@@ -71,7 +62,7 @@ $(document).ready(function() {
         <div class="full_w">
             <div class="h_title">Program Cycles</div>
 			<form name="frmProgram" id="frmProgram" action="postdata.php" method="post">
-			  <input type="hidden" name="form_action" value="<?php echo $form_action;?>" />
+			  <input type="hidden" name="form_action" value="add_edit_cycles" />
 			  <?php if(isset($_GET['edit'])){?>
 			  	<input type="hidden" name="programId" value="<?php echo $_GET['edit'];?>" />
 			  <?php } ?>
@@ -181,11 +172,22 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 							<h3>Timeslot</h3>
-							<select id="slctTimeslot1" name="slctTimeslot1[]" class="ts-avail required" multiple="multiple" style="width:90px;">
+							<select id="slctTimeslot2" name="slctTimeslot2[]" class="ts-avail required" multiple="multiple" style="width:90px;">
 							  <?php echo $tslot_dropDwn;?>
 							</select>
 							</div>
 						</div>
+						<div class="clear"></div>
+						<div class="custtd_left">
+							<h2>Add Exception</h2>
+						</div>
+						<div class="txtfield">
+							<input type="text" size="12" id="exceptnProgAval" />
+						</div>
+						<div class="addbtnException">
+							<input type="button" name="btnAddMore" class="btnProgAvailExcep" value="Add">
+						 </div>
+
 					</div>
                     <div class="clear"></div>
 					<div id="thirdCycle" style="display:none;">
@@ -214,11 +216,22 @@ $(document).ready(function() {
 							</div>
 							<div class="cylcebox">
 							<h3>Timeslot</h3>
-							<select id="slctTimeslot1" name="slctTimeslot1[]" class="ts-avail required" multiple="multiple" style="width:90px;">
+							<select id="slctTimeslot3" name="slctTimeslot3[]" class="ts-avail required" multiple="multiple" style="width:90px;">
 							  <?php echo $tslot_dropDwn;?>
 							</select>
 							</div>
 						</div>
+							<div class="clear"></div>
+							<div class="custtd_left">
+								<h2>Add Exception</h2>
+							</div>
+							<div class="txtfield">
+								<input type="text" size="12" id="exceptnProgAval" />
+							</div>
+							<div class="addbtnException">
+								<input type="button" name="btnAddMore" class="btnProgAvailExcep" value="Add">
+							 </div>
+
 					</div>
                     <div class="clear"></div>
 
@@ -226,7 +239,7 @@ $(document).ready(function() {
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield">
-                        <input type="submit" name="btnAdd" id="btnAdd" class="buttonsub" value="<?php echo $button_save;?>">
+                        <input type="submit" name="btnAdd" id="btnAdd" class="buttonsub" value="Save">
                     </div>
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href='program_cycles_view.php';">

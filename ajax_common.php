@@ -44,10 +44,13 @@ switch ($codeBlock) {
 		if(mysqli_affected_rows($db)>0){
 		    // delete all the cycles related to this program
 		    $del_cycle_query="delete from cycle where program_id='".$id."'";
-		    $qry = mysqli_query($db, $del_cycle_query);
+		    mysqli_query($db, $del_cycle_query);
+			// delete all the program years related to this program
+			$del_cycle_query="delete from program_years where program_id='".$id."'";
+			$qry = mysqli_query($db, $del_cycle_query);
 		    //delete associated groups
 			$del_pg_query="delete from program_group where program_year_id in(select id from program_years where program_id='".$id."')";
-			$qry = mysqli_query($db, $del_pg_query);
+			mysqli_query($db, $del_pg_query);
 
 			echo 1;
 		}else{
@@ -89,7 +92,7 @@ switch ($codeBlock) {
 				$qry = mysqli_query($db, $room_query);
 				while($room_data= mysqli_fetch_array($qry)){
 				  $selected = ($_POST['roomId'] == $room_data['id']) ? ' selected="selected"' : '';
-	
+
 				  $options .='<option value="'.$room_data['id'].'" '.$selected.' >'.$room_data['room_name'].'</option>';
 				 }
 			}
@@ -304,7 +307,7 @@ switch ($codeBlock) {
 			if(count($dataAll)>0){
 				echo '0';
 			}elseif(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!="" && $_POST['SchdName']!=""){
-			
+
 			 $rule_qry="INSERT INTO  classroom_availability_rule VALUES ('', '".$_POST['SchdName']."', '".$dateFrom."','".$dateTo."','".$currentDateTime."', '".$currentDateTime."')";
 				 $result_qry=mysqli_query($db,$rule_qry);
 				 $j=0;

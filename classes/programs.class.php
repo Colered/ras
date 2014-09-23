@@ -260,4 +260,26 @@ class Programs extends Base {
 		 }
     }
 
+    //function tto add program cycles
+    public function addCycles()
+    {
+        $edit_id = base64_decode($_POST['programId']);
+        $slctProgram_id = $_POST['slctProgram'];
+        echo '<pre>';
+        print_r($_POST);
+        if($edit_id==$slctProgram_id){
+			$last_yr_id = $slctProgram_id;
+			//INSERT CYCLES DATA
+			for($i=1; $i<=$slctNumcycle; $i++){
+			   $days = implode(',',$_POST['slctDays'.$i]);
+			   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+			   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+			   $sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_yr_id."', '".$slctNumcycle."', '".$start_date."', '".$end_date."', '".$days."', now())";
+			   $rel = $this->conn->query($sql);
+			}
+			//END HERE
+        }
+        die;
+    }
+
 }
