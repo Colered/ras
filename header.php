@@ -52,7 +52,7 @@ if(!isset($_SESSION['user_id'])){
                                 <li>&#8250; <a href="timetable_dashboard.php">Publish</a></li>
 								<li>&#8250; <a href="timetable_dashboard.php">Delete</a></li>-->
 								<li>&#8250; <a href="timetable_view.php">View</a></li>
-                           </ul> 
+                           </ul>
 						</li>
 						<li class="upp"><a href="">Resources</a>
                             <ul>
@@ -60,6 +60,7 @@ if(!isset($_SESSION['user_id'])){
 								<li>&#8250; <a href="rooms_view.php">Classrooms</a></li>
 								<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
 								<li>&#8250; <a href="programs_view.php">Programs</a></li>
+								<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
 								<li>&#8250; <a href="group_view.php">Student Group</a></li>
 								<li>&#8250; <a href="program_group_view.php">Program Student Group</a></li>
 								<li>&#8250; <a href="areas_view.php">Areas</a></li>
@@ -74,7 +75,7 @@ if(!isset($_SESSION['user_id'])){
 								<!--<li>&#8250; <a href="timetable.php">Timetable Management</a></li>-->
                             </ul>
                         </li>
-						
+
 						<li class="upp right"><a href="logout.php/">Logout</a></li>
                     </ul>
 					<?php } ?>

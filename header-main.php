@@ -49,7 +49,7 @@ require_once('config.php');
                                 <li>&#8250; <a href="timetable_dashboard.php">Save</a></li>
                                 <li>&#8250; <a href="timetable_dashboard.php">Publish</a></li>
 								<li>&#8250; <a href="timetable_dashboard.php">Delete</a></li>
-                           </ul> 
+                           </ul>
 						</li>
 						<li class="upp"><a href="">Resources</a>
                             <ul>

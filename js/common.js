@@ -1336,3 +1336,6 @@ function strip_tags(str, allow) {
 function stripslashes(str) {
  return str.replace(/\\'/g,'\'').replace(/\"/g,'"').replace(/\\\\/g,'\\').replace(/\\0/g,'\0');
 }
+function changeExceptionData(pid){
+	window.location.href = 'program_cycles.php?edit='+window.btoa(pid);
+}
