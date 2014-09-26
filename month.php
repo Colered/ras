@@ -18,6 +18,8 @@ if ( empty ( $user ) )
 }
 $cat_id = getValue ( 'cat_id', '-?[0-9,\-]*', true );
 $teacher_id = getValue ( 'teacher_id', '-?[0-9,\-]*', true );
+$subject_id = getValue ( 'subject_id', '-?[0-9,\-]*', true );
+$room_id = getValue ( 'room_id', '-?[0-9,\-]*', true );
 load_user_categories ();
 
 $next = mktime ( 0, 0, 0, $thismonth + 1, 1, $thisyear );
@@ -39,16 +41,34 @@ if ( $BOLD_DAYS_IN_YEAR == 'Y' ) {
   $startdate = mktime ( 0, 0, 0, $thismonth, 0, $thisyear );
   $enddate = mktime ( 23, 59, 59, $thismonth + 1, 0, $thisyear );
 }
-
 /* Pre-Load the repeated events for quicker access */
+/*if($teacher_id!=""){
 $repeated_events = read_repeated_events (
   ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, $cat_id );
-
+  ? $user : $login, $startdate, $enddate, $cat_id);
+}else{
+$repeated_events = read_repeated_events_teacher (//Dwarikesh
+  ( ! empty ( $user ) && strlen ( $user ) )
+  ? $user : $login, $startdate, $enddate, $cat_id,$teacher_id );
+}*///end dwarikesh
+//echo "repeate=";
+//print_r($repeated_events);query_events_teahcer1
+if($teacher_id==""){
 $events = read_events ( ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, $cat_id );
-  
+  ? $user : $login, $startdate, $enddate, $cat_id);
+}else{
+$events = read_events_teacher ( ( ! empty ( $user ) && strlen ( $user ) )
+  ? $user : $login, $startdate, $enddate,'',$teacher_id);
+}
 
+if($subject_id!=""){
+$events = read_events_subject ( ( ! empty ( $user ) && strlen ( $user ) )
+  ? $user : $login, $startdate, $enddate, $cat_id ,$subject_id);
+}
+if($room_id!=""){
+$events = read_events_room ( ( ! empty ( $user ) && strlen ( $user ) )
+  ? $user : $login, $startdate, $enddate, $cat_id ,$room_id);
+}
 if ( $DISPLAY_TASKS_IN_GRID == 'Y' ){
   /* Pre-load tasks for quicker access */
   $tasks = read_tasks ( ( ! empty ( $user ) && strlen ( $user ) &&
@@ -85,7 +105,6 @@ $eventinfo = ( ! empty ( $eventinfo ) ? $eventinfo : '' );
 $monthStr = display_month ( $thismonth, $thisyear );
 
 $navStr = display_navigation ( 'month' );
-
 if ( empty ( $friendly ) ) {
   $unapprovedStr = display_unapproved_events (
     ( $is_assistant || $is_nonuser_admin ? $user : $login ) );

@@ -222,6 +222,35 @@ class Subjects extends Base {
    		  return (trim($row['session_name'])<>"") ? $row['session_name'] : "N/A";
    		}
    }
-
+   public function getProgramYearDetail($slctProgram){
+        $subject_program=explode('#',$slctProgram);
+		$program_year_id=$subject_program['0'];
+	    $program_query="select * from  program_years where id='".$program_year_id."'";
+	    $program_result= mysqli_query($this->conn, $program_query);
+	    $program_data = mysqli_fetch_assoc($program_result);
+		$program_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
+		return $program_detail;
+	}
+	public function getWebSubjectDetail($subject_id='')
+	{   
+	$row=$rowmainArr=$newArr=array();
+	$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.subject_id='".$subject_id."' ORDER BY we.cal_time, we.cal_name ");
+		if($result->num_rows){
+			while ($rows =$result->fetch_assoc()){
+					$row[]=$rows;
+			}
+		}
+		if(count($row)>0){
+		   $rowNewArr=array(array());
+		   for($i=0;$i<count($row);$i++){
+		    $j=0;
+		    foreach($row[$i] as $key=>$val){
+			  $rowNewArr[$i][$j]=$val;
+			  $j++;
+		   	}
+		  }
+		  return $rowNewArr;
+		}			
+	}
 
 }

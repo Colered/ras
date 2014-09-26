@@ -1,6 +1,7 @@
 <?php
 /* $Id: week.php,v 1.133.2.5 2008/09/27 14:50:18 cknudsen Exp $ */
 include_once 'includes/init.php';
+include_once 'config.php';
 
 //check UAC
 if ( ! access_can_access_function ( ACCESS_WEEK ) || 
@@ -58,6 +59,15 @@ $repeated_events = read_repeated_events ( ( strlen ( $user )
 // Start the search ONE_WEEK early to account for cross-day events.
 $events = read_events ( ( strlen ( $user )
     ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
+
+/*$events = read_events_teacher ( ( strlen ( $user )
+    ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
+
+$events = read_events_subject ( ( strlen ( $user )
+    ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
+	
+$events = read_events_room ( ( strlen ( $user )
+    ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );*/
 
 if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
   /* Pre-load tasks for quicker access. */
