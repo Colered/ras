@@ -177,23 +177,22 @@ class Programs extends Base {
 			   $cycle = $numSufArr[$i];
 			   $start_date = $this->formatDateByDate($row['start_week']);
 			   $end_date = $this->formatDateByDate($row['end_week']);
-
                $data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' ('.$finalDays.')</td></tr>';
-               $data .= $this->getProgCycleList($prog_id,$i);
                $i++;
+               $data .= $this->getProgCycExceptions($prog_id,$i);
 			}
 			$data .= '</table>';
 		}
 		return $data;
     }
     //function to get program cycle exceptions
-    public function getProgCycleList($py_id,$cycle_num)
+    public function getProgCycExceptions($py_id,$cycle_num)
     {
         $query = "select exception_date from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
 	  	$result= $this->conn->query($query);
 	  	$num_rows = $result->num_rows;
 	  	$dt = '';
-	  	if($num_rows){
+	  	if($num_rows > 0){
 	  	    $dt .= '<tr><td>Exceptions:</td></tr>';
 			while($row = $result->fetch_assoc()){
                $dt .= '<tr><td style="padding-left:100px;">'.$row['exception_date'].'</td></tr>';
