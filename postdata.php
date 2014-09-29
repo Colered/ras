@@ -539,8 +539,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 
 		      $objP = new Programs();
 
-		      //$resp = $objP->addCycles();
-		      header('Location: program_cycles_view.php');
+		      $resp = $objP->addEditCycles();
+		      if(!$resp){
+		      	header('Location: program_cycles_view.php');
+		      }
 
 		   }
 

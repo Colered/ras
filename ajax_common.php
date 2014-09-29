@@ -217,6 +217,7 @@ switch ($codeBlock) {
             echo '<table cellspacing="0" cellpadding="0" border="0">';
             echo '<tr>';
 			echo '<th>Reserved</th>';
+			echo '<th>Name</th>';
 			echo '<th>Program</th>';
 			echo '<th>Subject</th>';
 			echo '<th>Session</th>';
@@ -226,12 +227,13 @@ switch ($codeBlock) {
 			echo '<th>Date</th>';
 			echo '<th>&nbsp;</th>';
 			echo '</tr>';
-            $slqT="SELECT * FROM teacher_activity WHERE program_year_id='".$program_year_id."' AND subject_id='".$subject_id."' AND session_id='".$sessionid."' ORDER BY name";
+            $slqT="SELECT * FROM teacher_activity WHERE program_year_id='".$program_year_id."' AND subject_id='".$subject_id."' AND session_id='".$sessionid."' ORDER BY id";
 			$relT = mysqli_query($db, $slqT);
 			while($data= mysqli_fetch_array($relT)){
 			    $reserved_flag_checked = ($data['reserved_flag']==1) ? "checked" : '';
 				echo '<tr>';
 				echo '<td align="center"><input type="hidden" name="activitiesArr[]" value="'.$data['id'].'"><input type="radio" name="reserved_flag" value="'.$data['id'].'" '.$reserved_flag_checked.' onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
+				echo '<td align="center">'.$data['name'].'</td>';
 				echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
 				echo '<td>'.$objS->getSubjectByID($data['subject_id']).'</td>';
 				echo '<td>'.$objS->getSessionByID($data['session_id']).'</td>';
@@ -274,6 +276,17 @@ switch ($codeBlock) {
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
 			$del_ExcepTeachAvail_query="delete from teacher_availability_exception where id='".$id."'";
+			$qry = mysqli_query($db, $del_ExcepTeachAvail_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+	break;
+	case "deleteExcepProgCycle":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_ExcepTeachAvail_query="delete from program_cycle_exception where id='".$id."'";
 			$qry = mysqli_query($db, $del_ExcepTeachAvail_query);
 			if(mysqli_affected_rows($db)>0)
 				echo 1;
@@ -337,7 +350,8 @@ switch ($codeBlock) {
 			}
 	break;
 	case "checkActAvailability":
-	  if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && $_POST['teacher_id']<>"")
+	  $objT = new Teacher();
+	  if($_POST['program_year_id']<>"" && $_POST['subject_id']<>"" && $_POST['teacher_id']<>"" && $_POST['sessionid']<>"")
 	  {
 			$program_year_id = $_POST['program_year_id'];
 			$subject_id = $_POST['subject_id'];
@@ -347,28 +361,10 @@ switch ($codeBlock) {
 			$tslot_id = $_POST['tslot_id'];
 			$act_date_val = $_POST['act_date_val'];
 
-			$sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
-			if($program_year_id)
-				$sqlA .= " and program_year_id='".$program_year_id."'";
-			if($subject_id)
-				$sqlA .= " and subject_id='".$subject_id."'";
-			if($sessionid)
-				$sqlA .= " and session_id='".$sessionid."'";
-			if($teacher_id)
-				$sqlA .= " and teacher_id='".$teacher_id."'";
-			if($room_id)
-				$sqlA .= " and room_id='".$room_id."'";
-			if($tslot_id)
-				$sqlA .= " and timeslot_id='".$tslot_id."'";
-			if($act_date_val<>"")
-			    $sqlA .= " and DATE_FORMAT(act_date, '%d-%m-%Y') = '".$act_date_val."'";
-			//echo '<br>'.$sqlA;die;
-			$result =  mysqli_query($db,$sqlA);
-			if(mysqli_num_rows($result)){
-               echo '1';
-			}else{
-			   echo '0';
-			}
+			$preReserved_Id = $objT->getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid);
+
+            $resp = $objT->checkActTeaRoomTimeDate($teacher_id,$room_id,$tslot_id,$act_date_val,$preReserved_Id);
+            echo $resp;
 	  }
     break;
 	case "createTeachAvaRule":

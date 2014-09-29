@@ -111,24 +111,11 @@ class Teacher extends Base {
 				$time_slot_id = isset($_POST['tslot_id_'.$reserved_flag]) ? $_POST['tslot_id_'.$reserved_flag] : 0;
 				$act_date = isset($_POST['activityDateCal_'.$reserved_flag]) ? $_POST['activityDateCal_'.$reserved_flag] : '';
 
-				$sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
-				if($program_year_id)
-					$sqlA .= " and program_year_id='".$program_year_id."'";
-				if($subject_id)
-					$sqlA .= " and subject_id='".$subject_id."'";
-				if($sessionid)
-					$sqlA .= " and session_id='".$sessionid."'";
-				if($teacher_id)
-					$sqlA .= " and teacher_id='".$teacher_id."'";
-				if($room_id)
-					$sqlA .= " and room_id='".$room_id."'";
-				if($time_slot_id)
-					$sqlA .= " and timeslot_id='".$time_slot_id."'";
-				if($act_date<>"")
-					$sqlA .= " and DATE_FORMAT(act_date, '%d-%m-%Y') = '".$act_date."'";
-				  //echo '<br>'.$sqlA;
-				$result =  $this->conn->query($sqlA);
-				if(!$result->num_rows){
+				$preReserved_Id = $this->getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid);
+
+				$resp = $this->checkActTeaRoomTimeDate($teacher_id,$room_id,$time_slot_id,$act_date,$preReserved_Id);
+
+				if(!$resp){
 				    $act_date = date("Y-m-d h:i:s", strtotime($act_date));
 					$SQL = "UPDATE teacher_activity SET
 								   room_id = '".$room_id."',
@@ -138,12 +125,14 @@ class Teacher extends Base {
 					$rel = $this->conn->query($SQL);
 				}
 				foreach($_POST['activitiesArr'] AS $val){
-				   $sql22 = "update teacher_activity set
-				                    reserved_flag='2'
-				                    room_id = '0',
-									timeslot_id='0',
-				                    act_date = '0000:00:00 00:00:00' WHERE id='".$val."' AND id != '".$reserved_flag."'";
-				   $this->conn->query($sql22);
+				  if($reserved_flag != $val){
+					   $sql22 = "update teacher_activity set
+										reserved_flag='2',
+										room_id = '0',
+										timeslot_id='0',
+										act_date = '0000:00:00 00:00:00' WHERE id='".$val."'";
+					   $this->conn->query($sql22);
+				   }
 				}
 		    }
 			$message="Record has been added successfully.";
@@ -219,6 +208,31 @@ class Teacher extends Base {
 			return 0;
 		}
 	}
+	//function to check activity availability
+	public function checkActTeaRoomTimeDate($teacher_id,$room_id,$tslot_id,$act_date_val,$act_id)
+	{
+		$sqlA = "SELECT name FROM teacher_activity WHERE id !='".$act_id."'";
+		$sqlA .= " and (teacher_id='".$teacher_id."' or room_id='".$room_id."')";
+		$sqlA .= " and (timeslot_id='".$tslot_id."' and DATE_FORMAT(act_date, '%d-%m-%Y') = '".$act_date_val."')";
+		//echo '<br>'.$sqlA;die;
+		$result = $this->conn->query($sqlA);
+		if($result->num_rows){
+		   return '1';
+		}else{
+		   return '0';
+		}
+	}
+	public function getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid)
+	{
+		$slqT="SELECT id,reserved_flag FROM teacher_activity WHERE program_year_id='".$program_year_id."' AND subject_id='".$subject_id."' AND session_id='".$sessionid."' ORDER BY id";
+		$relT = $this->conn->query($slqT);
+		while($data= $relT->fetch_assoc()){
+		   if($data['reserved_flag']==1){
+		      return $data['id'];
+		   }
+		}
+		return 0;
+	}
 	//function to get all teacher activities
 	public function getTeachersAct()
 	{
@@ -231,16 +245,6 @@ class Teacher extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;
 	}
-	//add teacher availability
-	/*public function addTeacherAvailability()
-	{
-		print_r($_POST); die;
-		$result =  $this->conn->query("select * from teacher order by teacher_name");
-		if(!$result->num_rows){
-			return 0;
-		}
-		return $result;
-	}*/
 	//get all teachers availability
 	public function getTeacherAvailRule()
 	{

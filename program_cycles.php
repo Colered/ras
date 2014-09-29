@@ -2,9 +2,8 @@
 include('header.php');
 $objP = new Programs();
 $objTS = new Timeslot();
-
+$programId = '';
 $rel_prog = $objP->getProgramListYearWise();
-
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
     $result = $objP->getProgramById($programId);
@@ -13,24 +12,26 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     //get all the cycles related to data
     $cycleData = $objP->getProgramCycleList($programId);
     while($data = $cycleData->fetch_assoc()){
+       $cycleIdsArr[]= $data['id'];
        $daysArr[]= explode(',',$data['days']);
        $start_week[] = $data['start_week'];
        $end_week[] = $data['end_week'];
+       $timeslotArr[] = explode(',',$data['timeslot_id']);
     }
-
     // set the value
     $totcycle = $objP->getCyclesInProgram($programId);
-
 }
 
-//timeslot dropdown
-$tslot_dropDwn = $objTS->getTimeSlotDropDwn();
-
 $no_of_cycles = isset($_GET['edit']) ? $totcycle : (isset($_POST['slctNumcycle'])? $_POST['slctNumcycle']:'');
+$cycleIdsArr = (!empty($cycleIdsArr) ? $cycleIdsArr : array());
 
 $daysArr1 = isset($_GET['edit']) ? (isset($daysArr[0])? $daysArr[0]: array()) : (!empty($_POST['slctDays1']) ? $_POST['slctDays1'] : array());
 $daysArr2 = isset($_GET['edit']) ? (isset($daysArr[1])? $daysArr[1]: array()) : (!empty($_POST['slctDays2']) ? $_POST['slctDays2'] : array());
 $daysArr3 = isset($_GET['edit']) ? (isset($daysArr[2])? $daysArr[2]: array()) : (!empty($_POST['slctDays3']) ? $_POST['slctDays3'] : array());
+
+$timeslotArr1 = isset($_GET['edit']) ? (isset($timeslotArr[0])? $timeslotArr[0]: array()) : (!empty($_POST['slctTimeslot1']) ? $_POST['slctTimeslot1'] : array());
+$timeslotArr2 = isset($_GET['edit']) ? (isset($timeslotArr[1])? $timeslotArr[1]: array()) : (!empty($_POST['slctTimeslot2']) ? $_POST['slctTimeslot2'] : array());
+$timeslotArr3 = isset($_GET['edit']) ? (isset($timeslotArr[2])? $timeslotArr[2]: array()) : (!empty($_POST['slctTimeslot3']) ? $_POST['slctTimeslot3'] : array());
 
 $startweek_1 = isset($_GET['edit']) ? (isset($start_week[0])? $start_week[0]:'') : (isset($_POST['startweek1'])? $_POST['startweek1']:'');
 $startweek_2 = isset($_GET['edit']) ? (isset($start_week[1])? $start_week[1]:'') : (isset($_POST['startweek2'])? $_POST['startweek2']:'');
@@ -65,7 +66,14 @@ $(document).ready(function() {
 			  <input type="hidden" name="form_action" value="add_edit_cycles" />
 			  <?php if(isset($_GET['edit'])){?>
 			  	<input type="hidden" name="programId" value="<?php echo $_GET['edit'];?>" />
-			  <?php } ?>
+			  	<input type="hidden" name="preNumCycle" value="<?php echo $no_of_cycles;?>" />
+			  	<?php
+			  	   $ct = 0;
+			  	   foreach($cycleIdsArr as $val){
+			  	      $ct++;
+			  	      echo '<input type="hidden" name="preCycleId'.$ct.'" value="'.$val.'" />';
+			  	   }
+			    } ?>
                 <div class="custtable_left">
                     <div class="custtd_left red">
 						<?php if(isset($_SESSION['error_msg'])) echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
@@ -130,7 +138,13 @@ $(document).ready(function() {
 							<div class="cylcebox">
 							<h3>Timeslot</h3>
 							<select id="slctTimeslot1" name="slctTimeslot1[]" class="ts-avail required" multiple="multiple" style="width:90px;">
-							  <?php echo $tslot_dropDwn;?>
+							<?php
+								$slqTS="SELECT id, timeslot_range FROM timeslot";
+								$relTS = mysqli_query($db, $slqTS);
+								while($tsdata= mysqli_fetch_array($relTS)){
+									echo '<option value="'.$tsdata['id'].'" '.(in_array($tsdata['id'],$timeslotArr1) ? 'selected' : '').'>'.$tsdata['timeslot_range'].'</option>';
+								}
+							?>
 							</select>
 							</div>
 						</div>
@@ -139,11 +153,22 @@ $(document).ready(function() {
 							<h2>Add Exception</h2>
 						</div>
 						<div class="txtfield">
-							<input type="text" size="12" id="exceptnProgAval" />
+							<input type="text" size="14" id="exceptnProgAval1" name="exceptnProgAval1" readonly />
 						</div>
-						<div class="addbtnException">
-							<input type="button" name="btnAddMore" class="btnProgAvailExcep" value="Add">
-						 </div>
+					<div class="addbtnException">
+						<input type="button" name="btnAddMore" class="btnProgCycleAvailExcep1" value="Add">
+					 </div>
+					<div class="clear"></div>
+					<div class="custtd_left">
+					</div>
+					<div class="divException1">
+					<?php
+					if($programId!=""){
+                        $objP->getProgExceptions($programId,1);
+					 } ?>
+					</div>
+					<div class="clear"></div>
+
 					</div>
                     <div class="clear"></div>
 					<div id="secondCycle" style="display:none;">
@@ -173,7 +198,13 @@ $(document).ready(function() {
 							<div class="cylcebox">
 							<h3>Timeslot</h3>
 							<select id="slctTimeslot2" name="slctTimeslot2[]" class="ts-avail required" multiple="multiple" style="width:90px;">
-							  <?php echo $tslot_dropDwn;?>
+								<?php
+									$slqTS="SELECT id, timeslot_range FROM timeslot";
+									$relTS = mysqli_query($db, $slqTS);
+									while($tsdata= mysqli_fetch_array($relTS)){
+										echo '<option value="'.$tsdata['id'].'" '.(in_array($tsdata['id'],$timeslotArr2) ? 'selected' : '').'>'.$tsdata['timeslot_range'].'</option>';
+									}
+								?>
 							</select>
 							</div>
 						</div>
@@ -182,12 +213,21 @@ $(document).ready(function() {
 							<h2>Add Exception</h2>
 						</div>
 						<div class="txtfield">
-							<input type="text" size="12" id="exceptnProgAval" />
+							<input type="text" size="14" id="exceptnProgAval2" name="exceptnProgAval2" readonly />
 						</div>
 						<div class="addbtnException">
-							<input type="button" name="btnAddMore" class="btnProgAvailExcep" value="Add">
+							<input type="button" name="btnAddMore" class="btnProgCycleAvailExcep2" value="Add">
 						 </div>
-
+						 <div class="clear"></div>
+							<div class="custtd_left">
+							</div>
+							<div class="divException2">
+							<?php
+							if($programId!=""){
+								 $objP->getProgExceptions($programId,2);
+							 } ?>
+							</div>
+							<div class="clear"></div>
 					</div>
                     <div class="clear"></div>
 					<div id="thirdCycle" style="display:none;">
@@ -217,7 +257,13 @@ $(document).ready(function() {
 							<div class="cylcebox">
 							<h3>Timeslot</h3>
 							<select id="slctTimeslot3" name="slctTimeslot3[]" class="ts-avail required" multiple="multiple" style="width:90px;">
-							  <?php echo $tslot_dropDwn;?>
+								<?php
+									$slqTS="SELECT id, timeslot_range FROM timeslot";
+									$relTS = mysqli_query($db, $slqTS);
+									while($tsdata= mysqli_fetch_array($relTS)){
+										echo '<option value="'.$tsdata['id'].'" '.(in_array($tsdata['id'],$timeslotArr3) ? 'selected' : '').'>'.$tsdata['timeslot_range'].'</option>';
+									}
+								?>
 							</select>
 							</div>
 						</div>
@@ -226,12 +272,21 @@ $(document).ready(function() {
 								<h2>Add Exception</h2>
 							</div>
 							<div class="txtfield">
-								<input type="text" size="12" id="exceptnProgAval" />
+								<input type="text" size="14" id="exceptnProgAval3" name="exceptnProgAval3" readonly />
 							</div>
 							<div class="addbtnException">
-								<input type="button" name="btnAddMore" class="btnProgAvailExcep" value="Add">
+								<input type="button" name="btnAddMore" class="btnProgCycleAvailExcep3" value="Add">
 							 </div>
-
+                          <div class="clear"></div>
+							<div class="custtd_left">
+							</div>
+							<div class="divException3">
+							<?php
+							if($programId!=""){
+								  $objP->getProgExceptions($programId,3);
+							 } ?>
+							</div>
+							<div class="clear"></div>
 					</div>
                     <div class="clear"></div>
 

@@ -8,7 +8,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$( "#dob" ).datepicker({
+	$("#dob").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -17,7 +17,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$( "#doj" ).datepicker({
+	$("#doj").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -25,7 +25,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$( "#exceptnClsAval" ).datepicker({
+	$("#exceptnClsAval").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -33,7 +33,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$( "#exceptnTeachAval" ).datepicker({
+	$("#exceptnTeachAval").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -41,7 +41,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$( "#exceptnClsrmAval" ).datepicker({
+	$("#exceptnClsrmAval").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -49,7 +49,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$( "#exceptnClsrmAval" ).datepicker({
+	$("#exceptnClsrmAval").datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -57,7 +57,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$( "#holiday_date" ).datepicker({
+	$("#holiday_date").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -68,98 +68,26 @@ $(document).ready(function() {
  });			   
 
 $(function() {
-	$( "#fromGenrtTmtbl" ).datepicker({
+	$("#fromGenrtTmtbl").datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
 		changeMonth: true, 
 		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#toGenrtTmtbl" ).datepicker( "option", "minDate", selectedDate );
+		onClose: function(selectedDate) {
+			$("#toGenrtTmtbl").datepicker("option", "minDate", selectedDate);
 		}
 	});
-	$( "#toGenrtTmtbl" ).datepicker({
+	$("#toGenrtTmtbl").datepicker({
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
 		changeMonth: true, 
 		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#fromGenrtTmtbl" ).datepicker( "option", "maxDate", selectedDate );
-		}
-	});
-});
-$(function() {
-	$( "#startweek1" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#endweek1" ).datepicker( "option", "minDate", selectedDate );
-		}
-	});
-	$( "#endweek1" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#startweek1" ).datepicker( "option", "maxDate", selectedDate );
-		}
-	});
-});
-$(function() {
-	$( "#startweek2" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#endweek2" ).datepicker( "option", "minDate", selectedDate );
-		}
-	});
-	$( "#endweek2" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#startweek2" ).datepicker( "option", "maxDate", selectedDate );
-		}
-	});
-});
-$(function() {
-	$( "#startweek3" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#endweek3" ).datepicker( "option", "minDate", selectedDate );
-		}
-	});
-	$( "#endweek3" ).datepicker({
-	    dateFormat: 'dd-mm-yy',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#startweek3" ).datepicker( "option", "maxDate", selectedDate );
+		onClose: function(selectedDate) {
+			$("#fromGenrtTmtbl").datepicker("option", "maxDate", selectedDate);
 		}
 	});
 });
@@ -183,39 +111,39 @@ $(function() {
 	
 });
 $(function() {
-	$( "#fromTeachAval" ).datepicker({
+	$("#fromTeachAval").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
 		changeMonth: true, 
 		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#toTeachAval" ).datepicker( "option", "minDate", selectedDate );
+		onClose: function(selectedDate) {
+			$("#toTeachAval").datepicker("option", "minDate", selectedDate);
 		}
 	});
-	$( "#toTeachAval" ).datepicker({
+	$("#toTeachAval").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
 		changeMonth: true, 
 		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#fromTeachAval" ).datepicker( "option", "maxDate", selectedDate );
+		onClose: function(selectedDate) {
+			$("#fromTeachAval").datepicker("option", "maxDate", selectedDate);
 		}
 	});
 });
 $(function() {
- $( "#fromTmDuratn" ).datepicker({
+ $("#fromTmDuratn").datepicker({
       dateFormat: 'yy-mm-dd',
 	  defaultDate: "+1w",
 	  changeMonth: true,
 	  numberOfMonths: 1,
 	  changeMonth: true, 
 	  changeYear: true,
-	  onClose: function( selectedDate ) {
-	   $( "#toTmDuratn" ).datepicker( "option", "minDate", selectedDate );
+	  onClose: function(selectedDate) {
+	   $("#toTmDuratn").datepicker("option", "minDate", selectedDate);
 	  }
 	 });
  $("#toTmDuratn").datepicker({
@@ -225,8 +153,8 @@ $(function() {
 	  numberOfMonths: 1,
 	  changeMonth: true, 
 	  changeYear: true,
-	  onClose: function( selectedDate ) {
-	   $( "#fromTmDuratn" ).datepicker( "option", "maxDate", selectedDate );
+	  onClose: function(selectedDate) {
+	   $("#fromTmDuratn").datepicker("option", "maxDate", selectedDate);
 	  }
 	 });
  $("#fromclsRmAval").datepicker({
@@ -236,8 +164,8 @@ $(function() {
 		numberOfMonths: 1,
 		changeMonth: true, 
 		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#toclsRmAval" ).datepicker( "option", "minDate", selectedDate );
+		onClose: function(selectedDate) {
+			$("#toclsRmAval").datepicker("option", "minDate", selectedDate);
 		}
 	});
  $("#toclsRmAval").datepicker({
@@ -247,8 +175,8 @@ $(function() {
 		numberOfMonths: 1,
 		changeMonth: true, 
 		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#fromclsRmAval" ).datepicker( "option", "maxDate", selectedDate );
+		onClose: function(selectedDate) {
+			$("#fromclsRmAval").datepicker("option", "maxDate", selectedDate);
 		}
 	});
 });
@@ -292,7 +220,7 @@ function deleteArea($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected Area.");
@@ -318,7 +246,7 @@ function deleteBuld($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected Building.");
@@ -344,7 +272,7 @@ function deleteTeacher($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected.");
@@ -370,7 +298,7 @@ function deleteProgram($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected.");
@@ -412,7 +340,7 @@ function deleteRoom($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected Room.");
@@ -438,7 +366,7 @@ function deleteGroup($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected Group.");
@@ -481,7 +409,7 @@ function del_associated_prog_group($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected.");
@@ -508,7 +436,7 @@ function deleteTimeslot($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected Group.");
@@ -535,7 +463,7 @@ function deleteSubject($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected subject.");
@@ -576,7 +504,7 @@ $(document).ready(function() {
     $(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>'); 
    }
    if(sessionName!=''){
-    $('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionOrder+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+    $('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionOrder+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
     //$(wrapper).append('');
     $('#txtSessionName').val('');
     $('#txtOrderNum').val('');
@@ -624,7 +552,7 @@ function getSessionName(subjectId)
 function removeSession($sessionId, $serialId){
 	if(confirm("Are you sure you want to delete the Subject?")) {
 	    	if($sessionId == 0){
-				$('#'+$serialId).closest( 'tr').remove();
+				$('#'+$serialId).closest('tr').remove();
 				$('.green, .red').hide();
 			}else{
 				$.ajax({
@@ -636,7 +564,7 @@ function removeSession($sessionId, $serialId){
 						},
 						success: function($succ){
 							if($succ==1){
-								$('#'+$sessionId).closest( 'tr').remove();
+								$('#'+$sessionId).closest('tr').remove();
 								$('.green, .red').hide();
 							}else{
 								alert("Cannot delete the selected session.");
@@ -701,7 +629,7 @@ function deleteTeacherActivity($id){
 			},
 			success: function($succ){
 				if($succ==1){
-					$('#'+$id).closest( 'tr').remove();
+					$('#'+$id).closest('tr').remove();
 					$('.green, .red').hide();
 				}else{
 					alert("Cannot delete the selected Activity.");
@@ -1142,7 +1070,7 @@ $(document).ready(function() {
 				$(wrapper2).append('<div class="sessionList"><table id="datatables" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th >Session Name</th><th>Remove</th></tr></thead><tbody>');	
 			}
 			if(exception_date!=''){
-				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
 				$('#exceptnTeachAval').val('');
 			}
 	    }
@@ -1152,7 +1080,7 @@ $(document).ready(function() {
 function deleteExcepTeachAvail($sessionId, $serialId){
 	if(confirm("Are you sure you want to delete the Exception?")) {
 	    	if($sessionId == 0){
-				$('#'+$serialId).closest( 'tr').remove();
+				$('#'+$serialId).closest('tr').remove();
 				$('.green, .red').hide();
 			}else{
 				$.ajax({
@@ -1164,7 +1092,7 @@ function deleteExcepTeachAvail($sessionId, $serialId){
 						},
 						success: function($succ){
 							if($succ==1){
-								$('#'+$sessionId).closest( 'tr').remove();
+								$('#'+$sessionId).closest('tr').remove();
 								$('.green, .red').hide();
 							}else{
 								alert("Cannot delete the selected Exception.");
@@ -1191,7 +1119,7 @@ function deleteTeachAvail($id){
     },
                 success: function($succ){
      if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
       $('.green, .red').hide();
      }else{
       alert("Cannot delete the teacher availability mapping subject.");
@@ -1219,7 +1147,7 @@ $(document).ready(function() {
 				$(wrapper).append('<div class="sessionList"><table id="datatables" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th >Session Name</th><th>Remove</th></tr></thead><tbody>');	
 			}
 			if(exceptnDate!=''){
-				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exceptnDate+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeClassException(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exceptnDate+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeClassException(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
 				//$(wrapper).append('');
 				$('#exceptnClsrmAval').val('');
 			}
@@ -1248,7 +1176,7 @@ function changeRoomData($id){
 function removeClassException($exceptionId, $serialId){
 	if(confirm("Are you sure you want to delete the classroom exception?")) {
 	    	if($exceptionId == 0){
-				$('#'+$serialId).closest( 'tr').remove();
+				$('#'+$serialId).closest('tr').remove();
 				$('.green, .red').hide();
 			}else{
 				$.ajax({
@@ -1260,7 +1188,7 @@ function removeClassException($exceptionId, $serialId){
 						},
 						success: function($succ){
 							if($succ==1){
-								$('#'+$exceptionId).closest( 'tr').remove();
+								$('#'+$exceptionId).closest('tr').remove();
 								$('.green, .red').hide();
 							}else{
 								alert("Cannot delete the selected exception.");
@@ -1286,7 +1214,7 @@ function deleteClassroomAvailability($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected subject.");
@@ -1312,7 +1240,7 @@ function deleteHoliday($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest( 'tr').remove();
+                        $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected Holiday.");
@@ -1338,4 +1266,214 @@ function stripslashes(str) {
 }
 function changeExceptionData(pid){
 	window.location.href = 'program_cycles.php?edit='+window.btoa(pid);
+}
+//function do add exception date in program cycles
+$(function() {
+    //for cycle 1
+	$("#startweek1").datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onSelect: function(selectedDate) {
+		    var date2 = $('#startweek1').datepicker('getDate');
+			date2.setDate(date2.getDate() + 1);
+		    $("#endweek1").datepicker("option", "minDate", date2);
+			$("#exceptnProgAval1").datepicker("option", "minDate", selectedDate);
+			$('#exceptnProgAval1').val('');
+		}
+	});
+	$("#endweek1").datepicker({
+	    dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onSelect: function(selectedDate) {
+			var date2 = $('#endweek1').datepicker('getDate');
+			date2.setDate(date2.getDate() + 1);
+			$("#startweek2").datepicker("option", "minDate", date2);
+			$("#exceptnProgAval1").datepicker("option", "maxDate", selectedDate);
+			$('#exceptnProgAval1').val('');
+		}
+	});
+	$("#exceptnProgAval1").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
+	//for cycle 2
+	$("#startweek2").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onSelect: function(selectedDate) {
+			var date2 = $('#startweek2').datepicker('getDate');
+			date2.setDate(date2.getDate() + 1);
+			$("#endweek2").datepicker("option", "minDate", date2);
+			$("#exceptnProgAval2").datepicker("option", "minDate", selectedDate);
+			$('#exceptnProgAval2').val('');
+		}
+	});
+	$("#endweek2").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onSelect: function(selectedDate) {
+			var date2 = $('#endweek2').datepicker('getDate');
+			date2.setDate(date2.getDate() + 1);
+			$("#startweek3").datepicker("option", "minDate", date2);
+			$("#exceptnProgAval2").datepicker("option", "maxDate", selectedDate);
+			$('#exceptnProgAval2').val('');
+		}
+	});
+	$("#exceptnProgAval2").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
+	//for cycle 3
+	$("#startweek3").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onSelect: function(selectedDate) {
+			var date2 = $('#startweek3').datepicker('getDate');
+			date2.setDate(date2.getDate() + 1);
+			$("#endweek3").datepicker("option", "minDate", date2);
+			$("#exceptnProgAval3").datepicker("option", "minDate", selectedDate);
+			$('#exceptnProgAval3').val('');
+		}
+	});
+	$("#endweek3").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onSelect: function(selectedDate) {
+			$("#exceptnProgAval3").datepicker("option", "maxDate", selectedDate);
+			$('#exceptnProgAval3').val('');
+		}
+	});
+	$("#exceptnProgAval3").datepicker({
+		dateFormat: 'dd-mm-yy',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
+
+});
+//end exception date program cycle
+//function to add cycle exception
+$(document).ready(function() {
+   $(".btnProgCycleAvailExcep1").click(function(e){ 
+		var max_fields = 10; 
+		var x = 1,y=0; 
+		var exception_date = $('#exceptnProgAval1').val();
+		e.preventDefault();
+		var programId=$('#programId').val();
+		var maxSerialNum=parseInt($('#maxSessionListVal1').val(),10);
+		if(programId!=""){
+			var maxSerialNumVal=maxSerialNum + 1;
+			$('#maxSessionListVal1').val(maxSerialNumVal);
+			if(maxSerialNum==0){
+				$(".divException1").append('<div class="exceptionList1"><table id="datatables1" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+			}
+			if(exception_date!=''){
+				$('#datatables1').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate1[]" id="exceptnDate'+maxSerialNumVal+'" value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteExcepProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+				$('#exceptnProgAval1').val('');
+			}
+		}
+	});
+
+   $(".btnProgCycleAvailExcep2").click(function(e){ 
+        
+   		var max_fields = 10; 
+   		var x = 1,y=0; 
+		var exception_date = $('#exceptnProgAval2').val();
+		e.preventDefault();
+		var programId=$('#programId').val();
+		var maxSerialNum=parseInt($('#maxSessionListVal2').val(),10);
+		if(programId!=""){
+			var maxSerialNumVal=maxSerialNum + 1;
+			$('#maxSessionListVal2').val(maxSerialNumVal);
+			if(maxSerialNum==0){
+				$(".divException2").append('<div class="exceptionList2"><table id="datatables2" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+			}
+			if(exception_date!=''){
+				$('#datatables2').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate2[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteExcepProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+				$('#exceptnProgAval2').val('');
+			}
+		}
+	});
+
+	$(".btnProgCycleAvailExcep3").click(function(e){ 
+		var max_fields = 10; 
+		var x = 1,y=0; 
+ 		var exception_date = $('#exceptnProgAval3').val();
+		e.preventDefault();
+		var programId=$('#programId').val();
+		var maxSerialNum=parseInt($('#maxSessionListVal3').val(),10);
+		if(programId!=""){
+			var maxSerialNumVal=maxSerialNum + 1;
+			$('#maxSessionListVal3').val(maxSerialNumVal);
+			if(maxSerialNum==0){
+				$(".divException3").append('<div class="exceptionList3"><table id="datatables3" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+			}
+			if(exception_date!=''){
+				$('#datatables3').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate3[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteExcepProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+				$('#exceptnProgAval3').val('');
+			}
+		}
+	});
+});
+//Ajax delete the program cycle exception function 
+function deleteExcepProgCycle($sessionId, $serialId){
+	if(confirm("Are you sure you want to delete the Exception?")) {
+		if($sessionId == 0){
+			$('#'+$serialId).closest('tr').remove();
+			$('.green, .red').hide();
+		}else{
+			$.ajax({
+					type: "POST",
+					url: "ajax_common.php",
+					data: {
+						'id': $sessionId,
+						'codeBlock': 'deleteExcepProgCycle',
+					},
+					success: function($succ){
+						if($succ==1){
+							$('#'+$sessionId).closest('tr').remove();
+							$('.green, .red').hide();
+						}else{
+							alert("Cannot delete the selected Exception.");
+							$('.green, .red').hide();
+						}
+					}
+			});
+		}
+	}
+    return false;
 }

@@ -100,7 +100,7 @@ class Programs extends Base {
 			  if($slctPrgmType < ($z-1)){
 			    for($j=($slctPrgmType+1); $j <= ($z-1); $j++){
 					 $progName = $txtPrgmName.'-'.$j;
-					 // delete all the which are not need
+					 // delete all the program years which are not need
 					 $py_rel =  $this->conn->query("SELECT id FROM program_years WHERE name='".$progName."' AND program_id='".$edit_id."'");
 					 $py_row_cnt = $py_rel->num_rows;
 					 if($py_row_cnt > 0){
@@ -146,26 +146,26 @@ class Programs extends Base {
     }
 	//function to  get all cycles data related to a program
 	public function getProgramCycleList($prog_id){
-		$result =  $this->conn->query("select * from cycle where program_year_id in(select id from program_years where program_id='".$prog_id."')");
+		$result =  $this->conn->query("select * from cycle where program_year_id='".$prog_id."'");
 		return $result;
     }
     //function to get no of cycle
     public function getCyclesInProgram($prog_id){
-    	$result =  $this->conn->query("select no_of_cycle from cycle where program_year_id in(select id from program_years where program_id='".$prog_id."')");
+    	$result =  $this->conn->query("select no_of_cycle from cycle where program_year_id='".$prog_id."' limit 1");
 		$row = $result->fetch_assoc();
 		return $row['no_of_cycle'];
     }
     //function to get cycle info by program id
     public function getCyclesInfo($prog_id){
-        $SQL = "select distinct start_week,end_week,days from cycle where program_year_id in(select id from program_years where program_id='".$prog_id."')";
+        $SQL = "select distinct start_week,end_week,days from cycle where program_year_id ='".$prog_id."'";
     	$result =  $this->conn->query($SQL);
     	$row_cnt = $result->num_rows;
         $data = '';
         $numSufArr = array('0'=>'1st','1'=>'2nd','2'=>'3rd');
         $daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 		if($row_cnt > 0){
-		    $data .= '<ul>';
-			$data .= '<li>Number of Cycle:'.$this->getCyclesInProgram($prog_id).'</li>';
+		    $data .= '<table cellspacing="0" cellpadding="0" style="border:none;">';
+			$data .= '<tr><td>Number of Cycle:'.$this->getCyclesInProgram($prog_id).'</td></tr>';
 			$i=0;
 			while($row = $result->fetch_assoc()){
 			   $daysArr = explode(',',$row['days']);
@@ -178,14 +178,28 @@ class Programs extends Base {
 			   $start_date = $this->formatDateByDate($row['start_week']);
 			   $end_date = $this->formatDateByDate($row['end_week']);
 
-               $data .= '<li>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' ('.$finalDays.')</li>';
+               $data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' ('.$finalDays.')</td></tr>';
+               $data .= $this->getProgCycleList($prog_id,$i);
                $i++;
-               if($i==3)
-               break;
 			}
-			$data .= '</ul>';
+			$data .= '</table>';
 		}
 		return $data;
+    }
+    //function to get program cycle exceptions
+    public function getProgCycleList($py_id,$cycle_num)
+    {
+        $query = "select exception_date from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
+	  	$result= $this->conn->query($query);
+	  	$num_rows = $result->num_rows;
+	  	$dt = '';
+	  	if($num_rows){
+	  	    $dt .= '<tr><td>Exceptions:</td></tr>';
+			while($row = $result->fetch_assoc()){
+               $dt .= '<tr><td style="padding-left:100px;">'.$row['exception_date'].'</td></tr>';
+			}
+			return $dt;
+		}
     }
 
 	/*function for add student group*/
@@ -259,27 +273,134 @@ class Programs extends Base {
 			 $this->conn->query($sql);
 		 }
     }
-
+    // function to delete all cycles from cycle table
+    //as well as associated to other tables
+    public function deleteAssociateCycles($c_id){
+		 $sql = "DELETE FROM cycle WHERE id='".$c_id."'";
+		 $rel = $this->conn->query($sql);
+		 if($rel->affected_rows > 0){
+             //delete other associated cycles from other tables here
+			 //$sql = "DELETE FROM cycle WHERE program_year_id='".$c_id."'";
+			 //$this->conn->query($sql);
+		 }
+    }
     //function tto add program cycles
-    public function addCycles()
+    public function addEditCycles()
     {
         $edit_id = base64_decode($_POST['programId']);
         $slctProgram_id = $_POST['slctProgram'];
-        echo '<pre>';
-        print_r($_POST);
-        if($edit_id==$slctProgram_id){
-			$last_yr_id = $slctProgram_id;
-			//INSERT CYCLES DATA
-			for($i=1; $i<=$slctNumcycle; $i++){
-			   $days = implode(',',$_POST['slctDays'.$i]);
-			   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
-			   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
-			   $sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, date_add) VALUES ('".$last_yr_id."', '".$slctNumcycle."', '".$start_date."', '".$end_date."', '".$days."', now())";
-			   $rel = $this->conn->query($sql);
-			}
-			//END HERE
-        }
-        die;
+        $slctNumcycle = $_POST['slctNumcycle'];
+        $preNumCycle = ($_POST['preNumCycle'] > 0) ? $_POST['preNumCycle'] : 0;
+
+        if($edit_id==$slctProgram_id)
+        {
+			if($slctNumcycle==$preNumCycle){
+				for($i=1; $i<=$slctNumcycle; $i++){
+				   $cycle_edit_id = $_POST['preCycleId'.$i];
+				   $days = implode(',',$_POST['slctDays'.$i]);
+				   $timeslots = implode(',',$_POST['slctTimeslot'.$i]);
+				   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+				   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+				   $sql = "update cycle set
+								 no_of_cycle='".$slctNumcycle."',
+								 start_week='".$start_date."',
+								 end_week='".$end_date."',
+								 days='".$days."',
+								 timeslot_id='".$timeslots."',
+								 date_update=now() WHERE id='".$cycle_edit_id."'";
+				   //echo '<br>'.$sql;
+				   $rel = $this->conn->query($sql);
+				   //add program exception
+				   $this->addProgramException($slctProgram_id,$i);
+				}
+			  }else if($slctNumcycle < $preNumCycle){
+				for($j=($slctNumcycle+1); $j<=$preNumCycle; $j++){
+					 $cycle_edit_id = $_POST['preCycleId'.$j];
+					 // delete all cycle which are not need
+					 $py_rel =  $this->conn->query("SELECT id FROM cycle WHERE id='".$cycle_edit_id."'");
+					 $py_row_cnt = $py_rel->num_rows;
+					 if($py_row_cnt > 0){
+					      $row = $py_rel->fetch_assoc();
+						  $this->deleteAssociateCycles($row['id']);
+					 }
+					//delete program exception as well
+					$query="delete from program_cycle_exception where program_year_id='".$slctProgram_id."' AND cycle_id='".$j."'";
+					$qry = $this->conn->query($query);
+				}
+
+			  }else if($slctNumcycle > $preNumCycle){
+				 for($i=$preNumCycle+1; $i<=$slctNumcycle; $i++){
+					$days = implode(',',$_POST['slctDays'.$i]);
+					$timeslots = implode(',',$_POST['slctTimeslot'.$i]);
+					$start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+					$end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+					$sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, timeslot_id, date_add) VALUES ('".$slctProgram_id."', '".$slctNumcycle."', '".$start_date."', '".$end_date."', '".$days."','".$timeslots."', now())";
+					$rel = $this->conn->query($sql);
+
+				   //add program exception
+				   $this->addProgramException($slctProgram_id,$i);
+
+				 }
+			  }
+			  //finally set all the similar program with current selected number of cycles
+			  $sql = "update cycle set no_of_cycle='".$slctNumcycle."' WHERE program_year_id='".$slctProgram_id."'";
+			  $rel = $this->conn->query($sql);
+
+			$message="Record has been saved successfully";
+			$_SESSION['succ_msg'] = $message;
+			return 0;
+
+		}else{
+			$message="Record could not be saved. Please Try again.";
+			$_SESSION['error_msg'] = $message;
+			return 1;
+		}
     }
 
+    //function to add row of the program exception
+    public function getProgExceptions($py_id,$cycle_num)
+    {
+		$x=0;
+		$html='';
+		$query="select * from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
+		$result= $this->conn->query($query);
+		while($data = $result->fetch_assoc()){
+			$x++;
+			if($x==1){
+				$html .='<div class="exceptionList'.$cycle_num.'">
+					<table id="datatables'.$cycle_num.'" class="exceptionTbl">
+					  <thead>
+					   <tr>
+						<th>Sr. No.</th>
+						<th>Exception Date</th>
+						<th>Remove</th>
+					   </tr>
+					  </thead>
+					  <tbody>';
+			 }
+			$html .='<tr>
+					<td>'.$x.'</td>
+					<td>'.$data['exception_date'].'</td>
+					<td style="display:none"><input type="hidden" name="exceptionDate'.$cycle_num.'[]" id="exceptnDate'.$x.'" value="'.$data['exception_date'].'" />
+					<input type="hidden" name="program_cycleRowId'.$cycle_num.'[]" id="program_cycleRowId'.$x.'"  value="'.$data['id'].'"/></td>
+					<td id="'.$data['id'].'"><a class="remove_field" onclick="deleteExcepProgCycle('.$data['id'].', 0);">Remove</a></td></tr>';
+		}
+		$html .='<input type="hidden" name="maxSessionListVal'.$cycle_num.'" id="maxSessionListVal'.$cycle_num.'"  value="'.$x.'"/>';
+		$html .='</tbody></table></div>';
+		echo $html;
+    }
+
+    //function to add program exception
+    public function addProgramException($py_id,$cycle_no)
+    {
+		//delete old exceptions
+		$query="delete from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_no."'";
+		$qry = $this->conn->query($query);
+		//add new exceptions
+		foreach($_POST['exceptionDate'.$cycle_no] as $exceptionDate){
+		    $exceptionDate = date("Y-m-d",strtotime($exceptionDate));
+			$currentDateTime = date("Y-m-d H:i:s");
+			$result =$this->conn->query("INSERT INTO program_cycle_exception(program_year_id,cycle_id,exception_date,date_add,date_update) VALUES ('".$py_id."','".$cycle_no."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');");
+		}
+    }
 }
