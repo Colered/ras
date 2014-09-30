@@ -314,7 +314,7 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
-	public function addWebCalEntry($date, $cal_time, $name, $room_name, $description, $duration)
+	public function addWebCalEntry($date, $cal_time, $name, $room_name, $description, $duration, $teacher_id, $subject_id, $room_id)
 	{
 		$sql_insert_cal = "insert into webcal_entry set
 									   cal_date = '".date('Ymd', strtotime($date))."',
@@ -329,7 +329,10 @@ class Timetable extends Base {
 									   cal_access = 'P',
 									   cal_name = '".$name."',
 									   cal_location = '".$room_name."',
-									   cal_description = '".$description."'";				   
+									   cal_description = '".$description."',
+									   teacher_id = '".$teacher_id."',
+									   subject_id = '".$subject_id."',
+									   room_id = '".$room_id."'";				   
 		if($this->conn->query($sql_insert_cal))
 		{
 			 $last_ins_id = $this->conn->insert_id;
