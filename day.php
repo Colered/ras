@@ -1,7 +1,7 @@
 <?php
 /* $Id: day.php,v 1.78.2.4 2008/03/31 21:03:41 umcesrjones Exp $ */
 include_once 'includes/init.php';
-
+include_once 'config.php';
 //check UAC
 if ( ! access_can_access_function ( ACCESS_DAY ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )

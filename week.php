@@ -2,8 +2,10 @@
 /* $Id: week.php,v 1.133.2.5 2008/09/27 14:50:18 cknudsen Exp $ */
 include_once 'includes/init.php';
 include_once 'config.php';
-
 //check UAC
+$teacher_id=(isset($_REQUEST['teacher_id'])) ? ($_REQUEST['teacher_id']) : '';
+$subject_id=(isset($_REQUEST['subject_id'])) ? ($_REQUEST['subject_id']) : '';
+$room_id=(isset($_REQUEST['room_id'])) ? ($_REQUEST['room_id']) : '';
 if ( ! access_can_access_function ( ACCESS_WEEK ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )
   send_to_preferred_view ();
@@ -51,6 +53,7 @@ if ( $DISPLAY_SM_MONTH == 'Y' && $BOLD_DAYS_IN_YEAR == 'Y' ) {
   $evStart = $wkstart;
   $evEnd = $wkend;
 }
+
 /* Pre-Load the repeated events for quickier access. */
 $repeated_events = read_repeated_events ( ( strlen ( $user )
     ? $user : $login ), $evStart, $evEnd, $cat_id );
@@ -59,16 +62,17 @@ $repeated_events = read_repeated_events ( ( strlen ( $user )
 // Start the search ONE_WEEK early to account for cross-day events.
 $events = read_events ( ( strlen ( $user )
     ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
-
-/*$events = read_events_teacher ( ( strlen ( $user )
-    ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
-
-$events = read_events_subject ( ( strlen ( $user )
-    ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
 	
-$events = read_events_room ( ( strlen ( $user )
-    ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );*/
+if($teacher_id!=""){
+	$events = read_events_teacher (( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd,'',$teacher_id);
+}
 
+if($subject_id!=""){
+$events = read_events_subject ( ( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd, '' ,$subject_id);
+}
+if($room_id!=""){
+$events = read_events_room ( ( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd, '' ,$room_id);
+}
 if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
   /* Pre-load tasks for quicker access. */
   $tasks = read_tasks ( ! empty ( $user ) && strlen ( $user ) && $is_assistant
