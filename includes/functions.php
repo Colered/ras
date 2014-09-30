@@ -4282,7 +4282,7 @@ function print_category_menu ( $form, $date = '', $cat_id = '' ) {
   $printerStr = '';
   $ret = '
     <form action="' . $form . '.php" method="get" name="SelectCategory" '
-   . 'class="categories" style="float:left;padding-left:65px">' . ( empty ( $date ) ? '' : '
+   . 'class="categories" style="float:left;display:none;">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6227,7 +6227,7 @@ function print_teacher_menu ( $form, $date = '', $teacher_id = '' ) {
   $catStr = translate ( 'Teacher' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectTeacher" '. 'class="categories " style="float:left">' . ( empty ( $date ) ? '' : '
+    <form action="' . $form . '.php" method="get" name="SelectTeacher" '. 'class="categories " style="float:left;padding-left:150px;">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6236,7 +6236,7 @@ function print_teacher_menu ( $form, $date = '', $teacher_id = '' ) {
       <select name="teacher_id" onchange="document.SelectTeacher.submit()">';
   // loading all teacher list
   if ( is_array ( $teacher ) ) {
-  $ret .= ' <option value="">--Select Teacher--</option>';
+  $ret .= ' <option value="">All</option>';
     foreach ( $teacher as $K => $V ) {
       if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
 	    
@@ -6279,7 +6279,7 @@ function print_subject_menu( $form, $date = '', $subject_id = '' ) {
       <select name="subject_id" onchange="document.SelectSubject.submit()">';
   // loading all subject list
   if ( is_array ( $subject ) ) {
-  $ret .= ' <option value="">--Select Subject--</option>';
+  $ret .= ' <option value="">All</option>';
     foreach ( $subject as $K => $V ) {
       if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
 		$ret .= '
@@ -6320,7 +6320,7 @@ function print_room_menu( $form, $date = '', $room_id = '' ) {
       <select name="room_id" onchange="document.SelectRoom.submit()">';
   // loading all subject list
   if ( is_array ( $room ) ) {
-  $ret .= ' <option value="">--Select Room--</option>';
+  $ret .= ' <option value="">All</option>';
     foreach ( $room as $K => $V ) {
       if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
 	  	$ret .= '
