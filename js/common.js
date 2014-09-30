@@ -1477,3 +1477,22 @@ function deleteExcepProgCycle($sessionId, $serialId){
 	}
     return false;
 }
+
+//function to show/hide the cycle info
+function showHideCycleInfo(subjectId)
+{
+	var divSessionName = '#divSessionName'+subjectId;
+    var imageId='#sessionNameImg'+subjectId;
+	if($(divSessionName).css('display') == 'none') {
+		//close all the open links
+		$(".subjectSession").slideUp("slow");
+		$(".sessionNameImg").attr({src: 'images/plus_icon.png'});
+		//open the clicked link
+		$(divSessionName).slideDown("slow");
+        $(imageId).attr({src: 'images/minus_icon.png'});
+    }
+    else {
+        $(divSessionName).slideUp("slow");
+        $(imageId).attr({src: 'images/plus_icon.png'});
+	}
+}

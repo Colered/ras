@@ -400,11 +400,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
 				if(!$obj->checkName($_POST['txtAName']))
 				{
-				
+
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
 					$output_array = $obj->generateTimetable($start_date, $end_date, $from_time);
 					//print"<pre>";print_r($output_array);die;
-					
+
 
 					if(isset($output_array['program_not_found'])){
 						$_SESSION['error_msg'] = $output_array['program_not_found'];
@@ -415,7 +415,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					}else{
 						$_SESSION['error_msg'] = $output_array['system_error'];
 					}
-					
+
 					if(isset($_SESSION['error_msg']))
 					{
 						header('Location: generate_timetable.php?fromGenrtTmtbl='.$fromGenrtTmtbl.'&toGenrtTmtbl='.$toGenrtTmtbl.'&name='.$name);
@@ -429,7 +429,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							foreach($output_array as $key=>$value)
 							{
 								foreach($value as $newkey=>$val)
-								{											
+								{
 									$timeslot = $newkey;
 									for($cnt=0;$cnt<count($val);$cnt++)
 									{
@@ -451,7 +451,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										$date = $val[$cnt]['date'];
 										$date_add = date("Y-m-d H:i:s");
 										$date_upd = date("Y-m-d H:i:s");
-										
+
 										$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd);
 										if($resp)
 										{
@@ -477,7 +477,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 											$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id);
 											if($cal_id){
 												$obj->addWebCalEntryUser($cal_id);
-												
+
 											}
 										}
 									}
@@ -530,6 +530,20 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$_SESSION['error_msg'] = $message;
 				header('Location: holidays.php');
 			}
+		break;
+
+		case "add_edit_cycles":
+		 if(isset($_POST['programId'])){
+
+		 	 $objP = new Programs();
+
+			 $resp = $objP->addEditCycles();
+			 if(!$resp){
+				header('Location: program_cycles_view.php');
+			 }
+
+		 }
+
 		break;
 
 	}
