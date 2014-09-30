@@ -55,7 +55,6 @@ class Timetable extends Base {
    	}
 	public function generateTimetable($date, $end_date, $from_time)
 	{
-		//$days = array('0','1','2','3','4','5');
 		$start_final_day = '';
 		$end_final_day = '';
 		$flag = '0';
@@ -63,11 +62,13 @@ class Timetable extends Base {
 		$allocated_activities = '';
 		$result_array = array();
 		$start_date = $date;
+		
 		for($cnt = 1;$cnt<=3;$cnt++)
 		{
 			$reserved_array = array();
 			while(strtotime($date) <= strtotime($end_date))
 			{
+				
 				$day = date('w', strtotime($date));
 				$final_day = $day - 1;
 				if(!$this->checkHoliday($date))
@@ -80,6 +81,9 @@ class Timetable extends Base {
 						{
 							while($result_slot = mysqli_fetch_array($sql_slot))
 							{
+								$reserved_teachers = array();
+								$reserved_rooms = array();
+								$counter = array();
 								$sql_pgm = $this->conn->query("SELECT distinct py.id as program_id
 														FROM program_years py
 														INNER JOIN program p on p.id = py.program_id
@@ -130,6 +134,8 @@ class Timetable extends Base {
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_reserv_act['order_number'];
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
+													$reserved_rooms[$result_slot['timeslot_range']][$i] = $result_reserv_act['room_id'];
+													$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_reserv_act['teacher_id'];
 													$number++;
 													$res++;
 													$i++;
@@ -152,6 +158,8 @@ class Timetable extends Base {
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_reserv_act['order_number'];
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
+													$reserved_rooms[$result_slot['timeslot_range']][$i] = $result_reserv_act['room_id'];
+													$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_reserv_act['teacher_id'];
 													$number++;
 													$res++;
 													$i++;
@@ -162,6 +170,7 @@ class Timetable extends Base {
 										if($res == 0)
 										{
 											$teachers = $this->search_teachers($date,$result_slot['id'],$final_day);
+											
 											
 											foreach($teachers as $teacher)
 											{						
@@ -183,7 +192,12 @@ class Timetable extends Base {
 													}else{
 														$subject_order = $result_free_act['subject_id']."-".$result_free_act['order_number'];
 													}
-													if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array) && !empty($rooms))
+													if(!empty($rooms) && $this->search_array($rooms[$j]['id'],$reserved_rooms))
+													{
+														$j++;
+													}
+													
+													if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array) && !empty($rooms) && isset($rooms[$j]['id']) && !$this->search_array($result_free_act['teacher_id'],$reserved_teachers))
 													{
 														if($result_free_act['order_number'] == 0)
 														{
@@ -194,15 +208,37 @@ class Timetable extends Base {
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_id'] = $result_free_act['teacher_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_name'] = $result_free_act['teacher_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['group_id'] = $result_free_act['group_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $rooms[$j]['id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $rooms[$j]['room_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_id'] = $result_free_act['session_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_name'] = $result_free_act['session_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_id'] = $result_free_act['subject_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_name'] = $result_free_act['subject_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_free_act['order_number'];	
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;	
+															$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
+															$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_free_act['teacher_id'];
+															$reserved_rooms[$result_slot['timeslot_range']][$i] = $rooms[$j]['id'];
+															if(array_key_exists($result_free_act['subject_id'], $counter))
+															{
+																$room_name = $this->getRoomName($counter[$result_free_act['subject_id']]);
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $counter[$result_free_act['subject_id']];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+															}
+															else{
+																$room_id = $this->getRoomBySubject($result_free_act['subject_id']);
+																if($room_id)
+																{
+																	$room_name = $this->getRoomName($room_id);
+																	$counter[$result_free_act['subject_id']] = $room_id;
+																	$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $room_id;
+																	$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+
+																}else{
+																	$room_name = $this->getRoomName($rooms[$j]['id']);
+																	$counter[$result_free_act['subject_id']] = $rooms[$j]['id'];
+																	$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $rooms[$j]['id'];
+																	$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+																}
+															}
 															$number++;
 															$i++;
 															$flag = 1;
@@ -215,15 +251,37 @@ class Timetable extends Base {
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_id'] = $result_free_act['teacher_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_name'] = $result_free_act['teacher_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['group_id'] = $result_free_act['group_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $rooms[$j]['id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $rooms[$j]['room_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_id'] = $result_free_act['session_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_name'] = $result_free_act['session_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_id'] = $result_free_act['subject_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_name'] = $result_free_act['subject_name'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_free_act['order_number'];	
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;	
+															$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
+															$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_free_act['teacher_id'];
+															$reserved_rooms[$result_slot['timeslot_range']][$i] = $rooms[$j]['id'];
+															if(array_key_exists($result_free_act['subject_id'], $counter))
+															{
+																$room_name = $this->getRoomName($counter[$result_free_act['subject_id']]);
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $counter[$result_free_act['subject_id']];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+															}
+															else{
+																	$room_id = $this->getRoomBySubject($result_free_act['subject_id']);
+																	if($room_id)
+																	{
+																		$room_name = $this->getRoomName($room_id);
+																		$counter[$result_free_act['subject_id']] = $room_id;
+																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $room_id;
+																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+
+																	}else{
+																		$room_name = $this->getRoomName($rooms[$j]['id']);
+																		$counter[$result_free_act['subject_id']] = $rooms[$j]['id'];
+																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $rooms[$j]['id'];
+																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+																	}
+															}
 															$number++;
 															$i++;
 															$flag = 1;
@@ -242,6 +300,7 @@ class Timetable extends Base {
 									$err['program_not_found'] = 'No program found';
 									return $err;									
 								}
+							//print"<pre>";print_r($counter);	die;
 							}
 						}else{
 							$err['timeslot_not_found'] = 'No Timeslot found';
@@ -250,7 +309,10 @@ class Timetable extends Base {
 					}
 				}
 				$date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
+				
 			}
+			
+			//print"<pre>";print_r($reserved_array);die;
 		$result_array[$cnt] = $reserved_array;
 		$allocated_activities[$cnt] =  $number;
 		}
@@ -354,6 +416,7 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
+
 	public function search_array($needle, $haystack)
 	{
 		 if(in_array($needle, $haystack)) {
@@ -373,7 +436,7 @@ class Timetable extends Base {
 								inner join classroom_availability_rule_day_map cd on cd.classroom_availability_rule_id = cm.classroom_availability_rule_id
 								inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
 								inner join room on room.id = cm.room_id
-								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and timeslot_id like '%".$slot."%' ");
+								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and timeslot_id like '%".$slot."%'");
 								
 							
 		$k = 0;
@@ -437,6 +500,25 @@ class Timetable extends Base {
 		if($row_cnt > 0)
 		{
 			return 1;
+		}else{
+			return 0;
+		}
+
+	}
+	public function getRoomName($room_id)
+	{
+		$sql_room_name = $this->conn->query("select room_name from room where id = '".$room_id."'");
+		$rooms = mysqli_fetch_array($sql_room_name);
+		return $rooms['room_name'];
+	}
+	public function getRoomBySubject($subject_id)
+	{
+		$sql_select = $this->conn->query("select room_id from teacher_activity where subject_id = '".$subject_id."' and reserved_flag = 1");
+		$row_cnt = mysqli_num_rows($sql_select);
+		if($row_cnt > 0)
+		{
+			$rooms = mysqli_fetch_array($sql_select);
+			return $rooms['room_id'];			
 		}else{
 			return 0;
 		}
