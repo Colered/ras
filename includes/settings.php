@@ -13,4 +13,5 @@ use_http_auth: false
 single_user: true
 single_user_login: admin
 # end settings.php */
+
 ?>
