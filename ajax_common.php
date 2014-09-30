@@ -207,9 +207,9 @@ switch ($codeBlock) {
             $program_year_id = $_POST['program_year_id'];
             $subject_id = $_POST['subject_id'];
             $sessionid = $_POST['session_id'];
-
+            $cycle_id = $_POST['cycle_id'];
             //add teacher activity row in table if not exist
-            $objT->insertActivityRow($program_year_id,$subject_id,$sessionid,$_POST['teachersArr']);
+            $objT->insertActivityRow($program_year_id,$cycle_id,$subject_id,$sessionid,$_POST['teachersArr']);
 			//room dropdown
 			$room_dropDwn = $objB->getRoomsDropDwn();
 			//timeslot dropdown
@@ -477,6 +477,20 @@ switch ($codeBlock) {
 			else
 				echo 0;
 		}
+	break;
+	case "getCyclesByPyId":
+		$options='<option value="">--Select Session--</option>';
+		if(isset($_POST['py_id']) && $_POST['py_id']!=""){
+			$py_id = $_POST['py_id'];
+			$query="SELECT * FROM cycle WHERE program_year_id = '".$py_id."' ORDER BY id";
+			$result = mysqli_query($db, $query);
+			$i=0;
+			while($data= mysqli_fetch_array($result)){
+			     $i++;
+				 $options .='<option value="'.$data['id'].'">'.$i.'</option>';
+			}
+		}
+		echo $options;
 	break;
 }
 ?>

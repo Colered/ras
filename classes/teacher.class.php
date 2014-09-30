@@ -156,32 +156,19 @@ class Teacher extends Base {
 		if(isset($program_year_id) && isset($subject_id) && isset($sessionid)){
 
 		    $reserved_flag = $_POST['reserved_flag'];
-		    if(isset($reserved_flag) && $reserved_flag > 0)
-		    {
+			if(isset($reserved_flag) && $reserved_flag > 0)
+			{
 				$teacher_id = isset($_POST['reserved_teacher_id_'.$reserved_flag]) ? $_POST['reserved_teacher_id_'.$reserved_flag] : 0;
 				$room_id = isset($_POST['room_id_'.$reserved_flag]) ? $_POST['room_id_'.$reserved_flag] : 0;
 				$time_slot_id = isset($_POST['tslot_id_'.$reserved_flag]) ? $_POST['tslot_id_'.$reserved_flag] : 0;
 				$act_date = isset($_POST['activityDateCal_'.$reserved_flag]) ? $_POST['activityDateCal_'.$reserved_flag] : '';
 
-				$sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
-				if($program_year_id)
-					$sqlA .= " and program_year_id='".$program_year_id."'";
-				if($subject_id)
-					$sqlA .= " and subject_id='".$subject_id."'";
-				if($sessionid)
-					$sqlA .= " and session_id='".$sessionid."'";
-				if($teacher_id)
-					$sqlA .= " and teacher_id='".$teacher_id."'";
-				if($room_id)
-					$sqlA .= " and room_id='".$room_id."'";
-				if($time_slot_id)
-					$sqlA .= " and timeslot_id='".$time_slot_id."'";
-				if($act_date<>"")
-					$sqlA .= " and DATE_FORMAT(act_date, '%d-%m-%Y') = '".$act_date."'";
-				  //echo '<br>'.$sqlA;
-				$result =  $this->conn->query($sqlA);
-				if(!$result->num_rows){
-				    $act_date = date("Y-m-d h:i:s", strtotime($act_date));
+				$preReserved_Id = $this->getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid);
+
+				$resp = $this->checkActTeaRoomTimeDate($teacher_id,$room_id,$time_slot_id,$act_date,$preReserved_Id);
+
+				if(!$resp){
+					$act_date = date("Y-m-d h:i:s", strtotime($act_date));
 					$SQL = "UPDATE teacher_activity SET
 								   room_id = '".$room_id."',
 								   timeslot_id = '".$time_slot_id."',
@@ -190,12 +177,14 @@ class Teacher extends Base {
 					$rel = $this->conn->query($SQL);
 				}
 				foreach($_POST['activitiesArr'] AS $val){
-				   $sql22 = "update teacher_activity set
-				                    reserved_flag='2',
-				                    room_id = '0',
-				                    timeslot_id='0',
-				                    act_date = '0000:00:00 00:00:00' WHERE id='".$val."' AND id != '".$reserved_flag."'";
-				   $this->conn->query($sql22);
+				  if($reserved_flag != $val){
+					   $sql22 = "update teacher_activity set
+										reserved_flag='2',
+										room_id = '0',
+										timeslot_id='0',
+										act_date = '0000:00:00 00:00:00' WHERE id='".$val."'";
+					   $this->conn->query($sql22);
+				   }
 				}
 		    }
 			$message="Record has been updated successfully.";
@@ -236,7 +225,7 @@ class Teacher extends Base {
 	//function to get all teacher activities
 	public function getTeachersAct()
 	{
-	    $sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name FROM teacher_activity ta
+	    $sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name FROM teacher_activity ta
 						left join subject s on(s.id = ta.subject_id)
 						left join subject_session ss on(ss.id=ta.session_id)
 						left join teacher t on(t.id = ta.teacher_id)
@@ -323,12 +312,12 @@ class Teacher extends Base {
 		return $q_excep;
 	}
 	//add teacher activity row in table if not exist
-	public function insertActivityRow($program_year_id,$subject_id,$sessionid,$teachersArr)
+	public function insertActivityRow($program_year_id,$cycle_id,$subject_id,$sessionid,$teachersArr)
 	{
 		foreach($teachersArr AS $val)
 		{
 		   $teacher_id = $val;
-		   $sqlA = "SELECT name FROM teacher_activity WHERE 1=1";
+		   $sqlA = "SELECT id,name FROM teacher_activity WHERE 1=1";
 		   if($program_year_id)
 				$sqlA .= " and program_year_id='".$program_year_id."'";
 		   if($subject_id)
@@ -344,8 +333,13 @@ class Teacher extends Base {
 				$dRow = $result->fetch_assoc();
 				$actCnt = substr($dRow['name'],1);
 				$actName = 'A'.($actCnt+1);
-				$SQL = "INSERT INTO teacher_activity (name, program_year_id, subject_id, session_id, teacher_id, date_add) VALUES ('".$actName."', '".$program_year_id."', '".$subject_id."', '".$sessionid."', '".$teacher_id."', NOW())";
+				$SQL = "INSERT INTO teacher_activity (name, program_year_id,cycle_id, subject_id, session_id, teacher_id, date_add) VALUES ('".$actName."', '".$program_year_id."', '".$cycle_id."', '".$subject_id."', '".$sessionid."', '".$teacher_id."', NOW())";
 				$rel = $this->conn->query($SQL);
+			}else{
+			   while($row = $result->fetch_assoc()){
+			      $sql = "UPDATE teacher_activity SET cycle_id='".$cycle_id."' WHERE id='".$row['id']."'";
+				  $rel = $this->conn->query($sql);
+			   }
 			}
 		}
 	}
@@ -362,7 +356,7 @@ class Teacher extends Base {
 		}
     }
 	public function getWebTeachersDetail($teacher_id='')
-	{   
+	{
 	$row=$rowmainArr=$newArr=array();
 	$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.teacher_id='".$teacher_id."' ORDER BY we.cal_time, we.cal_name ");
 		if($result->num_rows){
@@ -380,6 +374,6 @@ class Teacher extends Base {
 		   	}
 		  }
 		  return $rowNewArr;
-		}			
+		}
 	}
 }

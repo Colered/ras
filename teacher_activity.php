@@ -36,6 +36,17 @@ $rel_session = $objS->getSessions();
 					</select>
                     </div>
                     <div class="clear"></div>
+					<div class="custtd_left">
+						<h2>Cycle <span class="redstar">*</span></h2>
+					</div>
+					<div class="txtfield">
+					<select id="slctProgramCycle" name="slctProgramCycle" class="select1 required">
+					<option value="" selected="selected">--Select Cycle--</option>
+
+					</select>
+					<div id="ajaxload_progCycle" style="float: right;display:none;"><img src="images/loading2.gif"  /><div class="wait-text">Please Wait...</div></div>
+					</div>
+					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Subject <span class="redstar">*</span></h2>
                     </div>

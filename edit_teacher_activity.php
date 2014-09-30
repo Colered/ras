@@ -8,10 +8,12 @@ $objTS = new Timeslot();
 
 $activity_id = base64_decode($_GET['edit']);
 $program_year_id = base64_decode($_GET['pyid']);
+$act_cycle_id = base64_decode($_GET['cycle_id']);
 $subject_id = base64_decode($_GET['sid']);
 $sessionid = base64_decode($_GET['sessId']);
 
 $program_name = $objP->getProgramYearName($program_year_id);
+$program_cycle = $objP->getProgramCycleDuration($program_year_id,$act_cycle_id);
 $subject_name = $objT->getFielldVal('subject','subject_name','id',$subject_id);
 $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessionid);
 
@@ -32,6 +34,15 @@ $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessio
 						</div>
 						<div class="txtfield">
 						   <?php echo $program_name;?>
+						</div>
+                   <?php } ?>
+                   <div class="clear"></div>
+                  <?php if($program_cycle<>""){?>
+						<div class="custtd_left">
+							<h2>Cycle:</h2>
+						</div>
+						<div class="txtfield">
+						   <?php echo $program_cycle;?>
 						</div>
                    <?php } ?>
                     <div class="clear"></div>
@@ -67,6 +78,7 @@ $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessio
 						echo '<table cellspacing="0" cellpadding="0" border="0">';
 						echo '<tr>';
 						echo '<th>Reserved</th>';
+						echo '<th>Name</th>';
 						echo '<th>Program</th>';
 						echo '<th>Subject</th>';
 						echo '<th>Session</th>';
@@ -83,6 +95,7 @@ $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessio
 							echo '<tr>';
 							echo '<td align="center"><input type="hidden" name="activitiesArr[]" value="'.$data['id'].'">';
 							echo '<input type="radio" name="reserved_flag" value="'.$data['id'].'" '.$reserved_flag_checked.' onclick="roomTslotValidate(\''.$data['id'].'\');"></td>';
+							echo '<td align="center">'.$data['name'].'</td>';
 							echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
 							echo '<td>'.$objS->getSubjectByID($data['subject_id']).'</td>';
 							echo '<td>'.$objS->getSessionByID($data['session_id']).'</td>';

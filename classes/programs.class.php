@@ -402,4 +402,22 @@ class Programs extends Base {
 			$result =$this->conn->query("INSERT INTO program_cycle_exception(program_year_id,cycle_id,exception_date,date_add,date_update) VALUES ('".$py_id."','".$cycle_no."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');");
 		}
     }
+    //function to get program activity cycle number
+    public function getProgramCycleDuration($py_id,$act_cycle_id)
+    {
+		$result =  $this->conn->query("SELECT id FROM cycle WHERE program_year_id='".$py_id."'");
+		$row_cnt = $result->num_rows;
+		if($row_cnt){
+		    $i=0;
+			while($rr = $result->fetch_assoc()){
+			    $i++;
+				if($rr['id']==$act_cycle_id){
+				  return $i;
+				}
+			}
+		}else{
+		   return '';
+		}
+
+	}
 }

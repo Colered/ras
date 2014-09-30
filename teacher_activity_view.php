@@ -67,7 +67,7 @@ $(document).ready(function(){
 							<td class="align-center"><?php echo $res_flag;?></td>
 							<td class="align-center"><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
-								<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&cycle_id=<?php echo base64_encode($row['cycle_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a>
 								<a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
 							</td>
 						</tr>

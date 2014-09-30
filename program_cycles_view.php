@@ -38,23 +38,27 @@ $(document).ready(function(){
 						$result = $objP->getProgramListYearWise();
 						while($row = $result->fetch_assoc()){
 						$cycleInfo = $objP->getCyclesInfo($row['id']);
-
                      ?>
 						<tr>
 							<td class="align-center"><?php echo $row['id'];?></td>
 							<td class="align-center"><?php echo $row['name'];?></td>
 							<td width="500">
-							<div style="text-align:center"><img id="sessionNameImg<?php echo $row['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="showHideCycleInfo('<?php echo $row['id']?>');"></div>
-						  	<div id="divSessionName<?php echo $row['id'];?>" class="subjectSession">
-							<?php echo ($cycleInfo=='') ? '<span align="center">N/A</span>' : $cycleInfo;?>
-							</div>
+							<?php if($cycleInfo!=''){?>
+									<div style="text-align:center"><img id="sessionNameImg<?php echo $row['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="showHideCycleInfo('<?php echo $row['id']?>');"></div>
+									<div id="divSessionName<?php echo $row['id'];?>" class="subjectSession">
+									<?php echo $cycleInfo;?>
+									</div>
+						  	<?php }else{
+							 		echo '<div style="text-align:center">N/A</div>';
+							      }
+							?>
 							</td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<a href="program_cycles.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
 								<a href="#" class="table-icon delete" onClick=""></a>
 							</td>
 						</tr>
-				<?php }?>
+				<?php } ?>
 				</tbody>
 				</table>
 				<?php if(isset($_SESSION['error_msg'])){ ?>

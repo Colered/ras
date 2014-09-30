@@ -579,6 +579,8 @@ function removeSession($sessionId, $serialId){
 //function to show subjects by program
 function showSubjects(selval){
     $("#ajaxload_subject").show();
+    $("#ajaxload_progCycle").show();
+    showPYCycles(selval);
     $.ajax({
         url: "./ajax_common.php",
         type: "POST",
@@ -589,6 +591,25 @@ function showSubjects(selval){
         success: function(data) {
              $("#ajaxload_subject").hide();
 			 $("#slctSubject").html(data);
+        },
+        error: function(errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+}
+//function to show subjects by program
+function showPYCycles(pyid){
+    $("#ajaxload_progCycle").show();
+    $.ajax({
+        url: "./ajax_common.php",
+        type: "POST",
+        data: {
+            'py_id': pyid,
+			'codeBlock': 'getCyclesByPyId',
+        },
+        success: function(data) {
+             $("#ajaxload_progCycle").hide();
+			 $("#slctProgramCycle").html(data);
         },
         error: function(errorThrown) {
             console.log(errorThrown);
@@ -649,6 +670,7 @@ function addTeacherActivity()
 { 
 	 if($('#frmTactivity').valid()){
 		 var slctProgram = $('#slctProgram').val();
+		 var slctProgramCycle = $('#slctProgramCycle').val();
 		 var slctSubject = $('#slctSubject').val();
 		 var slctSession = $('#slctSession').val();
 		 var slctTeacher = $('#slctTeacher').val();
@@ -658,6 +680,7 @@ function addTeacherActivity()
 		   type: "POST",
 		   data: {
 			   'program_year_id': slctProgram,
+			   'cycle_id':slctProgramCycle,
 			   'subject_id': slctSubject,
 			   'session_id': slctSession,
 			   'teachersArr': slctTeacher,
