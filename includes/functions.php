@@ -1015,7 +1015,8 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
        . ( $demo ? '' : 'week.php?date=' . date ( 'Ymd', $i + 86400 ) )
        . ( ! empty ( $user ) && $user != $login ? '&amp;user=' . $user : '' )
        . ( empty ( $cat_id ) ? '' : '&amp;cat_id=' . $cat_id ) . '"' . '>';
-
+	
+	 // print_r($ret);die;
       $wkStr = $WKStr . $tmp;
       $wkStr2 = '';
 
@@ -1028,7 +1029,7 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
       }
       $ret .= $wkStr2 . '</a></td>';
     }
-
+	//print_r($ret);die;
     for ( $j = 0; $j < 7; $j++ ) {
       $date = $i + ( $j * 86400 + 43200 );
       $dateYmd = date ( 'Ymd', $date );
@@ -1039,6 +1040,7 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
         <td';
 
       $currMonth = ( $dateYmd >= $monthstart && $dateYmd <= $monthend );
+	  //print_r($currMonth);die;
       if ( $currMonth ||
         ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) && $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
         $class = ( $currMonth
@@ -1065,6 +1067,9 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
             $ret_events = translate ( 'My event text' );
           }
         }
+		//echo 'Yes'.'<br>';
+		//echo $ret_events;
+		//print_r($ret_events);die;
         $class = trim ( $class );
         $class .= ( ! empty ( $ret_events ) &&
           strstr ( $ret_events, 'class="entry"' ) ? ' hasevents' : '' );
@@ -1135,13 +1140,12 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
    . ( $is_assistant
     ? '<br />-- ' . translate ( 'Assistant mode' ) . ' --' : '' ) . '</span>'
    . ( $CATEGORIES_ENABLED == 'Y' && $show_cats &&
-    ( ! $user || ( $user == $login || $is_assistant ) ) ? '<br /><br />'
-     . print_category_menu ( $name,
+    ( ! $user || ( $user == $login || $is_assistant ) ) ?'</br></br>'.print_category_menu ( $name,
       sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),
       $cat_id ) : '' ) 
-	 .( $CATEGORIES_ENABLED == 'Y'? '<br /><br />'. print_teacher_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$teacher_id ) : '' )
-	 .( $CATEGORIES_ENABLED == 'Y'? '<br /><br />'. print_subject_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$subject_id ) : '' )
-	 .( $CATEGORIES_ENABLED == 'Y'? '<br /><br />'. print_room_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$room_id ) : '' ).'
+	 .( $CATEGORIES_ENABLED == 'Y'? print_teacher_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$teacher_id ) : '' )
+	 .( $CATEGORIES_ENABLED == 'Y'? print_subject_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$subject_id ) : '' )
+	 .( $CATEGORIES_ENABLED == 'Y'? print_room_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$room_id ) : '' ).'
 	  </div>
       </div><br />';
 }
@@ -3339,7 +3343,7 @@ function html_for_add_icon ( $date = 0, $hour = '', $minute = '', $user = '' ) {
    . ( $minute > 0 ? '&amp;minute=' . $minute : '' )
    . ( empty ( $user ) ? '' : '&amp;defusers=' . $user )
    . ( empty ( $cat_id ) ? '' : '&amp;cat_id=' . $cat_id )
-   . '"><img src="images/new.png" class="new" alt="' . $newEntryStr . '" /></a>';
+   . '"></a>';
 }
 
 /* Generates the HTML for an event to be viewed in the day-at-glance (day.php).
@@ -4278,7 +4282,7 @@ function print_category_menu ( $form, $date = '', $cat_id = '' ) {
   $printerStr = '';
   $ret = '
     <form action="' . $form . '.php" method="get" name="SelectCategory" '
-   . 'class="categories">' . ( empty ( $date ) ? '' : '
+   . 'class="categories" style="float:left;padding-left:65px">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6223,7 +6227,7 @@ function print_teacher_menu ( $form, $date = '', $teacher_id = '' ) {
   $catStr = translate ( 'Teacher' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectTeacher" '. 'class="categories">' . ( empty ( $date ) ? '' : '
+    <form action="' . $form . '.php" method="get" name="SelectTeacher" '. 'class="categories " style="float:left">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6266,7 +6270,7 @@ function print_subject_menu( $form, $date = '', $subject_id = '' ) {
   $catStr = translate ( 'Subject' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectSubject" '. 'class="categories">' . ( empty ( $date ) ? '' : '
+    <form action="' . $form . '.php" method="get" name="SelectSubject" '. 'class="categories" style="float:left">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6307,7 +6311,7 @@ function print_room_menu( $form, $date = '', $room_id = '' ) {
   $catStr = translate ( 'Classroom' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectRoom" '. 'class="categories">' . ( empty ( $date ) ? '' : '
+    <form action="' . $form . '.php" method="get" name="SelectRoom" '. 'class="categories" style="float:left">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
