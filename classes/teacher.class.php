@@ -110,11 +110,10 @@ class Teacher extends Base {
 				$room_id = isset($_POST['room_id_'.$reserved_flag]) ? $_POST['room_id_'.$reserved_flag] : 0;
 				$time_slot_id = isset($_POST['tslot_id_'.$reserved_flag]) ? $_POST['tslot_id_'.$reserved_flag] : 0;
 				$act_date = isset($_POST['activityDateCal_'.$reserved_flag]) ? $_POST['activityDateCal_'.$reserved_flag] : '';
-
+                //check if a reserved activity already exist
 				$preReserved_Id = $this->getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid);
-
+                //check activity availability
 				$resp = $this->checkActTeaRoomTimeDate($teacher_id,$room_id,$time_slot_id,$act_date,$preReserved_Id);
-
 				if(!$resp){
 				    $act_date = date("Y-m-d h:i:s", strtotime($act_date));
 					$SQL = "UPDATE teacher_activity SET
@@ -162,11 +161,10 @@ class Teacher extends Base {
 				$room_id = isset($_POST['room_id_'.$reserved_flag]) ? $_POST['room_id_'.$reserved_flag] : 0;
 				$time_slot_id = isset($_POST['tslot_id_'.$reserved_flag]) ? $_POST['tslot_id_'.$reserved_flag] : 0;
 				$act_date = isset($_POST['activityDateCal_'.$reserved_flag]) ? $_POST['activityDateCal_'.$reserved_flag] : '';
-
+                //check if a reserved activity already exist
 				$preReserved_Id = $this->getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid);
-
+                //check activity availability
 				$resp = $this->checkActTeaRoomTimeDate($teacher_id,$room_id,$time_slot_id,$act_date,$preReserved_Id);
-
 				if(!$resp){
 					$act_date = date("Y-m-d h:i:s", strtotime($act_date));
 					$SQL = "UPDATE teacher_activity SET
@@ -211,6 +209,7 @@ class Teacher extends Base {
 		   return '0';
 		}
 	}
+	//function to check if a reserved activity already exist
 	public function getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid)
 	{
 		$slqT="SELECT id,reserved_flag FROM teacher_activity WHERE program_year_id='".$program_year_id."' AND subject_id='".$subject_id."' AND session_id='".$sessionid."' ORDER BY id";

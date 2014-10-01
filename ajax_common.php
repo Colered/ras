@@ -360,9 +360,9 @@ switch ($codeBlock) {
 			$room_id = $_POST['room_id'];
 			$tslot_id = $_POST['tslot_id'];
 			$act_date_val = $_POST['act_date_val'];
-
+            //check if a reserved activity already exist
 			$preReserved_Id = $objT->getReservedByProgSubjSess($program_year_id,$subject_id,$sessionid);
-
+            //check activity availability
             $resp = $objT->checkActTeaRoomTimeDate($teacher_id,$room_id,$tslot_id,$act_date_val,$preReserved_Id);
             echo $resp;
 	  }
