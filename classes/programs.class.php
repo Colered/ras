@@ -420,4 +420,52 @@ class Programs extends Base {
 		}
 
 	}
+	//function to create week and timeslot
+	public function createWeekTimeSlot($cId,$w){
+
+	   $objTS = new Timeslot();
+	   //get the list of all available timeslots
+	   $timeslotData = $objTS->viewTimeslot();
+	   $options = "";
+	   while($data = $timeslotData->fetch_assoc()){
+	   	$options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
+	  }
+
+	  	echo '<div class="tmSlot">
+			  <input type="checkbox" id="'.$cId.'Mon'.$w.'" name="'.$cId.'day'.$w.'[]" value="'.$cId.'Mon'.$w.'" class="days"/><span class="dayName"> Mon </span>
+			<select id="'.$cId.'ts-avail-mon'.$w.'" name="'.$cId.'Mon'.$w.'[]" class="slctTs" multiple="multiple">
+				'.$options.'
+			 </select>
+			</div>
+			<div class="tmSlot">
+			  <input type="checkbox" id="'.$cId.'Tue'.$w.'" name="'.$cId.'day'.$w.'[]" value="'.$cId.'Tue'.$w.'" class="days"/><span class="dayName"> Tue </span>
+			<select id="'.$cId.'ts-avail-tue'.$w.'" name="'.$cId.'Tue'.$w.'[]" class="slctTs" multiple="multiple">
+				 '.$options.'
+			  </select>
+			</div>
+			<div class="tmSlot">
+			  <input type="checkbox" id="'.$cId.'Wed'.$w.'" name="'.$cId.'day'.$w.'[]"  value="'.$cId.'Wed'.$w.'" class="days"/><span class="dayName"> Wed </span>
+			 <select id="'.$cId.'ts-avail-wed'.$w.'" name="'.$cId.'Wed'.$w.'[]" class="slctTs" multiple="multiple">
+				 '.$options.'
+			  </select>
+			</div>
+			<div class="tmSlot">
+			  <input type="checkbox" id="'.$cId.'Thu'.$w.'" name="'.$cId.'day'.$w.'[]"  value="'.$cId.'Thu'.$w.'" class="days"/><span class="dayName"> Thu </span>
+			 <select id="'.$cId.'ts-avail-thu'.$w.'" name="'.$cId.'Thu'.$w.'[]" class="slctTs" multiple="multiple">
+				 '.$options.'
+			  </select>
+			</div>
+			<div class="tmSlot">
+			  <input type="checkbox" id="'.$cId.'Fri'.$w.'" name="'.$cId.'day'.$w.'[]"  value="'.$cId.'Fri'.$w.'" class="days"/><span class="dayName"> Fri </span>
+			 <select id="'.$cId.'ts-avail-fri'.$w.'" name="'.$cId.'Fri'.$w.'[]" class="slctTs" multiple="multiple">
+				  '.$options.'
+			  </select>
+			</div>
+			<div class="tmSlot">
+			  <input type="checkbox" id="'.$cId.'Sat'.$w.'" name="'.$cId.'day'.$w.'[]"  value="'.$cId.'Sat'.$w.'" class="days"/><span class="dayName"> Sat </span>
+			 <select id="'.$cId.'ts-avail-sat'.$w.'" name="'.$cId.'Sat'.$w.'[]" class="slctTs" multiple="multiple">
+				'.$options.'
+			  </select>
+			</div>';
+	}
 }

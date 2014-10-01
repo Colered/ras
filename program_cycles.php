@@ -3,6 +3,13 @@ include('header.php');
 $objP = new Programs();
 $objTS = new Timeslot();
 $programId = '';
+//get the list of all available timeslots
+$timeslotData = $objTS->viewTimeslot();
+$options = "";
+while($data = $timeslotData->fetch_assoc()){
+	$options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
+}
+
 $rel_prog = $objP->getProgramListYearWise();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
@@ -111,7 +118,7 @@ $(document).ready(function() {
 						</script>
                     </div>
                     <div class="clear"></div>
-                    <div id="firstCycle" style="display:none;">
+                    <div id="firstCycle" style="display:none;border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 						<div class="custtd_left">
 							<h2>1st cycle<span class="redstar">*</span></h2>
 						</div>
@@ -124,31 +131,109 @@ $(document).ready(function() {
 							<h3>End Date</h3>
 							<input type="text" size="14" id="endweek1" name="endweek1" value="<?php echo $objP->formatDateByDate($endweek_1);?>" class="required" readonly />
 						</div>
-						<div class="cylcebox" style="width:100px;">
-							<h3>Days</h3>
-							<select id="slctDays1" name="slctDays1[]" class="ts-avail required" multiple="multiple">
-								<option value="0" <?php echo in_array(0,$daysArr1) ? 'selected' : ''?>>Mon</option>
-								<option value="1" <?php echo in_array(1,$daysArr1) ? 'selected' : ''?>>Tue</option>
-								<option value="2" <?php echo in_array(2,$daysArr1) ? 'selected' : ''?>>Wed</option>
-								<option value="3" <?php echo in_array(3,$daysArr1) ? 'selected' : ''?>>Thu</option>
-								<option value="4" <?php echo in_array(4,$daysArr1) ? 'selected' : ''?>>Fri</option>
-								<option value="5" <?php echo in_array(5,$daysArr1) ? 'selected' : ''?>>Sat</option>
-							</select>
-							</div>
-							<div class="cylcebox">
-							<h3>Timeslot</h3>
-							<select id="slctTimeslot1" name="slctTimeslot1[]" class="ts-avail required" multiple="multiple" style="width:90px;">
-							<?php
-								$slqTS="SELECT id, timeslot_range FROM timeslot";
-								$relTS = mysqli_query($db, $slqTS);
-								while($tsdata= mysqli_fetch_array($relTS)){
-									echo '<option value="'.$tsdata['id'].'" '.(in_array($tsdata['id'],$timeslotArr1) ? 'selected' : '').'>'.$tsdata['timeslot_range'].'</option>';
-								}
-							?>
-							</select>
-							</div>
+						
 						</div>
 						<div class="clear"></div>
+                    <div class="custtd_left">
+                        <h2>Occurring<span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+                        <select id="c1chWeek1" name="c1chWeek1" class="select required">
+                            <option value="">--Select Week--</option>
+                            <option value="1w">Weekly</option>
+                            <option value="2w">Bi Weekly</option>
+                        </select>
+                    </div>
+                    <div class="clear"></div>
+					<div class="custtd_left">
+                        <h2>Days and Timeslot 1st<span class="redstar">*</span></h2>
+                    </div>
+		            <div class="txtfield">
+					  <div id="c1week1">
+					    <div class="tmSlot">
+                        <input type="checkbox" id="Mon1" name="day1[]"  value="Mon1" class="days"/><span class="dayName"> Mon </span>
+						<select id="ts-avail-mon1" name="Mon1[]" class="slctTs" multiple="multiple">
+							<?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Tue1" name="day1[]"  value="Tue1" class="days"/><span class="dayName"> Tue </span>
+						<select id="ts-avail-tue1" name="Tue1[]" class="slctTs" multiple="multiple">
+                           <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Wed1" name="day1[]"  value="Wed1" class="days"/><span class="dayName"> Wed </span>
+						 <select id="ts-avail-wed1" name="Wed1[]" class="slctTs" multiple="multiple">
+                           <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Thu1" name="day1[]"  value="Thu1" class="days"/><span class="dayName"> Thu </span>
+						 <select id="ts-avail-thu1" name="Thu1[]" class="slctTs" multiple="multiple">
+                           <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Fri1" name="day1[]"  value="Fri1" class="days"/><span class="dayName"> Fri </span>
+						 <select id="ts-avail-fri1" name="Fri1[]" class="slctTs" multiple="multiple">
+                            <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Sat1" name="day1[]"  value="Sat1" class="days"/><span class="dayName"> Sat </span>
+						 <select id="ts-avail-sat1" name="Sat1[]" class="slctTs" multiple="multiple">
+                          <?php echo $options; ?>
+                        </select>
+						</div>
+					  </div>	
+                    </div>
+					<div class="clear"></div>
+					<div class="custtd_left">
+                        <h2>Days and Timeslot 2nd<span class="redstar">*</span></h2>
+                    </div>
+		            <div class="txtfield">
+					  <div id="c1week2">
+					    <div class="tmSlot">
+                        <input type="checkbox" id="Mon2" name="day2[]"  value="Mon2" class="days"/><span class="dayName"> Mon </span>
+						<select id="ts-avail-mon2" name="Mon2[]" class="slctTs" multiple="multiple">
+							<?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Tue2" name="day2[]"  value="Tue2" class="days"/><span class="dayName"> Tue </span>
+						<select id="ts-avail-tue2" name="Tue2[]" class="slctTs" multiple="multiple">
+                           <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Wed2" name="day2[]"  value="Wed2" class="days"/><span class="dayName"> Wed </span>
+						 <select id="ts-avail-wed2" name="Wed2[]" class="slctTs" multiple="multiple">
+                           <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Thu2" name="day2[]"  value="Thu2" class="days"/><span class="dayName"> Thu </span>
+						 <select id="ts-avail-thu2" name="Thu2[]" class="slctTs" multiple="multiple">
+                           <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Fri2" name="day2[]"  value="Fri2" class="days"/><span class="dayName"> Fri </span>
+						 <select id="ts-avail-fri2" name="Fri2[]" class="slctTs" multiple="multiple">
+                            <?php echo $options; ?>
+                        </select>
+						</div>
+						<div class="tmSlot">
+                        <input type="checkbox" id="Sat2" name="day2[]"  value="Sat2" class="days"/><span class="dayName"> Sat </span>
+						 <select id="ts-avail-sat2" name="Sat2[]" class="slctTs" multiple="multiple">
+                          <?php echo $options; ?>
+                        </select>
+						</div>
+					  </div>	
+	                </div>
+						<div class="clear"></div>
+	
 						<div class="custtd_left">
 							<h2>Add Exception</h2>
 						</div>

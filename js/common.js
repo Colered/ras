@@ -323,8 +323,6 @@ function show_hide_cycle(selval){
 	  $('#thirdCycle').show();
 	}
 }
-
-
 //Ajax delete the room function 
 function deleteRoom($id){
 	if($id==""){
@@ -1519,3 +1517,46 @@ function showHideCycleInfo(subjectId)
         $(imageId).attr({src: 'images/plus_icon.png'});
 	}
 }
+//function to show hide time slot at program cycle page
+$(document).ready(function(){
+	$("#ts-avail-mon1,#ts-avail-tue1,#ts-avail-wed1,#ts-avail-thu1,#ts-avail-fri1,#ts-avail-sat1").hide();
+	$("#ts-avail-mon2,#ts-avail-tue2,#ts-avail-wed2,#ts-avail-thu2,#ts-avail-fri2,#ts-avail-sat2").hide();
+	   $('input[class=days]').click(function(){
+            if($(this).attr("value")=="Mon1"){
+				$("#ts-avail-mon1").toggle();
+			}
+            if($(this).attr("value")=="Tue1"){
+				$("#ts-avail-tue1").toggle();
+            }
+            if($(this).attr("value")=="Wed1"){
+				$("#ts-avail-wed1").toggle();
+            }
+			if($(this).attr("value")=="Thu1"){
+				$("#ts-avail-thu1").toggle();
+            }
+			if($(this).attr("value")=="Fri1"){
+				$("#ts-avail-fri1").toggle();
+            }
+			if($(this).attr("value")=="Sat1"){
+				$("#ts-avail-sat1").toggle();
+            }
+            if($(this).attr("value")=="Mon2"){
+				$("#ts-avail-mon2").toggle();
+			}
+			if($(this).attr("value")=="Tue2"){
+				$("#ts-avail-tue2").toggle();
+			}
+			if($(this).attr("value")=="Wed2"){
+				$("#ts-avail-wed2").toggle();
+			}
+			if($(this).attr("value")=="Thu2"){
+				$("#ts-avail-thu2").toggle();
+			}
+			if($(this).attr("value")=="Fri2"){
+				$("#ts-avail-fri2").toggle();
+			}
+			if($(this).attr("value")=="Sat2"){
+				$("#ts-avail-sat2").toggle();
+            }
+	   });
+});
