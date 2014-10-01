@@ -3,6 +3,7 @@
 include_once 'includes/init.php';
 include_once 'config.php';
 //check UAC
+$program_id=(isset($_REQUEST['program_id'])) ? ($_REQUEST['program_id']) : '';
 $teacher_id=(isset($_REQUEST['teacher_id'])) ? ($_REQUEST['teacher_id']) : '';
 $subject_id=(isset($_REQUEST['subject_id'])) ? ($_REQUEST['subject_id']) : '';
 $room_id=(isset($_REQUEST['room_id'])) ? ($_REQUEST['room_id']) : '';
@@ -62,7 +63,11 @@ $repeated_events = read_repeated_events ( ( strlen ( $user )
 // Start the search ONE_WEEK early to account for cross-day events.
 $events = read_events ( ( strlen ( $user )
     ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
-	
+
+if($program_id!=""){
+	$events = read_events_program (( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd,'',$program_id);
+}
+
 if($teacher_id!=""){
 	$events = read_events_teacher (( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd,'',$teacher_id);
 }

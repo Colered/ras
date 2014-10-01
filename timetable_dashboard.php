@@ -10,10 +10,10 @@
                     </div>
                     <div class="custtd_right">
                         <!--<a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>-->
-						<a target="_blank" href="month.php"><input type="button" name="btnSubject" class="buttonsub" value="Open"></a>
+						<a target="_blank" href="month.php"><input type="button" name="btnSubject" class="buttonsub" value="Calendar View"></a>
                     </div>
                     <div class="custtd_right">
-                        <a target="_blank" href="timetable_view.php"><input type="button" name="btnSubject" class="buttonsub" value="View"></a>
+                        <a target="_blank" href="timetable_view.php"><input type="button" name="btnSubject" class="buttonsub" value="Open Timetable"></a>
                     </div>
                     <div class="custtd_left1">
                         <!--<a href="#"> <input type="button" name="btnTeacher" class="buttonsub" value="Save"></a>-->

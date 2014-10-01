@@ -474,7 +474,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 											$zone=3600*+5;//India
 											$eventstart = gmmktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
 											$cal_time = gmdate('His', $eventstart + $zone);
-											$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id);
+											$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id);
 											if($cal_id){
 												$obj->addWebCalEntryUser($cal_id);
 

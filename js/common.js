@@ -1560,3 +1560,19 @@ $(document).ready(function(){
             }
 	   });
 });
+function showCycleDetails($week){
+	if($week == "1w")
+	{
+		$("#custtd_left1").show();
+		$("#c1week1").show();
+		$("#custtd_left2").hide();
+		$("#c1week2").hide();
+
+	}else{
+		$("#custtd_left1").show();		
+		$("#c1week1").show();
+		$("#custtd_left2").show();
+		$("#c1week2").show();
+	}
+
+}

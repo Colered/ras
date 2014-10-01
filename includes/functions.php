@@ -1093,7 +1093,7 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
   $DISPLAY_SM_MONTH, $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $is_admin,
   $is_assistant, $is_nonuser_admin, $login, $nextYmd, $nowYmd, $prevYmd,
   $single_user, $spacer, $thisday, $thismonth, $thisyear, $user, $user_fullname,
-  $wkend, $wkstart,$teacher_id,$subject_id,$room_id;
+  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id;
   if ( empty ( $name ) )
     return;
 
@@ -1142,7 +1142,8 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
    . ( $CATEGORIES_ENABLED == 'Y' && $show_cats &&
     ( ! $user || ( $user == $login || $is_assistant ) ) ?'</br></br>'.print_category_menu ( $name,
       sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),
-      $cat_id ) : '' ) 
+      $cat_id ) : '' )
+	 .( $CATEGORIES_ENABLED == 'Y'? print_program_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_id ) : '' )
 	 .( $CATEGORIES_ENABLED == 'Y'? print_teacher_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$teacher_id ) : '' )
 	 .( $CATEGORIES_ENABLED == 'Y'? print_subject_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$subject_id ) : '' )
 	 .( $CATEGORIES_ENABLED == 'Y'? print_room_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$room_id ) : '' ).'
@@ -5284,6 +5285,19 @@ function read_events_room ( $user, $startdate, $enddate, $cat_id = '',$room_id )
      . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
      . gmdate ( 'His', $enddate ) . ' ) )','', $room_id);
 }
+function read_events_program ( $user, $startdate, $enddate, $cat_id = '',$program_id ) {
+	 global $layers, $login;
+	 // Shift date/times to UTC.
+	  $start_date = gmdate ( 'Ymd', $startdate );
+	  $end_date = gmdate ( 'Ymd', $enddate );
+	  return query_events_program ( $user, false, ' AND ( ( we.cal_date >= ' . $start_date
+		 . ' AND we.cal_date <= ' . $end_date
+		 . ' AND we.cal_time = -1 ) OR ( we.cal_date > ' . $start_date
+		 . ' AND we.cal_date < ' . $end_date . ' ) OR ( we.cal_date = ' . $start_date
+		 . ' AND we.cal_time >= ' . gmdate ( 'His', $startdate )
+		 . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
+		 . gmdate ( 'His', $enddate ) . ' ) )','', $program_id);
+}
 /* Reads all the repeated events for a user.
  *
  * This is only called once per page request to improve performance.
@@ -6227,7 +6241,7 @@ function print_teacher_menu ( $form, $date = '', $teacher_id = '' ) {
   $catStr = translate ( 'Teacher' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectTeacher" '. 'class="categories " style="float:left;padding-left:150px;">' . ( empty ( $date ) ? '' : '
+    <form action="' . $form . '.php" method="get" name="SelectTeacher" '. 'class="categories " style="float:left;padding-left:20px;">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6257,6 +6271,49 @@ function print_teacher_menu ( $form, $date = '', $teacher_id = '' ) {
   . $printerStr;
 
 }
+function print_program_menu ( $form, $date = '', $program_id = '' ) {
+	 global $db, $login, $user, $CATEGORIES_ENABLED;
+	 $obj=new Programs();
+	 $programs_result = $obj->getProgramListYearWise();
+	 while($row = $programs_result->fetch_assoc()){
+	 $programs[] = $row;
+	 }
+	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
+    return false;
+
+  $catStr = translate ( 'Program' );
+  $printerStr = '';
+  $ret = '
+    <form action="' . $form . '.php" method="get" name="SelectProgram" '. 'class="categories " style="float:left;padding-left:150px;">' . ( empty ( $date ) ? '' : '
+      <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
+     . '" value="' . $date . '" />' )
+   . ( ! empty ( $user ) && $user != $login ? '
+      <input type="hidden" name="user" value="' . $user . '" />' : '' )
+   . $catStr . ':
+      <select name="program_id" onchange="document.SelectProgram.submit()">';
+  // loading all teacher list
+  if ( is_array ( $programs ) ) {
+  $ret .= ' <option value="">All</option>';
+    foreach ( $programs as $K => $V ) {
+      if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+	    
+        $ret .= '
+        <option value="' . $programs[$K]['id'] . '"';
+		if ( $program_id == $programs[$K]['id'] ) {
+        $printerStr .= '<span id="cat">' . $catStr . ': ' . $programs[$K]['name'] . '</span>';
+		$ret .= ' selected="selected"';
+		 }
+       	$ret .= ">{$V['name']}</option>";
+      }
+    }
+  }
+  return $ret . '
+      </select>
+    </form>'
+  // This is used for Printer Friendly view.
+  . $printerStr;
+
+}
 function print_subject_menu( $form, $date = '', $subject_id = '' ) {
 	 global $db, $login, $user, $CATEGORIES_ENABLED;
 	 $obj=new Subjects();
@@ -6270,7 +6327,7 @@ function print_subject_menu( $form, $date = '', $subject_id = '' ) {
   $catStr = translate ( 'Subject' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectSubject" '. 'class="categories" style="float:left">' . ( empty ( $date ) ? '' : '
+    <form action="' . $form . '.php" method="get" name="SelectSubject" '. 'class="categories" style="float:left;padding-left:20px;">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6311,7 +6368,7 @@ function print_room_menu( $form, $date = '', $room_id = '' ) {
   $catStr = translate ( 'Classroom' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectRoom" '. 'class="categories" style="float:left">' . ( empty ( $date ) ? '' : '
+    <form action="' . $form . '.php" method="get" name="SelectRoom" '. 'class="categories" style="float:left;padding-left:20px;">' . ( empty ( $date ) ? '' : '
       <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
      . '" value="' . $date . '" />' )
    . ( ! empty ( $user ) && $user != $login ? '
@@ -6627,6 +6684,83 @@ function query_events_teacher ( $user, $want_repeated, $date_filter, $cat_id = '
   return $result;
 }
 
+function query_events_program ( $user, $want_repeated, $date_filter,$is_task = false,$program_id='') {
+  global $db_connection_info, $jumpdate, $layers, $login, $max_until,
+  $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
+  global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
+ // New multiple categories requires some checking to see if this cat_id is
+  // valid for this cal_id. It could be done with nested SQL,
+  // but that may not work for all databases. This might be quicker also.
+  $programlist = $cloneRepeats = $layers_byuser = $result = array ();
+  $obj=new Programs();
+  $rows=$obj->getWebProgramsDetail($program_id);
+  if ( $rows ) {
+    $i = 0;
+    $checkdup_id = $first_i_this_id = -1;
+    for ( $ii = 0, $cnt = count ( $rows ); $ii < $cnt; $ii++ ) {
+      $row = $rows[$ii];
+	  if ( $login == '__public__' && ! empty ( $OVERRIDE_PUBLIC ) &&
+        $OVERRIDE_PUBLIC == 'Y' ) {
+     	$evt_name = $OVERRIDE_PUBLIC_TEXT;
+        $evt_descr = $OVERRIDE_PUBLIC_TEXT;
+	  } else {
+         $evt_name = $row[0];
+		 $evt_descr = $row[1];
+		}
+	if ( $want_repeated && ! empty ( $row[20] ) ) {// row[20] = cal_type
+	    $item = new RepeatingEvent ( $evt_name, $evt_descr, $row[2], $row[3],
+          $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10],
+          $primary_cat, $row[11], $row[12], $row[13], $row[14], $row[15],
+          $row[16], $row[17], $row[18], $row[19], $row[20], $row[21], $row[22],
+          $row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29],
+          $row[30], $row[31], $row[32], array (), array (), array () );
+	}else{// row[20] = cal_type
+	    $item = new Event ( $evt_name, $evt_descr, $row[2], $row[3], $row[4],
+          $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], '',
+          $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17],
+          $row[18], $row[19] );
+		  }
+	if ( $item->getID () != $checkdup_id ) {
+	    $checkdup_id = $item->getID ();
+        $first_i_this_id = $i;
+	 }
+	 if ( $item->getLogin () == $user ) {
+	   // Insert this one before all other ones with this ID.
+        array_splice ( $result, $first_i_this_id, 0, array ( $item ) );
+		  $i++;
+		
+        if ( $first_i_this_id + 1 < $i ) {
+		  // There's another one with the same ID as the one we inserted.
+          // Check for dup and if so, delete it.
+          $other_item = $result[$first_i_this_id + 1];
+          if ( ! empty ( $layers_byuser[$other_item->getLogin ()] ) &&
+            $layers_byuser[$other_item->getLogin ()] == 'N' ) {
+            // NOTE:  array_splice requires PHP4
+            array_splice ( $result, $first_i_this_id + 1, 1 );
+            $i--;
+          }
+        }
+      } else {
+        if ( $i == $first_i_this_id || ( !
+            empty ( $layers_byuser[$item->getLogin ()] ) &&
+              $layers_byuser[$item->getLogin ()] != 'N' ) )
+          // This item either is the first one with its ID, or allows dups.
+          // Add it to the end of the array.
+		  	$result [$i++] = $item;
+      }
+      // Does event go past midnight?
+      if ( date ( 'Ymd', $item->getDateTimeTS () ) !=
+          date ( 'Ymd', $item->getEndDateTimeTS () ) && !
+          $item->isAllDay () && $item->getCalTypeName () == 'event' ) {
+		  echo $item->getDateTimeTS ();
+		    die(hello3);
+        getOverLap ( $item, $i, true );
+        $i = count ( $result );
+      }
+    }
+  }
+return $result;
+}
 function query_events_teachers ( $user, $want_repeated, $date_filter,$is_task = false,$teacher_id='') {
   global $db_connection_info, $jumpdate, $layers, $login, $max_until,
   $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;

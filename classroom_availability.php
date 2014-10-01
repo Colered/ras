@@ -7,54 +7,18 @@ $options = "";
 while($data = $timeslotData->fetch_assoc()){
 	$options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
 }*/
-$options = '<option value="08:00-08:15">08:00-08:15</option>
-			<option value="08:15-08:30">08:15-08:30</option>
-			<option value="08:30-08:45">08:30-08:45</option>
-			<option value="08:45-09:00">08:45-09:00</option>
-			<option value="09:00-09:15">09:00-09:15</option>
-			<option value="09:15-09:30">09:15-09:30</option>
-			<option value="09:30-09:45">09:30-09:45</option>
-			<option value="09:45-10:00">09:45-10:00</option>
-			<option value="10:00-10:15">10:00-10:15</option>
-			<option value="10:15-10:30">10:15-10:30</option>
-			<option value="10:30-10:45">10:30-10:45</option>
-			<option value="10:45-11:00">10:45-11:00</option>
-			<option value="11:00-11:15">11:00-11:15</option>
-			<option value="11:15-11:30">11:15-11:30</option>
-			<option value="11:30-11:45">11:30-11:45</option>
-			<option value="11:45-12:00">11:45-12:00</option>
-			<option value="12:00-12:15">12:00-12:15</option>
-			<option value="12:15-12:30">12:15-12:30</option>
-			<option value="12:30-12:45">12:30-12:45</option>
-			<option value="12:45-13:00">12:45-13:00</option>
-			<option value="13:00-13:15">13:00-13:15</option>
-			<option value="13:15-13:30">13:15-13:30</option>
-			<option value="13:30-13:45">13:30-13:45</option>
-			<option value="13:45-14:00">13:45-14:00</option>
-			<option value="14:00-14:15">14:00-14:15</option>
-			<option value="14:15-14:30">14:15-14:30</option>
-			<option value="14:30-14:45">14:30-14:45</option>
-			<option value="14:45-15:00">14:45-15:00</option>
-			<option value="15:00-15:15">15:00-15:15</option>
-			<option value="15:15-15:30">15:15-15:30</option>
-			<option value="15:30-15:45">15:30-15:45</option>
-			<option value="15:45-16:00">15:45-16:00</option>
-			<option value="16:00-16:15">16:00-16:15</option>
-			<option value="16:15-16:30">16:15-16:30</option>
-			<option value="16:30-16:45">16:30-16:45</option>
-			<option value="16:45-17:00">16:45-17:00</option>
-			<option value="17:00-17:15">17:00-17:15</option>
-			<option value="17:15-17:30">17:15-17:30</option>
-			<option value="17:30-17:45">17:30-17:45</option>
-			<option value="17:45-18:00">17:45-18:00</option>
-			<option value="18:00-18:15">18:00-18:15</option>
-			<option value="18:15-18:30">18:15-18:30</option>
-			<option value="18:30-18:45">18:30-18:45</option>
-			<option value="18:45-19:00">18:45-19:00</option>
-			<option value="19:00-19:15">19:00-19:15</option>
-			<option value="19:15-19:30">19:15-19:30</option>
-			<option value="19:30-19:45">19:30-19:45</option>
-			<option value="19:45-20:00">19:45-20:00</option>';
+$options = '<option value="08:00 AM-09:00 AM">08:00 AM-09:00 AM</option>
+			<option value="09:00 AM-10:00 AM">09:00 AM-10:00 AM</option>
+			<option value="10:00 AM-11:00 AM">10:00 AM-11:00 AM</option>
+			<option value="11:00 AM-12:00 PM">11:00 AM-12:00 PM</option>
+			<option value="12:00 PM-01:00 PM">12:00 PM-01:00 PM</option>
+			<option value="01:00 PM-02:00 PM">01:00 PM-02:00 PM</option>
+			<option value="02:00 PM-03:00 PM">02:00 PM-03:00 PM</option>
+			<option value="03:00 PM-04:00 PM">03:00 PM-04:00 PM</option>
+			<option value="04:00 PM-05:00 PM">04:00 PM-05:00 PM</option>
+			<option value="05:00 PM-06:00 PM">05:00 PM-06:00 PM</option>
+			<option value="06:00 PM-07:00 PM">06:00 PM-07:00 PM</option>
+			<option value="07:00 PM-08:00 PM">07:00 PM-08:00 PM</option>';
 $name="";
 $classRmAvailId="";
 $roomId="";
@@ -137,37 +101,37 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                      <div class="txtfield" >
 					    <div class="tmSlot">
                         <input type="checkbox" id="Mon" name="day[]"  value="0" class="days"/><span class="dayName"> Mon </span>
-						<select id="ts-avail-day-0" name="Mon[]" class="slctTs" multiple="multiple">
+						<select id="ts-avail-day-0" name="Mon[]" class="slctTs" multiple="multiple" style="height:110px;">
 						<?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Tue" name="day[]"  value="1" class="days"/><span class="dayName"> Tue </span>
-						<select id="ts-avail-day-1" name="Tue[]" class="slctTs" multiple="multiple">
+						<select id="ts-avail-day-1" name="Tue[]" class="slctTs" multiple="multiple" style="height:110px;">
                            <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Wed" name="day[]"  value="2" class="days"/><span class="dayName"> Wed </span>
-						 <select id="ts-avail-day-2" name="Wed[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-day-2" name="Wed[]" class="slctTs" multiple="multiple" style="height:110px;">
                           <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Thu" name="day[]"  value="3" class="days"/><span class="dayName"> Thu </span>
-						 <select id="ts-avail-day-3" name="Thu[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-day-3" name="Thu[]" class="slctTs" multiple="multiple" style="height:110px;">
                          <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Fri" name="day[]"  value="4" class="days"/><span class="dayName"> Fri </span>
-						 <select id="ts-avail-day-4" name="Fri[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-day-4" name="Fri[]" class="slctTs" multiple="multiple" style="height:110px;">
                           <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Sat" name="day[]"  value="5" class="days"/><span class="dayName"> Sat </span>
-						 <select id="ts-avail-day-5" name="Sat[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-day-5" name="Sat[]" class="slctTs" multiple="multiple" style="height:110px;">
                           <?php echo $options; ?>
                         </select>
 						</div>
@@ -191,7 +155,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 					    $count = 0;
 					   	while($data = $classroomAvailData->fetch_assoc()){
 							if($count%6 == 0){ echo "<tr>"; }?>
-								<td class="sched-data"><div style="width:200px;"><li class="main-title"><input type="checkbox" name="ckbruleVal[]" value="<?php echo $data['id']; ?>" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b></li>
+								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 300px;"><li class="main-title"><input type="checkbox" name="ckbruleVal[]" value="<?php echo $data['id']; ?>" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b></li>
 								<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span>
 								<ul class="listing">
 									<?php //get the day and timeslot
@@ -206,8 +170,8 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 											if($ddata['day']==3){echo $day_name="Thu ";}
 											if($ddata['day']==4){echo $day_name="Fri ";}
 											if($ddata['day']==5){echo $day_name="Sat ";}											
-											 echo $ddata['timeslot_id'].",";
-											  ?>
+											echo str_replace(",", ",<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $ddata['timeslot_id']);
+											?>
 										</li>
 									<?php } ?>
 								</ul>

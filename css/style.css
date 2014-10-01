@@ -586,7 +586,7 @@ div.divSession{
 }
 .remove_field{cursor:pointer;}
 .addbtnSession{padding-top:16px;}
-.tmSlot{width:100px;float: left; text-align: left;}
+.tmSlot{width:136px;float: left; text-align: left;}
 .dayName{font-size:13px; padding:5px; padding-top:0px;}
 .main-title{ list-style:none;}
 #rules{margin:0px!important;}

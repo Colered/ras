@@ -17,6 +17,7 @@ if ( empty ( $user ) )
 	load_user_layers ();
 }
 $cat_id = getValue ( 'cat_id', '-?[0-9,\-]*', true );
+$program_id = getValue ( 'program_id', '-?[0-9,\-]*', true );
 $teacher_id = getValue ( 'teacher_id', '-?[0-9,\-]*', true );
 $subject_id = getValue ( 'subject_id', '-?[0-9,\-]*', true );
 $room_id = getValue ( 'room_id', '-?[0-9,\-]*', true );
@@ -60,7 +61,10 @@ $events = read_events ( ( ! empty ( $user ) && strlen ( $user ) )
 $events = read_events_teacher ( ( ! empty ( $user ) && strlen ( $user ) )
   ? $user : $login, $startdate, $enddate,'',$teacher_id);
 }
-
+if($program_id!=""){
+$events = read_events_program ( ( ! empty ( $user ) && strlen ( $user ) )
+  ? $user : $login, $startdate, $enddate, '' ,$program_id);
+}
 if($subject_id!=""){
 $events = read_events_subject ( ( ! empty ( $user ) && strlen ( $user ) )
   ? $user : $login, $startdate, $enddate, $cat_id ,$subject_id);
