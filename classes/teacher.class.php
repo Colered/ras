@@ -356,8 +356,8 @@ class Teacher extends Base {
     }
 	public function getWebTeachersDetail($teacher_id='')
 	{
-	$row=$rowmainArr=$newArr=array();
-	$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.teacher_id='".$teacher_id."' ORDER BY we.cal_time, we.cal_name ");
+		$row=$rowmainArr=$newArr=array();
+		$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.teacher_id='".$teacher_id."' ORDER BY we.cal_time, we.cal_name ");
 		if($result->num_rows){
 			while ($rows =$result->fetch_assoc()){
 					$row[]=$rows;
@@ -374,5 +374,16 @@ class Teacher extends Base {
 		  }
 		  return $rowNewArr;
 		}
+	}
+	//function to check allocated room for a subject
+	public function getAllocatedRoomBySubject($subject_id)
+	{
+	    $SQL = "SELECT room_id FROM teacher_activity WHERE subject_id='".$subject_id."' AND reserved_flag='1'";
+	    $result =  $this->conn->query($SQL);
+	   	if($result->num_rows){
+			$rows = $result->fetch_assoc();
+			return $rows['room_id'];
+		}
+		return '';
 	}
 }

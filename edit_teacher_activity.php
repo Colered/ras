@@ -66,13 +66,14 @@ $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessio
                     <div class="clear"></div>
                     <div id="activityAddMore" style="padding:50px 0px 0px 100px;">
                     <div id="activityReset" style="padding-left:10px;"><input class="buttonsub" type="button" value="Reset" name="btnTeacherActReset" id="btnTeacherActReset" onclick="reset_reserved_flag();"></div>
-					<input type="hidden" name="program_year_id" value="<?php echo $program_year_id;?>" />
-					<input type="hidden" name="subject_id" value="<?php echo $subject_id;?>" />
-					<input type="hidden" name="sessionid" value="<?php echo $sessionid;?>" />
+					<input type="hidden" id="program_year_id" name="program_year_id" value="<?php echo $program_year_id;?>" />
+					<input type="hidden" id="subject_id" name="subject_id" value="<?php echo $subject_id;?>" />
+					<input type="hidden" id="sessionid" name="sessionid" value="<?php echo $sessionid;?>" />
 
                     <?php
 						//room dropdown
-						$room_dropDwn = $objB->getRoomsDropDwn();
+						$preallocated_room = $objT->getAllocatedRoomBySubject($subject_id);
+						$room_dropDwn = $objB->getRoomsDropDwn($preallocated_room);
 						//timeslot dropdown
 						$tslot_dropDwn = $objTS->getTimeSlotDropDwn();
 						echo '<table cellspacing="0" cellpadding="0" border="0">';
@@ -99,7 +100,7 @@ $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessio
 							echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
 							echo '<td>'.$objS->getSubjectByID($data['subject_id']).'</td>';
 							echo '<td>'.$objS->getSessionByID($data['session_id']).'</td>';
-							echo '<td>'.$objT->getTeacherByID($data['teacher_id']).'<input type="hidden" name="reserved_teacher_id_'.$data['id'].'" value="'.$data['teacher_id'].'"></td>';
+							echo '<td>'.$objT->getTeacherByID($data['teacher_id']).'<input type="hidden" id="reserved_teacher_id_'.$data['id'].'" name="reserved_teacher_id_'.$data['id'].'" value="'.$data['teacher_id'].'"></td>';
 
 							echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'" class="activity_row_chk" disabled>';
 							echo '<option value="">--Room--</option>';
@@ -131,7 +132,7 @@ $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessio
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield">
-                        <input type="submit" name="btnAdd" id="btnAdd" class="buttonsub" value="Edit Activity">
+                        <input type="submit" name="btnAdd" id="btnEditTeacherActivity" class="buttonsub" value="Edit Activity">
                     </div>
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'teacher_activity_view.php';">

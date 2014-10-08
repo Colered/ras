@@ -79,12 +79,16 @@ class Buildings extends Base {
 			}
     }
     //function to get rooms
-    public function getRoomsDropDwn()
+    public function getRoomsDropDwn($room_id='')
     {
 		$room_dropDwn = '';
 		$slqR="SELECT r.id, r.room_name, rt.room_type, b.building_name FROM room r
 				LEFT JOIN room_type rt ON ( rt.id = r.room_type_id )
-				LEFT JOIN building b ON ( b.id = r.building_id ) ORDER BY room_type,building_name";
+				LEFT JOIN building b ON ( b.id = r.building_id )";
+		if($room_id){
+			$slqR .= " WHERE r.id='".$room_id."'";
+		}
+		$slqR .= " ORDER BY room_name,room_type,building_name";
 		$relR = mysqli_query($this->conn, $slqR);
 		while($rdata= mysqli_fetch_array($relR)){
 			$room_dropDwn .= '<option value="'.$rdata['id'].'">'.$rdata['room_name'].'-'.$rdata['building_name'].'-'.$rdata['room_type'].'</option>';

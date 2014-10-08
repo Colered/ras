@@ -211,7 +211,8 @@ switch ($codeBlock) {
             //add teacher activity row in table if not exist
             $objT->insertActivityRow($program_year_id,$cycle_id,$subject_id,$sessionid,$_POST['teachersArr']);
 			//room dropdown
-			$room_dropDwn = $objB->getRoomsDropDwn();
+			$preallocated_room = $objT->getAllocatedRoomBySubject($subject_id);
+			$room_dropDwn = $objB->getRoomsDropDwn($preallocated_room);
 			//timeslot dropdown
 			$tslot_dropDwn = $objTS->getTimeSlotDropDwn();
             echo '<table cellspacing="0" cellpadding="0" border="0">';
@@ -237,7 +238,7 @@ switch ($codeBlock) {
 				echo '<td>'.$objS->getFielldVal("program_years","name","id",$program_year_id).'</td>';
 				echo '<td>'.$objS->getSubjectByID($data['subject_id']).'</td>';
 				echo '<td>'.$objS->getSessionByID($data['session_id']).'</td>';
-				echo '<td>'.$objT->getTeacherByID($data['teacher_id']).'<input type="hidden" name="reserved_teacher_id_'.$data['id'].'" value="'.$data['teacher_id'].'"></td>';
+				echo '<td>'.$objT->getTeacherByID($data['teacher_id']).'<input type="hidden" id="reserved_teacher_id_'.$data['id'].'" name="reserved_teacher_id_'.$data['id'].'" value="'.$data['teacher_id'].'"></td>';
 
 				echo '<td><select name="room_id_'.$data['id'].'" id="room_id_'.$data['id'].'" class="activity_row_chk" disabled>';
 				echo '<option value="">--Room--</option>';
