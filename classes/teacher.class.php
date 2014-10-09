@@ -6,6 +6,7 @@ class Teacher extends Base {
 	/*function for add professor*/
 	public function addProfessor() {
 		$txtPname = Base::cleanText($_POST['txtPname']);
+		$proftype = $_POST['proftype'];
 		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
 		$dob = ($_POST['dob']<>'')? date("Y-m-d h:i:s", strtotime($_POST['dob'])) : '0000:00:00 00:00:00';
 		$doj = ($_POST['doj']<>'')? date("Y-m-d h:i:s", strtotime($_POST['doj'])) : '0000:00:00 00:00:00';
@@ -32,7 +33,7 @@ class Teacher extends Base {
 			$_SESSION['error_msg'] = $message;
 			return 0;
         }else{
-           $sql = "INSERT INTO teacher (teacher_name, address, dob, doj, gender, designation, qualification, experience, email, username, date_add, date_update) VALUES ('".$txtPname."', '".$txtAreaAddress."', '".$dob."', '".$doj."', '".$sex."', '".$txtDegination."', '".$txtQualification."', '".$totalmonthExp."', '".$txtEmail."', '".$txtUname."', now(), '')";
+           $sql = "INSERT INTO teacher (teacher_name,teacher_type, address, dob, doj, gender, designation, qualification, experience, email, username, date_add, date_update) VALUES ('".$txtPname."','".$proftype."', '".$txtAreaAddress."', '".$dob."', '".$doj."', '".$sex."', '".$txtDegination."', '".$txtQualification."', '".$totalmonthExp."', '".$txtEmail."', '".$txtUname."', now(), '')";
            $rel = $this->conn->query($sql);
            if(!$rel){
               printf("%s\n", $this->conn->error);
@@ -48,6 +49,7 @@ class Teacher extends Base {
 	/*function for edit professor*/
 	public function editProfessor() {
 		$edit_id = base64_decode($_POST['form_edit_id']);
+		$proftype = $_POST['proftype'];
 		$txtPname = Base::cleanText($_POST['txtPname']);
 		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
 		$dob = ($_POST['dob']<>'')? date("Y-m-d h:i:s", strtotime($_POST['dob'])) : '0000:00:00 00:00:00';
@@ -60,6 +62,7 @@ class Teacher extends Base {
 		$totalmonthExp = $years*12+$months;
 		$sql = "UPDATE teacher SET
 						teacher_name='".$txtPname."',
+						teacher_type='".$proftype."',
 						address='".$txtAreaAddress."',
 						dob='".$dob."',
 						doj='".$doj."',

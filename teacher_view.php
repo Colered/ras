@@ -28,6 +28,7 @@ $(document).ready(function(){
                     <tr>
                         <th >ID</th>
                         <th >Name</th>
+                        <th >Type</th>
                         <th >Address</th>
                         <th >DOB</th>
                         <th >DOJ</th>
@@ -44,6 +45,7 @@ $(document).ready(function(){
                     <tr>
                         <td class="align-center"><?php echo $row['id'];?></td>
                         <td><?php echo $row['teacher_name'];?></td>
+                        <td><?php echo $row['teacher_type'];?></td>
                         <td><?php echo $row['address'];?></td>
                         <td><?php echo $objT->formatDate($row['dob']);?></td>
                         <td><?php echo $objT->formatDate($row['doj']);?></td>

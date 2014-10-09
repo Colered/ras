@@ -1,5 +1,5 @@
-<?php 	
-include('header.php'); 
+<?php
+include('header.php');
 $obj = new Buildings();
 $result = $obj->viewBuld();
 ?>
@@ -29,6 +29,7 @@ $(document).ready(function(){
                     <tr>
                         <th >ID</th>
                         <th >Name</th>
+                        <th >Location</th>
 						<th >Is Default</th>
                         <th >Add Date</th>
 						<th >Update Date</th>
@@ -36,12 +37,13 @@ $(document).ready(function(){
                     </tr>
                 </thead>
                 <tbody>
-                    
+
 					<?php while ($data = $result->fetch_assoc()){ ?>
 					<tr>
                         <td class="align-center"><?php echo $data['id'] ?></td>
                         <td><?php echo $data['building_name'] ?></td>
-						<td><?php if($data['is_default']=='1'){echo 'Yes';}else{echo 'No';} ?></td>
+                        <td><?php echo $data['location'] ?></td>
+						<td class="align-center"><?php if($data['is_default']=='1'){echo 'Yes';}else{echo 'No';} ?></td>
                         <td><?php echo $data['date_add'] ?></td>
 						<td><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">

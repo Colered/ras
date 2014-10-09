@@ -15,6 +15,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $months = isset($_POST['months']) ? $_POST['months']:'';
 }
 $teachername = isset($_GET['edit']) ? $row['teacher_name'] : (isset($_POST['txtPname'])? $_POST['txtPname']:'');
+$proftype = isset($_GET['edit']) ? $row['teacher_type'] : (isset($_POST['proftype'])? $_POST['proftype']:'');
 $address = isset($_GET['edit']) ? $row['address'] : (isset($_POST['txtAreaAddress'])? $_POST['txtAreaAddress']:'');
 $dob = isset($_GET['edit'])? $row['dob'] : (isset($_POST['dob']) ? $_POST['dob']:'');
 $doj = isset($_GET['edit'])? $row['doj'] : (isset($_POST['doj'])? $_POST['doj'] : '');
@@ -46,6 +47,22 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
                     <div class="txtfield">
                         <input type="text" class="inp_txt required alphanumeric" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
                     </div>
+                    <div class="clear"></div>
+
+                    <div class="custtd_left">
+					  <h2>Type</h2>
+					</div>
+					<div class="txtfield">
+					<select id="proftype" name="proftype" class="select1">
+						<option value="">--Select Type--</option>
+						<option value="resident">Resident</option>
+						<option value="nonresident">Nonresident</option>
+						<option value="associate">Associate</option>
+					</select>
+					<script type="text/javascript">
+						jQuery('#proftype').val("<?php echo $proftype;?>");
+					</script>
+					</div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Address</h2>

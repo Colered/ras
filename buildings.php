@@ -1,4 +1,4 @@
-<?php include('header.php'); 
+<?php include('header.php');
 $buldName=""; $buldId="";
 $obj = new Buildings();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
@@ -7,6 +7,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$row = $result->fetch_assoc();
 }
 $buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBname'])? $obj->cleanText($_POST['txtBname']):'');
+$location = isset($_GET['edit']) ? $row['location'] : (isset($_POST['txtBlocation'])? $obj->cleanText($_POST['txtBlocation']):'');
 $is_default = isset($_GET['edit']) ? $row['is_default'] : (isset($_POST['is_default'])? $obj->cleanText($_POST['is_default']):'');
 //$hiddenVal = ($buldName!="") ? "EditBuld":"Buld";
 ?>
@@ -31,6 +32,13 @@ $is_default = isset($_GET['edit']) ? $row['is_default'] : (isset($_POST['is_defa
                     </div>
                     <div class="clear"></div>
 					<div class="custtd_left">
+						<h2>Location</h2>
+					</div>
+					<div class="txtfield">
+						<input type="text" class="inp_txt" id="txtBlocation" name="txtBlocation" value="<?php echo $location;?>">
+					</div>
+					<div class="clear"></div>
+					<div class="custtd_left">
                         <h2>Is Default<span class="redstar">*</span></h2>
                     </div>
 					<div class="txtfield">
@@ -49,7 +57,7 @@ $is_default = isset($_GET['edit']) ? $row['is_default'] : (isset($_POST['is_defa
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'buildings_view.php';">
                     </div>
-                </div>	
+                </div>
             </form>
         </div>
         <div class="clear"></div>
