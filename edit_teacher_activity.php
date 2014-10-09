@@ -132,7 +132,7 @@ $sessionName = $objT->getFielldVal('subject_session','session_name','id',$sessio
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield">
-                        <input type="submit" name="btnAdd" id="btnEditTeacherActivity" class="buttonsub" value="Edit Activity">
+                        <input type="submit" name="btnAdd" id="btnAddTeacherActivity" class="buttonsub" value="Edit Activity">
                     </div>
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'teacher_activity_view.php';">

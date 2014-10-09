@@ -1595,38 +1595,6 @@ $(document).ready(function() {
 				alert('Please choose date');
 				return false;
 			}
-			var program_year_id = $("#slctProgram").val();
-			var subject_id = $("#slctSubject").val();
-			var sessionid = $("#slctSession").val();
-			var teacher_id = $("#reserved_teacher_id_"+row_id).val();
-			checkActAvailability(program_year_id,subject_id,sessionid,teacher_id,row_id);
-      	}
-	});
-});
-$(document).ready(function() {
-    $("#btnEditTeacherActivity").click(function(e){ 
-      	if($("input:radio[name=reserved_flag]").is(":checked")){
-			var row_id = $('input:radio[name=reserved_flag]:checked', '#frmTactivity').val();
-			var room_id = $("#room_id_"+row_id).val();
-			var timeslot_id = $("#tslot_id_"+row_id).val();
-			var act_date = $("#activityDateCal_"+row_id).val();
-			if(room_id===null || room_id==''){
-				alert('Please choose room');
-				return false;
-			}
-			if(timeslot_id===null || timeslot_id==''){
-				alert('Please choose timeslot');
-				return false;
-			}
-			if(act_date===null || act_date==''){
-				alert('Please choose date');
-				return false;
-			}
-			var program_year_id = $("#program_year_id").val();
-			var subject_id = $("#subject_id").val();
-			var sessionid = $("#sessionid").val();
-			var teacher_id = $("#reserved_teacher_id_"+row_id).val();
-			checkActAvailability(program_year_id,subject_id,sessionid,teacher_id,row_id);
       	}
 	});
 });
