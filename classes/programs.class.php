@@ -157,7 +157,7 @@ class Programs extends Base {
     }
     //function to get cycle info by program id
     public function getCyclesInfo($prog_id){
-        $SQL = "select distinct start_week,end_week,days from cycle where program_year_id ='".$prog_id."'";
+        $SQL = "select start_week, end_week, week1, week2, occurrence from cycle where program_year_id ='".$prog_id."'";
     	$result =  $this->conn->query($SQL);
     	$row_cnt = $result->num_rows;
         $data = '';
@@ -168,16 +168,26 @@ class Programs extends Base {
 			$data .= '<tr><td>Number of Cycle:'.$this->getCyclesInProgram($prog_id).'</td></tr>';
 			$i=0;
 			while($row = $result->fetch_assoc()){
-			   $daysArr = explode(',',$row['days']);
-			   $finalDays = array();
-			   foreach($daysArr as $val){
-                  $finalDays[] = $daysDBArr[$val];
-			   }
-			   $finalDays = implode(',',$finalDays);
+				$week1 = '';
+				$week2 = '';
+				foreach(unserialize($row['week1']) as $key=> $value)
+				{		
+						$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value);				
+				}
+				 if($row['occurrence'] == '2w'){
+					 foreach(unserialize($row['week2']) as $key=> $value)
+					 {		
+							$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value);				
+					 }
+				 }
 			   $cycle = $numSufArr[$i];
 			   $start_date = $this->formatDateByDate($row['start_week']);
 			   $end_date = $this->formatDateByDate($row['end_week']);
-               $data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' ('.$finalDays.')</td></tr>';
+               $data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' </td></tr>';
+			   $data .= '<tr><td> Week1 - '.$week1.'</td></tr>';
+			   if($row['occurrence'] == '2w'){
+				 $data .= '<tr><td> Week2 - '.$week2.' </td></tr>';
+			   }
                $i++;
                $data .= $this->getProgCycExceptions($prog_id,$i);
 			}
@@ -195,7 +205,7 @@ class Programs extends Base {
 	  	if($num_rows > 0){
 	  	    $dt .= '<tr><td>Exceptions:</td></tr>';
 			while($row = $result->fetch_assoc()){
-               $dt .= '<tr><td style="padding-left:100px;">'.$row['exception_date'].'</td></tr>';
+               $dt .= '<tr><td>'.$row['exception_date'].'</td></tr>';
 			}
 			return $dt;
 		}
@@ -290,56 +300,145 @@ class Programs extends Base {
         $slctProgram_id = $_POST['slctProgram'];
         $slctNumcycle = $_POST['slctNumcycle'];
         $preNumCycle = ($_POST['preNumCycle'] > 0) ? $_POST['preNumCycle'] : 0;
-
         if($edit_id==$slctProgram_id)
         {
-			if($slctNumcycle==$preNumCycle){
+			if($slctNumcycle==$preNumCycle){//echo $slctNumcycle;print"<pre>";print_r($_POST);print"</pre>";die("1");
 				for($i=1; $i<=$slctNumcycle; $i++){
 				   $cycle_edit_id = $_POST['preCycleId'.$i];
-				   $days = implode(',',$_POST['slctDays'.$i]);
-				   $timeslots = implode(',',$_POST['slctTimeslot'.$i]);
 				   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
 				   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
-				   $sql = "update cycle set
+				   $chweek = $_POST['c1chWeek'.$i];
+					 if($chweek == '1w')
+					 {						
+						$sql = "update cycle set
 								 no_of_cycle='".$slctNumcycle."',
 								 start_week='".$start_date."',
 								 end_week='".$end_date."',
-								 days='".$days."',
-								 timeslot_id='".$timeslots."',
+								 occurrence = '".$chweek."',
+								 week1='".serialize($_POST['cycle'.$i]['week1'])."',
+								 week2='',
 								 date_update=now() WHERE id='".$cycle_edit_id."'";
-				   //echo '<br>'.$sql;
-				   $rel = $this->conn->query($sql);
-				   //add program exception
-				   $this->addProgramException($slctProgram_id,$i);
-				}
-			  }else if($slctNumcycle < $preNumCycle){
-				for($j=($slctNumcycle+1); $j<=$preNumCycle; $j++){
-					 $cycle_edit_id = $_POST['preCycleId'.$j];
-					 // delete all cycle which are not need
-					 $py_rel =  $this->conn->query("SELECT id FROM cycle WHERE id='".$cycle_edit_id."'");
-					 $py_row_cnt = $py_rel->num_rows;
-					 if($py_row_cnt > 0){
-					      $row = $py_rel->fetch_assoc();
-						  $this->deleteAssociateCycles($row['id']);
+						$rel = $this->conn->query($sql);
+					   //add program exception
+					   $this->addProgramException($slctProgram_id,$i);						 
+					 }else{
+						 $sql = "update cycle set
+								 no_of_cycle='".$slctNumcycle."',
+								 start_week='".$start_date."',
+								 end_week='".$end_date."',
+								 occurrence = '".$chweek."',
+								 week1='".serialize($_POST['cycle'.$i]['week1'])."',
+								 week2='".serialize($_POST['cycle'.$i]['week2'])."',
+								 date_update=now() WHERE id='".$cycle_edit_id."'";
+						$rel = $this->conn->query($sql);
+					   //add program exception
+					   $this->addProgramException($slctProgram_id,$i);
 					 }
-					//delete program exception as well
-					$query="delete from program_cycle_exception where program_year_id='".$slctProgram_id."' AND cycle_id='".$j."'";
-					$qry = $this->conn->query($query);
+				   
+				}
+			  }else if($slctNumcycle < $preNumCycle){//echo $slctNumcycle;echo "--"; echo $preNumCycle;die("2");
+				for($j=1; $j<=$preNumCycle; $j++){
+					if($j <= $slctNumcycle)
+					{
+					   $cycle_edit_id = $_POST['preCycleId'.$j];
+					   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$j]));
+					   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$j]));
+					   $chweek = $_POST['c1chWeek'.$j];
+					   if($chweek == '1w')
+					   {						
+							$sql = "update cycle set
+									 no_of_cycle='".$slctNumcycle."',
+									 start_week='".$start_date."',
+									 end_week='".$end_date."',
+									 occurrence = '".$chweek."',
+									 week1='".serialize($_POST['cycle'.$j]['week1'])."',
+									 week2='',
+									 date_update=now() WHERE id='".$cycle_edit_id."'";
+							$rel = $this->conn->query($sql);
+						   //add program exception
+						   $this->addProgramException($slctProgram_id,$j);						 
+						 }else{
+							 $sql = "update cycle set
+									 no_of_cycle='".$slctNumcycle."',
+									 start_week='".$start_date."',
+									 end_week='".$end_date."',
+									 occurrence = '".$chweek."',
+									 week1='".serialize($_POST['cycle'.$j]['week1'])."',
+									 week2='".serialize($_POST['cycle'.$j]['week2'])."',
+									 date_update=now() WHERE id='".$cycle_edit_id."'";
+							$rel = $this->conn->query($sql);
+						   //add program exception
+						   $this->addProgramException($slctProgram_id,$j);
+						 }
+					}else{
+						 $cycle_edit_id = $_POST['preCycleId'.$j];
+						 // delete all cycle which are not need
+						 $py_rel =  $this->conn->query("SELECT id FROM cycle WHERE id='".$cycle_edit_id."'");
+						 $py_row_cnt = $py_rel->num_rows;
+						 if($py_row_cnt > 0){
+							  $row = $py_rel->fetch_assoc();
+							  $this->deleteAssociateCycles($row['id']);
+						 }
+						//delete program exception as well
+						$query="delete from program_cycle_exception where program_year_id='".$slctProgram_id."' AND cycle_id='".$j."'";
+						$qry = $this->conn->query($query);
+					}
 				}
 
-			  }else if($slctNumcycle > $preNumCycle){
-				 for($i=$preNumCycle+1; $i<=$slctNumcycle; $i++){
-					$days = implode(',',$_POST['slctDays'.$i]);
-					$timeslots = implode(',',$_POST['slctTimeslot'.$i]);
-					$start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
-					$end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
-					$sql = "INSERT INTO cycle (program_year_id, no_of_cycle, start_week, end_week, days, timeslot_id, date_add) VALUES ('".$slctProgram_id."', '".$slctNumcycle."', '".$start_date."', '".$end_date."', '".$days."','".$timeslots."', now())";
-					$rel = $this->conn->query($sql);
+			  }else if($slctNumcycle > $preNumCycle){//echo $slctNumcycle;echo "--"; echo $preNumCycle;die("3");
+				 // print"<pre>";print_r($_POST);
+				 for($i=1; $i<=$slctNumcycle; $i++){
+					 if($i<=$preNumCycle)
+					 {
+						   $cycle_edit_id = $_POST['preCycleId'.$i];
+						   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+						   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+						   $chweek = $_POST['c1chWeek'.$i];
+						   if($chweek == '1w')
+						   {						
+								$sql = "update cycle set
+										 no_of_cycle='".$slctNumcycle."',
+										 start_week='".$start_date."',
+										 end_week='".$end_date."',
+										 occurrence = '".$chweek."',
+										 week1='".serialize($_POST['cycle'.$i]['week1'])."',
+										 week2='',
+										 date_update=now() WHERE id='".$cycle_edit_id."'";
+								$rel = $this->conn->query($sql);
+							   //add program exception
+							   $this->addProgramException($slctProgram_id,$i);						 
+							 }else{
+								 $sql = "update cycle set
+										 no_of_cycle='".$slctNumcycle."',
+										 start_week='".$start_date."',
+										 end_week='".$end_date."',
+										 occurrence = '".$chweek."',
+										 week1='".serialize($_POST['cycle'.$i]['week1'])."',
+										 week2='".serialize($_POST['cycle'.$i]['week2'])."',
+										 date_update=now() WHERE id='".$cycle_edit_id."'";
+								$rel = $this->conn->query($sql);
+							   //add program exception
+							   $this->addProgramException($slctProgram_id,$i);
+							 }
+					 }else{
+						$start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+						$end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+						$chweek = $_POST['c1chWeek'.$i];
+						if($chweek == '1w')
+						 {						
+							$sql = "INSERT INTO cycle (program_year_id, start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$slctProgram_id."', '".$start_date."', '".$end_date."', '".$chweek."', '".serialize($_POST['cycle'.$i]['week1'])."','', now(), now())";
+							//echo $sql;echo "<br/>";
+							$rel = $this->conn->query($sql);						 
+						 }else{					 	
+								$sql = "INSERT INTO cycle (program_year_id, start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$slctProgram_id."', '".$start_date."', '".$end_date."', '".$chweek."', '".serialize($_POST['cycle'.$i]['week1'])."','".serialize($_POST['cycle'.$i]['week2'])."', now(), now())";	
+								//echo $sql;echo "<br/>";
+								$rel = $this->conn->query($sql);	
+						 }					
+						 //add program exception
+						 $this->addProgramException($slctProgram_id,$i);
+					 }
 
-				   //add program exception
-				   $this->addProgramException($slctProgram_id,$i);
-
-				 }
+				 }//die;
 			  }
 			  //finally set all the similar program with current selected number of cycles
 			  $sql = "update cycle set no_of_cycle='".$slctNumcycle."' WHERE program_year_id='".$slctProgram_id."'";
@@ -379,7 +478,7 @@ class Programs extends Base {
 			 }
 			$html .='<tr>
 					<td>'.$x.'</td>
-					<td>'.$data['exception_date'].'</td>
+					<td>'.date('d-m-Y',strtotime($data['exception_date'])).'</td>
 					<td style="display:none"><input type="hidden" name="exceptionDate'.$cycle_num.'[]" id="exceptnDate'.$x.'" value="'.$data['exception_date'].'" />
 					<input type="hidden" name="program_cycleRowId'.$cycle_num.'[]" id="program_cycleRowId'.$x.'"  value="'.$data['id'].'"/></td>
 					<td id="'.$data['id'].'"><a class="remove_field" onclick="deleteExcepProgCycle('.$data['id'].', 0);">Remove</a></td></tr>';
@@ -487,5 +586,21 @@ class Programs extends Base {
 				'.$options.'
 			  </select>
 			</div>';
+	}
+	public function getTimeslotOptions($params='')
+	{
+		//print_r($params);die("here");
+	   $objTS = new Timeslot();
+	   $timeslotData = $objTS->viewTimeslot();
+	   $options = "";
+	   while($data = $timeslotData->fetch_assoc()){
+		   if(in_array($data['id'], $params))
+		   {
+			   $options .= '<option value="'.$data['id'].'" selected="selected">'.$data['timeslot_range'].'</option>';
+		   }else{
+			   $options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
+		   }	   	
+		}
+		return $options;
 	}
 }

@@ -1519,60 +1519,122 @@ function showHideCycleInfo(subjectId)
 }
 //function to show hide time slot at program cycle page
 $(document).ready(function(){
-	$("#ts-avail-mon1,#ts-avail-tue1,#ts-avail-wed1,#ts-avail-thu1,#ts-avail-fri1,#ts-avail-sat1").hide();
-	$("#ts-avail-mon2,#ts-avail-tue2,#ts-avail-wed2,#ts-avail-thu2,#ts-avail-fri2,#ts-avail-sat2").hide();
+	$("#ts-avail-c1-w1-0,#ts-avail-c1-w1-1,#ts-avail-c1-w1-2,#ts-avail-c1-w1-3,#ts-avail-c1-w1-4,#ts-avail-c1-w1-5").hide();
+	$("#ts-avail-c1-w2-0,#ts-avail-c1-w2-1,#ts-avail-c1-w2-2,#ts-avail-c1-w2-3,#ts-avail-c1-w2-4,#ts-avail-c1-w2-5").hide();
+	$("#ts-avail-c2-w1-0,#ts-avail-c2-w1-1,#ts-avail-c2-w1-2,#ts-avail-c2-w1-3,#ts-avail-c2-w1-4,#ts-avail-c2-w1-5").hide();
+	$("#ts-avail-c2-w2-0,#ts-avail-c2-w2-1,#ts-avail-c2-w2-2,#ts-avail-c2-w2-3,#ts-avail-c2-w2-4,#ts-avail-c2-w2-5").hide();
+	$("#ts-avail-c3-w1-0,#ts-avail-c3-w1-1,#ts-avail-c3-w1-2,#ts-avail-c3-w1-3,#ts-avail-c3-w1-4,#ts-avail-c3-w1-5").hide();
+	$("#ts-avail-c3-w2-0,#ts-avail-c3-w2-1,#ts-avail-c3-w2-2,#ts-avail-c3-w2-3,#ts-avail-c3-w2-4,#ts-avail-c3-w2-5").hide();
+	
 	   $('input[class=days]').click(function(){
-            if($(this).attr("value")=="Mon1"){
-				$("#ts-avail-mon1").toggle();
+            if($(this).attr("value")=="Mon1C1W1"){
+				$("#ts-avail-c1-w1-0").toggle();
+			}else if($(this).attr("value")=="Mon2C1W2"){
+				$("#ts-avail-c1-w2-0").toggle();
+			}else if($(this).attr("value")=="MonC2W1"){
+				$("#ts-avail-c2-w1-0").toggle();
+			}else if($(this).attr("value")=="MonC2W2"){
+				$("#ts-avail-c2-w2-0").toggle();
+			}else if($(this).attr("value")=="MonC3W1"){
+				$("#ts-avail-c3-w1-0").toggle();
+			}else if($(this).attr("value")=="MonC3W2"){
+				$("#ts-avail-c3-w2-0").toggle();
 			}
-            if($(this).attr("value")=="Tue1"){
-				$("#ts-avail-tue1").toggle();
+            if($(this).attr("value")=="Tue1C1W1"){
+				$("#ts-avail-c1-w1-1").toggle();
+            }else if($(this).attr("value")=="Tue2C1W2"){
+				$("#ts-avail-c1-w2-1").toggle();
+            }else if($(this).attr("value")=="TueC2W1"){
+				$("#ts-avail-c2-w1-1").toggle();
+            }else if($(this).attr("value")=="TueC2W2"){
+				$("#ts-avail-c2-w2-1").toggle();
+            }else if($(this).attr("value")=="TueC3W1"){
+				$("#ts-avail-c3-w1-1").toggle();
+            }else if($(this).attr("value")=="TueC3W2"){
+				$("#ts-avail-c3-w2-1").toggle();
             }
-            if($(this).attr("value")=="Wed1"){
-				$("#ts-avail-wed1").toggle();
+            if($(this).attr("value")=="Wed1C1W1"){
+				$("#ts-avail-c1-w1-2").toggle();
+            }else if($(this).attr("value")=="Wed2C1W2"){
+				$("#ts-avail-c1-w2-2").toggle();
+            }else if($(this).attr("value")=="WedC2W1"){
+				$("#ts-avail-c2-w1-2").toggle();
+            }else if($(this).attr("value")=="WedC2W2"){
+				$("#ts-avail-c2-w2-2").toggle();
+            }else if($(this).attr("value")=="WedC3W1"){
+				$("#ts-avail-c3-w1-2").toggle();
+            }else if($(this).attr("value")=="WedC3W2"){
+				$("#ts-avail-c3-w2-2").toggle();
             }
-			if($(this).attr("value")=="Thu1"){
-				$("#ts-avail-thu1").toggle();
+			if($(this).attr("value")=="Thu1C1W1"){
+				$("#ts-avail-c1-w1-3").toggle();
+            }else if($(this).attr("value")=="Thu2C1W2"){
+				$("#ts-avail-c1-w2-3").toggle();
+            }else if($(this).attr("value")=="ThuC2W1"){
+				$("#ts-avail-c2-w1-3").toggle();
+            }else if($(this).attr("value")=="ThuC2W2"){
+				$("#ts-avail-c2-w2-3").toggle();
+            }else if($(this).attr("value")=="ThuC3W1"){
+				$("#ts-avail-c3-w1-3").toggle();
+            }else if($(this).attr("value")=="ThuC3W2"){
+				$("#ts-avail-c3-w2-3").toggle();
             }
-			if($(this).attr("value")=="Fri1"){
-				$("#ts-avail-fri1").toggle();
+			if($(this).attr("value")=="Fri1C1W1"){
+				$("#ts-avail-c1-w1-4").toggle();
+            }else if($(this).attr("value")=="Fri2C1W2"){
+				$("#ts-avail-c1-w2-4").toggle();
+            }else if($(this).attr("value")=="FriC2W1"){
+				$("#ts-avail-c2-w1-4").toggle();
+            }else if($(this).attr("value")=="FriC2W2"){
+				$("#ts-avail-c2-w2-4").toggle();
+            }else if($(this).attr("value")=="FriC3W1"){
+				$("#ts-avail-c3-w1-4").toggle();
+            }else if($(this).attr("value")=="FriC3W2"){
+				$("#ts-avail-c3-w2-4").toggle();
             }
-			if($(this).attr("value")=="Sat1"){
-				$("#ts-avail-sat1").toggle();
-            }
-            if($(this).attr("value")=="Mon2"){
-				$("#ts-avail-mon2").toggle();
-			}
-			if($(this).attr("value")=="Tue2"){
-				$("#ts-avail-tue2").toggle();
-			}
-			if($(this).attr("value")=="Wed2"){
-				$("#ts-avail-wed2").toggle();
-			}
-			if($(this).attr("value")=="Thu2"){
-				$("#ts-avail-thu2").toggle();
-			}
-			if($(this).attr("value")=="Fri2"){
-				$("#ts-avail-fri2").toggle();
-			}
-			if($(this).attr("value")=="Sat2"){
-				$("#ts-avail-sat2").toggle();
-            }
+			if($(this).attr("value")=="Sat1C1W1"){
+				$("#ts-avail-c1-w1-5").toggle();
+            }else if($(this).attr("value")=="Sat2C1W2"){
+				$("#ts-avail-c1-w2-5").toggle();
+            }else if($(this).attr("value")=="SatC2W1"){
+				$("#ts-avail-c2-w1-5").toggle();
+            }else if($(this).attr("value")=="SatC2W2"){
+				$("#ts-avail-c2-w2-5").toggle();
+            }else if($(this).attr("value")=="SatC3W1"){
+				$("#ts-avail-c3-w1-5").toggle();
+            }else if($(this).attr("value")=="SatC3W2"){
+				$("#ts-avail-c3-w2-5").toggle();
+            }         
 	   });
 });
 function showCycleDetails($week){
+	
 	if($week == "1w")
 	{
-		$("#custtd_left1").show();
+		$("#custtd_leftc1w1").show();
 		$("#c1week1").show();
-		$("#custtd_left2").hide();
+		$("#custtd_leftc1w2").hide();
 		$("#c1week2").hide();
 
 	}else{
-		$("#custtd_left1").show();		
+		$("#custtd_leftc1w1").show();		
 		$("#c1week1").show();
-		$("#custtd_left2").show();
+		$("#custtd_leftc1w2").show();
 		$("#c1week2").show();
+	}
+}
+function showCycleDetailstwo($week){
+	if($week == "1w")
+	{
+		$("#custtd_leftc2w1").show();
+		$("#c2week1").show();
+		$("#custtd_leftc2w2").hide();
+		$("#c2week2").hide();
+	}else{
+		$("#custtd_leftc2w1").show();		
+		$("#c2week1").show();
+		$("#custtd_leftc2w2").show();
+		$("#c2week2").show();
 	}
 
 }
@@ -1598,3 +1660,83 @@ $(document).ready(function() {
       	}
 	});
 });
+function showCycleDetailsthree($week){
+	if($week == "1w")
+	{
+		$("#custtd_leftc3w1").show();
+		$("#c3week1").show();
+		$("#custtd_leftc3w2").hide();
+		$("#c3week2").hide();
+
+	}else{
+		$("#custtd_leftc3w1").show();		
+		$("#c3week1").show();
+		$("#custtd_leftc3w2").show();
+		$("#c3week2").show();
+	}
+
+}
+
+$(document).ready(function(){
+  if($('#programId').val()!=''){
+	 
+	 for ( var i = 0; i <= 5; i++ ){
+	    cyc1_wk1 = '#c1-w1-'+i;
+		ts_avail_cyc1_wk1 = '#ts-avail-c1-w1-'+i;
+		cyc1_wk2 = '#c1-w2-'+i;
+		ts_avail_cyc1_wk2 = '#ts-avail-c1-w2-'+i;
+		cyc2_wk1 = '#c2-w1-'+i;
+		ts_avail_cyc2_wk1 = '#ts-avail-c2-w1-'+i;
+		cyc2_wk2 = '#c2-w2-'+i;
+		ts_avail_cyc2_wk2 = '#ts-avail-c2-w2-'+i;
+		cyc3_wk1 = '#c3-w1-'+i;
+		ts_avail_cyc3_wk1 = '#ts-avail-c3-w1-'+i;
+		cyc3_wk2 = '#c3-w2-'+i;
+		ts_avail_cyc3_wk2 = '#ts-avail-c3-w2-'+i;
+		if($(cyc1_wk1).prop('checked') == true){
+			$(ts_avail_cyc1_wk1).show();
+		}
+		if($(cyc1_wk2).prop('checked') == true){
+			$(ts_avail_cyc1_wk2).show();
+		}
+		if($(cyc2_wk1).prop('checked') == true){
+			$(ts_avail_cyc2_wk1).show();
+		}
+		if($(cyc2_wk2).prop('checked') == true){
+			$(ts_avail_cyc2_wk2).show();
+		}
+		if($(cyc3_wk1).prop('checked') == true){
+			$(ts_avail_cyc3_wk1).show();
+		}
+		if($(cyc3_wk2).prop('checked') == true){
+			$(ts_avail_cyc3_wk2).show();
+		}
+	  }	
+  }
+});
+//Ajax delete the cycle function 
+function deleteCycle($id){
+	if($id==""){
+		alert("Please select a row to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete this Program Cycles?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_cycle',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected program cycle.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
+

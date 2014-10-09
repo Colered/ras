@@ -55,7 +55,7 @@ $(document).ready(function(){
 							</td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<a href="program_cycles.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" onClick=""></a>
+								<a href="#" class="table-icon delete" onclick="deleteCycle(<?php echo $row['id'];?>)"></a>
 							</td>
 						</tr>
 				<?php } ?>
