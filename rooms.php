@@ -1,4 +1,4 @@
-<?php include('header.php'); 
+<?php include('header.php');
 $room_type=""; $room_name=""; $building_name=""; $roomId="";
 $obj = new Classroom();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
@@ -7,7 +7,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$row = $result->fetch_assoc();
 }
 $roomData = $obj->getAllRoomType();
-$objBuld = new Buildings();  
+$objBuld = new Buildings();
 $buildData = $objBuld->viewBuld();
 $slctRmType = isset($_GET['edit']) ? $row['room_type_id'] : (isset($_POST['slctRmType'])? $_POST['slctRmType']:'');
 $txtRmName = isset($_GET['edit']) ? $row['room_name'] : (isset($_POST['txtRmName'])? $_POST['txtRmName']:'');
@@ -72,7 +72,7 @@ $slctBuilding = isset($_GET['edit']) ? $row['building_id'] : (isset($_POST['slct
                     <div class="txtfield">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'rooms_view.php';">
                     </div>
-                </div>	
+                </div>
             </form>
         </div>
         <div class="clear"></div>

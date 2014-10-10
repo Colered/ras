@@ -474,6 +474,9 @@ function deleteSubject($id){
 }
 
 //function for addind session number with subject
+$(document).ready(function() {
+ 	$('.subjectSession').hide();
+}); 
 /*$(document).ready(function() {
  $('.subjectSession').hide();
 	var max_fields      = 10; 
