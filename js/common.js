@@ -616,18 +616,18 @@ $(document).ready(function() {
 					},
 					success: function($succ){
 						if($succ==1){
-							//$('#showstatus').val('Yes');
+							$('#showstatusNoAvail').hide();
 							$('#showstatusAvail').show();
 						}else if($succ==2){
-							//$('#showstatus').val('No');
+							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
 						}else if($succ==3){
-							//$('#showstatus').val('No');
+							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is not available on the selected time and day.');
 						}else if($succ==4){
-							//$('#showstatus').val('No');
+							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Classroom is not free on the given date and time.');
 						}
