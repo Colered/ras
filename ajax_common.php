@@ -61,6 +61,7 @@ switch ($codeBlock) {
 	case "del_subject":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
+			//delete all the sessions related to the subject
 			$sclt_query="select * from subject_session where subject_id='".$id."'";
 			$session_detail_qry = mysqli_query($db, $sclt_query);
 			if(mysqli_affected_rows($db)>0){
@@ -578,11 +579,13 @@ switch ($codeBlock) {
 							$query="select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='".$_POST['subjectId']."' and ta.reserved_flag=1 limit 1";
 							$q_res = mysqli_query($db, $query);
 							$dataAll = mysqli_fetch_assoc($q_res);
+							if(mysqli_affected_rows($db)>0){
 								if($dataAll['room_id']!= $_POST['room_id']){
 									echo 6;
 									$valid=0;
 									exit;
 								}
+							}
 						}
 						//check if teacher is available on the given time and day and is  not engaged in some other reserved activity
 						if($valid==1){ 
@@ -656,11 +659,13 @@ switch ($codeBlock) {
 			$query="select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='".$_POST['subjectId']."' and ta.reserved_flag=1 limit 1";
 			$q_res = mysqli_query($db, $query);
 			$dataAll = mysqli_fetch_assoc($q_res);
+			if(mysqli_affected_rows($db)>0){
 				if($dataAll['room_id']!= $_POST['room_id']){
 					echo 2;
 					$valid=0;
 					exit;
 				}
+			}
 		}
 		//check if teacher is available on the given time and day and is  not engaged in some other reserved activity
 		if($valid==1){ 

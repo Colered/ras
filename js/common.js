@@ -451,7 +451,7 @@ function deleteSubject($id){
 	if($id==""){
 		alert("Please select a subject to delete");
 		return false;
-	}else if(confirm("Are you sure you want to delete the Subject?")) {
+	}else if(confirm("Are you sure you want to delete the Subject? This will delete all the related sessions and activities.")) {
 	    $.ajax({
                 type: "POST",
                 url: "ajax_common.php",
