@@ -618,3 +618,9 @@ div.divSession{
 .divException{ text-align:right}
 .exceptionTbl{ width:60px;}
 .divException{ padding-left:80px}
+.btnSessiondiv{padding-top:0px!important; margin-left:20px;}
+.sessionboxSub {
+width: 150px;
+float: left;
+text-align: left;
+}

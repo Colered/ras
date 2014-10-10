@@ -3,12 +3,10 @@ include('header.php');
 $objP = new Programs();
 $objS = new Subjects();
 $objT = new Teacher();
-
 $rel_teacher = $objT->getTeachers();
 $rel_prog = $objP->getProgramListYearWise();
 $rel_subject = $objS->getSubjects();
 $rel_session = $objS->getSessions();
-
 ?>
 <div id="content">
     <div id="main">

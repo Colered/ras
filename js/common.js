@@ -65,7 +65,7 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
- });			   
+});			   
 
 $(function() {
 	$("#fromGenrtTmtbl").datepicker({
@@ -184,7 +184,7 @@ $(function() {
 //validate form for area
 $(document).ready(function(){
 		$("#areaForm").validate();
-		$("#subjectForm").validate();
+		//$("#subjectForm").validate();
 		$("#roomsForm").validate();
 		$("#buildings").validate();
 		$("#frmProgram").validate();
@@ -472,61 +472,237 @@ function deleteSubject($id){
     }
     return false;
 }
+
 //function for addind session number with subject
-$(document).ready(function() {
+/*$(document).ready(function() {
  $('.subjectSession').hide();
-    var max_fields      = 10; 
-    var wrapper         = $(".divSession"); 
-    var add_button      = $(".btnSession"); 
-    var x = 1,y=0; 
-    $(add_button).click(function(e){ 
-  var sessionName='',sessionOrder='',sessionDesc='';       
-  sessionName=stripslashes(strip_tags($('#txtSessionName').val()));
-  sessionDesc=stripslashes(strip_tags($('#txtareaSessionDesp').val()));
-  sessionOrder=$('#txtOrderNum').val();
-  if(sessionName==""){
-	 alert('Please select session name.');
-  }else if(sessionOrder==""){
-	 alert('Please select order number');
-  }else if(!$.isNumeric(sessionOrder)){
-	 alert('order number should be numeric');
-  }
-  if($.isNumeric(sessionOrder)){
-  e.preventDefault();
-  var subjectID=$('#subjectId').val();
-  var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
-  if(subjectID!=""){
-   var maxSerialNumVal=maxSerialNum + 1;
-   $('#maxSessionListVal').val(maxSerialNumVal);
-   if(maxSerialNum==0){
-    $(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>'); 
-   }
-   if(sessionName!=''){
-    $('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionOrder+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
-    //$(wrapper).append('');
-    $('#txtSessionName').val('');
-    $('#txtOrderNum').val('');
-    $('#txtareaSessionDesp').val('');
-   }
-     }else{
-   if(x < max_fields){ 
-   x++;
-   y++;
-   if(sessionName!=''){
-    if(y==1){
-    $(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Remove</th></tr></thead><tbody>'); 
-    }
-             $('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionOrder+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSession(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
-    $('#txtSessionName').val('');
-    $('#txtOrderNum').val('');
-    $('#txtareaSessionDesp').val('');
-   }
-   }
-    }
-   }else{
-      alert('Order number should be numeric');
-    }
- });
+	var max_fields      = 10; 
+	var wrapper         = $(".divSession"); 
+	var add_button      = $("#btnAddNewSess"); 
+	var x = 1,y=0; 
+	$(add_button).click(function(e){ 
+		  $("#subjectForm").validate();
+		  var sessionName='',sessionOrder='',sessionDesc='', sessionCaseNo='', sessionTechNote='';       
+		  sessionName=stripslashes(strip_tags($('#txtSessionName').val()));
+		  sessionDesc=stripslashes(strip_tags($('#txtareaSessionDesp').val()));
+		  sessionOrder=$('#txtOrderNum').val();
+		  sessionCaseNo=stripslashes(strip_tags($('#txtCaseNo').val()));
+		  sessionTechNote=stripslashes(strip_tags($('#txtareatechnicalNotes').val()));
+		  if(sessionName==""){
+			 alert('Please select session name.');
+		  }else if(sessionOrder==""){
+			 alert('Please select order number');
+		  }else if(sessionCaseNo==""){
+			 alert('Please enter a valid case no');
+		  }else if(sessionTechNote==""){
+			 alert('Please enter the valid technical note');
+		  }else if(!$.isNumeric(sessionOrder)){
+			 alert('order number should be numeric');
+		  }
+		  if($.isNumeric(sessionOrder))
+		  {
+			  e.preventDefault();
+			  var subjectID=$('#subjectId').val();
+			  var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
+			  if(subjectID!=""){
+				   var maxSerialNumVal=maxSerialNum + 1;
+				   $('#maxSessionListVal').val(maxSerialNumVal);
+				   if(maxSerialNum==0){
+						$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Case No.</th><th>Technical Notes</th><th>Remove</th></tr></thead><tbody>'); 
+				   }
+				   if(sessionName!=''){
+						$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td>'+sessionCaseNo+'</td><td>'+sessionTechNote+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionOrder+'"/><input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo'+maxSerialNumVal+'"  value="'+sessionCaseNo+'"/><input type="hidden" name="sessionTechNote[]" id="sessionTechNote'+maxSerialNumVal+'"  value="'+sessionTechNote+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
+						//$(wrapper).append('');
+						$('#txtSessionName').val('');
+						$('#txtOrderNum').val('');
+						$('#txtareaSessionDesp').val('');
+						$('#txtCaseNo').val('');
+						$('#txtareatechnicalNotes').val('');
+				   }
+			   }else{
+					if(x < max_fields){ 
+						x++; y++;
+						if(sessionName!=''){
+							if(y==1){
+							$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Case No.</th><th>Technical Notes</th><th>Remove</th></tr></thead><tbody>'); 
+							}
+							$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td>'+sessionCaseNo+'</td><td>'+sessionTechNote+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionOrder+'"/><input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo'+y+'"  value="'+sessionCaseNo+'"/><input type="hidden" name="sessionTechNote[]" id="sessionTechNote'+y+'"  value="'+sessionTechNote+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSession(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
+							$('#txtSessionName').val('');
+							$('#txtOrderNum').val('');
+							$('#txtareaSessionDesp').val('');
+							$('#txtCaseNo').val('');
+							$('#txtareatechnicalNotes').val('');
+						}
+					}
+				}
+		   }else{
+			  alert('Order number should be numeric');
+			}
+		 });
+});*/
+$(document).ready(function() {
+	//function for check availability
+	$("#btnCheckAvail").on( "click", function() {
+		var txtSessionName="", txtOrderNum="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
+		var subIdEncrypt = $('#subIdEncrypt').val()
+  		//custom validation for all the fieelds on form
+		var formValid = 0;
+		if($('#txtSessionName').val()==""){
+			$('#txtSessionName').css('border', '1px solid red');
+			var formValid = 1;
+		}else{
+			$('#txtSessionName').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
+			$('#txtOrderNum').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#txtOrderNum').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if($('#slctTeacher').val()==""){
+			$('#slctTeacher').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#slctTeacher').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if($('#room_id').val()==""){
+			$('#room_id').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#room_id').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if($('#tslot_id').val()==""){
+			$('#tslot_id').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#tslot_id').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if($('#subSessDate').datepicker().val()==""){
+			$('#subSessDate').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#subSessDate').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if(($('#txtSessionName').val()=="") || ($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val())) || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="")){
+			var formValid = 1; 
+			return false;
+			}
+		//sending an ajax request to check the availability of an activity
+		if(formValid==0){
+			$.ajax({
+					type: "POST",
+					url: "ajax_common.php",
+					data: {
+						'subjectId': $('#subjectId').val(),
+						'cycleId': $('#slctCycle').val(),
+						'txtSessionName': $('#txtSessionName').val(),
+						'txtOrderNum': $('#txtOrderNum').val(),
+						'txtareaSessionDesp': $('#txtareaSessionDesp').val(),
+						'txtCaseNo': $('#txtCaseNo').val(),
+						'txtareatechnicalNotes': $('#txtareatechnicalNotes').val(),
+						'room_id': $('#room_id').val(),
+						'programId': $('#slctProgram').val(),
+						'areaId': $('#slctArea').val(),
+						'slctTeacher': $('#slctTeacher').val(),
+						'tslot_id': $('#tslot_id').val(),
+						'subSessDate': $('#subSessDate').val(),
+						'codeBlock': 'checkAvailabilitySession',
+					},
+					success: function($succ){
+						if($succ==1){
+							//$('#showstatus').val('Yes');
+							$('#showstatusAvail').show();
+						}else if($succ==2){
+							//$('#showstatus').val('No');
+							$('#showstatusNoAvail').show();
+							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
+						}else if($succ==3){
+							//$('#showstatus').val('No');
+							$('#showstatusNoAvail').show();
+							alert('Teacher is not available on the selected time and day.');
+						}else if($succ==4){
+							//$('#showstatus').val('No');
+							$('#showstatusNoAvail').show();
+							alert('Classroom is not free on the given date and time.');
+						}
+					}
+				});
+		}else{
+			return false;
+		}
+	});
+
+	
+	//add a new session function										  
+	$("#btnAddNewSess").on( "click", function() {
+		var txtSessionName="", txtOrderNum="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
+		var subIdEncrypt = $('#subIdEncrypt').val()
+  		//validating the forms
+		var formValid = 0;
+		if($('#txtSessionName').val()==""){
+			$('#txtSessionName').css('border', '1px solid red');
+			var formValid = 1;
+		}else{
+			$('#txtSessionName').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
+			$('#txtOrderNum').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#txtOrderNum').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		//sending an ajax request to save the session and creating a teacher activity
+		if(formValid==0){
+			$.ajax({
+					type: "POST",
+					url: "ajax_common.php",
+					data: {
+						'subjectId': $('#subjectId').val(),
+						'cycleId': $('#slctCycle').val(),
+						'txtSessionName': $('#txtSessionName').val(),
+						'txtOrderNum': $('#txtOrderNum').val(),
+						'txtareaSessionDesp': $('#txtareaSessionDesp').val(),
+						'txtCaseNo': $('#txtCaseNo').val(),
+						'txtareatechnicalNotes': $('#txtareatechnicalNotes').val(),
+						'room_id': $('#room_id').val(),
+						'programId': $('#slctProgram').val(),
+						'areaId': $('#slctArea').val(),
+						'slctTeacher': $('#slctTeacher').val(),
+						'tslot_id': $('#tslot_id').val(),
+						'subSessDate': $('#subSessDate').val(),
+						'codeBlock': 'add_sub_session',
+					},
+					success: function($succ){
+						if($succ==1){
+							window.location.href = 'subjects.php?edit='+subIdEncrypt;
+							//alert("New session is added successfully");
+						}else if($succ==2){
+							alert("Session Name already exist for the given subject.");
+						}else if($succ==5){
+							alert("Activity cannot be created, please click to check availability for more detail.");
+						}else if($succ==6){
+							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
+						}else if($succ==3){
+							alert('Teacher is not available on the selected time and day.');
+						}else if($succ==4){
+							alert('Classroom is not free on the given date and time.');
+						}else{
+							alert("Cannot create the session.");
+						}
+					}
+				});
+		}else{
+				return false;
+		}
+	});
 });
 
 function getSessionName(subjectId)
@@ -547,30 +723,51 @@ function getSessionName(subjectId)
 	}
 }
 //Ajax delete the Subject function 
-function removeSession($sessionId, $serialId){
-	if(confirm("Are you sure you want to delete the Subject?")) {
-	    	if($sessionId == 0){
-				$('#'+$serialId).closest('tr').remove();
-				$('.green, .red').hide();
-			}else{
-				$.ajax({
-						type: "POST",
-						url: "ajax_common.php",
-						data: {
-							'id': $sessionId,
-							'codeBlock': 'del_session',
-						},
-						success: function($succ){
-							if($succ==1){
-								$('#'+$sessionId).closest('tr').remove();
-								$('.green, .red').hide();
-							}else{
-								alert("Cannot delete the selected session.");
-								$('.green, .red').hide();
+function removeSession($activityId, $sessionID, $subjectId, $srno ){
+	if(confirm("Are you sure you want to delete the session?")) {
+		$.ajax({
+				type: "POST",
+				url: "ajax_common.php",
+				data: {
+					'activityId': $activityId,
+					'sessionID': $sessionID,
+					'codeBlock': 'del_activity',
+				},
+				success: function($succ){
+					if($succ==2){
+						//if the activity is last then delete the session also
+						if(confirm("if you will delete this activity, the session will also be deleted.?")) {
+							$.ajax({
+										type: "POST",
+										url: "ajax_common.php",
+										data: {
+											'activityId': $activityId,
+											'sessionID': $sessionID,
+											'codeBlock': 'del_sub_activity_session',
+										},
+										success: function($succ){
+											if($succ==1){
+												//reload the page
+												$('#'+$srno).closest('tr').remove();
+												$('.green, .red').hide();
+												//window.location.href = 'subjects.php?edit'+$subjectId+'';
+											}else{
+												alert("Cannot delete the selected session.");
+												$('.green, .red').hide();
+											}
+										}
+								});
 							}
-						}
-				});
-    		}
+						return false;
+					}else if($succ==1){
+						$('#'+$srno).closest('tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected subject session.");
+						$('.green, .red').hide();
+					}
+				}
+		});
 	}
     return false;
 }
@@ -1498,7 +1695,6 @@ function deleteExcepProgCycle($sessionId, $serialId){
 	}
     return false;
 }
-
 //function to show/hide the cycle info
 function showHideCycleInfo(subjectId)
 {
@@ -1738,5 +1934,87 @@ function deleteCycle($id){
         });
     }
     return false;
+}
+//getting cycles by program ID
+function getCycleByProgId($this){
+	var selectVal = $('#slctProgram :selected').val();
+	var progId = selectVal.split("#");
+	if(progId[0]!=""){
+		 $.ajax({
+			url: "./ajax_common.php",
+			type: "POST",
+			data: {
+				'codeBlock': 'getCycles',
+				'progId': progId[0],
+			},
+			success: function(data) {
+				 $("#slctCycle").html(data);
+			},
+			error: function(errorThrown) {
+				console.log(errorThrown);
+			}
+		  });
+	}else{
+			$("#slctCycle").html("<option value=''>--Select a program first--</option>");
+		}
+}
+$(document).ready(function(){ 
+	$("#subSessDate").datepicker({
+			dateFormat: 'yy-mm-dd',
+			defaultDate: "+1w",
+			changeMonth: true,
+			numberOfMonths: 1,
+			changeMonth: true, 
+			changeYear: true,
+	});
+});
+
+
+//Ajax to check activity availability on subject session page
+function checkAvailSubSession(program_year_id,subject_id,sessionid,teacher_id,row_id)
+{
+    var room_id = $("#room_id_"+row_id).val();
+    if(room_id!=''){
+      $("#room_validate_"+row_id).hide();
+    }
+    var tslot_id = $("#tslot_id_"+row_id).val();
+    if(tslot_id!=''){
+	  $("#tslot_validate_"+row_id).hide();
+    }
+	var act_date_val = $("#activityDateCal_"+row_id).val();
+	if(act_date_val!=''){
+	  $("#activityDate_validate_"+row_id).hide();
+	}
+	$("#room_tslot_availability_avail_"+row_id).hide();
+	$("#room_tslot_availability_not_avail_"+row_id).hide();
+	
+    if(room_id!='' && tslot_id!='' && act_date_val!=''){
+		$.ajax({
+			 url: "./ajax_common.php",
+			 type: "POST",
+			 data: {
+				'program_year_id': program_year_id,
+				'subject_id': subject_id,
+				'sessionid': sessionid,
+				'teacher_id': teacher_id,
+				'room_id': room_id,
+				'tslot_id': tslot_id,
+				'act_date_val': act_date_val,
+				'codeBlock': 'checkActAvailability',
+			 },
+			 success: function(data) {
+			     if(data==1){
+			        $("#room_tslot_availability_not_avail_"+row_id).show();
+				 	$('input[type="submit"]').attr('disabled' , true);
+				 }else{
+				   $("#room_tslot_availability_avail_"+row_id).show();
+				   $('input[type="submit"]').attr('disabled' , false);
+				 }	
+			 },
+			 error: function(errorThrown) {
+				 console.log(errorThrown);
+			 }
+		});
+   }	
 }
 

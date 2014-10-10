@@ -206,6 +206,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}
 		break;
 		case 'addEditSubject':
+		//print_r($_POST); die;
 		//adding new subject
 			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
 				$obj = new Subjects();
@@ -530,7 +531,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$_SESSION['error_msg'] = $message;
 				header('Location: holidays.php');
 			}
-		break;
+			break;
+			case 'addEditSession':
+				print_r($_POST); die;
+			break;
 
 		case "add_edit_cycles":
 		 if(isset($_POST['programId'])){

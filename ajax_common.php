@@ -162,16 +162,36 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	break;
-	case "del_session":
-		if(isset($_POST['id'])){
-			$id = $_POST['id'];
-			$del_timeslot_query="delete from subject_session where id='".$id."'";
-			$qry = mysqli_query($db, $del_timeslot_query);
-			if(mysqli_affected_rows($db)>0)
-				echo 1;
-			else
-				echo 0;
-		}
+	case "del_activity":
+		if(isset($_POST['activityId']) && isset($_POST['sessionID'])){
+			$activityId = $_POST['activityId'];
+			//check if activity id is o means there is no activity so simply delete the session
+			if($activityId==0){
+				$del_session="delete from subject_session where id='".$_POST['sessionID']."'";
+				$qry = mysqli_query($db, $del_session);
+				if(mysqli_affected_rows($db)>0){
+					echo 1;
+				}else{
+					echo 0;
+				}
+			}else{
+				//check if some other activities exists for the session
+				$del_activity_query="select session_id from teacher_activity where session_id = '".$_POST['sessionID']."' and id!='".$_POST['activityId']."'";
+				$qry = mysqli_query($db, $del_activity_query);
+				if(mysqli_affected_rows($db)>0){
+					//delete only activity not the session 
+					$del_act_query="delete from teacher_activity where id='".$_POST['activityId']."'";
+					$qry = mysqli_query($db, $del_act_query);
+					if(mysqli_affected_rows($db)>0)
+						echo 1;
+					else
+						echo 0;
+				}else{
+					//session also needs to be deleted as this is the last activity of the session
+					 echo 2;
+				}
+			}
+	}
     break;
 	case "getSubjects":
 		$options='<option value="">--Select Subject--</option>';
@@ -509,5 +529,151 @@ switch ($codeBlock) {
 		else
 			echo 0;
 	}
+	case "getCycles":
+		if(isset($_POST['progId']) && $_POST['progId']!=""){
+				$options .='<option value="">--Select Cycle--</option>';
+				$cycle_query="select no_of_cycle from cycle where program_year_id='".$_POST['progId']."' limit 1";
+				$qry = mysqli_query($db, $cycle_query);
+				$data = mysqli_fetch_row($qry); 
+				for($i=1; $i<=$data[0]; $i++){
+					$options .='<option value="'.$i.'" >'.$i.'</option>';
+				}
+		}
+		echo $options;
+	break;
+	case "add_sub_session":
+		//check if same session name already created
+		$rule_query="select id, session_name from subject_session where subject_id='".$_POST['subjectId']."' and session_name = '".$_POST['txtSessionName']."'";
+		$q_res = mysqli_query($db, $rule_query);
+		$dataAll = mysqli_fetch_assoc($q_res);
+		if(count($dataAll)>0){
+			echo '2';
+		}else{
+			//if only session name and order no is provide, just create a session and exit
+			$currentDateTime = date("Y-m-d H:i:s");
+			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['txtOrderNum']) && $_POST['txtOrderNum']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']=="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']=="") && (isset($_POST['room_id']) && $_POST['room_id']=="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']=="") ){
+					$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$_POST['txtOrderNum']."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
+				if(mysqli_affected_rows($db)>0){
+					echo 1;
+				}else{
+					echo 0;
+				} exit;
+			}
+			//if all fields are present then first add session and then create activities after checking the availability
+			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['txtOrderNum']) && $_POST['txtOrderNum']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']!="") && (isset($_POST['room_id']) && $_POST['room_id']!="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']!="")){
+						$group_id = "";
+						//check the availability of activity with different condition
+						//check if the subject have some other reserved activities and the new room name is same as was in previously assigned room
+						$valid=1;
+						if(isset($_POST['subjectId']) && $_POST['subjectId']!=""){
+							$query="select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='".$_POST['subjectId']."' and ta.reserved_flag=1 limit 1";
+							$q_res = mysqli_query($db, $query);
+							$dataAll = mysqli_fetch_assoc($q_res);
+								if($dataAll['room_id']!= $_POST['room_id']){
+									echo 6;
+									$valid=0;
+									exit;
+								}
+						}
+						//check if teacher is available on the given time and day and is  not engaged in some other reserved activity
+						if($valid==1){ 
+							$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
+							$q_res = mysqli_query($db, $teachAvail_query);
+							if(mysqli_affected_rows($db)>0){
+								echo 3;
+								$valid=0;
+								exit;
+							}
+						}
+						//check if room is free at given time and day
+						if($valid==1){ 
+							$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."'";
+							$q_res = mysqli_query($db, $roomAvail_query);
+							if(mysqli_affected_rows($db)>0){
+								echo 4;
+								$valid=0;
+								exit;
+							}
+						}
+						if($valid==1){
+							$reserved_flag="1";
+							$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$_POST['txtOrderNum']."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
+							if(mysqli_affected_rows($db)>0){
+								$sessionId = mysqli_insert_id($db);
+								//get last created activity name
+								$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+								$dRow = mysqli_fetch_assoc($result3);
+								$actCnt = substr($dRow['name'],1);
+								$actName = 'A'.($actCnt+1);
+								//insert new activity
+								$result2 = mysqli_query($db, "INSERT INTO teacher_activity VALUES ('', '".$actName."', '".$_POST['programId']."', '".$_POST['cycleId']."', '".$_POST['subjectId']."', '".$sessionId."', '".$_POST['slctTeacher']."', '".$group_id."','".$_POST['room_id']."', '".$_POST['tslot_id']."', '".$_POST['subSessDate']."', '".$reserved_flag."', NOW(), NOW());");
+								if(mysqli_affected_rows($db)>0){
+									echo 1;
+								}else{
+									echo 0;
+								}
+							}else{
+									echo 0;
+							}
+					}else{
+						echo 0;
+					}
+		}	
+	}
+	break;
+	case "del_sub_activity_session":
+		if(isset($_POST['activityId']) && isset($_POST['sessionID'])){
+			$activityId = $_POST['activityId'];
+			//delete activity
+			$del_act_query="delete from teacher_activity where id='".$_POST['activityId']."'";
+			$qry = mysqli_query($db, $del_act_query);
+			if(mysqli_affected_rows($db)>0){
+				$del_session="delete from subject_session where id='".$_POST['sessionID']."'";
+				$qry = mysqli_query($db, $del_session);
+				if(mysqli_affected_rows($db)>0){
+					echo 1;
+				}else{
+					echo 0;
+				}
+			}else{
+				echo 0;
+			}
+	}
+    break;
+	case "checkAvailabilitySession":
+		//check if the subject have some other reserved activities and the new room name is same as was in previously assigned room
+		$valid=1;
+		if(isset($_POST['subjectId']) && $_POST['subjectId']!=""){
+			$query="select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='".$_POST['subjectId']."' and ta.reserved_flag=1 limit 1";
+			$q_res = mysqli_query($db, $query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+				if($dataAll['room_id']!= $_POST['room_id']){
+					echo 2;
+					$valid=0;
+					exit;
+				}
+		}
+		//check if teacher is available on the given time and day and is  not engaged in some other reserved activity
+		if($valid==1){ 
+			$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
+			$q_res = mysqli_query($db, $teachAvail_query);
+			if(mysqli_affected_rows($db)>0){
+				echo 3;
+				$valid=0;
+				exit;
+			}
+		}
+		//check if room is free at given time and day
+		if($valid==1){ 
+			$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."'";
+			$q_res = mysqli_query($db, $roomAvail_query);
+			if(mysqli_affected_rows($db)>0){
+				echo 4;
+				$valid=0;
+				exit;
+			}
+		}
+		echo $valid;
+		break;
 }
 ?>

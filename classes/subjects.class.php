@@ -4,13 +4,17 @@ class Subjects extends Base {
    		 parent::__construct();
    	}
 	/*function for adding Subject*/
-	public function addSubject() {
+	/*public function addSubject() {
 			$sessionName = (isset($_POST['sessionName'])) ? ($_POST['sessionName']) : '';
 			$sessionNameArr=$this->formingArray($sessionName);
 			$orderNumber = (isset($_POST['sessionOrder'])) ? ($_POST['sessionOrder']) : '';
 			$orderNumberArr=$this->formingArray($orderNumber);
 			$sessionDesp = (isset($_POST['sessionDesc'])) ? ($_POST['sessionDesc']) : '';
 			$sessionDespArr=$this->formingArray($sessionDesp);
+			$txtCaseNum = (isset($_POST['txtCaseNum'])) ? ($_POST['txtCaseNum']) : '';
+			$txtCaseNumArr=$this->formingArray($txtCaseNum);
+			$txtTechNotes = (isset($_POST['txtTechNotes'])) ? ($_POST['txtTechNotes']) : '';
+			$txtTechNotesArr=$this->formingArray($txtTechNotes);
 			//check if the subject code already exists
 			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
@@ -29,9 +33,10 @@ class Subjects extends Base {
 				$program_name=$_POST['slctProgram'];
 				$program_Val=explode('#',$program_name);
 				$program_year_id=$program_Val[0];
+				$cycle_no=$_POST['slctCycle'];
 				$program_id=$program_Val[1];
 				//inserting values
-				$SQL = "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."','".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$_POST['txtCaseNum']."','".$_POST['txtTechNotes']."','".$currentDateTime."', '".$currentDateTime."')";
+				$SQL = "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."', '".$cycle_no."', '".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$currentDateTime."', '".$currentDateTime."')";
 				$result = $this->conn->query($SQL);
 				$last_ins_id = $this->conn->insert_id;
 				if($last_ins_id) {
@@ -41,7 +46,7 @@ class Subjects extends Base {
 					foreach ($sessionNameArr as $key => $value) {
 						$sessionNameval=$value;
 						//inserting subject session values
-						if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$last_ins_id."', '".$sessionNameval."','".$orderNumberArr[$j]."','".$sessionDespArr[$j]."','".$currentDateTime."', '".$currentDateTime."')")){
+						if($seesion_result = mysqli_query($this->conn, "INSERT INTO subject_session VALUES ('', '".$last_ins_id."', '".$sessionNameval."','".$orderNumberArr[$j]."','".$sessionDespArr[$j]."','".$txtCaseNumArr[$j]."','".$txtTechNotesArr[$j]."','".$currentDateTime."', '".$currentDateTime."')")){
 						$j++;
 						if($j==count($sessionNameArr)){
 						 $message="New subject has been added successfully with session";
@@ -66,7 +71,57 @@ class Subjects extends Base {
 					return 0;
 				  }
 		}
+	}*/
+	/*function for adding Subject*/
+	public function addSubject() {
+			
+			//check if the subject code already exists
+			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."'";
+			$q_res = mysqli_query($this->conn, $subject_query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0){
+				$message="Subject code already exists.";
+				$_SESSION['error_msg'] = $message;
+				return 0;
+			}else{
+				//add the new subject
+				$currentDateTime = date("Y-m-d H:i:s");
+				//fectching area id
+				//$area_id=$this->getAreaId();
+				$area_id=$_POST['slctArea'];
+				//fectching program id
+				//$program_id=$this->getProgramId();
+				//$program_name=$_POST['slctProgram'];
+				//$program_Val=explode('#',$program_name);
+				$program_year_id = $_POST['slctProgram'];
+				$cycle_no=$_POST['slctCycle'];
+				//$program_id=$program_Val[1];
+				//inserting values
+				$SQL = "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."', '".$cycle_no."', '".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$currentDateTime."', '".$currentDateTime."')";
+				$result = $this->conn->query($SQL);
+				$last_ins_id = $this->conn->insert_id;
+				if($last_ins_id) {
+					$message="Subject has been added successfully, You can manage sessions for this subject now.";
+					$_SESSION['succ_msg'] = $message;
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formsubject' method='post' action='subjects.php?edit=".base64_encode($last_ins_id)."'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
+				}else{
+				    $message="Cannot add the subject, Please try again";
+					$_SESSION['error_msg'] = $message;
+					return 0;
+				  }
+		}
 	}
+	
+	
 	/*function for listing Subject*/
 	public function viewSubject()
 	{
@@ -82,7 +137,7 @@ class Subjects extends Base {
 	}
 	public function updateSubject() {
 	        //check if the subject code already exists
-			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."' and id !='".$_POST['subjectId']."'";
+			$subject_query="select subject_name, subject_code from subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."' and id !='".$_POST['subjectId']."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0){
@@ -96,6 +151,7 @@ class Subjects extends Base {
 			$program_name=$_POST['slctProgram'];
 			$program_Val=explode('#',$program_name);
 			$program_year_id=$program_Val[0];
+			$cycle_no=$_POST['slctCycle'];
 			$program_id=$program_Val[1];
 			$sessionName = (isset($_POST['sessionName'])) ? ($_POST['sessionName']) : '';
 			$sessionNameArr=$this->formingArray($sessionName);
@@ -103,10 +159,16 @@ class Subjects extends Base {
 			$orderNumberArr=$this->formingArray($orderNumber);
 			$sessionDesp = (isset($_POST['sessionDesc'])) ? ($_POST['sessionDesc']) : '';
 			$sessionDespArr=$this->formingArray($sessionDesp);
+			
+			$txtCaseNum = (isset($_POST['sessionCaseNo'])) ? ($_POST['sessionCaseNo']) : '';
+			$txtCaseNumArr=$this->formingArray($txtCaseNum);
+			$txtTechNotes = (isset($_POST['sessionTechNote'])) ? ($_POST['sessionTechNote']) : '';
+			$txtTechNotesArr=$this->formingArray($txtTechNotes);
+			
 			$sessionRowId = (isset($_POST['sessionRowId'])) ? ($_POST['sessionRowId']) : '';
 			$sessionRowIdArr=$this->formingArray($sessionRowId);
 			//updating subject values
-			if ($result = mysqli_query($this->conn, "Update subject  Set area_id = '".$area_id."', program_year_id = '".$program_year_id."', subject_name= '".$_POST['txtSubjName']."' , subject_code= '".$_POST['txtSubjCode']."',case_number = '".$_POST['txtCaseNum']."',technical_notes = '".$_POST['txtTechNotes']."',date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['subjectId']."'")) {
+			if ($result = mysqli_query($this->conn, "Update subject  Set area_id = '".$area_id."', program_year_id = '".$program_year_id."', cycle_no = '".$cycle_no."', subject_name= '".$_POST['txtSubjName']."' , subject_code= '".$_POST['txtSubjCode']."',date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['subjectId']."'")) {
 			        if($_POST['subjectId']!=""){
 					$j=0;
 					$k=0;
@@ -115,7 +177,7 @@ class Subjects extends Base {
 					foreach ($sessionNameArr as $key => $value) {
 						$sessionNameval=$value;
 						if($j!=count($sessionRowIdArr)){
-							if($seesion_result = mysqli_query($this->conn, "Update  subject_session  Set session_name = '".$sessionNameval."', order_number = '".$orderNumberArr[$j]."', description= '".$sessionDespArr[$j]."',date_update = '".date("Y-m-d H:i:s")."' where id='".$sessionRowIdArr[$j]."'")){
+							if($seesion_result = mysqli_query($this->conn, "Update  subject_session  Set session_name = '".$sessionNameval."', order_number = '".$orderNumberArr[$j]."', description= '".$sessionDespArr[$j]."', case_number= '".$txtCaseNumArr[$j]."', technical_notes= '".$txtTechNotesArr[$j]."',date_update = '".date("Y-m-d H:i:s")."' where id='".$sessionRowIdArr[$j]."'")){
 								$j++;
 								$k=$j;
 								}
@@ -125,8 +187,7 @@ class Subjects extends Base {
 									return 1;
 								}
 					 	}else{
-							//echo "sdffffff";die;
-						   if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$_POST['subjectId']."', '".$sessionNameval."','".$orderNumberArr[$k]."','".$sessionDespArr[$k]."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')")){
+						   if($seesion_result = mysqli_query($this->conn, "INSERT INTO  subject_session VALUES ('', '".$_POST['subjectId']."', '".$sessionNameval."','".$orderNumberArr[$k]."','".$sessionDespArr[$k]."','".$txtCaseNumArr[$k]."','".$txtTechNotesArr[$k]."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')")){
 						     $k++;
 							 if($k == (count($sessionNameArr))){
 						   			$message="Subject has been updated successfully with session";
@@ -232,9 +293,9 @@ class Subjects extends Base {
 		return $program_detail;
 	}
 	public function getWebSubjectDetail($subject_id='')
-	{   
-	$row=$rowmainArr=$newArr=array();
-	$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.subject_id='".$subject_id."' ORDER BY we.cal_time, we.cal_name ");
+	{
+		$row=$rowmainArr=$newArr=array();
+		$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.subject_id='".$subject_id."' ORDER BY we.cal_time, we.cal_name ");
 		if($result->num_rows){
 			while ($rows =$result->fetch_assoc()){
 					$row[]=$rows;
@@ -252,5 +313,15 @@ class Subjects extends Base {
 		  return $rowNewArr;
 		}			
 	}
-
+    /*function for get cycle from program id*/
+ 	public function getCycleByProgId($progId){
+		$data="";
+		if($progId!=""){
+				$cycle_query="select no_of_cycle from cycle where program_year_id='".$progId."' limit 1";
+				$qry = $this->conn->query($cycle_query);
+				$row = $qry->fetch_assoc();
+				$data = $row['no_of_cycle']; 
+		}
+		return $data;
+   }
 }
