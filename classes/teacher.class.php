@@ -389,4 +389,25 @@ class Teacher extends Base {
 		}
 		return '';
 	}
+	public function getTimeslotId($timeSoltArr)
+	{
+		//print"<pre>";print_r($timeSoltArr);die;
+		//$timeslotIds = '';			
+		$ts_array = explode(",",$timeSoltArr);
+		$timeslots = array();
+		foreach($ts_array as $val)
+		{			
+			$time = explode("-",$val);
+			$start_time  = date("H:i", strtotime($time['0']));
+			$end_time = date("H:i", strtotime($time['1']));
+			$sql_time_slct = "select id from timeslot where TIME_TO_SEC(start_time) >= TIME_TO_SEC('".$start_time."') and TIME_TO_SEC(end_time) <= TIME_TO_SEC('".$end_time."')";
+			$q_res= mysqli_query($this->conn, $sql_time_slct);
+			while($data = $q_res->fetch_assoc()){
+				$timeslots[] =  $data['id'];
+			}				
+		}
+		$timeslotIds = implode(',',$timeslots);		
+		//print"<pre>";print_r($timeslotIds);die;
+		return $timeslotIds;
+	}
 }

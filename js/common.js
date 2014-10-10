@@ -1036,6 +1036,7 @@ $(document).ready(function() {
 		var tmSlotVal=$(clsTmSlot+ ' ' +str).map(function(){ return this.value }).get().join(",");
 		tsValArr.push(tmSlotVal); 
 	}
+	
 	$.ajax({
         url: "./ajax_common.php",
         type: "POST",
@@ -1049,7 +1050,7 @@ $(document).ready(function() {
 			'timeSoltArr': tsValArr,
 			'codeBlock': 'createClassAvailabilityRules',
             },
-        success: function(data) {
+        success: function(data) {			
 			if(data==1){
 			 count++;
 			 $('#fromTmDuratn, #toTmDuratn,.slctTs').val('');
@@ -1248,6 +1249,7 @@ function createTeachAvailRule(){
 					'timeslotSat': timeslotSat,
 					},
 				success: function($succ){
+						
 					if($succ==1){
 						$id = "";
 						if($('#slctTeacher').val()!=""){

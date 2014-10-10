@@ -4,11 +4,24 @@ $teacherData = $obj->getTeachers();
 $teacherAvailData = $obj->getTeacherAvailRule();
 $obj2 = new Timeslot();
 //get the list of all available timeslots
-$timeslotData = $obj2->viewTimeslot();
+/*$timeslotData = $obj2->viewTimeslot();
 $options = "";
 while($data = $timeslotData->fetch_assoc()){
 	$options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
-}
+}*/
+$options = '<option value="08:00 AM-09:00 AM">08:00 AM-09:00 AM</option>
+			<option value="09:00 AM-10:00 AM">09:00 AM-10:00 AM</option>
+			<option value="10:00 AM-11:00 AM">10:00 AM-11:00 AM</option>
+			<option value="11:00 AM-12:00 PM">11:00 AM-12:00 PM</option>
+			<option value="12:00 PM-01:00 PM">12:00 PM-01:00 PM</option>
+			<option value="01:00 PM-02:00 PM">01:00 PM-02:00 PM</option>
+			<option value="02:00 PM-03:00 PM">02:00 PM-03:00 PM</option>
+			<option value="03:00 PM-04:00 PM">03:00 PM-04:00 PM</option>
+			<option value="04:00 PM-05:00 PM">04:00 PM-05:00 PM</option>
+			<option value="05:00 PM-06:00 PM">05:00 PM-06:00 PM</option>
+			<option value="06:00 PM-07:00 PM">06:00 PM-07:00 PM</option>
+			<option value="07:00 PM-08:00 PM">07:00 PM-08:00 PM</option>';
+$name="";
 $teachId = ""; $decodeTeachId="";
 $mappedruleids = array();
 if(isset($_GET['tid']) && $_GET['tid']!=""){
@@ -69,37 +82,37 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                     <div class="txtfield" >
 					    <div class="tmSlot">
                         <input type="checkbox" id="Mon" name="day[]"  value="Mon" class="days"/><span class="dayName"> Mon </span>
-						<select id="ts-avail-mon" name="Mon[]" class="slctTs" multiple="multiple">
+						<select id="ts-avail-mon" name="Mon[]" class="slctTs" multiple="multiple" style="height:110px;">
 							<?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Tue" name="day[]"  value="Tue" class="days"/><span class="dayName"> Tue </span>
-						<select id="ts-avail-tue" name="Tue[]" class="slctTs" multiple="multiple">
+						<select id="ts-avail-tue" name="Tue[]" class="slctTs" multiple="multiple" style="height:110px;">
                            <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Wed" name="day[]"  value="Wed" class="days"/><span class="dayName"> Wed </span>
-						 <select id="ts-avail-wed" name="Wed[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-wed" name="Wed[]" class="slctTs" multiple="multiple" style="height:110px;">
                            <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Thu" name="day[]"  value="Thu" class="days"/><span class="dayName"> Thu </span>
-						 <select id="ts-avail-thu" name="Thu[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-thu" name="Thu[]" class="slctTs" multiple="multiple" style="height:110px;">
                            <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Fri" name="day[]"  value="Fri" class="days"/><span class="dayName"> Fri </span>
-						 <select id="ts-avail-fri" name="Fri[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-fri" name="Fri[]" class="slctTs" multiple="multiple" style="height:110px;">
                             <?php echo $options; ?>
                         </select>
 						</div>
 						<div class="tmSlot">
                         <input type="checkbox" id="Sat" name="day[]"  value="Sat" class="days"/><span class="dayName"> Sat </span>
-						 <select id="ts-avail-sat" name="Sat[]" class="slctTs" multiple="multiple">
+						 <select id="ts-avail-sat" name="Sat[]" class="slctTs" multiple="multiple" style="height:110px;">
                           <?php echo $options; ?>
                         </select>
 						</div>
@@ -124,7 +137,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 					    $count = 0;
 					   	while($data = $teacherAvailData->fetch_assoc()){
 							if($count%6 == 0){ echo "<tr>"; }?>
-								<td class="sched-data"><li class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b></li>
+								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 300px;"><li class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b></li>
 								<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span>
 								<ul class="listing">
 									<?php //get the day and timeslot
@@ -132,12 +145,12 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 									while($ddata = $dayData->fetch_assoc()){
 										$timeslotData2 = $obj->getTeacherAvailTimeslot($ddata['timeslot_id']);?>
 										<li><?php echo $ddata['day_name']." ";
-											while($tsdata = $timeslotData2->fetch_assoc()){
-											 echo $tsdata['timeslot_range'].",";
-											 } ?>
+											echo str_replace(",", ",<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $ddata['timeslot_id']);
+											?>
 										</li>
 									<?php } ?>
 								</ul>
+								</div>
 								</td>
 						<?php $count++; } ?>
 						</tr>

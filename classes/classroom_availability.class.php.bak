@@ -151,7 +151,7 @@ class Classroom_Availability extends Base {
 			}
 			$timeslotIds[$i] = implode(',',$timeslots);
 		}
-		//print"<pre>";print_r($timeslotIds);die;
+		print"<pre>";print_r($timeslotIds);die;
 		return $timeslotIds;
 	}
 }
