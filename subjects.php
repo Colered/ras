@@ -194,7 +194,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 					if($subjectId!=""){
 						$x=0;
 						$sessionHtml='';
-						$subj_session_query="select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.timeslot_range from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE subs.subject_id='".$subjectId."'";
+						$subj_session_query="select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.timeslot_range from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE subs.subject_id='".$subjectId."' order by subs.order_number ASC";
 						$subj_session_result= mysqli_query($db, $subj_session_query);
 						while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
 						$x++;
