@@ -40,9 +40,6 @@ $subjectCode = isset($_GET['edit']) ? $row['subject_code'] : (isset($_POST['txtS
 $areaId = isset($_GET['edit']) ? $row['area_id'] : (isset($_POST['slctArea'])? $_POST['slctArea']:'');
 $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctProgram'])? $_POST['slctProgram']:'');
 ?>
-<script type="text/javascript">
- var edit_subject_id = '<?php echo $subjectId;?>';
-</script>
 <div id="content">
     <div id="main">
 		<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
@@ -57,7 +54,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 			<input type="hidden" name="form_action" value="addEditSubject" />
 			<input type="hidden" id="subjectId" name="subjectId" value="<?php echo $subjectId; ?>" />
 			<input type="hidden" id="subIdEncrypt" name="subIdEncrypt" value="<?php echo $subIdEncrypt; ?>" />
-			
+
                 <div class="custtable_left">
 					<div class="custtd_left">
                         <h2>Choose Program<span class="redstar">*</span></h2>
@@ -188,7 +185,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						<!--<input style="display:none" type="button" name="showstatus" id="showstatus" class="btnSession buttonsub" value="">-->
                        </div>
 					    <div class="sessionboxSub addbtnSession">
-					    <input type="button" name="btnAddMore" id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;" onclick="if(edit_subject_id=='')alert('Please save subject info before add to session.');">
+					    <input type="button" name="btnAddMore" id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;">
 
 					   </div></div>
 					<div class="clear"></div>
@@ -235,8 +232,8 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 	   							<td>'.$subj_session_data['description'].'</td>
 								<td>'.$subj_session_data['case_number'].'</td>
 	   							<td>'.$subj_session_data['technical_notes'].'</td>';
-							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>							
-								
+							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
+
 								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['description'].'"/>
 								<input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo'.$x.'"  value="'.$subj_session_data['case_number'].'"/>
 								<input type="hidden" name="sessionTechNote[]" id="sessionTechNote'.$x.'"  value="'.$subj_session_data['technical_notes'].'"/>

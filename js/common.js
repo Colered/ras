@@ -645,9 +645,10 @@ $(document).ready(function() {
 	//add a new session function										  
 	$("#btnAddNewSess").on( "click", function() {
 		var txtSessionName="", txtOrderNum="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
-		var subIdEncrypt = $('#subIdEncrypt').val()
-  		//validating the forms
-		var formValid = 0;
+		var subIdEncrypt = $('#subIdEncrypt').val();
+ 		//validating the forms
+ 		var formValid = 0;
+		
 		if($('#txtSessionName').val()==""){
 			$('#txtSessionName').css('border', '1px solid red');
 			var formValid = 1;
@@ -661,6 +662,11 @@ $(document).ready(function() {
 		}else{
 			$('#txtOrderNum').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
+		}
+		if($('#subjectId').val()==""){
+			var formValid = 1;
+			alert('Please save subject info before add to session.');
+			return false;
 		}
 		//sending an ajax request to save the session and creating a teacher activity
 		if(formValid==0){
