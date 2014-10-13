@@ -74,7 +74,7 @@ class Subjects extends Base {
 	}*/
 	/*function for adding Subject*/
 	public function addSubject() {
-			
+
 			//check if the subject code already exists
 			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
@@ -120,8 +120,8 @@ class Subjects extends Base {
 				  }
 		}
 	}
-	
-	
+
+
 	/*function for listing Subject*/
 	public function viewSubject()
 	{
@@ -159,12 +159,12 @@ class Subjects extends Base {
 			$orderNumberArr=$this->formingArray($orderNumber);
 			$sessionDesp = (isset($_POST['sessionDesc'])) ? ($_POST['sessionDesc']) : '';
 			$sessionDespArr=$this->formingArray($sessionDesp);
-			
+
 			$txtCaseNum = (isset($_POST['sessionCaseNo'])) ? ($_POST['sessionCaseNo']) : '';
 			$txtCaseNumArr=$this->formingArray($txtCaseNum);
 			$txtTechNotes = (isset($_POST['sessionTechNote'])) ? ($_POST['sessionTechNote']) : '';
 			$txtTechNotesArr=$this->formingArray($txtTechNotes);
-			
+
 			$sessionRowId = (isset($_POST['sessionRowId'])) ? ($_POST['sessionRowId']) : '';
 			$sessionRowIdArr=$this->formingArray($sessionRowId);
 			//updating subject values
@@ -311,7 +311,7 @@ class Subjects extends Base {
 		   	}
 		  }
 		  return $rowNewArr;
-		}			
+		}
 	}
     /*function for get cycle from program id*/
  	public function getCycleByProgId($progId){
@@ -320,7 +320,7 @@ class Subjects extends Base {
 				$cycle_query="select no_of_cycle from cycle where program_year_id='".$progId."' limit 1";
 				$qry = $this->conn->query($cycle_query);
 				$row = $qry->fetch_assoc();
-				$data = $row['no_of_cycle']; 
+				$data = $row['no_of_cycle'];
 		}
 		return $data;
    }

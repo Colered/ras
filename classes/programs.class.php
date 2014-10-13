@@ -170,14 +170,18 @@ class Programs extends Base {
 			while($row = $result->fetch_assoc()){
 				$week1 = '';
 				$week2 = '';
-				foreach(unserialize($row['week1']) as $key=> $value)
-				{		
-						$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value);				
-				}
+				$week1_data = unserialize($row['week1']);
+				$week2_data = unserialize($row['week2']);
+				if(is_array($week1_data) && !empty($week1_data)){
+					foreach($week1_data as $key=> $value) {
+						$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value);
+					}
+				 }
 				 if($row['occurrence'] == '2w'){
-					 foreach(unserialize($row['week2']) as $key=> $value)
-					 {		
-							$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value);				
+                     if(is_array($week2_data) && !empty($week2_data)){
+						 foreach($week2_data as $key=> $value) {
+							$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value);
+						 }
 					 }
 				 }
 			   $cycle = $numSufArr[$i];
@@ -309,7 +313,7 @@ class Programs extends Base {
 				   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
 				   $chweek = $_POST['c1chWeek'.$i];
 					 if($chweek == '1w')
-					 {						
+					 {
 						$sql = "update cycle set
 								 no_of_cycle='".$slctNumcycle."',
 								 start_week='".$start_date."',
@@ -320,7 +324,7 @@ class Programs extends Base {
 								 date_update=now() WHERE id='".$cycle_edit_id."'";
 						$rel = $this->conn->query($sql);
 					   //add program exception
-					   $this->addProgramException($slctProgram_id,$i);						 
+					   $this->addProgramException($slctProgram_id,$i);
 					 }else{
 						 $sql = "update cycle set
 								 no_of_cycle='".$slctNumcycle."',
@@ -334,7 +338,7 @@ class Programs extends Base {
 					   //add program exception
 					   $this->addProgramException($slctProgram_id,$i);
 					 }
-				   
+
 				}
 			  }else if($slctNumcycle < $preNumCycle){//echo $slctNumcycle;echo "--"; echo $preNumCycle;die("2");
 				for($j=1; $j<=$preNumCycle; $j++){
@@ -345,7 +349,7 @@ class Programs extends Base {
 					   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$j]));
 					   $chweek = $_POST['c1chWeek'.$j];
 					   if($chweek == '1w')
-					   {						
+					   {
 							$sql = "update cycle set
 									 no_of_cycle='".$slctNumcycle."',
 									 start_week='".$start_date."',
@@ -356,7 +360,7 @@ class Programs extends Base {
 									 date_update=now() WHERE id='".$cycle_edit_id."'";
 							$rel = $this->conn->query($sql);
 						   //add program exception
-						   $this->addProgramException($slctProgram_id,$j);						 
+						   $this->addProgramException($slctProgram_id,$j);
 						 }else{
 							 $sql = "update cycle set
 									 no_of_cycle='".$slctNumcycle."',
@@ -395,7 +399,7 @@ class Programs extends Base {
 						   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
 						   $chweek = $_POST['c1chWeek'.$i];
 						   if($chweek == '1w')
-						   {						
+						   {
 								$sql = "update cycle set
 										 no_of_cycle='".$slctNumcycle."',
 										 start_week='".$start_date."',
@@ -406,7 +410,7 @@ class Programs extends Base {
 										 date_update=now() WHERE id='".$cycle_edit_id."'";
 								$rel = $this->conn->query($sql);
 							   //add program exception
-							   $this->addProgramException($slctProgram_id,$i);						 
+							   $this->addProgramException($slctProgram_id,$i);
 							 }else{
 								 $sql = "update cycle set
 										 no_of_cycle='".$slctNumcycle."',
@@ -425,15 +429,15 @@ class Programs extends Base {
 						$end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
 						$chweek = $_POST['c1chWeek'.$i];
 						if($chweek == '1w')
-						 {						
+						 {
 							$sql = "INSERT INTO cycle (program_year_id, start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$slctProgram_id."', '".$start_date."', '".$end_date."', '".$chweek."', '".serialize($_POST['cycle'.$i]['week1'])."','', now(), now())";
 							//echo $sql;echo "<br/>";
-							$rel = $this->conn->query($sql);						 
-						 }else{					 	
-								$sql = "INSERT INTO cycle (program_year_id, start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$slctProgram_id."', '".$start_date."', '".$end_date."', '".$chweek."', '".serialize($_POST['cycle'.$i]['week1'])."','".serialize($_POST['cycle'.$i]['week2'])."', now(), now())";	
+							$rel = $this->conn->query($sql);
+						 }else{
+								$sql = "INSERT INTO cycle (program_year_id, start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$slctProgram_id."', '".$start_date."', '".$end_date."', '".$chweek."', '".serialize($_POST['cycle'.$i]['week1'])."','".serialize($_POST['cycle'.$i]['week2'])."', now(), now())";
 								//echo $sql;echo "<br/>";
-								$rel = $this->conn->query($sql);	
-						 }					
+								$rel = $this->conn->query($sql);
+						 }
 						 //add program exception
 						 $this->addProgramException($slctProgram_id,$i);
 					 }
@@ -599,7 +603,7 @@ class Programs extends Base {
 			   $options .= '<option value="'.$data['id'].'" selected="selected">'.$data['timeslot_range'].'</option>';
 		   }else{
 			   $options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
-		   }	   	
+		   }
 		}
 		return $options;
 	}

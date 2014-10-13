@@ -121,7 +121,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 					    <input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
                        </div>
                     <div class="clear"></div>
-					
+
 
                     <div class="custtd_left">
                         <h2><strong>Manage Sessions:-</strong></h2>
@@ -176,7 +176,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						<h3>Description</h3>
 							 <textarea style="height:40px;" class="inp_txt_session alphanumeric" id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"></textarea>
 						</div>
-					   
+
 					   <div class="sessionboxSub addbtnSession">
 						<input type="button" name="btnCheckAvail" id="btnCheckAvail" class="btnSession buttonsub" value="Check Availability" style="height:30px;">
 						<span style="display:none" name="showstatusAvail" id="showstatusAvail" ><img alt="OK" src="images/ok.gif" /></span>
@@ -184,8 +184,8 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						<!--<input style="display:none" type="button" name="showstatus" id="showstatus" class="btnSession buttonsub" value="">-->
                        </div>
 					    <div class="sessionboxSub addbtnSession">
-					    <input type="button" name="btnAddMore" id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;">
-					   
+					    <input type="button" name="btnAddMore" id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;" <?php echo (isset($_GET['edit'])) ? '' : 'disabled';?>>
+
 					   </div></div>
 					<div class="clear"></div>
 					<div class="divSession" style="text-align:left">
@@ -212,7 +212,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 								<th >Room</th>
 								<th >Time Slot</th>
 								<th >Date</th>
-								
+
           						<th >Description</th>
           						<th >Case No</th>
 								<th >Technical Notes</th>
@@ -227,7 +227,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 								<td>'.$subj_session_data['room_name'].'</td>
 								<td>'.$subj_session_data['timeslot_range'].'</td>
 								<td>'.$subj_session_data['act_date'].'</td>
-								
+
 	   							<td>'.$subj_session_data['description'].'</td>
 								<td>'.$subj_session_data['case_number'].'</td>
 	   							<td>'.$subj_session_data['technical_notes'].'</td>';

@@ -19,16 +19,19 @@ $(document).ready(function(){
 </style>
 	<div id="content">
 		<div id="main">
+			<div class="full_w green center">
+				<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
+			</div>
 			<div class="full_w">
 				<div class="h_title">Classrooms View<a href="rooms.php" class="gird-addnew" title="Add New Classroom">Add new</a></div>
 				<table id="datatables" class="display">
 					<thead>
 						<tr>
-							<th >ID</th>
-							<th >Name</th>
-							<th >Room Type</th>
-							<th >Building</th>
-							<th >Action</th>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Room Type</th>
+							<th>Building</th>
+							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
