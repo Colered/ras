@@ -753,6 +753,13 @@ function removeSession($activityId, $sessionID, $subjectId, $srno ){
 												//reload the page
 												$('#'+$srno).closest('tr').remove();
 												$('.green, .red').hide();
+												var Rows = $(".datatableSession tbody tr");
+												var cnt=0;
+												Rows.each(function(index, element) {
+														cnt++;
+												var firstCell = $(this).find('td').eq(0).text(cnt);
+												});
+												
 												//window.location.href = 'subjects.php?edit'+$subjectId+'';
 											}else{
 												alert("Cannot delete the selected session.");
