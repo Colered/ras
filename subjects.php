@@ -40,6 +40,9 @@ $subjectCode = isset($_GET['edit']) ? $row['subject_code'] : (isset($_POST['txtS
 $areaId = isset($_GET['edit']) ? $row['area_id'] : (isset($_POST['slctArea'])? $_POST['slctArea']:'');
 $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctProgram'])? $_POST['slctProgram']:'');
 ?>
+<script type="text/javascript">
+ var edit_subject_id = '<?php echo $subjectId;?>';
+</script>
 <div id="content">
     <div id="main">
 		<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
@@ -185,7 +188,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						<!--<input style="display:none" type="button" name="showstatus" id="showstatus" class="btnSession buttonsub" value="">-->
                        </div>
 					    <div class="sessionboxSub addbtnSession">
-					    <input type="button" name="btnAddMore" id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;" <?php echo (isset($_GET['edit'])) ? '' : 'disabled';?>>
+					    <input type="button" name="btnAddMore" id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;" onclick="if(edit_subject_id=='')alert('Please save subject info before add to session.');">
 
 					   </div></div>
 					<div class="clear"></div>
