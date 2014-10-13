@@ -689,5 +689,24 @@ switch ($codeBlock) {
 		}
 		echo $valid;
 		break;
+		case "UpdateSessionOrderPosition":
+		if(isset($_POST['subject_id']) && $_POST['sessionIDSArrValue']!=""){
+			$sessionIdsArr=$_POST['sessionIDSArrValue'];
+			$sessionID_array=explode(',',$sessionIdsArr);
+			$cnt = count($sessionID_array);
+			$subjectId=$_POST['subject_id'];
+			foreach($sessionID_array as $key=>$val){
+			$key=$key+1;
+			$del_query="update subject_session set order_number = '".$key."' where id='".$val."' and subject_id='".$subjectId."'";
+				$qry = mysqli_query($db, $del_query);
+			}
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+	    break;
+		
 }
 ?>
+

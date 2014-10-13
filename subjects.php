@@ -54,6 +54,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 			<input type="hidden" name="form_action" value="addEditSubject" />
 			<input type="hidden" id="subjectId" name="subjectId" value="<?php echo $subjectId; ?>" />
 			<input type="hidden" id="subIdEncrypt" name="subIdEncrypt" value="<?php echo $subIdEncrypt; ?>" />
+			
                 <div class="custtable_left">
 					<div class="custtd_left">
                         <h2>Choose Program<span class="redstar">*</span></h2>
@@ -203,7 +204,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						}
 						if($x==1){
 							$sessionHtml.='<div class="sessionList">
-   							<table id="datatables" class="display">
+   							<table id="datatables" class="display datatableSession">
        						  <thead>
           					   <tr>
 								<th>Sr. No.</th>
@@ -220,8 +221,8 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 							   </tr>
        					      </thead>
        					      <tbody>';}
-						 	$sessionHtml.='<tr>
-           						<td>'.$x.'</td>
+						 	$sessionHtml.='<tr id="'.$x.'" >
+           						<td class="number">'.$x.'</td>
 	   							<td>'.$subj_session_data['session_name'].'</td>
 								<td>'.$subj_session_data['teacher_name'].'</td>
 								<td>'.$subj_session_data['room_name'].'</td>
@@ -231,19 +232,26 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 	   							<td>'.$subj_session_data['description'].'</td>
 								<td>'.$subj_session_data['case_number'].'</td>
 	   							<td>'.$subj_session_data['technical_notes'].'</td>';
-							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
+							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>							
+								
 								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['description'].'"/>
 								<input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo'.$x.'"  value="'.$subj_session_data['case_number'].'"/>
 								<input type="hidden" name="sessionTechNote[]" id="sessionTechNote'.$x.'"  value="'.$subj_session_data['technical_notes'].'"/>
 								<input type="hidden" name="sessionOrder[]" id="sessionOrder'.$x.'"  value="'.$subj_session_data['order_number'].'"/>
-								<input type="hidden" name="sessionRowId[]" id="sessionRowId'.$x.'"  value="'.$subj_session_data['id'].'"/></td>
+								<input type="hidden" name="sessionRowId[]" id="sessionRowId'.$x.'"  value="'.$subj_session_data['id'].'"/>
+								<input type="hidden" name="sessionSubId[]" id="sessionSubId'.$x.'"  value="'.$subj_session_data['sessionID'].'"/></td>
 								<td id='.$x.'><a class="remove_field" onclick="removeSession('.$actID.','.$subj_session_data['sessionID'].', '.$subjectId.', '.$x.');">Remove</a></td></tr>';
        					}
 					$sessionHtml.='<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="'.$x.'"/>';
 					$sessionHtml.='<input type="hidden" name="EditMaxExceptnListVal" id="EditMaxExceptnListVal"  value="'.$x.'"/>';
+					$sessionHtml.='<input type="hidden" name="sessionIDVal" id="sessionIDVal"  value=""/>';
+					$sessionHtml.='<input type="hidden" name="sessionIDSubject" id="sessionIDSubject"  value=""/>';
+					$sessionHtml.='<input type="hidden" name="serialNum" id="serialNum"  value=""/>';
+					$sessionHtml.='<input type="hidden" name="sessionIDSArr" id="sessionIDSArr"  value=""/>';
 					$sessionHtml.='</tbody></table></div>';
-					echo $sessionHtml;
-				 }?>
+					echo $sessionHtml;?>
+					<script type="text/javascript">sortingSession();</script>
+					<?php }?>
 					</div>
 					<div class="clear"></div>
                     <div class="custtd_left">

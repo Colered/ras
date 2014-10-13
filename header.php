@@ -18,6 +18,7 @@ if(!isset($_SESSION['user_id'])){
 		<script src="js/jquery-ui.js"></script>
 		<script src="js/jquery.validate.js"></script>
 		<script src="js/common.js"></script>
+		<script type="text/javascript" src="js/jquery.tablednd.0.7.min.js"></script>
 		<script type="text/javascript">
             $(function() {
                 $(".box .h_title").not(this).next("ul").hide("normal");

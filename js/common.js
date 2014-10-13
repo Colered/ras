@@ -2023,3 +2023,6 @@ function checkAvailSubSession(program_year_id,subject_id,sessionid,teacher_id,ro
    }	
 }
 
+function sortingSession(){
+	$(".datatableSession").tableDnD();
+}
