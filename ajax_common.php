@@ -556,8 +556,14 @@ switch ($codeBlock) {
 		}else{
 			//if only session name and order no is provide, just create a session and exit
 			$currentDateTime = date("Y-m-d H:i:s");
-			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['txtOrderNum']) && $_POST['txtOrderNum']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']=="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']=="") && (isset($_POST['room_id']) && $_POST['room_id']=="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']=="") ){
-					$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$_POST['txtOrderNum']."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
+			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']=="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']=="") && (isset($_POST['room_id']) && $_POST['room_id']=="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']=="") ){
+					//check the total no of values in subject session to make a new order no
+					$sessCount_query="select count(id) as total from subject_session";
+					$sessCount_res = mysqli_query($db, $sessCount_query);
+					$sessCount_data = mysqli_fetch_assoc($sessCount_res);
+					$txtOrderNum =  $sessCount_data['total'] +1;
+					//add new session
+					$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
 				if(mysqli_affected_rows($db)>0){
 					echo 1;
 				}else{
@@ -565,7 +571,7 @@ switch ($codeBlock) {
 				} exit;
 			}
 			//if all fields are present then first add session and then create activities after checking the availability
-			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['txtOrderNum']) && $_POST['txtOrderNum']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']!="") && (isset($_POST['room_id']) && $_POST['room_id']!="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']!="")){
+			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']!="") && (isset($_POST['room_id']) && $_POST['room_id']!="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']!="")){
 						$group_id = "";
 						//check the availability of activity with different condition
 						//check if the subject have some other reserved activities and the new room name is same as was in previously assigned room
@@ -604,7 +610,12 @@ switch ($codeBlock) {
 						}
 						if($valid==1){
 							$reserved_flag="1";
-							$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$_POST['txtOrderNum']."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
+							//check the total no of values in subject session to make a new order no
+							$sessCount_query="select count(id) as total from subject_session";
+							$sessCount_res = mysqli_query($db, $sessCount_query);
+							$sessCount_data = mysqli_fetch_assoc($sessCount_res);
+							$txtOrderNum =  $sessCount_data['total'] +1;
+							$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
 							if(mysqli_affected_rows($db)>0){
 								$sessionId = mysqli_insert_id($db);
 								//get last created activity name

@@ -546,7 +546,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	//function for check availability
 	$("#btnCheckAvail").on( "click", function() {
-		var txtSessionName="", txtOrderNum="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
+		var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
 		var subIdEncrypt = $('#subIdEncrypt').val()
   		//custom validation for all the fieelds on form
 		var formValid = 0;
@@ -557,13 +557,13 @@ $(document).ready(function() {
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
+		/*if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
 			$('#txtOrderNum').css('border', 'solid 1px red');
 			var formValid = 1; 
 		}else{
 			$('#txtOrderNum').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
-		}
+		}*/
 		if($('#slctTeacher').val()==""){
 			$('#slctTeacher').css('border', 'solid 1px red');
 			var formValid = 1; 
@@ -592,7 +592,7 @@ $(document).ready(function() {
 			$('#subSessDate').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if(($('#txtSessionName').val()=="") || ($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val())) || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="")){
+		if(($('#txtSessionName').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="")){
 			var formValid = 1; 
 			return false;
 			}
@@ -605,7 +605,7 @@ $(document).ready(function() {
 						'subjectId': $('#subjectId').val(),
 						'cycleId': $('#slctCycle').val(),
 						'txtSessionName': $('#txtSessionName').val(),
-						'txtOrderNum': $('#txtOrderNum').val(),
+						//'txtOrderNum': $('#txtOrderNum').val(),
 						'txtareaSessionDesp': $('#txtareaSessionDesp').val(),
 						'txtCaseNo': $('#txtCaseNo').val(),
 						'txtareatechnicalNotes': $('#txtareatechnicalNotes').val(),
@@ -644,7 +644,7 @@ $(document).ready(function() {
 	
 	//add a new session function										  
 	$("#btnAddNewSess").on( "click", function() {
-		var txtSessionName="", txtOrderNum="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
+		var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
 		var subIdEncrypt = $('#subIdEncrypt').val();
  		//validating the forms
  		var formValid = 0;
@@ -656,13 +656,13 @@ $(document).ready(function() {
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
+		/*if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
 			$('#txtOrderNum').css('border', 'solid 1px red');
 			var formValid = 1; 
 		}else{
 			$('#txtOrderNum').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
-		}
+		}*/
 		if($('#subjectId').val()==""){
 			var formValid = 1;
 			alert('Please save subject info before add to session.');
@@ -677,7 +677,7 @@ $(document).ready(function() {
 						'subjectId': $('#subjectId').val(),
 						'cycleId': $('#slctCycle').val(),
 						'txtSessionName': $('#txtSessionName').val(),
-						'txtOrderNum': $('#txtOrderNum').val(),
+						//'txtOrderNum': $('#txtOrderNum').val(),
 						'txtareaSessionDesp': $('#txtareaSessionDesp').val(),
 						'txtCaseNo': $('#txtCaseNo').val(),
 						'txtareatechnicalNotes': $('#txtareatechnicalNotes').val(),

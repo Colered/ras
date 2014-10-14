@@ -70,12 +70,11 @@ $(document).ready(function(){
 						    $sessionHtml='';
 							$subj_session_query="select session_name,order_number,description, case_number, technical_notes from subject_session where subject_id='".$data['id']."'";
 							$subj_session_result= mysqli_query($db, $subj_session_query);
-							$sessionHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Session Name</th><th >Order No.</th><th >Description</th><th >Case No:</th><th >Technical Notes</th></tr></thead><tbody>';
+							$sessionHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Session Name</th><th >Description</th><th >Case No:</th><th >Technical Notes</th></tr></thead><tbody>';
 							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
 							//$subj_session_order_num = (isset($subj_session_data['order_number'])) ? $subj_session_data['order_number'] : '&nbsp;';
 									$sessionHtml.='<tr>
 														<td>'.$subj_session_data['session_name'].'</td>
-														<td>'.$subj_session_data['order_number'].'</td>
 														<td>'.$subj_session_data['description'].'</td>
 														<td>'.$subj_session_data['case_number'].'</td>
 														<td>'.$subj_session_data['technical_notes'].'</td>
