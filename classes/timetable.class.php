@@ -107,7 +107,7 @@ class Timetable extends Base {
 										while($result_reserv_act = mysqli_fetch_array($sql_reserv_act))
 										{
 											
-											if($result_reserv_act['order_number'] > 0){
+											if($result_reserv_act['order_number'] > 1){
 												$subject_order = $result_reserv_act['subject_id']."-".($result_reserv_act['order_number']-1);
 											}else{
 												$subject_order = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
@@ -115,7 +115,7 @@ class Timetable extends Base {
 											if(!$this->search_array($result_reserv_act['name'],$reserved_array)) 
 											{
 												
-												if($result_reserv_act['order_number'] == 0)
+												if($result_reserv_act['order_number'] == 1)
 												{
 													
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] =  $result_reserv_act['activity_id'];
@@ -187,7 +187,8 @@ class Timetable extends Base {
 												{
 													$j = 0;
 													$rooms = $this->search_room($date,$result_slot['id'],$final_day);
-													if($result_free_act['order_number'] > 0){
+													//$min_order_id = $this->getMinimumOrderBySubject($result_free_act['subject_id']);
+													if($result_free_act['order_number'] > 1){
 														$subject_order = $result_free_act['subject_id']."-".($result_free_act['order_number']-1);
 													}else{
 														$subject_order = $result_free_act['subject_id']."-".$result_free_act['order_number'];
@@ -199,7 +200,7 @@ class Timetable extends Base {
 													
 													if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array) && !empty($rooms) && isset($rooms[$j]['id']) && !$this->search_array($result_free_act['teacher_id'],$reserved_teachers))
 													{
-														if($result_free_act['order_number'] == 0)
+														if($result_free_act['order_number'] == 1)
 														{
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] =  $result_free_act['activity_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['name'] =  $result_free_act['name'];
@@ -524,5 +525,17 @@ class Timetable extends Base {
 			return 0;
 		}
 
+	}
+	public function getMinimumOrderBySubject($subject_id)
+	{
+		$sql_select = $this->conn->query("select min(order_number) as min_order_id FROM `subject_session` WHERE subject_id = '".$subject_id."'");
+		$row_cnt = mysqli_num_rows($sql_select);
+		if($row_cnt > 0)
+		{
+			$min_order_id = mysqli_fetch_array($sql_select);
+			return $min_order_id;			
+		}else{
+			return 0;
+		}
 	}
 }

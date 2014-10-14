@@ -155,50 +155,48 @@ class Programs extends Base {
 		$row = $result->fetch_assoc();
 		return $row['no_of_cycle'];
     }
-    //function to get cycle info by program id
-    public function getCyclesInfo($prog_id){
-        $SQL = "select start_week, end_week, week1, week2, occurrence from cycle where program_year_id ='".$prog_id."'";
-    	$result =  $this->conn->query($SQL);
-    	$row_cnt = $result->num_rows;
-        $data = '';
-        $numSufArr = array('0'=>'1st','1'=>'2nd','2'=>'3rd');
-        $daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
+    //function to get cycle info by program id  
+	public function getCyclesInfo($prog_id)
+	{
+		$SQL = "select start_week, end_week, week1, week2, occurrence from cycle where program_year_id ='".$prog_id."'";
+		$result = $this->conn->query($SQL);
+		$row_cnt = $result->num_rows;
+		$data = '';
+		$numSufArr = array('0'=>'1st','1'=>'2nd','2'=>'3rd');
+		$daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 		if($row_cnt > 0){
-		    $data .= '<table cellspacing="0" cellpadding="0" style="border:none;">';
-			$data .= '<tr><td>Number of Cycle:'.$this->getCyclesInProgram($prog_id).'</td></tr>';
-			$i=0;
-			while($row = $result->fetch_assoc()){
-				$week1 = '';
-				$week2 = '';
-				$week1_data = unserialize($row['week1']);
-				$week2_data = unserialize($row['week2']);
-				if(is_array($week1_data) && !empty($week1_data)){
-					foreach($week1_data as $key=> $value) {
-						$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value);
-					}
-				 }
-				 if($row['occurrence'] == '2w'){
-                     if(is_array($week2_data) && !empty($week2_data)){
-						 foreach($week2_data as $key=> $value) {
-							$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value);
-						 }
-					 }
-				 }
-			   $cycle = $numSufArr[$i];
-			   $start_date = $this->formatDateByDate($row['start_week']);
-			   $end_date = $this->formatDateByDate($row['end_week']);
-               $data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' </td></tr>';
-			   $data .= '<tr><td> Week1 - '.$week1.'</td></tr>';
-			   if($row['occurrence'] == '2w'){
-				 $data .= '<tr><td> Week2 - '.$week2.' </td></tr>';
-			   }
-               $i++;
-               $data .= $this->getProgCycExceptions($prog_id,$i);
+		$data .= '<table cellspacing="0" cellpadding="0" style="border:none;">';
+		$data .= '<tr><td>Number of Cycle:'.$this->getCyclesInProgram($prog_id).'</td></tr>';
+		$i=0;
+		while($row = $result->fetch_assoc())
+		{
+			$week1 = '';
+			$week2 = '';
+			foreach(unserialize($row['week1']) as $key=> $value)
+			{	
+				$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
 			}
-			$data .= '</table>';
+			if($row['occurrence'] == '2w'){
+				foreach(unserialize($row['week2']) as $key=> $value)
+				{	
+					$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
+				}
+			}
+			$cycle = $numSufArr[$i];
+			$start_date = $this->formatDateByDate($row['start_week']);
+			$end_date = $this->formatDateByDate($row['end_week']);
+			$data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' </td></tr>';
+			$data .= '<tr><td> Week1 - '.$week1.'</td></tr>';
+			if($row['occurrence'] == '2w'){
+			$data .= '<tr><td> Week2 - '.$week2.' </td></tr>';
+			}
+			$i++;
+			$data .= $this->getProgCycExceptions($prog_id,$i);
+		}
+		$data .= '</table>';
 		}
 		return $data;
-    }
+	}
     //function to get program cycle exceptions
     public function getProgCycExceptions($py_id,$cycle_num)
     {
@@ -600,9 +598,9 @@ class Programs extends Base {
 	   while($data = $timeslotData->fetch_assoc()){
 		   if(in_array($data['id'], $params))
 		   {
-			   $options .= '<option value="'.$data['id'].'" selected="selected">'.$data['timeslot_range'].'</option>';
-		   }else{
-			   $options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
+			   $options .= '<option value="'.$data['start_time'].'-'.$data['end_time'].'" selected="selected">'.$data['timeslot_range'].'</option>';
+		   }else{			   
+			   $options .= '<option value="'.$data['start_time'].'-'.$data['end_time'].'">'.$data['timeslot_range'].'</option>';
 		   }
 		}
 		return $options;
