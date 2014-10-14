@@ -2,7 +2,7 @@
 ob_start();
 include('header.php');
 $subjectName=""; $subjectCode=""; $sessionNum=""; $subjectCode="";$areaCode="";$areaName="";$programName="";$roomType="";$roomName="";$subjectId="";
-$program_year_detail="";$programYearId=""; $cycle_no="";$cycleData="";$disTest="";
+$program_year_detail="";$programYearId=""; $cycle_no="";$cycleData="";$disTest=""; $disSession=""; $disDivCss=""; $disFDivCss="";
 $objT = new Teacher();
 $rel_teacher = $objT->getTeachers();
 $objS = new Subjects();
@@ -16,6 +16,7 @@ $tslot_dropDwn = $objTS->getTimeSlotDropDwn();
 
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$disTest = "disabled";
+	$disFDivCss  = "style='opacity:.5; pointer-event:none'";
 	$subIdEncrypt = $_GET['edit'];
 	$subjectId= base64_decode($_GET['edit']);
 	$obj = new Subjects();
@@ -32,6 +33,9 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 		header('Location: subject_view.php');
 		exit();
 	}
+}else{
+	$disSession = "disabled";
+	$disDivCss  = "style='opacity:.5; pointer-event:none'";
 }
 $objT = new Teacher();
 $rel_teacher = $objT->getTeachers();
@@ -56,6 +60,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 			<input type="hidden" id="subIdEncrypt" name="subIdEncrypt" value="<?php echo $subIdEncrypt; ?>" />
 
                 <div class="custtable_left">
+					<div class="addSubDiv" <?php echo $disFDivCss; ?>> 
 					<div class="custtd_left">
                         <h2>Choose Program<span class="redstar">*</span></h2>
                     </div>
@@ -122,23 +127,23 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 					    <input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
                        </div>
                     <div class="clear"></div>
-
-
+					</div>
+					<div class="sessionData" <?php echo $disDivCss; ?>>
                     <div class="custtd_left">
                         <h2><strong>Manage Sessions:-</strong></h2>
                     </div>
 						<div class="txtfield ">
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Session Name<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session alphanumeric required" id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="">
+							<input type="text" class="inp_txt_session alphanumeric required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="">
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Order Number<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session number required" id="txtOrderNum" maxlength="10" style="width:94px;" name="txtOrderNum" value="">
+							<input type="text" class="inp_txt_session number required" <?php echo $disSession; ?> id="txtOrderNum" maxlength="10" style="width:94px;" name="txtOrderNum" value="">
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Teacher</h3>
-						<select id="slctTeacher" name="slctTeacher" class="required" style="width:106px; height:27px;">
+						<select id="slctTeacher" name="slctTeacher" class="required" <?php echo $disSession; ?> style="width:106px; height:27px;">
 						<option value="">--Select--</option>';
                         <?php
 							while($row = $rel_teacher->fetch_assoc()){
@@ -149,46 +154,47 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Room</h3>
-							<select name="room_id" id="room_id" class="activity_row_chk" style="height:27px; width:106px;">
+							<select name="room_id" id="room_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px;">
 							<option value="">--Select--</option>
 							<?php echo $room_dropDwn; ?>
 							</select>
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Time Slot</h3>
-							<select name="tslot_id" id="tslot_id" class="activity_row_chk" style="height:27px; width:106px">';
+							<select name="tslot_id" id="tslot_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">';
 							<option value="">--Select--</option>';
 							<?php echo $tslot_dropDwn; ?>
 							</select>
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Date</h3>
-							 <input type="text" size="12" id="subSessDate" style="height:23px; width:102px;" />
+							 <input type="text" size="12" id="subSessDate" <?php echo $disSession; ?> style="height:23px; width:102px;" />
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Case No</h3>
-							 <input type="text" class="inp_txt_session alphanumeric" id="txtCaseNo" maxlength="10" style="width:94px;" name="txtCaseNo" value="">
+							 <input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtCaseNo" maxlength="10" style="width:94px;" name="txtCaseNo" value="">
 						</div>
 						<div class="sessionboxSub"style="width:152px;">
 						<h3>Technical Notes</h3>
-							 <textarea style="height:40px; width:135px" class="inp_txt_session alphanumeric" id="txtareatechnicalNotes" cols="20" rows="2" name="txtTechnicalNotes"></textarea>
+							 <textarea style="height:40px; width:135px" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareatechnicalNotes" cols="20" rows="2" name="txtTechnicalNotes"></textarea>
 						</div>
 						<div class="sessionboxSub" style="width:154px;" >
 						<h3>Description</h3>
-							 <textarea style="height:40px;" class="inp_txt_session alphanumeric" id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"></textarea>
+							 <textarea style="height:40px;" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"></textarea>
 						</div>
 
 					   <div class="sessionboxSub addbtnSession">
-						<input type="button" name="btnCheckAvail" id="btnCheckAvail" class="btnSession buttonsub" value="Check Availability" style="height:30px;">
+						<input type="button" name="btnCheckAvail" id="btnCheckAvail" class="btnSession buttonsub" <?php echo $disSession; ?> value="Check Availability" style="height:30px;">
 						<span style="display:none" name="showstatusAvail" id="showstatusAvail" ><img alt="OK" src="images/ok.gif" /></span>
 						<span style="display:none" name="showstatusNoAvail" id="showstatusNoAvail" ><img alt="OK" src="images/error.gif" /></span>
 						<!--<input style="display:none" type="button" name="showstatus" id="showstatus" class="btnSession buttonsub" value="">-->
                        </div>
 					    <div class="sessionboxSub addbtnSession">
-					    <input type="button" name="btnAddMore" id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;">
+					    <input type="button" name="btnAddMore" <?php echo $disSession; ?> id="btnAddNewSess" class="btnSession buttonsub" value="Add Session" style="width: 115px; height:30px; margin-bottom: 1px;">
 
 					   </div></div>
 					<div class="clear"></div>
+					</div>
 					<div class="divSession" style="text-align:left">
 					<?php
 					if($subjectId!=""){
@@ -257,9 +263,9 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
                     <div class="custtd_left">
                      </div>
 						<div class="txtfield">
-						 <?php if($subjectName==""){ ?>
-							<input type="submit" name="btnAddSubject" class="buttonsub" value="Save Session">
-						 <?php } ?>
+						 <?php //if($subjectName==""){ ?>
+							<!--<input type="submit" name="btnAddSubject" class="buttonsub" value="Save Session">-->
+						 <?php //} ?>
 						</div>
                     <div class="txtfield">
 						<input type="button" name="btnCancel" class="buttonsub" value="<?php echo $buttonName = ($subjectName!="") ? "Done":"Cancel" ?>" onclick="location.href = 'subject_view.php';">
