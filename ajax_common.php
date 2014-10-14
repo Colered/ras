@@ -61,24 +61,19 @@ switch ($codeBlock) {
 	case "del_subject":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
-			//delete all the sessions related to the subject
-			$sclt_query="select * from subject_session where subject_id='".$id."'";
-			$session_detail_qry = mysqli_query($db, $sclt_query);
-			if(mysqli_affected_rows($db)>0){
-			   $del_subject_query="DELETE subject,subject_session  FROM subject  INNER JOIN subject_session WHERE subject.id= subject_session.subject_id and subject.id = '".$id."'";
-			   $qry = mysqli_query($db, $del_subject_query);
-			   if(mysqli_affected_rows($db)>0)
-				   echo 1;
-			   else
-				   echo 0;
-		   	}else{
+			//delete all activity related to that subject
+			$del_act_query="delete from teacher_activity where subject_id='".$id."'";
+			$qry = mysqli_query($db, $del_act_query);
+			//delete all sessions related to that subject
+			$del_session_query="delete from subject_session where subject_id='".$id."'";
+			$qry = mysqli_query($db, $del_session_query);
+			//delete the subject
 			$del_subject_query="delete from subject where id='".$id."'";
 			$qry = mysqli_query($db, $del_subject_query);
-				if(mysqli_affected_rows($db)>0)
-					echo 1;
-				else
-					echo 0;
-			}
+			if(mysqli_affected_rows($db)>0)
+			   echo 1;
+		    else
+			   echo 0;
 		}
     break;
 	case "getRooms":
