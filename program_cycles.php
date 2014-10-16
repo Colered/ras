@@ -5,6 +5,7 @@ $objTS = new Timeslot();
 $programId = '';
 //get the list of all available timeslots
 $options = "";
+$week1 = array(); $week2 = array();
 $rel_prog = $objP->getProgramListYearWise();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
@@ -19,11 +20,11 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
        $start_week[] = $data['start_week'];
        $end_week[] = $data['end_week'];
 	   $occurrence[] = $data['occurrence'];
-	   $week1[] = unserialize($data['week1']);
-	   $week2[] = unserialize($data['week2']);
+	   $week1 = unserialize($data['week1']);
+	   $week2 = unserialize($data['week2']);
        
     }
-//	print"<pre>";print_r($week1);print"</pre>";
+	//print"<pre>";print_r($week1);print"</pre>";
     // set the value
 	
     $totcycle = $objP->getCyclesInProgram($programId);
@@ -31,7 +32,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 }
 $no_of_cycles = isset($_GET['edit']) ? $totcycle : (isset($_POST['slctNumcycle'])? $_POST['slctNumcycle']:'');
 $cycleIdsArr = (!empty($cycleIdsArr) ? $cycleIdsArr : array());
-
 $startweek_1 = isset($_GET['edit']) ? (isset($start_week[0])? $start_week[0]:'') : (isset($_POST['startweek1'])? $_POST['startweek1']:'');
 $startweek_2 = isset($_GET['edit']) ? (isset($start_week[1])? $start_week[1]:'') : (isset($_POST['startweek2'])? $_POST['startweek2']:'');
 $startweek_3 = isset($_GET['edit']) ? (isset($start_week[2])? $start_week[2]:'') : (isset($_POST['startweek3'])? $_POST['startweek3']:'');
@@ -56,8 +56,6 @@ $(document).ready(function() {
 	});
 
 });
-
-
 </script>
 <div id="content">
     <div id="main">

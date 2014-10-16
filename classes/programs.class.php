@@ -172,9 +172,13 @@ class Programs extends Base {
 		{
 			$week1 = '';
 			$week2 = '';
-			foreach(unserialize($row['week1']) as $key=> $value)
-			{	
-				$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
+			//echo "<pre>";
+			//print_r(unserialize($row['week1']));
+			if(count(unserialize($row['week1']))>0){
+				foreach(unserialize($row['week1']) as $key=> $value)
+				{	
+					$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
+				}
 			}
 			if($row['occurrence'] == '2w'){
 				foreach(unserialize($row['week2']) as $key=> $value)
@@ -591,18 +595,23 @@ class Programs extends Base {
 	}
 	public function getTimeslotOptions($params='')
 	{
-		//print_r($params);die("here");
 	   $objTS = new Timeslot();
 	   $timeslotData = $objTS->viewTimeslot();
 	   $options = "";
+	   $selec = "";
 	   while($data = $timeslotData->fetch_assoc()){
-		   if(in_array($data['id'], $params))
-		   {
-			   $options .= '<option value="'.$data['start_time'].'-'.$data['end_time'].'" selected="selected">'.$data['timeslot_range'].'</option>';
-		   }else{			   
-			   $options .= '<option value="'.$data['start_time'].'-'.$data['end_time'].'">'.$data['timeslot_range'].'</option>';
-		   }
+	   		$tsdata = $data['start_time'].'-'.$data['end_time'];
+			if($params == $tsdata ){
+				$selec = 'selected';
+			}
+			 $options .= '<option '.$selec.'  value="'.$data['start_time'].'-'.$data['end_time'].'">'.$data['start_time'].'-'.$data['end_time'].'</option>';
 		}
 		return $options;
+	}
+	//function to  get all programs according to years
+	public function getProgramWithCycle(){
+		//echo "select py.*, cy.id as cleid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id"; die;
+		$result =  $this->conn->query("select py.*, py.id as progid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id");
+		return $result;
 	}
 }

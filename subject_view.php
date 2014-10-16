@@ -68,7 +68,7 @@ $(document).ready(function(){
 						<td class="align-center"><?php echo $data['technical_notes'] ?></td><?php */?>
 						<?php
 						    $sessionHtml='';
-							$subj_session_query="select session_name,order_number,description, case_number, technical_notes from subject_session where subject_id='".$data['id']."'";
+							$subj_session_query="select session_name,order_number,description, case_number, technical_notes from subject_session where subject_id='".$data['id']."' ORDER BY order_number ASC ";
 							$subj_session_result= mysqli_query($db, $subj_session_query);
 							$sessionHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Session Name</th><th >Description</th><th >Case No:</th><th >Technical Notes</th></tr></thead><tbody>';
 							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){

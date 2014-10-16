@@ -1939,9 +1939,10 @@ function deleteCycle($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('.green, .red').hide();
+                        $('#'+$id).closest('tr').remove();
+						$('.green, .red').hide();
 					}else{
-						alert("Cannot delete the selected program cycle.");
+						alert("Cannot delete the selected Program Cycle.");
 						$('.green, .red').hide();
 					}
                 }

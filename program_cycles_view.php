@@ -35,17 +35,19 @@ $(document).ready(function(){
 					</thead>
 					<tbody>
 					<?php
-						$result = $objP->getProgramListYearWise();
+						//$result = $objP->getProgramListYearWise();
+						$result = $objP->getProgramWithCycle();
+						
 						while($row = $result->fetch_assoc()){
-						$cycleInfo = $objP->getCyclesInfo($row['id']);
+						$cycleInfo = $objP->getCyclesInfo($row['program_year_id']);
                      ?>
 						<tr>
-							<td class="align-center"><?php echo $row['id'];?></td>
+							<td class="align-center"><?php echo $row['program_year_id'];?></td>
 							<td class="align-center"><?php echo $row['name'];?></td>
 							<td width="500">
 							<?php if($cycleInfo!=''){?>
-									<div style="text-align:center"><img id="sessionNameImg<?php echo $row['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="showHideCycleInfo('<?php echo $row['id']?>');"></div>
-									<div id="divSessionName<?php echo $row['id'];?>" class="subjectSession">
+									<div style="text-align:center"><img id="sessionNameImg<?php echo $row['progid'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="showHideCycleInfo('<?php echo $row['progid']?>');"></div>
+									<div id="divSessionName<?php echo $row['progid'];?>" class="subjectSession">
 									<?php echo $cycleInfo;?>
 									</div>
 						  	<?php }else{
@@ -53,9 +55,9 @@ $(document).ready(function(){
 							      }
 							?>
 							</td>
-							<td class="align-center" id="<?php echo $row['id'] ?>">
-								<a href="program_cycles.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" onclick="deleteCycle(<?php echo $row['id'];?>)"></a>
+							<td class="align-center" id="<?php echo $row['progid'] ?>">
+								<a href="program_cycles.php?edit=<?php echo base64_encode($row['progid']);?>" class="table-icon edit" title="Edit"></a>
+								<a href="#" class="table-icon delete" onclick="deleteCycle(<?php echo $row['progid'];?>)"></a>
 							</td>
 						</tr>
 				<?php } ?>

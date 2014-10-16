@@ -523,16 +523,18 @@ switch ($codeBlock) {
 		$id = $_POST['id'];
 		$del_cycle_query="delete from cycle where program_year_id='".$id."'";
 		$qry = mysqli_query($db, $del_cycle_query);
-		$slct_qry = "select * from program_cycle_exception where program_year_id='".$id."'";
-		$qry_slct = mysqli_query($db,$slct_qry);
-		if(mysqli_num_rows($qry_slct)>0){
-		$del_pgm_exp_query="delete from program_cycle_exception where program_year_id='".$id."'";
-		$qry_pgm_exp = mysqli_query($db,$del_pgm_exp_query);
-		}
-		if(mysqli_affected_rows($db)>0)
+		if(mysqli_affected_rows($db)>0){
+			//delete the related exception if exists
+			$slct_qry = "select * from program_cycle_exception where program_year_id='".$id."'";
+			$qry_slct = mysqli_query($db,$slct_qry);
+			if(mysqli_num_rows($qry_slct)>0){
+				$del_pgm_exp_query="delete from program_cycle_exception where program_year_id='".$id."'";
+				$qry_pgm_exp = mysqli_query($db,$del_pgm_exp_query);
+			}
 			echo 1;
-		else
+		}else{
 			echo 0;
+		}
 	}
 	case "getCycles":
 		if(isset($_POST['progId']) && $_POST['progId']!=""){
