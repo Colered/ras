@@ -86,5 +86,15 @@ class Timeslot extends Base {
 		}
 		return $tslot_dropDwn;
 	}
+	//get ts by ts ids
+	public function getTSbyIDs($tsids) {
+			$tsbyids_query="select * from timeslot where id IN $tsids; ";
+			$q_res = mysqli_query($this->conn, $tsbyids_query);
+			$allTSVal = array();
+			while($tsdata= mysqli_fetch_array($q_res)){
+				$allTSVal[] = $tsdata['start_time'].'-'.$tsdata['end_time'];
+			}
+			return $allTSVal;
+	}
 
 }

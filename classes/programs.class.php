@@ -172,12 +172,13 @@ class Programs extends Base {
 		{
 			$week1 = '';
 			$week2 = '';
-			//echo "<pre>";
-			//print_r(unserialize($row['week1']));
 			if(count(unserialize($row['week1']))>0){
 				foreach(unserialize($row['week1']) as $key=> $value)
 				{	
-					$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
+					//get the timeslot from TS ids
+					$tsobj = new Timeslot();
+					$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
+					$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";	
 				}
 			}
 			if($row['occurrence'] == '2w'){
@@ -190,9 +191,9 @@ class Programs extends Base {
 			$start_date = $this->formatDateByDate($row['start_week']);
 			$end_date = $this->formatDateByDate($row['end_week']);
 			$data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' </td></tr>';
-			$data .= '<tr><td> Week1 - '.$week1.'</td></tr>';
+			$data .= '<tr><td> <b>Week1</b><br/> '.$week1.'</td></tr>';
 			if($row['occurrence'] == '2w'){
-			$data .= '<tr><td> Week2 - '.$week2.' </td></tr>';
+			$data .= '<tr><td> <b>Week2</b><br/> '.$week2.' </td></tr>';
 			}
 			$i++;
 			$data .= $this->getProgCycExceptions($prog_id,$i);
@@ -602,9 +603,9 @@ class Programs extends Base {
 	   while($data = $timeslotData->fetch_assoc()){
 	   		if(in_array($data['id'], $params))
 		   {
-			   $options .= '<option value="'.$data['id'].'" selected="selected">'.$data['timeslot_range'].'</option>';
+			   $options .= '<option value="'.$data['id'].'" selected="selected">'.$data['start_time'].'-'.$data['end_time'].'</option>';
 		   }else{			   
-			   $options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
+			   $options .= '<option value="'.$data['id'].'">'.$data['start_time'].'-'.$data['end_time'].'</option>';
 		   }
 		}
 		return $options;
