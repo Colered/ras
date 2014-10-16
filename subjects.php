@@ -168,7 +168,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Date</h3>
-							 <input type="text" size="12" id="subSessDate" <?php echo $disSession; ?> style="height:23px; width:102px;" />
+							 <input type="text" size="12" id="subSessDate" <?php echo $disSession; ?> style="height:23px; width:102px;" readonly />
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Case No</h3>
