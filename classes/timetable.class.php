@@ -106,18 +106,11 @@ class Timetable extends Base {
 										$res = 0;
 										while($result_reserv_act = mysqli_fetch_array($sql_reserv_act))
 										{
-											
-											if($result_reserv_act['order_number'] > 1){
-												$subject_order = $result_reserv_act['subject_id']."-".($result_reserv_act['order_number']-1);
-											}else{
-												$subject_order = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
-											}
+											$min_order_id = $this->getMinimumOrderBySubject($result_reserv_act['subject_id']);		
 											if(!$this->search_array($result_reserv_act['name'],$reserved_array)) 
-											{
-												
-												if($result_reserv_act['order_number'] == 1)
-												{
-													
+											{												
+												if($result_reserv_act['order_number'] == $min_order_id)
+												{													
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] =  $result_reserv_act['activity_id'];
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['name'] =  $result_reserv_act['name'];
 													$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_year_id'] = $result_reserv_act['program_year_id'];
@@ -140,38 +133,50 @@ class Timetable extends Base {
 													$res++;
 													$i++;
 													break;
-												}elseif($this->search_array($subject_order,$reserved_array))
+												}else
 												{
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] =  $result_reserv_act['activity_id'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['name'] =  $result_reserv_act['name'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_year_id'] = $result_reserv_act['program_year_id'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_name'] = $result_reserv_act['program_name'];							
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_id'] = $result_reserv_act['teacher_id'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_name'] = $result_reserv_act['teacher_name'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['group_id'] = $result_reserv_act['group_id'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $result_reserv_act['room_id'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $result_reserv_act['room_name'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_id'] = $result_reserv_act['session_id'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_name'] = $result_reserv_act['session_name'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_id'] = $result_reserv_act['subject_id'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_name'] = $result_reserv_act['subject_name'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_reserv_act['order_number'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
-													$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
-													$reserved_rooms[$result_slot['timeslot_range']][$i] = $result_reserv_act['room_id'];
-													$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_reserv_act['teacher_id'];
-													$number++;
-													$res++;
-													$i++;
-													break;
+													$order_no_array = $this->getSubjectsWithLessOrder($result_reserv_act['subject_id'],$result_reserv_act['order_number']);
+													$order_no_value = 0;
+													foreach($order_no_array as $order_no)
+													{
+														if($this->search_array($result_reserv_act['subject_id']."-".$order_no,$reserved_array))
+														{
+															$order_no_value++;
+														}else{
+															break;
+														}
+													}
+													if($order_no_value == count($order_no_array))
+													{
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] =  $result_reserv_act['activity_id'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['name'] =  $result_reserv_act['name'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_year_id'] = $result_reserv_act['program_year_id'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_name'] = $result_reserv_act['program_name'];							
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_id'] = $result_reserv_act['teacher_id'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_name'] = $result_reserv_act['teacher_name'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['group_id'] = $result_reserv_act['group_id'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $result_reserv_act['room_id'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $result_reserv_act['room_name'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_id'] = $result_reserv_act['session_id'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_name'] = $result_reserv_act['session_name'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_id'] = $result_reserv_act['subject_id'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_name'] = $result_reserv_act['subject_name'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_reserv_act['order_number'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
+														$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
+														$reserved_rooms[$result_slot['timeslot_range']][$i] = $result_reserv_act['room_id'];
+														$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_reserv_act['teacher_id'];
+														$number++;
+														$res++;
+														$i++;
+														break;
+													}
 												}
 											}
 										}
 										if($res == 0)
 										{
-											$teachers = $this->search_teachers($date,$result_slot['id'],$final_day);
-											
-											
+											$teachers = $this->search_teachers($date,$result_slot['id'],$final_day);			
 											foreach($teachers as $teacher)
 											{						
 												$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,s.order_number 
@@ -187,20 +192,14 @@ class Timetable extends Base {
 												{
 													$j = 0;
 													$rooms = $this->search_room($date,$result_slot['id'],$final_day);
-													//$min_order_id = $this->getMinimumOrderBySubject($result_free_act['subject_id']);
-													if($result_free_act['order_number'] > 1){
-														$subject_order = $result_free_act['subject_id']."-".($result_free_act['order_number']-1);
-													}else{
-														$subject_order = $result_free_act['subject_id']."-".$result_free_act['order_number'];
-													}
 													if(!empty($rooms) && $this->search_array($rooms[$j]['id'],$reserved_rooms))
 													{
 														$j++;
 													}
-													
+													$min_order_id = $this->getMinimumOrderBySubject($result_free_act['subject_id']);
 													if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array) && !empty($rooms) && isset($rooms[$j]['id']) && !$this->search_array($result_free_act['teacher_id'],$reserved_teachers))
 													{
-														if($result_free_act['order_number'] == 1)
+														if($result_free_act['order_number'] == $min_order_id)
 														{
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] =  $result_free_act['activity_id'];
 															$reserved_array[$date][$result_slot['timeslot_range']][$i]['name'] =  $result_free_act['name'];
@@ -244,49 +243,64 @@ class Timetable extends Base {
 															$i++;
 															$flag = 1;
 															break;
-														}elseif($this->search_array($subject_order,$reserved_array)){
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] =  $result_free_act['activity_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['name'] =  $result_free_act['name'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_year_id'] = $result_free_act['program_year_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_name'] = $result_free_act['program_name'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_id'] = $result_free_act['teacher_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_name'] = $result_free_act['teacher_name'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['group_id'] = $result_free_act['group_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_id'] = $result_free_act['session_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_name'] = $result_free_act['session_name'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_id'] = $result_free_act['subject_id'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_name'] = $result_free_act['subject_name'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_free_act['order_number'];	
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
-															$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
-															$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_free_act['teacher_id'];
-															$reserved_rooms[$result_slot['timeslot_range']][$i] = $rooms[$j]['id'];
-															if(array_key_exists($result_free_act['subject_id'], $counter))
+														}
+														else{
+															$order_no_array = $this->getSubjectsWithLessOrder($result_free_act['subject_id'],$result_free_act['order_number']);
+															$order_no_value = 0;
+															foreach($order_no_array as $order_no)
 															{
-																$room_name = $this->getRoomName($counter[$result_free_act['subject_id']]);
-																$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $counter[$result_free_act['subject_id']];
-																$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+																if($this->search_array($result_free_act['subject_id']."-".$order_no,$reserved_array))
+																{
+																	$order_no_value++;
+																}else{
+																	break;
+																}
 															}
-															else{
-																	$room_id = $this->getRoomBySubject($result_free_act['subject_id']);
-																	if($room_id)
-																	{
-																		$room_name = $this->getRoomName($room_id);
-																		$counter[$result_free_act['subject_id']] = $room_id;
-																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $room_id;
-																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+															if($order_no_value == count($order_no_array))
+															{
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['activity_id'] = $result_free_act['activity_id'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['name'] =  $result_free_act['name'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_year_id'] = $result_free_act['program_year_id'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['program_name'] = $result_free_act['program_name'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_id'] = $result_free_act['teacher_id'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['teacher_name'] = $result_free_act['teacher_name'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['group_id'] = $result_free_act['group_id'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_id'] = $result_free_act['session_id'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['session_name'] = $result_free_act['session_name'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_id'] = $result_free_act['subject_id'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_name'] = $result_free_act['subject_name'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['order_no'] = $result_free_act['order_number'];	
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
+																$reserved_array[$date][$result_slot['timeslot_range']][$i]['date'] = $date;
+																$reserved_teachers[$result_slot['timeslot_range']][$i] = $result_free_act['teacher_id'];
+																$reserved_rooms[$result_slot['timeslot_range']][$i] = $rooms[$j]['id'];
+																if(array_key_exists($result_free_act['subject_id'], $counter))
+																{
+																	$room_name = $this->getRoomName($counter[$result_free_act['subject_id']]);
+																	$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $counter[$result_free_act['subject_id']];
+																	$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+																}
+																else{
+																		$room_id = $this->getRoomBySubject($result_free_act['subject_id']);
+																		if($room_id)
+																		{
+																			$room_name = $this->getRoomName($room_id);
+																			$counter[$result_free_act['subject_id']] = $room_id;
+																			$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $room_id;
+																			$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
 
-																	}else{
-																		$room_name = $this->getRoomName($rooms[$j]['id']);
-																		$counter[$result_free_act['subject_id']] = $rooms[$j]['id'];
-																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $rooms[$j]['id'];
-																		$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
-																	}
+																		}else{
+																			$room_name = $this->getRoomName($rooms[$j]['id']);
+																			$counter[$result_free_act['subject_id']] = $rooms[$j]['id'];
+																			$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_id'] = $rooms[$j]['id'];
+																			$reserved_array[$date][$result_slot['timeslot_range']][$i]['room_name'] = $room_name;
+																		}
+																}
+																$number++;
+																$i++;
+																$flag = 1;
+																break;
 															}
-															$number++;
-															$i++;
-															$flag = 1;
-															break;
 														}
 														$j++;
 													}																	
@@ -537,5 +551,22 @@ class Timetable extends Base {
 		}else{
 			return 0;
 		}
+	}
+	public function getSubjectsWithLessOrder($subject_id, $order_no)
+	{
+		//$order_no = array();
+		$sql_select = $this->conn->query("select order_number FROM `subject_session` WHERE subject_id = '".$subject_id."' and order_number < '".$order_no."'");
+		$row_cnt = mysqli_num_rows($sql_select);
+		$order_no_arr = array();
+		if($row_cnt > 0)
+		{	
+			while($row = mysqli_fetch_array($sql_select))
+			{
+				$order_no_arr[] =  $row['order_number'];
+				
+			}//print"<pre>";print_r($order_no_arr);die;
+						
+		}
+		return $order_no_arr;
 	}
 }

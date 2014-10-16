@@ -458,7 +458,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										{
 											$ts_array = explode("-", $timeslot);
 											$entry_time = $ts_array['0'];
-											$duration = ($ts_array['1']-$ts_array['0'])*60;
+											$duration = date('i',(strtotime($ts_array['1'])-strtotime($ts_array['0'])));
 											$entry_array = explode(":", $entry_time);
 											$entry_hour = $entry_array['0'];
 											$entry_minute = $entry_array['1'];
