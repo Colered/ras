@@ -595,16 +595,17 @@ class Programs extends Base {
 	}
 	public function getTimeslotOptions($params='')
 	{
+	  	//echo $params;
 	   $objTS = new Timeslot();
 	   $timeslotData = $objTS->viewTimeslot();
 	   $options = "";
-	   $selec = "";
 	   while($data = $timeslotData->fetch_assoc()){
-	   		$tsdata = $data['start_time'].'-'.$data['end_time'];
-			if($params == $tsdata ){
-				$selec = 'selected';
-			}
-			 $options .= '<option '.$selec.'  value="'.$data['start_time'].'-'.$data['end_time'].'">'.$data['start_time'].'-'.$data['end_time'].'</option>';
+	   		if(in_array($data['id'], $params))
+		   {
+			   $options .= '<option value="'.$data['id'].'" selected="selected">'.$data['timeslot_range'].'</option>';
+		   }else{			   
+			   $options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
+		   }
 		}
 		return $options;
 	}
