@@ -588,7 +588,35 @@ switch ($codeBlock) {
 								}
 							}
 						}
-						//check if teacher is available on the given time and day and is  not engaged in some other reserved activity
+						//check if teacher is available on the given time and day
+						if($valid==1){ 
+							//check if the selected date is not added as exception by the teacher while providing availability
+							$query = "select id from teacher_availability_exception where teacher_id = '".$_POST['slctTeacher']."' and exception_date = '".$_POST['subSessDate']."'";
+							$q_res = mysqli_query($db, $query);
+							if(mysqli_affected_rows($db) == 0)
+							{
+								//find the day using date
+								$day = date('w', strtotime($_POST['subSessDate']));
+								$final_day = $day - 1;
+								//check if teacher is available on the given time and day
+								$teachAvail_query="select tm.id 
+													from teacher_availability_rule_teacher_map tm 
+													inner join teacher_availability_rule_day_map td on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
+													inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
+													where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and tm.teacher_id='".$_POST['slctTeacher']."' and td.timeslot_id like '%".$_POST['tslot_id']."%'";
+								$q_res = mysqli_query($db, $teachAvail_query);
+								if(mysqli_affected_rows($db)<=0){
+									echo 5;
+									$valid=0;
+									exit;
+								}
+							}else{
+								echo 5;
+								$valid=0;
+								exit;
+							}
+						}
+						//check if teacher is not engaged in some other reserved activity
 						if($valid==1){ 
 							$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
 							$q_res = mysqli_query($db, $teachAvail_query);
@@ -599,6 +627,35 @@ switch ($codeBlock) {
 							}
 						}
 						//check if room is free at given time and day
+						if($valid==1){ 
+							//check if the selected date is not added as exception in classroom availability
+							$query = "select id from classroom_availability_exception where room_id = '".$_POST['room_id']."' and exception_date = '".$_POST['subSessDate']."'";
+							$q_res = mysqli_query($db, $query);
+							if(mysqli_affected_rows($db) == 0)
+							{
+								//find the day using date
+								$day = date('w', strtotime($_POST['subSessDate']));
+								$final_day = $day - 1;
+								//check if classroom is available on the given time and day
+								$classroomAvail_query="select cm.room_id, room.room_name
+												from classroom_availability_rule_room_map cm
+												inner join classroom_availability_rule_day_map cd on cd.classroom_availability_rule_id = cm.classroom_availability_rule_id
+												inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
+												inner join room on room.id = cm.room_id
+												where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and cm.room_id='".$_POST['room_id']."' and timeslot_id like '%".$_POST['tslot_id']."%'";
+								$q_res = mysqli_query($db, $classroomAvail_query);
+								if(mysqli_affected_rows($db)<=0){
+									echo 7;
+									$valid=0;
+									exit;
+								}
+							}else{
+								echo 7;
+								$valid=0;
+								exit;
+							}
+						}
+						//check if room is not engaged in any reserved activity
 						if($valid==1){ 
 							$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."'";
 							$q_res = mysqli_query($db, $roomAvail_query);
@@ -673,7 +730,35 @@ switch ($codeBlock) {
 				}
 			}
 		}
-		//check if teacher is available on the given time and day and is  not engaged in some other reserved activity
+		
+		if($valid==1){ 
+			//check if the selected date is not added as exception by the teacher while providing availability
+			$query = "select id from teacher_availability_exception where teacher_id = '".$_POST['slctTeacher']."' and exception_date = '".$_POST['subSessDate']."'";
+			$q_res = mysqli_query($db, $query);
+			if(mysqli_affected_rows($db) == 0)
+			{
+				//find the day using date
+				$day = date('w', strtotime($_POST['subSessDate']));
+				$final_day = $day - 1;
+				//check if teacher is available on the given time and day
+				$teachAvail_query="select tm.id 
+									from teacher_availability_rule_teacher_map tm 
+									inner join teacher_availability_rule_day_map td on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
+									inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
+									where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and tm.teacher_id='".$_POST['slctTeacher']."' and td.timeslot_id like '%".$_POST['tslot_id']."%'";
+				$q_res = mysqli_query($db, $teachAvail_query);
+				if(mysqli_affected_rows($db)<=0){
+					echo 5;
+					$valid=0;
+					exit;
+				}
+			}else{
+				echo 5;
+				$valid=0;
+				exit;
+			}
+		}
+		//check if teacher is not engaged in some other reserved activity
 		if($valid==1){ 
 			$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
 			$q_res = mysqli_query($db, $teachAvail_query);
@@ -684,6 +769,35 @@ switch ($codeBlock) {
 			}
 		}
 		//check if room is free at given time and day
+		if($valid==1){ 
+			//check if the selected date is not added as exception in classroom availability
+			$query = "select id from classroom_availability_exception where room_id = '".$_POST['room_id']."' and exception_date = '".$_POST['subSessDate']."'";
+			$q_res = mysqli_query($db, $query);
+			if(mysqli_affected_rows($db) == 0)
+			{
+				//find the day using date
+				$day = date('w', strtotime($_POST['subSessDate']));
+				$final_day = $day - 1;
+				//check if classroom is available on the given time and day
+				$classroomAvail_query="select cm.room_id, room.room_name
+								from classroom_availability_rule_room_map cm
+								inner join classroom_availability_rule_day_map cd on cd.classroom_availability_rule_id = cm.classroom_availability_rule_id
+								inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
+								inner join room on room.id = cm.room_id
+								where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and cm.room_id='".$_POST['room_id']."' and timeslot_id like '%".$_POST['tslot_id']."%'";
+				$q_res = mysqli_query($db, $classroomAvail_query);
+				if(mysqli_affected_rows($db)<=0){
+					echo 7;
+					$valid=0;
+					exit;
+				}
+			}else{
+				echo 7;
+				$valid=0;
+				exit;
+			}
+		}
+		//check if room is not engaged in any reserved actity on the selected day and time
 		if($valid==1){ 
 			$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."'";
 			$q_res = mysqli_query($db, $roomAvail_query);

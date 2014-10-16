@@ -557,13 +557,6 @@ $(document).ready(function() {
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		/*if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
-			$('#txtOrderNum').css('border', 'solid 1px red');
-			var formValid = 1; 
-		}else{
-			$('#txtOrderNum').css('border', '1px solid #C0C0C0');
-			var formValid = 0;
-		}*/
 		if($('#slctTeacher').val()==""){
 			$('#slctTeacher').css('border', 'solid 1px red');
 			var formValid = 1; 
@@ -628,11 +621,19 @@ $(document).ready(function() {
 						}else if($succ==3){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('Teacher is not available on the selected time and day.');
+							alert('Teacher is busy in some other class on selected day and time.');
 						}else if($succ==4){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Classroom is not free on the given date and time.');
+						}else if($succ==5){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Teacher is not available on the selected time and day.');
+						}else if($succ==7){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Classroom is not available on the selected time and day.');
 						}
 					}
 				});
@@ -656,13 +657,6 @@ $(document).ready(function() {
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		/*if(($('#txtOrderNum').val()=="") || (!$.isNumeric($('#txtOrderNum').val()))){
-			$('#txtOrderNum').css('border', 'solid 1px red');
-			var formValid = 1; 
-		}else{
-			$('#txtOrderNum').css('border', '1px solid #C0C0C0');
-			var formValid = 0;
-		}*/
 		if($('#subjectId').val()==""){
 			var formValid = 1;
 			alert('Please save subject info before add to session.');
@@ -694,14 +688,16 @@ $(document).ready(function() {
 							window.location.href = 'subjects.php?edit='+subIdEncrypt;
 							//alert("New session is added successfully");
 						}else if($succ==2){
-							alert("Session Name already exist for the given subject.");
+							alert('session name already exist.');
 						}else if($succ==5){
-							alert("Activity cannot be created, please click to check availability for more detail.");
+							alert('Teacher is not available on the selected time and day.');
 						}else if($succ==6){
 							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
 						}else if($succ==3){
 							alert('Teacher is not available on the selected time and day.');
 						}else if($succ==4){
+							alert('Classroom is already engaged in other activity.');
+						}else if($succ==7){
 							alert('Classroom is not free on the given date and time.');
 						}else{
 							alert("Cannot create the session.");
