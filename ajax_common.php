@@ -601,13 +601,13 @@ switch ($codeBlock) {
 								$day = date('w', strtotime($_POST['subSessDate']));
 								$final_day = $day - 1;
 								//check if teacher is available on the given time and day
-								echo $teachAvail_query="select tm.id 
+								$teachAvail_query="select tm.id 
 													from teacher_availability_rule_teacher_map tm 
 													inner join teacher_availability_rule_day_map td on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
 													inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
 													where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and tm.teacher_id='".$_POST['slctTeacher']."' and td.timeslot_id like '%".$_POST['tslot_id']."%'";
 								$q_res = mysqli_query($db, $teachAvail_query);
-								if(mysqli_affected_rows($db)<=0){
+								if(mysqli_affected_rows($db)>0){
 									echo 5;
 									$valid=0;
 									exit;
@@ -646,7 +646,7 @@ switch ($codeBlock) {
 												inner join room on room.id = cm.room_id
 												where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and cm.room_id='".$_POST['room_id']."' and timeslot_id like '%".$_POST['tslot_id']."%'";
 								$q_res = mysqli_query($db, $classroomAvail_query);
-								if(mysqli_affected_rows($db)<=0){
+								if(mysqli_affected_rows($db)>0){
 									echo 7;
 									$valid=0;
 									exit;
@@ -751,7 +751,7 @@ switch ($codeBlock) {
 									inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
 									where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and tm.teacher_id='".$_POST['slctTeacher']."' and td.timeslot_id like '%".$_POST['tslot_id']."%'";
 				$q_res = mysqli_query($db, $teachAvail_query);
-				if(mysqli_affected_rows($db)<=0){
+				if(mysqli_affected_rows($db)>0){
 					echo 5;
 					$valid=0;
 					exit;
@@ -790,7 +790,7 @@ switch ($codeBlock) {
 								inner join room on room.id = cm.room_id
 								where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and cm.room_id='".$_POST['room_id']."' and timeslot_id like '%".$_POST['tslot_id']."%'";
 				$q_res = mysqli_query($db, $classroomAvail_query);
-				if(mysqli_affected_rows($db)<=0){
+				if(mysqli_affected_rows($db)>0){
 					echo 7;
 					$valid=0;
 					exit;
