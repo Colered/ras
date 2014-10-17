@@ -64,15 +64,13 @@ $(document).ready(function(){
 							echo $program_detail;
 						?>
 						</td>
-						<?php /*?><td class="align-center"><?php echo $data['case_number'] ?></td>
-						<td class="align-center"><?php echo $data['technical_notes'] ?></td><?php */?>
 						<?php
-						    $sessionHtml='';
+						    $sessionHtml=''; $count=0;
 							$subj_session_query="select session_name,order_number,description, case_number, technical_notes from subject_session where subject_id='".$data['id']."' ORDER BY order_number ASC ";
 							$subj_session_result= mysqli_query($db, $subj_session_query);
 							$sessionHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Session Name</th><th >Description</th><th >Case No:</th><th >Technical Notes</th></tr></thead><tbody>';
 							while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
-							//$subj_session_order_num = (isset($subj_session_data['order_number'])) ? $subj_session_data['order_number'] : '&nbsp;';
+									$count++;
 									$sessionHtml.='<tr>
 														<td>'.$subj_session_data['session_name'].'</td>
 														<td>'.$subj_session_data['description'].'</td>
@@ -81,16 +79,19 @@ $(document).ready(function(){
 												  </tr> ';
 							}
 		   					$sessionHtml.='</tbody></table>';
-						?>
+						
+						if($count>0){ ?>
 						<td class="align-center" width="200">
 						 	<img id="sessionNameImg<?php echo $data['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="getSessionName(<?php echo $data['id']?>);">
 						  	<div id="divSessionName<?php echo $data['id'];?>" class="subjectSession"><?php echo $sessionHtml;?></div>
 						</td>
+						<?php }else{ ?>
+						<td class="align-center" width="200">N/A</td>
+						<?php } ?>
 						<td class="align-center"><?php echo $data['date_add'] ?></td>
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">
                             <a href="subjects.php?edit=<?php echo base64_encode($data['id'])?>" class="table-icon edit" title="Edit"></a>
-							<?php /*?><a href="subjects.php?edit=<?php echo base64_encode($data['id'].'#'.$area_detail.'#'.$program_detail.'#'.$data['program_year_id'].'#'.$data['cycle_no'])?>" class="table-icon edit" title="Edit"></a><?php */?>
 							<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)"></a>
                         </td>
                     </tr>
