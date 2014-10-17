@@ -699,6 +699,8 @@ $(document).ready(function() {
 							alert('Classroom is already engaged in other activity.');
 						}else if($succ==7){
 							alert('Classroom is not free on the given date and time.');
+						}else if($succ==8){
+							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create an activity.');
 						}else{
 							alert("Cannot create the session.");
 						}

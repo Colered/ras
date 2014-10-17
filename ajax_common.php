@@ -695,6 +695,8 @@ switch ($codeBlock) {
 					}else{
 						echo 0;
 					}
+		}else{
+			echo 8;
 		}	
 	}
 	break;
