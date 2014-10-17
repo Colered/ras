@@ -745,7 +745,7 @@ switch ($codeBlock) {
 				$day = date('w', strtotime($_POST['subSessDate']));
 				$final_day = $day - 1;
 				//check if teacher is available on the given time and day
-				echo $teachAvail_query="select tm.id 
+				$teachAvail_query="select tm.id 
 									from teacher_availability_rule_teacher_map tm 
 									inner join teacher_availability_rule_day_map td on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
 									inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
