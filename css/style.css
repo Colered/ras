@@ -587,6 +587,12 @@ div.divSession{
 .remove_field{cursor:pointer;}
 .addbtnSession{padding-top:16px;}
 .tmSlot{width:136px;float: left; text-align: left;}
+.tmSlotc1w1{width:136px;float: left; text-align: left;}
+.tmSlotc1w2{width:136px;float: left; text-align: left;}
+.tmSlotc2w1{width:136px;float: left; text-align: left;}
+.tmSlotc2w2{width:136px;float: left; text-align: left;}
+.tmSlotc3w1{width:136px;float: left; text-align: left;}
+.tmSlotc3w2{width:136px;float: left; text-align: left;}
 .dayName{font-size:13px; padding:5px; padding-top:0px;}
 .main-title{ list-style:none;}
 #rules{margin:0px!important;}

@@ -2036,3 +2036,54 @@ function checkAvailSubSession(program_year_id,subject_id,sessionid,teacher_id,ro
 function sortingSession(){
 	$(".datatableSession").tableDnD();
 }
+
+function checkweekTS()
+{	
+	var cycle = $('#slctNumCycle').val();
+	
+	if(cycle == '1'){
+		var occ1 = $('#c1chWeek1').val();
+		if(occ1 == '1w')
+		{
+			if($('.tmSlotc1w1 input:checked').length <= 0){
+				alert('Please select atleast one day and timeslot.');
+				return false;
+			}
+		}else if(occ1 == '2w'){
+			if($('.tmSlotc1w1 input:checked').length <= 0 || $('.tmSlotc1w2 input:checked').length <= 0){
+				alert('Please select atleast one day and timeslot.');
+				return false;
+			}
+		}
+	}else if(cycle == '2'){
+		var occ2 = $('#c1chWeek2').val();
+		if(occ2 == '1w')
+		{
+			if($('.tmSlotc2w1 input:checked').length <= 0){
+				alert('Please select atleast one day and timeslot.');
+				return false;
+			}
+		}else if(occ2 == '2w'){
+			if($('.tmSlotc2w1 input:checked').length <= 0 || $('.tmSlotc2w2 input:checked').length <= 0){
+				alert('Please select atleast one day and timeslot.');
+				return false;
+			}
+		}
+	}else if(cycle == '3'){
+		var occ3 = $('#c1chWeek3').val();
+		if(occ3 == '1w')
+		{
+			if($('.tmSlotc3w1 input:checked').length <= 0){
+				alert('Please select atleast one day and timeslot.');
+				return false;
+			}
+		}else if(occ3 == '2w'){
+			if($('.tmSlotc3w1 input:checked').length <= 0 || $('.tmSlotc3w2 input:checked').length <= 0){
+				alert('Please select atleast one day and timeslot.');
+				return false;
+			}
+		}
+	}
+}
+
+

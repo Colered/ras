@@ -181,10 +181,13 @@ class Programs extends Base {
 					$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";	
 				}
 			}
-			if($row['occurrence'] == '2w'){
-				foreach(unserialize($row['week2']) as $key=> $value)
-				{	
-					$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
+			if(count(unserialize($row['week2']))>0)
+			{
+				if($row['occurrence'] == '2w'){
+					foreach(unserialize($row['week2']) as $key=> $value)
+					{	
+						$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
+					}
 				}
 			}
 			$cycle = $numSufArr[$i];
