@@ -766,7 +766,7 @@ switch ($codeBlock) {
 		if($valid==1){ 
 			$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id='".$_POST['tslot_id']."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
 			$q_res = mysqli_query($db, $teachAvail_query);
-			if(mysqli_affected_rows($db)0){
+			if(mysqli_affected_rows($db)>0){
 				echo 3;
 				$valid=0;
 				exit;
