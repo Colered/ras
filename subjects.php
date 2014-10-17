@@ -2,7 +2,7 @@
 ob_start();
 include('header.php');
 $subjectName=""; $subjectCode=""; $sessionNum=""; $subjectCode="";$areaCode="";$areaName="";$programName="";$roomType="";$roomName="";$subjectId="";
-$program_year_detail="";$programYearId=""; $cycle_no="";$cycleData="";$disTest=""; $disSession=""; $disDivCss=""; $disFDivCss="";
+$program_year_detail="";$programYearId=""; $cycle_no="";$cycleData="";$disTest=""; $disSession=""; $disDivCss=""; $disFDivCss="";$subIdEncrypt="";
 $objT = new Teacher();
 $rel_teacher = $objT->getTeachers();
 $objS = new Subjects();

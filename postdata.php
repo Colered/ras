@@ -206,9 +206,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}
 		break;
 		case 'addEditSubject':
-		//print_r($_POST); die;
 		//adding new subject
-			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" ){
+			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" && $_POST['slctProgram']!="" && $_POST['slctCycle']!="" && $_POST['slctArea']!="" ){
 				$obj = new Subjects();
 				if(isset($_POST['subjectId']) && $_POST['subjectId']!=''){
 					//update subject
@@ -237,7 +236,18 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}else{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
-				header('Location: subjects.php');
+				//return back data to the form
+				echo "<html><head></head><body>";
+				echo "<form name='formsubject' method='post' action='subjects.php'>";
+				reset($_POST);
+				while(list($iname,$ival) = each($_REQUEST)) {
+					echo "<input type='hidden' name='$iname' value='$ival'>";
+				}
+				echo "</form>";
+				echo "</body></html>";
+				echo"<script language='JavaScript'>function submit_back(){ window.document.formsubject.submit();}submit_back();</script>";
+				exit();
+				//end return back
 			}
 		break;
 		case "add_edit_program_group":
