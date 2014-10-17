@@ -185,8 +185,10 @@ class Programs extends Base {
 			{
 				if($row['occurrence'] == '2w'){
 					foreach(unserialize($row['week2']) as $key=> $value)
-					{	
-						$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$value)."<br/>";	
+					{
+						$tsobj = new Timeslot();
+						$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');	
+						$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";	
 					}
 				}
 			}

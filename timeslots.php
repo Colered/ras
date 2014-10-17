@@ -54,9 +54,9 @@ $(document).ready(function(){
 					<thead>
 					<tr>
 						<th >ID</th>
-						<th style="text-align:left" >Start Time (24 Hrs format)</th>
-						<th style="text-align:left" >End Time (24 Hrs format)</th>
-						<th style="text-align:left" >Timeslot (24 Hrs format)</th>
+						<th style="text-align:left" >Start Time</th>
+						<th style="text-align:left" >End Time</th>
+						<th style="text-align:left" >Timeslot</th>
 						<th >Action</th>
 					</tr>
 					</thead>
