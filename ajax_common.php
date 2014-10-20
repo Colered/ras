@@ -558,7 +558,7 @@ switch ($codeBlock) {
 		}else{
 			//if only session name and order no is provide, just create a session and exit
 			$currentDateTime = date("Y-m-d H:i:s");
-			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']=="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']=="") && (isset($_POST['room_id']) && $_POST['room_id']=="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']=="") ){
+			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']=="") && (isset($_POST['room_id']) && $_POST['room_id']=="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']=="") ){
 					//check the total no of values in subject session to make a new order no
 					$sessCount_query="select count(id) as total from subject_session";
 					$sessCount_res = mysqli_query($db, $sessCount_query);
@@ -566,12 +566,33 @@ switch ($codeBlock) {
 					$txtOrderNum =  $sessCount_data['total'] +1;
 					//add new session
 					$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
+					
+				//if only teacher name is also provided then as a un reserved activity
 				if(mysqli_affected_rows($db)>0){
+						if(isset($_POST['slctTeacher']) && $_POST['slctTeacher']!=""){
+								$sessionId = mysqli_insert_id($db);
+								$group_id = "";
+								//get last created activity name
+								$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+								$dRow = mysqli_fetch_assoc($result3);
+								$actCnt = substr($dRow['name'],1);
+								$actName = 'A'.($actCnt+1);
+								//insert new activity
+								$result2 = mysqli_query($db, "INSERT INTO teacher_activity VALUES ('', '".$actName."', '".$_POST['programId']."', '".$_POST['cycleId']."', '".$_POST['subjectId']."', '".$sessionId."', '".$_POST['slctTeacher']."', '".$group_id."','', '', '', '0', NOW(), NOW());");
+								if(mysqli_affected_rows($db)>0){
+									echo 1;
+								}else{
+									echo 0;
+								}
+								exit;
+							}
 					echo 1;
 				}else{
 					echo 0;
-				} exit;
+				}
+	    	 exit;
 			}
+			
 			//if all fields are present then first add session and then create activities after checking the availability
 			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']!="") && (isset($_POST['room_id']) && $_POST['room_id']!="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']!="")){
 						$group_id = "";
