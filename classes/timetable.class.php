@@ -84,16 +84,11 @@ class Timetable extends Base {
 								$reserved_teachers = array();
 								$reserved_rooms = array();
 								$counter = array();
-								$sql_pgm = $this->conn->query("SELECT distinct py.id as program_id
-														FROM program_years py
-														INNER JOIN program p on p.id = py.program_id
-														WHERE DATE_FORMAT(start_date,'%Y-%m-%d') <= '".$start_date."' and start_year = '".$from_time."'");
-														
-								$pgm_cnt = mysqli_num_rows($sql_pgm);
-								if($pgm_cnt > 0)
+								$final_pgms = $this->search_programs($start_date,$from_time,$date,$final_day,$result_slot['id']);
+								if(count($final_pgms) > 0)
 								{
 									$i=0;
-									while($result_pgm = mysqli_fetch_array($sql_pgm))
+									foreach($final_pgms as $pgm_id)
 									{
 										$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number
 										from teacher_activity ta 
@@ -102,7 +97,7 @@ class Timetable extends Base {
 										inner join subject su on su.id = ta.subject_id
 										inner join teacher t on t.id = ta.teacher_id
 										inner join room r on r.id = ta.room_id
-										where timeslot_id = '".$result_slot['id']."' and reserved_flag = 1 and ta.program_year_id = '".$result_pgm['program_id']."' and DATE_FORMAT(act_date,'%Y-%m-%d') = '".$date."' order by rand()");
+										where timeslot_id = '".$result_slot['id']."' and reserved_flag = 1 and ta.program_year_id = '".$pgm_id."' and DATE_FORMAT(act_date,'%Y-%m-%d') = '".$date."' order by rand()");
 										$res = 0;
 										while($result_reserv_act = mysqli_fetch_array($sql_reserv_act))
 										{
@@ -185,7 +180,7 @@ class Timetable extends Base {
 												inner join program_years py on py.id = ta.program_year_id 
 												inner join subject su on su.id = ta.subject_id 
 												inner join teacher t on t.id = ta.teacher_id 
-												where teacher_id = ".$teacher." and reserved_flag = 0 and ta.program_year_id = '".$result_pgm['program_id']."' order by rand()");
+												where teacher_id = ".$teacher." and reserved_flag = 0 and ta.program_year_id = '".$pgm_id."' order by rand()");
 												
 												$flag = 0;
 												while($result_free_act = mysqli_fetch_array($sql_free_act))
@@ -307,15 +302,11 @@ class Timetable extends Base {
 												}
 												if($flag == 1)
 												break;
-											}
-											
+											}											
 										}
 									}
-								}else{
-									$err['program_not_found'] = 'No program found';
-									return $err;									
-								}
-							//print"<pre>";print_r($counter);	die;
+								}							
+								//print"<pre>";print_r($counter);	die;
 							}
 						}else{
 							$err['timeslot_not_found'] = 'No Timeslot found';
@@ -325,9 +316,8 @@ class Timetable extends Base {
 				}
 				$date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
 				
-			}
-			
-			//print"<pre>";print_r($reserved_array);die;
+			}			
+			print"<pre>";print_r($reserved_array);die;
 		$result_array[$cnt] = $reserved_array;
 		$allocated_activities[$cnt] =  $number;
 		}
@@ -490,6 +480,97 @@ class Timetable extends Base {
 			}
 		}		
 		return $newteachers;
+	}
+	public function search_programs($start_date,$from_time,$date,$day,$ts_id)
+	{
+		$final_programs = array();
+		$i=0;
+		$sql_pgm = $this->conn->query("SELECT distinct py.id as program_id
+														FROM program_years py
+														INNER JOIN program p on p.id = py.program_id
+														WHERE DATE_FORMAT(start_date,'%Y-%m-%d') <= '".$start_date."' and start_year = '".$from_time."'");	
+		$pgm_cnt = mysqli_num_rows($sql_pgm);
+		if($pgm_cnt > 0)
+		{
+			while($result_pgm = mysqli_fetch_array($sql_pgm))
+			{
+				$sql_pgm_cycle = $this->conn->query("select * from cycle where program_year_id = '".$result_pgm['program_id']."' and '".$date."' between start_week and end_week");
+				$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
+				if($pgm_cycle_cnt > 0)
+				{
+					$result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle);					
+					if($result_pgm_cycle['occurrence'] == '1w')
+					{
+						$week1 = $result_pgm_cycle['week1'];
+						$week1 = unserialize($week1);
+						foreach($week1 as $key=> $value)
+						{
+							//echo $day."----".$key;echo "<br/>";
+							if($day == $key && in_array($ts_id,$week1[$day]))
+							{
+								$sql_pgm_cycle_exp = $this->conn->query("SELECT exception_date from program_cycle_exception where program_year_id='".$result_pgm_cycle['program_year_id']."'");
+								$sql_pgm_cycle_exp_cnt = mysqli_num_rows($sql_pgm_cycle_exp);
+								if($sql_pgm_cycle_exp_cnt <= 0)
+								{
+									$final_programs[$i] = $result_pgm_cycle['program_year_id'];
+									$i++;
+								}
+							}
+						}						
+					}else if($result_pgm_cycle['occurrence'] == '2w'){
+						$week = $this->getWeekFromDate($date,$result_pgm_cycle['start_week'],$result_pgm_cycle['end_week']);
+						if($week == '1')
+						{
+							$week1 = $result_pgm_cycle['week1'];
+							$week1 = unserialize($week1);
+							foreach($week1 as $key=> $value)
+							{
+								//echo $day."----".$key;echo "<br/>";
+								if($day == $key && in_array($ts_id,$week1[$day]))
+								{
+									$sql_pgm_cycle_exp = $this->conn->query("SELECT exception_date from program_cycle_exception where program_year_id='".$result_pgm_cycle['program_year_id']."'");
+									$sql_pgm_cycle_exp_cnt = mysqli_num_rows($sql_pgm_cycle_exp);
+									if($sql_pgm_cycle_exp_cnt <= 0)
+									{
+										$final_programs[$i] = $result_pgm_cycle['program_year_id'];
+										$i++;
+									}
+								}
+							}
+						}else if($week == '2' and count(unserialize($result_pgm_cycle['week2'])) > 0)
+						{
+							$week2 = $result_pgm_cycle['week2'];
+							$week2 = unserialize($week2);
+							foreach($week2 as $key=> $value)
+							{
+								//echo $day."----".$key;echo "<br/>";
+								if($day == $key && in_array($ts_id,$week2[$day]))
+								{
+									$sql_pgm_cycle_exp = $this->conn->query("SELECT exception_date from program_cycle_exception where program_year_id='".$result_pgm_cycle['program_year_id']."'");
+									$sql_pgm_cycle_exp_cnt = mysqli_num_rows($sql_pgm_cycle_exp);
+									if($sql_pgm_cycle_exp_cnt <= 0)
+									{
+										$final_programs[$i] = $result_pgm_cycle['program_year_id'];
+										$i++;
+									}
+								}
+							}
+						}					
+					}
+				}				
+			}
+		}		
+		return $final_programs;
+	}
+	public function getWeekFromDate($date,$start_week,$end_week)
+	{
+		$myweek = date("W",strtotime($date)) % 2 ;
+		if($myweek == '0')
+		{
+			return 1;
+		}else{
+			return 2;
+		}
 	}
 	public function deleteData()
 	{
