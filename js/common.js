@@ -1502,10 +1502,14 @@ function changeExceptionData(pid){
 	window.location.href = 'program_cycles.php?edit='+window.btoa(pid);
 }
 //function do add exception date in program cycles
-$(function() {
+function setProgramCyclesDate(){
+	var start_date1 = $('#program_start_date').val();
+	var end_date1 = $('#program_end_date').val();
+	
     //for cycle 1
 	$("#startweek1").datepicker({
-	    dateFormat: 'dd-mm-yy',
+		minDate: start_date1,
+		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -1515,11 +1519,13 @@ $(function() {
 		    var date2 = $('#startweek1').datepicker('getDate');
 			date2.setDate(date2.getDate() + 1);
 		    $("#endweek1").datepicker("option", "minDate", date2);
+			$("#endweek1").datepicker("option", "maxDate", end_date1);
 			$("#exceptnProgAval1").datepicker("option", "minDate", selectedDate);
 			$('#exceptnProgAval1').val('');
 		}
 	});
 	$("#endweek1").datepicker({
+		maxDate: end_date1,
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1554,6 +1560,7 @@ $(function() {
 			var date2 = $('#startweek2').datepicker('getDate');
 			date2.setDate(date2.getDate() + 1);
 			$("#endweek2").datepicker("option", "minDate", date2);
+			$("#endweek2").datepicker("option", "maxDate", end_date1);
 			$("#exceptnProgAval2").datepicker("option", "minDate", selectedDate);
 			$('#exceptnProgAval2').val('');
 		}
@@ -1594,6 +1601,7 @@ $(function() {
 			date2.setDate(date2.getDate() + 1);
 			$("#endweek3").datepicker("option", "minDate", date2);
 			$("#exceptnProgAval3").datepicker("option", "minDate", selectedDate);
+			$("#endweek3").datepicker("option", "maxDate", end_date1);
 			$('#exceptnProgAval3').val('');
 		}
 	});
@@ -1618,7 +1626,7 @@ $(function() {
 		changeYear: true,
 	});
 
-});
+}
 //end exception date program cycle
 //function to add cycle exception
 $(document).ready(function() {
@@ -1740,81 +1748,117 @@ $(document).ready(function(){
 	
 	   $('input[class=days]').click(function(){
             if($(this).attr("value")=="Mon1C1W1"){
+				$("#ts-avail-c1-w1-0").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w1-0").toggle();
 			}else if($(this).attr("value")=="Mon2C1W2"){
+				$("#ts-avail-c1-w2-0").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w2-0").toggle();
 			}else if($(this).attr("value")=="MonC2W1"){
+				$("#ts-avail-c2-w1-0").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w1-0").toggle();
 			}else if($(this).attr("value")=="MonC2W2"){
+				$("#ts-avail-c2-w2-0").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w2-0").toggle();
 			}else if($(this).attr("value")=="MonC3W1"){
+				$("#ts-avail-c3-w1-0").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w1-0").toggle();
 			}else if($(this).attr("value")=="MonC3W2"){
+				$("#ts-avail-c3-w2-0").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w2-0").toggle();
 			}
             if($(this).attr("value")=="Tue1C1W1"){
+				$("#ts-avail-c1-w1-1").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w1-1").toggle();
             }else if($(this).attr("value")=="Tue2C1W2"){
+				$("#ts-avail-c1-w2-1").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w2-1").toggle();
             }else if($(this).attr("value")=="TueC2W1"){
+				$("#ts-avail-c2-w1-1").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w1-1").toggle();
             }else if($(this).attr("value")=="TueC2W2"){
+				$("#ts-avail-c2-w2-1").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w2-1").toggle();
             }else if($(this).attr("value")=="TueC3W1"){
+				$("#ts-avail-c3-w1-1").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w1-1").toggle();
             }else if($(this).attr("value")=="TueC3W2"){
+				$("#ts-avail-c3-w2-1").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w2-1").toggle();
             }
             if($(this).attr("value")=="Wed1C1W1"){
+				$("#ts-avail-c1-w1-2").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w1-2").toggle();
             }else if($(this).attr("value")=="Wed2C1W2"){
+				$("#ts-avail-c1-w2-2").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w2-2").toggle();
             }else if($(this).attr("value")=="WedC2W1"){
+				$("#ts-avail-c2-w1-2").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w1-2").toggle();
             }else if($(this).attr("value")=="WedC2W2"){
+				$("#ts-avail-c2-w2-2").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w2-2").toggle();
             }else if($(this).attr("value")=="WedC3W1"){
+				$("#ts-avail-c3-w1-2").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w1-2").toggle();
             }else if($(this).attr("value")=="WedC3W2"){
+				$("#ts-avail-c3-w2-2").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w2-2").toggle();
             }
 			if($(this).attr("value")=="Thu1C1W1"){
+				$("#ts-avail-c1-w1-3").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w1-3").toggle();
             }else if($(this).attr("value")=="Thu2C1W2"){
+				$("#ts-avail-c1-w2-3").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w2-3").toggle();
             }else if($(this).attr("value")=="ThuC2W1"){
+				$("#ts-avail-c2-w1-3").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w1-3").toggle();
             }else if($(this).attr("value")=="ThuC2W2"){
+				$("#ts-avail-c2-w2-3").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w2-3").toggle();
             }else if($(this).attr("value")=="ThuC3W1"){
+				$("#ts-avail-c3-w1-3").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w1-3").toggle();
             }else if($(this).attr("value")=="ThuC3W2"){
+				$("#ts-avail-c3-w2-3").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w2-3").toggle();
             }
 			if($(this).attr("value")=="Fri1C1W1"){
+				$("#ts-avail-c1-w1-4").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w1-4").toggle();
             }else if($(this).attr("value")=="Fri2C1W2"){
+				$("#ts-avail-c1-w2-4").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w2-4").toggle();
             }else if($(this).attr("value")=="FriC2W1"){
+				$("#ts-avail-c2-w1-4").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w1-4").toggle();
             }else if($(this).attr("value")=="FriC2W2"){
+				$("#ts-avail-c2-w2-4").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w2-4").toggle();
             }else if($(this).attr("value")=="FriC3W1"){
+				$("#ts-avail-c3-w1-4").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w1-4").toggle();
             }else if($(this).attr("value")=="FriC3W2"){
+				$("#ts-avail-c3-w2-4").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w2-4").toggle();
             }
 			if($(this).attr("value")=="Sat1C1W1"){
+				$("#ts-avail-c1-w1-5").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w1-5").toggle();
             }else if($(this).attr("value")=="Sat2C1W2"){
+				$("#ts-avail-c1-w2-5").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c1-w2-5").toggle();
             }else if($(this).attr("value")=="SatC2W1"){
+				$("#ts-avail-c2-w1-5").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w1-5").toggle();
             }else if($(this).attr("value")=="SatC2W2"){
+				$("#ts-avail-c2-w2-5").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c2-w2-5").toggle();
             }else if($(this).attr("value")=="SatC3W1"){
+				$("#ts-avail-c3-w1-5").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w1-5").toggle();
             }else if($(this).attr("value")=="SatC3W2"){
+				$("#ts-avail-c3-w2-5").find('option:selected').removeAttr('selected');
 				$("#ts-avail-c3-w2-5").toggle();
             }         
 	   });
@@ -2041,47 +2085,31 @@ function sortingSession(){
 
 function checkweekTS()
 {	
-	var cycle = $('#slctNumCycle').val();
-	
+	var cycle = $('#slctNumCycle').val();	
 	if(cycle == '1'){
 		var occ1 = $('#c1chWeek1').val();
-		if(occ1 == '1w')
+		if(occ1 == '1w' || occ1 == '2w')
 		{
 			if($('.tmSlotc1w1 input:checked').length <= 0){
-				alert('Please select atleast one day and timeslot.');
-				return false;
-			}
-		}else if(occ1 == '2w'){
-			if($('.tmSlotc1w1 input:checked').length <= 0 || $('.tmSlotc1w2 input:checked').length <= 0){
-				alert('Please select atleast one day and timeslot.');
+				alert('Please select atleast one day and timeslot for first week.');
 				return false;
 			}
 		}
 	}else if(cycle == '2'){
 		var occ2 = $('#c1chWeek2').val();
-		if(occ2 == '1w')
+		if(occ2 == '1w' || occ2 == '2w')
 		{
 			if($('.tmSlotc2w1 input:checked').length <= 0){
-				alert('Please select atleast one day and timeslot.');
-				return false;
-			}
-		}else if(occ2 == '2w'){
-			if($('.tmSlotc2w1 input:checked').length <= 0 || $('.tmSlotc2w2 input:checked').length <= 0){
-				alert('Please select atleast one day and timeslot.');
+				alert('Please select atleast one day and timeslot for first week.');
 				return false;
 			}
 		}
 	}else if(cycle == '3'){
 		var occ3 = $('#c1chWeek3').val();
-		if(occ3 == '1w')
+		if(occ3 == '1w' || occ3 == '2w')
 		{
 			if($('.tmSlotc3w1 input:checked').length <= 0){
-				alert('Please select atleast one day and timeslot.');
-				return false;
-			}
-		}else if(occ3 == '2w'){
-			if($('.tmSlotc3w1 input:checked').length <= 0 || $('.tmSlotc3w2 input:checked').length <= 0){
-				alert('Please select atleast one day and timeslot.');
+				alert('Please select atleast one day and timeslot for first week.');
 				return false;
 			}
 		}

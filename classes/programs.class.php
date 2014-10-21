@@ -139,6 +139,11 @@ class Programs extends Base {
 		$result =  $this->conn->query("select * from program where id='".$id."'");
 		return $result;
     }
+	//function to  a program by year id
+	public function getProgramByYearId($id){
+		$result =  $this->conn->query("SELECT * FROM `program` INNER JOIN program_years on program_years.program_id = program.id WHERE program_years.id = '".$id."'");
+		return $result;
+    }
 	//function to  get all programs
 	public function getProgramListData(){
 		$result =  $this->conn->query("select * from program");

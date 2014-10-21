@@ -10,6 +10,8 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $programId = base64_decode($_GET['edit']);
     $result = $objP->getProgramById($programId);
     $row = $result->fetch_assoc();
+	$resulty = $objP->getProgramByYearId($programId);
+	$row1 = $resulty->fetch_assoc();
     $unitArr[]= explode(',',$row['unit']);
     //get all the cycles related to data
     $cycleData = $objP->getProgramCycleList($programId);
@@ -67,6 +69,8 @@ $(document).ready(function() {
 			  <input type="hidden" name="form_action" value="add_edit_cycles" />
 			  <?php if(isset($_GET['edit'])){?>
 			  	<input type="hidden" name="programId" value="<?php echo $_GET['edit'];?>" />
+				<input type="hidden" name="program_start_date" id="program_start_date" value="<?php echo date('d-m-Y',strtotime($row1['start_date']));?>" />
+				<input type="hidden" name="program_end_date" id="program_end_date" value="<?php echo date('d-m-Y',strtotime($row1['end_date']));?>" />
 			  	<input type="hidden" name="preNumCycle" value="<?php echo $no_of_cycles;?>" />
 			  	<?php
 			  	   $ct = 0;
@@ -101,7 +105,7 @@ $(document).ready(function() {
                         <h2>No. of Cycles<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctNumCycle" name="slctNumcycle" class="select required">
+                        <select id="slctNumCycle" name="slctNumcycle" class="select required" onchange="setProgramCyclesDate();">
                             <option value="">--Select Cycles--</option>
                             <option value="1">1 </option>
                             <option value="2">2 </option>

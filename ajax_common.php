@@ -42,12 +42,12 @@ switch ($codeBlock) {
 		$del_query="delete from program where id='".$id."'";
 		$qry = mysqli_query($db, $del_query);
 		if(mysqli_affected_rows($db)>0){
-		    // delete all the cycles related to this program
-		    $del_cycle_query="delete from cycle where program_id='".$id."'";
-		    mysqli_query($db, $del_cycle_query);
-			// delete all the program years related to this program
+		    // delete all the program years related to this program
 			$del_cycle_query="delete from program_years where program_id='".$id."'";
 			$qry = mysqli_query($db, $del_cycle_query);
+			// delete all the cycles related to this program
+		    $del_cycle_query="delete from cycle where program_year_id in(select id from program_years where program_id='".$id."')";
+		    mysqli_query($db, $del_cycle_query);
 		    //delete associated groups
 			$del_pg_query="delete from program_group where program_year_id in(select id from program_years where program_id='".$id."')";
 			mysqli_query($db, $del_pg_query);
