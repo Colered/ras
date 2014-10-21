@@ -317,7 +317,7 @@ class Timetable extends Base {
 				$date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
 				
 			}			
-		//	print"<pre>";print_r($reserved_array);die;
+			print"<pre>";print_r($reserved_array);die;
 		$result_array[$cnt] = $reserved_array;
 		$allocated_activities[$cnt] =  $number;
 		}
