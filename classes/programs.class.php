@@ -622,8 +622,8 @@ class Programs extends Base {
 	}
 	//function to  get all programs according to years
 	public function getProgramWithCycle(){
-		//echo "select py.*, cy.id as cleid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id"; die;
-		$result =  $this->conn->query("select py.*, py.id as progid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id GROUP BY cy.no_of_cycle");
+		//echo "select py.*, py.id as progid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id GROUP BY cy.program_year_id"; die;
+		$result =  $this->conn->query("select py.*, py.id as progid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id GROUP BY cy.program_year_id");
 		return $result;
 	}
 }
