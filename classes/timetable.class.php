@@ -452,7 +452,7 @@ class Timetable extends Base {
 								inner join classroom_availability_rule_day_map cd on cd.classroom_availability_rule_id = cm.classroom_availability_rule_id
 								inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
 								inner join room on room.id = cm.room_id
-								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and timeslot_id like '%".$slot."%'");
+								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and actual_timeslot_id like '%".$slot."%'");
 								
 							
 		$k = 0;
@@ -479,7 +479,7 @@ class Timetable extends Base {
 								from teacher_availability_rule_teacher_map tm 
 								inner join teacher_availability_rule_day_map td on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
 								inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
-								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and td.timeslot_id like '%".$slot."%'");
+								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and td.actual_timeslot_id like '%".$slot."%'");
 		while($result_teachers = mysqli_fetch_array($sql_teachers))
 		{
 			$sql = $this->conn->query("select id from teacher_availability_exception where teacher_id = '".$result_teachers['teacher_id']."' and exception_date = '".$date."'");
