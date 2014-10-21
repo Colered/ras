@@ -234,7 +234,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 
 					</div>
 					<div class="clear"></div>
-					<div class="txtfield">
+					<div class="txtfield" style="margin-left:500px;">
                         <input type="submit" name="btnSave" class="buttonsub" value="Save">
                     </div>
                     <div class="txtfield">
