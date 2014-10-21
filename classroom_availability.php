@@ -238,7 +238,7 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
                         <input type="submit" name="btnSave" class="buttonsub" value="Save">
                     </div>
                     <div class="txtfield">
-                        <input type="submit" name="btnCancel" class="buttonsub" value="Cancel">
+                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'classroom_availability_view.php';">
                     </div>
 			 </form>
         </div>
