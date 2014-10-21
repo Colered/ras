@@ -851,6 +851,44 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	    break;
+		case "del_rule_teacher":
+		if(isset($_POST['rule_id']) && $_POST['rule_id']!=""){
+			//check if rule is not being used by any other teacher
+			$query = "select id from teacher_availability_rule_teacher_map where teacher_availability_rule_id = '".$_POST['rule_id']."'";
+			$q_res = mysqli_query($db, $query);
+			if(mysqli_affected_rows($db)<=0)
+			{
+				//then delete the days associate with rule from table teacher_availability_rule_day_map
+				$delRuleDay="delete from teacher_availability_rule_day_map where teacher_availability_rule_id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delRuleDay);
+				//delete the rule
+				$delRule="delete from teacher_availability_rule where id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delRule);
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}
+    	break;
+		case "del_rule_classroom":
+		if(isset($_POST['rule_id']) && $_POST['rule_id']!=""){
+			//check if rule is not being used by any other teacher
+			$query = "select id from classroom_availability_rule_room_map where classroom_availability_rule_id = '".$_POST['rule_id']."'";
+			$q_res = mysqli_query($db, $query);
+			if(mysqli_affected_rows($db)<=0)
+			{
+				//then delete the days associate with rule from table teacher_availability_rule_day_map
+				$delRuleDay="delete from classroom_availability_rule_day_map where classroom_availability_rule_id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delRuleDay);
+				//delete the rule
+				$delRule="delete from classroom_availability_rule where id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delRule);
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}
+    	break;
 		
 }
 ?>

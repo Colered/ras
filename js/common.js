@@ -2115,5 +2115,50 @@ function checkweekTS()
 		}
 	}
 }
-
+function deleteRuleTeacher($id){
+	if($id==""){
+		alert("Please select a rule to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Rule?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'rule_id': $id,
+					'codeBlock': 'del_rule_teacher',
+				},
+                success: function($succ){
+					if($succ==1){
+                       window.location.href = 'teacher_availability.php';
+					}else{
+						alert("Cannot delete the selected Rule, as this rule is associated with some teacher.");
+					}
+                }
+        });
+    }
+    return false;
+}
+function deleteRuleClassroom($id){
+	if($id==""){
+		alert("Please select a rule to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Rule?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'rule_id': $id,
+					'codeBlock': 'del_rule_classroom',
+				},
+                success: function($succ){
+					if($succ==1){
+                       window.location.href = 'classroom_availability.php';
+					}else{
+					   alert("Cannot delete the selected Rule, as this rule is associated with some classroom.");
+					}
+                }
+        });
+    }
+    return false;
+}
 
