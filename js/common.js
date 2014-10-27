@@ -288,7 +288,7 @@ function deleteProgram($id){
 	if($id==""){
 		alert("Please select a program to delete");
 		return false;
-	}else if(confirm("Are you sure you want to delete?")) {
+	}else if(confirm("Are you sure you want to delete? This will delete all the related subjects, sessions and activities")) {
 	    $.ajax({
                 type: "POST",
                 url: "ajax_common.php",
@@ -1502,7 +1502,7 @@ function changeExceptionData(pid){
 	window.location.href = 'program_cycles.php?edit='+window.btoa(pid);
 }
 //function do add exception date in program cycles
-function setProgramCyclesDate(){
+$(function() {
 	var start_date1 = $('#program_start_date').val();
 	var end_date1 = $('#program_end_date').val();
 	
@@ -1625,8 +1625,7 @@ function setProgramCyclesDate(){
 		changeMonth: true, 
 		changeYear: true,
 	});
-
-}
+});
 //end exception date program cycle
 //function to add cycle exception
 $(document).ready(function() {

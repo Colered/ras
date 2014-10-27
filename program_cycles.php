@@ -105,7 +105,7 @@ $(document).ready(function() {
                         <h2>No. of Cycles<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <select id="slctNumCycle" name="slctNumcycle" class="select required" onchange="setProgramCyclesDate();">
+                        <select id="slctNumCycle" name="slctNumcycle" class="select required">
                             <option value="">--Select Cycles--</option>
                             <option value="1">1 </option>
                             <option value="2">2 </option>
