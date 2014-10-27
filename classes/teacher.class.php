@@ -13,6 +13,7 @@ class Teacher extends Base {
 		$sex = $_POST['sex'];
 		$txtDegination = Base::cleanText($_POST['txtDegination']);
 		$txtQualification = Base::cleanText($_POST['txtQualification']);
+		$txtPayrate = Base::cleanText($_POST['txtPayrate']);
 		$years = $_POST['years'];
 		$months = $_POST['months'];
 		$totalmonthExp = $years*12+$months;
@@ -33,7 +34,7 @@ class Teacher extends Base {
 			$_SESSION['error_msg'] = $message;
 			return 0;
         }else{
-           $sql = "INSERT INTO teacher (teacher_name,teacher_type, address, dob, doj, gender, designation, qualification, experience, email, username, date_add, date_update) VALUES ('".$txtPname."','".$proftype."', '".$txtAreaAddress."', '".$dob."', '".$doj."', '".$sex."', '".$txtDegination."', '".$txtQualification."', '".$totalmonthExp."', '".$txtEmail."', '".$txtUname."', now(), '')";
+           $sql = "INSERT INTO teacher (teacher_name,teacher_type, address, dob, doj, gender, designation, qualification, payrate, experience, email, username, date_add, date_update) VALUES ('".$txtPname."','".$proftype."', '".$txtAreaAddress."', '".$dob."', '".$doj."', '".$sex."', '".$txtDegination."', '".$txtQualification."', '".$txtPayrate."', '".$totalmonthExp."', '".$txtEmail."', '".$txtUname."', now(), '')";
            $rel = $this->conn->query($sql);
            if(!$rel){
               printf("%s\n", $this->conn->error);
@@ -57,6 +58,7 @@ class Teacher extends Base {
 		$sex = $_POST['sex'];
 		$txtDegination = Base::cleanText($_POST['txtDegination']);
 		$txtQualification = Base::cleanText($_POST['txtQualification']);
+		$txtPayrate = Base::cleanText($_POST['txtPayrate']);
 		$years = $_POST['years'];
 		$months = $_POST['months'];
 		$totalmonthExp = $years*12+$months;
@@ -69,6 +71,7 @@ class Teacher extends Base {
 						gender='".$sex."',
 						designation='".$txtDegination."',
 						qualification='".$txtQualification."',
+						payrate='".$txtPayrate."',
 						experience='".$totalmonthExp."',
 						date_update=now() WHERE id=$edit_id";
 		$rel = $this->conn->query($sql);

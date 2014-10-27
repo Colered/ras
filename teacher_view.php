@@ -34,6 +34,7 @@ $(document).ready(function(){
                         <th >DOJ</th>
                         <th >Desigation</th>
                         <th >Qualification </th>
+						<th >Pay Rate </th>
                         <th >Experience </th>
                         <th >Email</th>
                         <th >Username</th>
@@ -51,6 +52,7 @@ $(document).ready(function(){
                         <td><?php echo $objT->formatDate($row['doj']);?></td>
                         <td><?php echo $row['designation'];?></td>
                         <td><?php echo $row['qualification'];?></td>
+						<td><?php echo $row['payrate'];?></td>
                         <td><?php echo $objT->printTeacherExp($row['experience']);?></td>
                         <td><?php echo $row['email'];?></td>
                         <td><?php echo $row['username'];?></td>

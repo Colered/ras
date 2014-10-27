@@ -24,6 +24,8 @@ $degination = isset($_GET['edit'])? $row['designation'] : (isset($_POST['txtDegi
 $qualification = isset($_GET['edit'])? $row['qualification'] : (isset($_POST['txtQualification'])? $_POST['txtQualification'] : '');
 $email = isset($_GET['edit'])? $row['email'] : (isset($_POST['txtEmail'])? $_POST['txtEmail'] : '');
 $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])? $_POST['txtUname'] : '');
+$payrate = isset($_GET['edit'])? $row['payrate'] : (isset($_POST['txtPayrate'])? $_POST['txtPayrate'] : '');
+
 
 ?>
 <div id="content">
@@ -105,6 +107,13 @@ $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])?
                     </div>
                     <div class="txtfield">
                         <input type="text" class="inp_txt alphanumeric" id="txtQualification" maxlength="50" name="txtQualification" value="<?php echo $qualification;?>"/>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="custtd_left">
+                        <h2>Pay Rate</h2>
+                    </div>
+                    <div class="txtfield">
+                        <input type="text" class="inp_txt alphanumeric" id="txtPayrate" maxlength="50" name="txtPayrate" value="<?php echo $payrate;?>"/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
