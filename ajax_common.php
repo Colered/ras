@@ -565,7 +565,7 @@ switch ($codeBlock) {
 					$sessCount_data = mysqli_fetch_assoc($sessCount_res);
 					$txtOrderNum =  $sessCount_data['total'] +1;
 					//add new session
-					$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '', NOW(), NOW());");
+					$result = mysqli_query($db, "INSERT INTO subject_session (id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '', NOW(), NOW());");
 					
 				//if only teacher name is also provided then as a un reserved activity
 				if(mysqli_affected_rows($db)>0){
@@ -695,7 +695,7 @@ switch ($codeBlock) {
 							$sessCount_res = mysqli_query($db, $sessCount_query);
 							$sessCount_data = mysqli_fetch_assoc($sessCount_res);
 							$txtOrderNum =  $sessCount_data['total'] +1;
-							$result = mysqli_query($db, "INSERT INTO subject_session VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '', NOW(), NOW());");
+							$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '', NOW(), NOW());");
 							if(mysqli_affected_rows($db)>0){
 								$sessionId = mysqli_insert_id($db);
 								//get last created activity name
