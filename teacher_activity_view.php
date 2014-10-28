@@ -43,8 +43,18 @@ $(document).ready(function(){
                 <tbody>
 				<?php
 					$result = $objT->getTeachersAct();
+					$session_array = array();
 					if($result->num_rows){
 						while($row = $result->fetch_assoc()){
+							//echo $row['session_id']."---"; print"<pre>";print_r($session_array);print"</pre>";
+							if(!in_array($row['session_id'],$session_array) && $row['reserved_flag'] != 2)
+							{
+								$trBColor1 = ' style="background-color:#FF0000;"';
+								$session_array[] = $row['session_id'];
+							}else{
+								$trBColor1 = '';
+							}
+
 						$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
 						$teacher_name = $row['teacher_name'].$email;
 						if($row['reserved_flag']==1)
@@ -54,7 +64,7 @@ $(document).ready(function(){
 						  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
 
 					?>
-						<tr<?php echo $trBColor;?>>
+						<tr<?php echo $trBColor;echo $trBColor1;?>>
 							<td class="align-center"><?php echo $row['id'];?></td>
 							<td><?php echo $row['name'];?></td>
 							<td><?php echo $row['program_name'];?></td>
