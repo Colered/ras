@@ -43,27 +43,28 @@ $(document).ready(function(){
                 <tbody>
 				<?php
 					$result = $objT->getTeachersAct();
+					$result_sess = $objT->getSessionFromTT();
+					//print_r($result_sess);die;
 					$session_array = array();
 					if($result->num_rows){
-						while($row = $result->fetch_assoc()){
+						while($row = $result->fetch_assoc())
+						{
 							//echo $row['session_id']."---"; print"<pre>";print_r($session_array);print"</pre>";
-							if(!in_array($row['session_id'],$session_array) && $row['reserved_flag'] != 2)
+							if(!in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
 							{
 								$trBColor1 = ' style="background-color:#FF0000;"';
 								$session_array[] = $row['session_id'];
 							}else{
 								$trBColor1 = '';
 							}
-
-						$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
-						$teacher_name = $row['teacher_name'].$email;
-						if($row['reserved_flag']==1)
-						   $res_flag = "Yes";
-						else
-						  $res_flag = "No";
-						  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
-
-					?>
+							$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
+							$teacher_name = $row['teacher_name'].$email;
+							if($row['reserved_flag']==1)
+							   $res_flag = "Yes";
+							else
+							  $res_flag = "No";
+							  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
+						?>
 						<tr<?php echo $trBColor;echo $trBColor1;?>>
 							<td class="align-center"><?php echo $row['id'];?></td>
 							<td><?php echo $row['name'];?></td>
