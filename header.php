@@ -77,7 +77,7 @@ if(!isset($_SESSION['user_id'])){
                             </ul>
                         </li>
 
-						<li class="upp right"><a href="logout.php/">Logout</a></li>
+						<li class="upp right"><a href="logout.php">Logout</a></li>
                     </ul>
 					<?php } ?>
                 </div>
