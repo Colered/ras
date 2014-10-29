@@ -50,7 +50,7 @@ $(document).ready(function(){
 						while($row = $result->fetch_assoc())
 						{
 							//echo $row['session_id']."---"; print"<pre>";print_r($session_array);print"</pre>";
-							if(!in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
+							if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
 							{
 								$trBColor1 = ' style="background-color:#FF0000;"';
 								$session_array[] = $row['session_id'];
