@@ -35,7 +35,7 @@ $(document).ready(function(){
             <div class="h_title">Timeslot</div>
             <form name="timetable" id="timetable" action="postdata.php" method="post">
 				<input type="hidden" name="form_action" value="addTimeslot" />
-					<div>
+					<!--<div>
 					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Timeslot <span class="redstar">*</span></h2>
@@ -49,7 +49,7 @@ $(document).ready(function(){
                     <input type="submit" name="btnGenrtTime" class="buttonsub" value="Add Timeslot" style="margin-left:10px;">
                     </div></div>
                     <div class="clear"></div>
-                    <div>
+                    <div>-->
 					<table id="datatables" class="display">
 					<thead>
 					<tr>
@@ -57,7 +57,7 @@ $(document).ready(function(){
 						<th style="text-align:left" >Start Time</th>
 						<th style="text-align:left" >End Time</th>
 						<th style="text-align:left" >Timeslot</th>
-						<th >Action</th>
+						<!--<th >Action</th>-->
 					</tr>
 					</thead>
 					<tbody>
@@ -67,9 +67,9 @@ $(document).ready(function(){
 						<td><?php echo $data['start_time'] ?></td>
 						<td><?php echo $data['end_time'] ?></td>
 						<td><?php echo $data['start_time'].'-'.$data['end_time']; ?></td>
-						<td class="align-center" id="<?php echo $data['id'] ?>">
+						<?php /*?><td class="align-center" id="<?php echo $data['id'] ?>">
 							<a href="#" class="table-icon delete" onClick="deleteTimeslot(<?php echo $data['id'] ?>)"></a>
-						</td>
+						</td><?php */?>
 						</tr>
 						<?php }?>
 					</tbody>
@@ -98,7 +98,7 @@ $(document).ready(function() {
 	var start = $("#start").kendoTimePicker({
 		change: startChange,
 		interval: 15,
-		format: "h:mm tt",
+		format: "hh:mm tt",
     	parseFormats: ["hh:mm"], 
 	}).data("kendoTimePicker");
 	//making timelot readonly
@@ -113,7 +113,7 @@ $(document).ready(function() {
 	var end = $("#end").kendoTimePicker(
 	{
 		interval: 15,
-		format: "h:mm tt",
+		format: "hh:mm tt",
     	parseFormats: ["hh:mm"] 
 	}).data("kendoTimePicker");
 	//making timelot readonly

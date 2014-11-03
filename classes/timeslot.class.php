@@ -6,11 +6,11 @@ class Timeslot extends Base {
 	/*function for adding Area*/
 	public function addTimeslot()
 	{
-			$start = date('H:i A', strtotime($_POST['start_time']));
-			$end = date('H:i A', strtotime($_POST['end_time']));
+			$start = $_POST['start_time'];
+			$end = $_POST['end_time'];
 			$timeslot = $start.' - '.$end;
 			//check if the timeslot is clashed with some other time.
-			$area_query="select id from timeslot where (start_time >= '".$start."' AND start_time < '".$end."') OR (end_time > '".$start."' AND end_time <= '".$end."')";
+			$area_query="select id from timeslot where start_time = '".$start."' AND end_time = '".$end."'";
 			$q_res = mysqli_query($this->conn, $area_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)
@@ -19,9 +19,9 @@ class Timeslot extends Base {
 				$_SESSION['error_msg'] = $message;
 				return 0;
 			}else{
-				//add the new area
-				$start2 = date('H:i', strtotime($_POST['start_time']));
-				$end2 = date('H:i', strtotime($_POST['end_time']));
+				//add the new timeslot
+				$start2 = $_POST['start_time'];
+				$end2 =  $_POST['end_time'];
 				$timeslot = $start2.'-'.$end2;
 				$currentDateTime = date("Y-m-d H:i:s");
 				if ($result = mysqli_query($this->conn, "INSERT INTO timeslot VALUES ('', '".$start."', '".$end."', '".$timeslot."', '".$currentDateTime."', '".$currentDateTime."');")) {
@@ -35,7 +35,7 @@ class Timeslot extends Base {
 				}
 			}
 	}
-	/*function for listing Area*/
+	/*function for listing timeslot*/
 	public function viewTimeslot() {
 			$area_query="select * from timeslot order by start_time ASC";
 			$q_res = mysqli_query($this->conn, $area_query);
@@ -95,6 +95,16 @@ class Timeslot extends Base {
 				$allTSVal[] = $tsdata['start_time'].'-'.$tsdata['end_time'];
 			}
 			return $allTSVal;
+	}
+	//function to get time slot start date
+	public function getTimeSlotStartDateDropDwn(){
+		$tslot_dropDwn = '';
+		$slqTS="SELECT id, start_time FROM timeslot";
+		$relTS = mysqli_query($this->conn, $slqTS);
+		while($tsdata= mysqli_fetch_array($relTS)){
+			$tslot_dropDwn .= '<option value="'.$tsdata['id'].'">'.$tsdata['start_time'].'</option>';
+		}
+		return $tslot_dropDwn;
 	}
 
 }

@@ -123,35 +123,32 @@ class Classroom_Availability extends Base {
 	  $q_res= mysqli_query($this->conn, $room_type_qry);
 	  return $q_res;
 	}
-	
-	/*public function getOnlyExceptionForRoom(){
-		$excep_query="select expAvail.exception_date from classroom_availability_exception as expAvail LEFT JOIN room as rm on expAvail.room_id =rm.id  GROUP BY expAvail.room_id" ;
-		$q_excep = mysqli_query($this->conn, $excep_query);
-		return $q_excep;
-	}*/
 	public function getTimeslotId($timeSoltArr)
 	{
-		//print"<pre>";print_r($timeSoltArr);die;
-		//$timeslotIds = '';
+		$timeslotIds = array();
 		for($i=0;$i<count($timeSoltArr);$i++)
 		{
 			
+			$ts_array = array();
 			$ts_array = explode(",",$timeSoltArr[$i]);
 			$timeslots = array();
 			foreach($ts_array as $val)
 			{			
 				$time = explode("-",$val);
-				$start_time  = date("H:i", strtotime($time['0']));
-				$end_time = date("H:i", strtotime($time['1']));
-				$sql_time_slct = "select id from timeslot where TIME_TO_SEC(start_time) >= TIME_TO_SEC('".$start_time."') and TIME_TO_SEC(end_time) <= TIME_TO_SEC('".$end_time."')";
+				$start_time  = $time['0'];
+				$end_time = $time['1'];
+				$sql_time_slct = "select id from timeslot where start_time = '".$start_time."' OR end_time = '".$end_time."'";
 				$q_res= mysqli_query($this->conn, $sql_time_slct);
+				$tempIdRange= array();
 				while($data = $q_res->fetch_assoc()){
-					$timeslots[] =  $data['id'];
-				}				
+				$tempIdRange[] =  $data['id'];
+				}
+				for($j=min($tempIdRange); $j<=max($tempIdRange); $j++){
+					$timeslots[] = $j;
+				}	
 			}
-			$timeslotIds[$i] = implode(',',$timeslots);
+			$timeslotIds[] = implode(',',$timeslots);
 		}
-		//print"<pre>";print_r($timeslotIds);die;
 		return $timeslotIds;
 	}
 }

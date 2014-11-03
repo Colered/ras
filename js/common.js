@@ -477,72 +477,6 @@ function deleteSubject($id){
 $(document).ready(function() {
  	$('.subjectSession').hide();
 }); 
-/*$(document).ready(function() {
- $('.subjectSession').hide();
-	var max_fields      = 10; 
-	var wrapper         = $(".divSession"); 
-	var add_button      = $("#btnAddNewSess"); 
-	var x = 1,y=0; 
-	$(add_button).click(function(e){ 
-		  $("#subjectForm").validate();
-		  var sessionName='',sessionOrder='',sessionDesc='', sessionCaseNo='', sessionTechNote='';       
-		  sessionName=stripslashes(strip_tags($('#txtSessionName').val()));
-		  sessionDesc=stripslashes(strip_tags($('#txtareaSessionDesp').val()));
-		  sessionOrder=$('#txtOrderNum').val();
-		  sessionCaseNo=stripslashes(strip_tags($('#txtCaseNo').val()));
-		  sessionTechNote=stripslashes(strip_tags($('#txtareatechnicalNotes').val()));
-		  if(sessionName==""){
-			 alert('Please select session name.');
-		  }else if(sessionOrder==""){
-			 alert('Please select order number');
-		  }else if(sessionCaseNo==""){
-			 alert('Please enter a valid case no');
-		  }else if(sessionTechNote==""){
-			 alert('Please enter the valid technical note');
-		  }else if(!$.isNumeric(sessionOrder)){
-			 alert('order number should be numeric');
-		  }
-		  if($.isNumeric(sessionOrder))
-		  {
-			  e.preventDefault();
-			  var subjectID=$('#subjectId').val();
-			  var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
-			  if(subjectID!=""){
-				   var maxSerialNumVal=maxSerialNum + 1;
-				   $('#maxSessionListVal').val(maxSerialNumVal);
-				   if(maxSerialNum==0){
-						$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Case No.</th><th>Technical Notes</th><th>Remove</th></tr></thead><tbody>'); 
-				   }
-				   if(sessionName!=''){
-						$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td>'+sessionCaseNo+'</td><td>'+sessionTechNote+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+maxSerialNumVal+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+maxSerialNumVal+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+maxSerialNumVal+'"  value="'+sessionOrder+'"/><input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo'+maxSerialNumVal+'"  value="'+sessionCaseNo+'"/><input type="hidden" name="sessionTechNote[]" id="sessionTechNote'+maxSerialNumVal+'"  value="'+sessionTechNote+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSession(0,'+maxSerialNumVal+' )">Remove</a></td></tr></tbody></table></div>');
-						//$(wrapper).append('');
-						$('#txtSessionName').val('');
-						$('#txtOrderNum').val('');
-						$('#txtareaSessionDesp').val('');
-						$('#txtCaseNo').val('');
-						$('#txtareatechnicalNotes').val('');
-				   }
-			   }else{
-					if(x < max_fields){ 
-						x++; y++;
-						if(sessionName!=''){
-							if(y==1){
-							$(wrapper).append('<div class="sessionList"><table id="datatables" class="display"><thead><tr><th>Sr. No.</th><th >Session Name</th><th >Order Number</th><th >Description</th><th>Case No.</th><th>Technical Notes</th><th>Remove</th></tr></thead><tbody>'); 
-							}
-							$('#datatables').append('<tr><td>'+y+'</td><td>'+sessionName+'</td><td>'+sessionOrder+'</td><td>'+sessionDesc+'</td><td>'+sessionCaseNo+'</td><td>'+sessionTechNote+'</td><td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'+y+'"  value="'+sessionName+'"/><input type="hidden" name="sessionDesc[]" id="sessionDesc'+y+'"  value="'+sessionDesc+'"/><input type="hidden" name="sessionOrder[]" id="sessionOrder'+y+'"  value="'+sessionOrder+'"/><input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo'+y+'"  value="'+sessionCaseNo+'"/><input type="hidden" name="sessionTechNote[]" id="sessionTechNote'+y+'"  value="'+sessionTechNote+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSession(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
-							$('#txtSessionName').val('');
-							$('#txtOrderNum').val('');
-							$('#txtareaSessionDesp').val('');
-							$('#txtCaseNo').val('');
-							$('#txtareatechnicalNotes').val('');
-						}
-					}
-				}
-		   }else{
-			  alert('Order number should be numeric');
-			}
-		 });
-});*/
 $(document).ready(function() {
 	//function for check availability
 	$("#btnCheckAvail").on( "click", function() {
@@ -578,6 +512,13 @@ $(document).ready(function() {
 			$('#tslot_id').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
+		if($('#duration').val()==""){
+			$('#duration').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#duration').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
 		if($('#subSessDate').datepicker().val()==""){
 			$('#subSessDate').css('border', 'solid 1px red');
 			var formValid = 1; 
@@ -607,6 +548,7 @@ $(document).ready(function() {
 						'areaId': $('#slctArea').val(),
 						'slctTeacher': $('#slctTeacher').val(),
 						'tslot_id': $('#tslot_id').val(),
+						'duration': $('#duration').val(),
 						'subSessDate': $('#subSessDate').val(),
 						'codeBlock': 'checkAvailabilitySession',
 					},
@@ -617,23 +559,39 @@ $(document).ready(function() {
 						}else if($succ==2){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
-						}else if($succ==3){
-							$('#showstatusAvail').hide();
-							$('#showstatusNoAvail').show();
-							alert('Teacher is busy in some other class on selected day and time.');
-						}else if($succ==4){
-							$('#showstatusAvail').hide();
-							$('#showstatusNoAvail').show();
-							alert('Classroom is not free on the given date and time.');
+							alert('session name already exist.');
 						}else if($succ==5){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is not available on the selected time and day.');
+						}else if($succ==6){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
+						}else if($succ==3){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Teacher is not available on the selected time and day.');
+						}else if($succ==4){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Classroom is already engaged in other activity.');
 						}else if($succ==7){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('Classroom is not available on the selected time and day.');
+							alert('Classroom is not free on the given date and time.');
+						}else if($succ==8){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create an activity.');
+						}else if($succ==9){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Program is not available on the selected day and time.');
+						}else{
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert("Cannot create the session.");
 						}
 					}
 				});
@@ -680,6 +638,7 @@ $(document).ready(function() {
 						'areaId': $('#slctArea').val(),
 						'slctTeacher': $('#slctTeacher').val(),
 						'tslot_id': $('#tslot_id').val(),
+						'duration': $('#duration').val(),
 						'subSessDate': $('#subSessDate').val(),
 						'codeBlock': 'add_sub_session',
 					},
@@ -701,6 +660,8 @@ $(document).ready(function() {
 							alert('Classroom is not free on the given date and time.');
 						}else if($succ==8){
 							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create an activity.');
+						}else if($succ==9){
+							alert('Program is not available on the selected day and time.');
 						}else{
 							alert("Cannot create the session.");
 						}

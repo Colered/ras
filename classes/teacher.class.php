@@ -405,23 +405,25 @@ class Teacher extends Base {
 	}
 	public function getTimeslotId($timeSoltArr)
 	{
-		//print"<pre>";print_r($timeSoltArr);die;
-		//$timeslotIds = '';			
 		$ts_array = explode(",",$timeSoltArr);
 		$timeslots = array();
 		foreach($ts_array as $val)
 		{			
 			$time = explode("-",$val);
-			$start_time  = date("H:i", strtotime($time['0']));
-			$end_time = date("H:i", strtotime($time['1']));
-			$sql_time_slct = "select id from timeslot where TIME_TO_SEC(start_time) >= TIME_TO_SEC('".$start_time."') and TIME_TO_SEC(end_time) <= TIME_TO_SEC('".$end_time."')";
+			$start_time  = $time['0'];
+			$end_time = $time['1'];
+			$sql_time_slct = "select id from timeslot where start_time = '".$start_time."' OR end_time = '".$end_time."'";
+			//get all the ids between two nos
 			$q_res= mysqli_query($this->conn, $sql_time_slct);
+			$tempIdRange= array();
 			while($data = $q_res->fetch_assoc()){
-				$timeslots[] =  $data['id'];
+				$tempIdRange[] =  $data['id'];
+			}
+			for($i=min($tempIdRange); $i<=max($tempIdRange); $i++){
+				$timeslots[] = $i;
 			}				
 		}
 		$timeslotIds = implode(',',$timeslots);		
-		//print"<pre>";print_r($timeslotIds);die;
 		return $timeslotIds;
 	}
 }

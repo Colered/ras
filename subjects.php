@@ -11,7 +11,7 @@ $objTS = new Timeslot();
 //room dropdown
 $room_dropDwn = $objB->getRoomsDropDwn();
 //timeslot dropdown
-$tslot_dropDwn = $objTS->getTimeSlotDropDwn();
+$tslot_dropDwn = $objTS->getTimeSlotStartDateDropDwn();
 
 
 if(isset($_GET['edit']) && $_GET['edit']!=""){
@@ -160,10 +160,48 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 							</select>
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
-						<h3>Time Slot</h3>
+						<h3>Start Time</h3>
 							<select name="tslot_id" id="tslot_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">';
 							<option value="">--Select--</option>';
 							<?php echo $tslot_dropDwn; ?>
+							</select>
+						</div>
+						<div class="sessionboxSub" style="width:110px;">
+						<h3>Duration(Hr)</h3>
+							<select name="duration" id="duration" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">';
+							<option value="">--Select--</option>';
+							<option value="15">00:15</option>
+							<option value="30">00:30</option>
+							<option value="45">00:45</option>
+							<option value="60">01:00</option>
+							<option value="75">01:15</option>
+							<option value="90">01:30</option>
+							<option value="105">01:45</option>
+							<option value="120">02:00</option>
+							<option value="135">02:15</option>
+							<option value="150">02:30</option>
+							<option value="165">02:45</option>
+							<option value="180">03:00</option>
+							<option value="195">03:15</option>
+							<option value="210">03:30</option>
+							<option value="225">03:45</option>
+							<option value="240">04:00</option>
+							<option value="255">04:15</option>
+							<option value="270">04:30</option>
+							<option value="285">04:45</option>
+							<option value="300">05:00</option>
+							<option value="315">05:15</option>
+							<option value="330">05:30</option>
+							<option value="345">05:45</option>
+							<option value="300">06:00</option>
+							<option value="315">06:15</option>
+							<option value="330">06:30</option>
+							<option value="345">06:45</option>
+							<option value="300">07:00</option>
+							<option value="315">07:15</option>
+							<option value="330">07:30</option>
+							<option value="345">07:45</option>
+							<option value="345">08:00</option>
 							</select>
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
@@ -200,7 +238,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 					if($subjectId!=""){
 						$x=0;
 						$sessionHtml='';
-						$subj_session_query="select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.timeslot_range from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE subs.subject_id='".$subjectId."' order by subs.order_number ASC";
+						$subj_session_query="select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.start_time from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE subs.subject_id='".$subjectId."' order by subs.order_number ASC";
 						$subj_session_result= mysqli_query($db, $subj_session_query);
 						while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
 						$x++;
@@ -217,9 +255,9 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
           						<th >Session Name</th>
 								<th >Teacher</th>
 								<th >Room</th>
-								<th >Time Slot</th>
+								<th >Start Time</th>
+								<th >Duration</th>
 								<th >Date</th>
-
           						<th >Description</th>
           						<th >Case No</th>
 								<th >Technical Notes</th>
@@ -232,9 +270,9 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 	   							<td>'.$subj_session_data['session_name'].'</td>
 								<td>'.$subj_session_data['teacher_name'].'</td>
 								<td>'.$subj_session_data['room_name'].'</td>
-								<td>'.$subj_session_data['timeslot_range'].'</td>
+								<td>'.$subj_session_data['start_time'].'</td>
+								<td>'.date('H:i', mktime(0,$subj_session_data['duration'])).'</td>
 								<td>'.$subj_session_data['act_date'].'</td>
-
 	   							<td>'.$subj_session_data['description'].'</td>
 								<td>'.$subj_session_data['case_number'].'</td>
 	   							<td>'.$subj_session_data['technical_notes'].'</td>';

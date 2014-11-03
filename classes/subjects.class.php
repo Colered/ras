@@ -4,77 +4,7 @@ class Subjects extends Base {
    		 parent::__construct();
    	}
 	/*function for adding Subject*/
-	/*public function addSubject() {
-			$sessionName = (isset($_POST['sessionName'])) ? ($_POST['sessionName']) : '';
-			$sessionNameArr=$this->formingArray($sessionName);
-			$orderNumber = (isset($_POST['sessionOrder'])) ? ($_POST['sessionOrder']) : '';
-			$orderNumberArr=$this->formingArray($orderNumber);
-			$sessionDesp = (isset($_POST['sessionDesc'])) ? ($_POST['sessionDesc']) : '';
-			$sessionDespArr=$this->formingArray($sessionDesp);
-			$txtCaseNum = (isset($_POST['txtCaseNum'])) ? ($_POST['txtCaseNum']) : '';
-			$txtCaseNumArr=$this->formingArray($txtCaseNum);
-			$txtTechNotes = (isset($_POST['txtTechNotes'])) ? ($_POST['txtTechNotes']) : '';
-			$txtTechNotesArr=$this->formingArray($txtTechNotes);
-			//check if the subject code already exists
-			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."'";
-			$q_res = mysqli_query($this->conn, $subject_query);
-			$dataAll = mysqli_fetch_assoc($q_res);
-			if(count($dataAll)>0){
-				$message="Subject code already exists.";
-				$_SESSION['error_msg'] = $message;
-				return 0;
-			}else{
-				//add the new subject
-				$currentDateTime = date("Y-m-d H:i:s");
-				//fectching area id
-				$area_id=$this->getAreaId();
-				//fectching program id
-				//$program_id=$this->getProgramId();
-				$program_name=$_POST['slctProgram'];
-				$program_Val=explode('#',$program_name);
-				$program_year_id=$program_Val[0];
-				$cycle_no=$_POST['slctCycle'];
-				$program_id=$program_Val[1];
-				//inserting values
-				$SQL = "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."', '".$cycle_no."', '".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$currentDateTime."', '".$currentDateTime."')";
-				$result = $this->conn->query($SQL);
-				$last_ins_id = $this->conn->insert_id;
-				if($last_ins_id) {
-					if($last_ins_id!=""){
-					$j=0;
-					if($sessionName!=""){
-					foreach ($sessionNameArr as $key => $value) {
-						$sessionNameval=$value;
-						//inserting subject session values
-						if($seesion_result = mysqli_query($this->conn, "INSERT INTO subject_session VALUES ('', '".$last_ins_id."', '".$sessionNameval."','".$orderNumberArr[$j]."','".$sessionDespArr[$j]."','".$txtCaseNumArr[$j]."','".$txtTechNotesArr[$j]."','".$currentDateTime."', '".$currentDateTime."')")){
-						$j++;
-						if($j==count($sessionNameArr)){
-						 $message="New subject has been added successfully with session";
-						 $_SESSION['succ_msg'] = $message;
-						 return 1;
-						 }
-						}else{
-						 $message="Cannot add the subject's sesssion";
-						 $_SESSION['succ_msg'] = $message;
-						 return 0;
-						}
-					  }
-					}else{
-						$message="New subject has been added successfully";
-						$_SESSION['succ_msg'] = $message;
-						return 1;
-					}
-				  }
-				}else{
-				    $message="Cannot add the subject";
-					$_SESSION['error_msg'] = $message;
-					return 0;
-				  }
-		}
-	}*/
-	/*function for adding Subject*/
 	public function addSubject() {
-
 			//check if the subject code already exists
 			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
@@ -324,4 +254,15 @@ class Subjects extends Base {
 		}
 		return $data;
    }
+  //get weeks from date
+  public function getWeekFromDate($date,$start_week,$end_week)
+	{
+		$myweek = date("W",strtotime($date)) % 2 ;
+		if($myweek == '0')
+		{
+			return 1;
+		}else{
+			return 2;
+		}
+	}
 }
