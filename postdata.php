@@ -436,27 +436,29 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						{
 							foreach($output_array as $key=>$value)
 							{
+								//print"<pre>";PRINT_R($value);die;
 								foreach($value as $newkey=>$val)
 								{
-									$timeslot = $newkey;
-									for($cnt=0;$cnt<count($val);$cnt++)
+									//$timeslot = $newkey;
+									foreach($val as $k=>$v)
 									{
+										$timeslot = $k;
 										$tt_id = $res;
-										$activity_id = $val[$cnt]['activity_id'];
-										$program_year_id = $val[$cnt]['program_year_id'];
-										$teacher_id = $val[$cnt]['teacher_id'];
-										$group_id = $val[$cnt]['group_id'];
-										$room_id = $val[$cnt]['room_id'];
-										$session_id = $val[$cnt]['session_id'];
-										$room_name = $val[$cnt]['room_name'];
-										$name = $val[$cnt]['name'];
-										$program_name = $val[$cnt]['program_name'];
-										$subject_name = $val[$cnt]['subject_name'];
-										$session_name = $val[$cnt]['session_name'];
-										$teacher_name = $val[$cnt]['teacher_name'];
-										$subject_id = $val[$cnt]['subject_id'];
+										$activity_id = $v['activity_id'];
+										$program_year_id = $v['program_year_id'];
+										$teacher_id = $v['teacher_id'];
+										$group_id = $v['group_id'];
+										$room_id = $v['room_id'];
+										$session_id = $v['session_id'];
+										$room_name = $v['room_name'];
+										$name = $v['name'];
+										$program_name = $v['program_name'];
+										$subject_name = $v['subject_name'];
+										$session_name = $v['session_name'];
+										$teacher_name = $v['teacher_name'];
+										$subject_id = $v['subject_id'];
 										$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
-										$date = $val[$cnt]['date'];
+										$date = $v['date'];
 										$date_add = date("Y-m-d H:i:s");
 										$date_upd = date("Y-m-d H:i:s");
 
@@ -464,16 +466,13 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										if($resp)
 										{
 											$ts_array = explode("-", $timeslot);
-											$entry_time = $ts_array['0'];
-											$duration = date('i',(strtotime($ts_array['1'])-strtotime($ts_array['0'])));
+											$entry_time = date("H:i",strtotime(trim($ts_array['0'])));
+											$st = strtotime($entry_time);
+											$et = strtotime(date("H:i",strtotime(trim($ts_array['1']))));
+											$duration = abs($et - $st) / 60;
 											$entry_array = explode(":", $entry_time);
 											$entry_hour = $entry_array['0'];
 											$entry_minute = $entry_array['1'];
-
-											if($entry_hour == '1')
-												$entry_hour = 13;
-											if($entry_hour == '2')
-												$entry_hour = 14;
 
 											$date_array = explode("-", $date);
 											$year = $date_array['0'];
