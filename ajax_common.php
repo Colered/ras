@@ -771,6 +771,16 @@ switch ($codeBlock) {
 							exit;
 						}
 					}
+					//Rule: A teacher cannot have more than 4 sessions per day
+					if($valid==1){
+						$teachAvail_query="select id from teacher_activity where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'"; 
+						$q_res = mysqli_query($db, $teachAvail_query);
+						if(mysqli_affected_rows($db)>=4){
+							echo 10;
+							$valid=0;
+							exit;
+						}
+					}
 					//check if room is free at given time and day
 					if($valid==1){
 						//check if the selected date is not added as exception in classroom availability
@@ -873,7 +883,6 @@ switch ($codeBlock) {
 			$valid=0;
 			exit;
 		}else{
-			//if only session name is provide, just create a session and exit
 			$currentDateTime = date("Y-m-d H:i:s");
 			//if all fields are present CHECK ALL THE VALIDATIONS
 		if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']!="")&& (isset($_POST['duration']) && $_POST['duration']!="") && (isset($_POST['room_id']) && $_POST['room_id']!="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']!="")){
@@ -1039,6 +1048,16 @@ switch ($codeBlock) {
 						$q_res = mysqli_query($db, $teachAvail_query);
 						if(mysqli_affected_rows($db)>0){
 							echo 3;
+							$valid=0;
+							exit;
+						}
+					}
+					//Rule: a teacher cannot have more than 4 sessions per day
+					if($valid==1){
+						$teachAvail_query="select id from teacher_activity where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'"; 
+						$q_res = mysqli_query($db, $teachAvail_query);
+						if(mysqli_affected_rows($db)>=4){
+							echo 10;
 							$valid=0;
 							exit;
 						}

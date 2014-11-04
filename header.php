@@ -62,8 +62,8 @@ if(!isset($_SESSION['user_id'])){
 								<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
 								<li>&#8250; <a href="programs_view.php">Programs</a></li>
 								<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
-								<li>&#8250; <a href="group_view.php">Student Group</a></li>
-								<li>&#8250; <a href="program_group_view.php">Program Student Group</a></li>
+								<!--<li>&#8250; <a href="group_view.php">Student Group</a></li>
+								<li>&#8250; <a href="program_group_view.php">Program Student Group</a></li>-->
 								<li>&#8250; <a href="areas_view.php">Areas</a></li>
 								<li>&#8250; <a href="subject_view.php">Subjects</a></li>
 								<li>&#8250; <a href="timeslots.php">Timeslots</a></li>

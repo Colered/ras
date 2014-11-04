@@ -588,6 +588,10 @@ $(document).ready(function() {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Program is not available on the selected day and time.');
+						}else if($succ==10){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Teacher already have 4 sessions allocated to him on selected day.');
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -662,6 +666,8 @@ $(document).ready(function() {
 							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create an activity.');
 						}else if($succ==9){
 							alert('Program is not available on the selected day and time.');
+						}else if($succ==10){
+							alert('Teacher already have 4 sessions allocated to him on selected day.');
 						}else{
 							alert("Cannot create the session.");
 						}

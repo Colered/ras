@@ -246,6 +246,9 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						if($subj_session_data['activityId']!=""){
 							$actID = $subj_session_data['activityId'];
 						}
+						//setting default duration as 15 min for the activities
+						$duration = $subj_session_data['duration'];
+						if($duration==""){$duration = "15"; }
 						if($x==1){
 							$sessionHtml.='<div class="sessionList">
    							<table id="datatables" class="display datatableSession">
@@ -271,7 +274,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 								<td>'.$subj_session_data['teacher_name'].'</td>
 								<td>'.$subj_session_data['room_name'].'</td>
 								<td>'.$subj_session_data['start_time'].'</td>
-								<td>'.date('H:i', mktime(0,$subj_session_data['duration'])).'</td>
+								<td>'.date('H:i', mktime(0,$duration)).'</td>
 								<td>'.$subj_session_data['act_date'].'</td>
 	   							<td>'.$subj_session_data['description'].'</td>
 								<td>'.$subj_session_data['case_number'].'</td>

@@ -37,12 +37,8 @@ class Timeslot extends Base {
 	}
 	/*function for listing timeslot*/
 	public function viewTimeslot() {
-			$area_query="select * from timeslot order by start_time ASC";
+			$area_query="select * from timeslot order by id ASC";
 			$q_res = mysqli_query($this->conn, $area_query);
-			/*if(mysqli_num_rows($q_res)<=0){
-				$message="There is not any timeslot exists.";
-				$_SESSION['error_msg'] = $message;
-			}*/
 			return $q_res;
 	}
 
