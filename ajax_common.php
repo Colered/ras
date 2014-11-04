@@ -1,5 +1,19 @@
 <?php
 require_once('config.php');
+function RexExpFormat($str)
+{
+	 $TempStr="";
+	 $tempId=explode(",",$str);
+	 for($i=0;$i<count($tempId);$i++)
+	 {
+		$TempStr=$TempStr."[[:<:]]".$tempId[$i]."[[:>:]]"."|";
+	 }
+	 if ($TempStr<>"")
+	 {
+		$TempStr=substr($TempStr,0,strlen($TempStr)-1);
+	 }
+	 return $TempStr;
+}
 $options = '';
 $codeBlock = trim($_POST['codeBlock']);
 switch ($codeBlock) {
@@ -763,7 +777,7 @@ switch ($codeBlock) {
 					}
 					//check if teacher is not engaged in some other reserved activity
 					if($valid==1){
-						$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id IN ($tsIdsAll) and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'"; 
+						$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '".RexExpFormat($tsIdsAll)."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'"; 
 						$q_res = mysqli_query($db, $teachAvail_query);
 						if(mysqli_affected_rows($db)>0){
 							echo 3;
@@ -810,7 +824,7 @@ switch ($codeBlock) {
 							exit;
 						}
 						//check if room is not engaged in any reserved activity
-						$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id IN ($tsIdsAll) and ta.act_date='".$_POST['subSessDate']."'";
+						$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id REGEXP '".RexExpFormat($tsIdsAll)."' and ta.act_date='".$_POST['subSessDate']."'";
 						$q_res = mysqli_query($db, $roomAvail_query);
 						mysqli_affected_rows($db);
 						if(mysqli_affected_rows($db)>0){
@@ -915,7 +929,7 @@ switch ($codeBlock) {
 						if($pgm_cycle_cnt > 0)
 						{
 							$result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle);	
-							//echo $result_pgm_cycle['occurrence'];
+							//echo $result_pgm_cycle['occurrence']; die;
 							if($result_pgm_cycle['occurrence'] == '1w')
 							{
 								$week1 = $result_pgm_cycle['week1'];
@@ -1044,7 +1058,11 @@ switch ($codeBlock) {
 					}
 					//check if teacher is not engaged in some other reserved activity
 					if($valid==1){
-						$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id IN ($tsIdsAll) and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'"; 
+						//echo $teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id like '%$tsIdsAll,%' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'"; 
+						$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '".RexExpFormat($tsIdsAll)."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
+						
+						 //destination REGEXP '".RexExpFormat($group_name)."'
+						
 						$q_res = mysqli_query($db, $teachAvail_query);
 						if(mysqli_affected_rows($db)>0){
 							echo 3;
@@ -1091,7 +1109,7 @@ switch ($codeBlock) {
 							exit;
 						}
 						//check if room is not engaged in any reserved activity
-						$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id IN ($tsIdsAll) and ta.act_date='".$_POST['subSessDate']."'";
+						$roomAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.room_id='".$_POST['room_id']."' and ta.timeslot_id REGEXP '".RexExpFormat($tsIdsAll)."' and ta.act_date='".$_POST['subSessDate']."'";
 						$q_res = mysqli_query($db, $roomAvail_query);
 						mysqli_affected_rows($db);
 						if(mysqli_affected_rows($db)>0){
