@@ -142,38 +142,13 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 							<input type="text" class="inp_txt_session number required" <?php //echo $disSession; ?> id="txtOrderNum" maxlength="10" style="width:94px;" name="txtOrderNum" value="">
 						</div>-->
 						<div class="sessionboxSub" style="width:110px;">
-						<h3>Teacher</h3>
-						<select id="slctTeacher" name="slctTeacher" class="required" <?php echo $disSession; ?> style="width:106px; height:27px;">
-						<option value="">--Select--</option>';
-                        <?php
-							while($row = $rel_teacher->fetch_assoc()){
-								echo '<option value="'.$row['id'].'">'.$row['teacher_name'].' ('.$row['email'].')</option>';
-							}
-						?>
-                        </select>
-						</div>
-						<div class="sessionboxSub" style="width:110px;">
-						<h3>Room</h3>
-							<select name="room_id" id="room_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px;">
-							<option value="">--Select--</option>
-							<?php echo $room_dropDwn; ?>
-							</select>
-						</div>
-						<div class="sessionboxSub" style="width:110px;">
-						<h3>Start Time</h3>
-							<select name="tslot_id" id="tslot_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">';
-							<option value="">--Select--</option>';
-							<?php echo $tslot_dropDwn; ?>
-							</select>
-						</div>
-						<div class="sessionboxSub" style="width:110px;">
 						<h3>Duration(Hr)</h3>
 							<select name="duration" id="duration" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">';
 							<option value="">--Select--</option>';
 							<option value="15">00:15</option>
 							<option value="30">00:30</option>
 							<option value="45">00:45</option>
-							<option value="60">01:00</option>
+							<option value="60" selected="selected">01:00</option>
 							<option value="75">01:15</option>
 							<option value="90">01:30</option>
 							<option value="105">01:45</option>
@@ -205,9 +180,36 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 							</select>
 						</div>
 						<div class="sessionboxSub" style="width:110px;">
+						<h3>Teacher</h3>
+						<select id="slctTeacher" name="slctTeacher" class="required" <?php echo $disSession; ?> style="width:106px; height:27px;">
+						<option value="">--Select--</option>';
+                        <?php
+							while($row = $rel_teacher->fetch_assoc()){
+								echo '<option value="'.$row['id'].'">'.$row['teacher_name'].' ('.$row['email'].')</option>';
+							}
+						?>
+                        </select>
+						</div>
+						<div class="sessionboxSub" style="width:110px;">
+						<h3>Room</h3>
+							<select name="room_id" id="room_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px;">
+							<option value="">--Select--</option>
+							<?php echo $room_dropDwn; ?>
+							</select>
+						</div>
+						<div class="sessionboxSub" style="width:110px;">
 						<h3>Date</h3>
 							 <input type="text" size="12" id="subSessDate" <?php echo $disSession; ?> style="height:23px; width:102px;" readonly />
 						</div>
+						<div class="sessionboxSub" style="width:110px;">
+						<h3>Start Time</h3>
+							<select name="tslot_id" id="tslot_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">';
+							<option value="">--Select--</option>';
+							<?php echo $tslot_dropDwn; ?>
+							</select>
+						</div>
+						
+						
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Case No</h3>
 							 <input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtCaseNo" maxlength="10" style="width:94px;" name="txtCaseNo" value="">
@@ -256,14 +258,14 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
           					   <tr>
 								<th>Sr. No.</th>
           						<th >Session Name</th>
+								<th >Duration</th>
 								<th >Teacher</th>
 								<th >Room</th>
-								<th >Start Time</th>
-								<th >Duration</th>
 								<th >Date</th>
-          						<th >Description</th>
+								<th >Start Time</th>
           						<th >Case No</th>
 								<th >Technical Notes</th>
+								<th >Description</th>
 								<th >Remove</th>
 							   </tr>
        					      </thead>
@@ -271,14 +273,14 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						 	$sessionHtml.='<tr id="'.$x.'" >
            						<td class="number">'.$x.'</td>
 	   							<td>'.$subj_session_data['session_name'].'</td>
+								<td>'.date('H:i', mktime(0,$duration)).'</td>
 								<td>'.$subj_session_data['teacher_name'].'</td>
 								<td>'.$subj_session_data['room_name'].'</td>
-								<td>'.$subj_session_data['start_time'].'</td>
-								<td>'.date('H:i', mktime(0,$duration)).'</td>
 								<td>'.$subj_session_data['act_date'].'</td>
-	   							<td>'.$subj_session_data['description'].'</td>
+								<td>'.$subj_session_data['start_time'].'</td>
 								<td>'.$subj_session_data['case_number'].'</td>
-	   							<td>'.$subj_session_data['technical_notes'].'</td>';
+	   							<td>'.$subj_session_data['technical_notes'].'</td>
+								<td>'.$subj_session_data['description'].'</td>';
 							$sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName'.$x.'"  value="'.$subj_session_data['session_name'].'"/>
 
 								<input type="hidden" name="sessionDesc[]" id="sessionDesc'.$x.'"  value="'.$subj_session_data['description'].'"/>
