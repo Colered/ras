@@ -28,7 +28,7 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2 class="dotted-line">Paasword<span class="redstar">*</span></h2>
+                        <h2 class="dotted-line">Password<span class="redstar">*</span></h2>
                     </div>
                     <div class="clear"></div>
                     <div class="txtfield1">

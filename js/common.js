@@ -2151,4 +2151,3 @@ function deleteRuleClassroom($id){
     }
     return false;
 }
-
