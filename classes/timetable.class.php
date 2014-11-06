@@ -68,7 +68,7 @@ class Timetable extends Base {
 			{				
 				$program_id = $key;
 				$reserved_timeslots = array();				
-				$total_timeslots = array();
+				
 				foreach($value as $k=>$v)
 				{
 					$date = $k;
@@ -144,7 +144,7 @@ class Timetable extends Base {
 								}
 							}
 						}
-						
+						$total_timeslots = array();
 						foreach($v as $start_id)
 						{
 							$total_timeslots[] = $start_id;
