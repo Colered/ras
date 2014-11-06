@@ -35,6 +35,10 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
                         <input type="password" class="inp_txt" id="txtPwd" maxlength="50" name="txtPwd" autocomplete="off" >
                     </div>
                     <div class="clear"></div>
+					 <div class="txtfield1">
+                       <a href="forgot.php">Forgot Password</a>
+                    </div>
+                    <div class="clear"></div>
                     <div class="txtfield1">
                         <input type="submit" name="login" class="buttonsub" value="Login">
                     </div>

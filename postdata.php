@@ -555,6 +555,21 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		 }
 
 		break;
+		case "forgotPwd":
+		 if(isset($_POST['email']) && $_POST['email']!=""){
+			 $obj = new Users();
+			 $resp = $obj->forgotPwd();
+			 header('Location: forgot.php');
+		}
+
+		break;
+		case "changePwd":
+		 if(isset($_POST['currentPassword']) && $_POST['currentPassword']!=""){
+			 $obj = new Users();
+			 $resp = $obj->changePwd();
+			 header('Location: change_password.php');
+		}
+		break;
 
 	}
 }

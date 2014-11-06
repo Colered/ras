@@ -184,7 +184,6 @@ $(function() {
 //validate form for area
 $(document).ready(function(){
 		$("#areaForm").validate();
-		//$("#subjectForm").validate();
 		$("#roomsForm").validate();
 		$("#buildings").validate();
 		$("#frmProgram").validate();
@@ -194,6 +193,31 @@ $(document).ready(function(){
 		$("#teacherAvailabilityForm").validate();
 		$("#classroomAvailabilityForm").validate();
 		$("#timetable").validate();
+		//$("#changePwdForm").validate();
+		$( "#forgotPwdForm" ).validate({
+			rules: {
+			email: {
+				required: true,
+				email: true
+			}
+			}
+		});
+		$( "#changePwdForm" ).validate({
+			rules: {
+			newPassword: {
+				required: true,
+				minlength: 6,
+				maxlength: 20
+			},
+			confirmPassword: {
+				required: true,
+				minlength: 6,
+				maxlength: 20
+			}
+			}
+		});
+		
+		
 });
 //Function to validate the email ID
 function validateEmail(sEmail) {

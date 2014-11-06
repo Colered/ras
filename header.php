@@ -1,7 +1,9 @@
 <?php
 require_once('config.php');
-if(!isset($_SESSION['user_id'])){
-	header('Location: index.php');
+if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forgot.php'){
+		//Do Nothing
+}elseif(!isset($_SESSION['user_id'])){
+		header('Location: index.php');
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -78,6 +80,7 @@ if(!isset($_SESSION['user_id'])){
                         </li>
 
 						<li class="upp right"><a href="logout.php">Logout</a></li>
+						<li class="upp right"><a href="change_password.php">Change Password</a></li>
                     </ul>
 					<?php } ?>
                 </div>
