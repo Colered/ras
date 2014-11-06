@@ -28,7 +28,7 @@ $is_default = isset($_GET['edit']) ? $row['is_default'] : (isset($_POST['is_defa
                         <h2>Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtBname" maxlength="50" name="txtBname" value="<?php echo $buldName; ?>">
+                        <input type="text" class="inp_txt required" id="txtBname" maxlength="50" name="txtBname" value="<?php echo $buldName; ?>">
                     </div>
                     <div class="clear"></div>
 					<div class="custtd_left">
@@ -42,7 +42,7 @@ $is_default = isset($_GET['edit']) ? $row['is_default'] : (isset($_POST['is_defa
                         <h2>Is Default<span class="redstar">*</span></h2>
                     </div>
 					<div class="txtfield">
-						<select class="inp_txt required alphanumeric" name="is_default" id="is_default">
+						<select class="inp_txt required" name="is_default" id="is_default">
 						<option value="0">No</option>
 						<option value="1" <?php if($is_default=='1'){echo 'selected';} ?>>Yes</option>
 						</select>

@@ -45,7 +45,7 @@ $slctBuilding = isset($_GET['edit']) ? $row['building_id'] : (isset($_POST['slct
                         <h2>Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtRmName" maxlength="50" name="txtRmName" value="<?php echo $txtRmName; ?>">
+                        <input type="text" class="inp_txt required" id="txtRmName" maxlength="50" name="txtRmName" value="<?php echo $txtRmName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

@@ -47,7 +47,7 @@ $payrate = isset($_GET['edit'])? $row['payrate'] : (isset($_POST['txtPayrate'])?
                         <h2>Professor Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
+                        <input type="text" class="inp_txt required" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
                     </div>
                     <div class="clear"></div>
 
@@ -157,7 +157,7 @@ $payrate = isset($_GET['edit'])? $row['payrate'] : (isset($_POST['txtPayrate'])?
 								<h2>Username<span class="redstar">*</span></h2>
 							</div>
 							<div class="txtfield">
-								<input type="text" class="inp_txt required alphanumeric" id="txtUname" maxlength="50" name="txtUname" value="<?php echo $username;?>">
+								<input type="text" class="inp_txt required" id="txtUname" maxlength="50" name="txtUname" value="<?php echo $username;?>">
 							</div>
 							<div class="clear"></div>
                     <?php } ?>

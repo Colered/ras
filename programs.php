@@ -53,7 +53,7 @@ $(document).ready(function() {
                         <h2>Program Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtPrgmName" maxlength="50" name="txtPrgmName" value="<?php echo $program_name;?>">
+                        <input type="text" class="inp_txt required" id="txtPrgmName" maxlength="50" name="txtPrgmName" value="<?php echo $program_name;?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

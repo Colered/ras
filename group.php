@@ -25,7 +25,7 @@ $groupName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtGname'])? $
                         <h2>Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtGname" maxlength="50" name="txtGname" value="<?php echo $groupName; ?>">
+                        <input type="text" class="inp_txt required" id="txtGname" maxlength="50" name="txtGname" value="<?php echo $groupName; ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

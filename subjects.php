@@ -60,7 +60,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 			<input type="hidden" id="subIdEncrypt" name="subIdEncrypt" value="<?php echo $subIdEncrypt; ?>" />
 
                 <div class="custtable_left">
-					<div class="addSubDiv" <?php echo $disFDivCss; ?>> 
+					<div class="addSubDiv" <?php echo $disFDivCss; ?>>
 					<div class="custtd_left">
                         <h2>Choose Program<span class="redstar">*</span></h2>
                     </div>
@@ -114,14 +114,14 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
                         <h2>Subject Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtSubjName" maxlength="50" name="txtSubjName" value="<?php echo $subjectName; ?>" <?php echo $disTest; ?>>
+                        <input type="text" class="inp_txt required" id="txtSubjName" maxlength="50" name="txtSubjName" value="<?php echo $subjectName; ?>" <?php echo $disTest; ?>>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Subject Code <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt required alphanumeric" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>" <?php if($subjectId!=""){echo "readonly";} ?> <?php echo $disTest; ?>>
+                        <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>" <?php if($subjectId!=""){echo "readonly";} ?> <?php echo $disTest; ?>>
                     </div>
 					<div class="sessionboxSub btnSessiondiv">
 					    <input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
@@ -135,7 +135,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						<div class="txtfield ">
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Session Name<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session alphanumeric required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="">
+							<input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="">
 						</div>
 						<!--<div class="sessionboxSub" style="width:110px;">
 						<h3>Order Number<span class="redstar">*</span></h3>
@@ -208,8 +208,8 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 							<?php echo $tslot_dropDwn; ?>
 							</select>
 						</div>
-						
-						
+
+
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Case No</h3>
 							 <input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtCaseNo" maxlength="10" style="width:94px;" name="txtCaseNo" value="">
