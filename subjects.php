@@ -135,7 +135,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 						<div class="txtfield ">
 						<div class="sessionboxSub" style="width:110px;">
 						<h3>Session Name<span class="redstar">*</span></h3>
-							<input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="">
+							<input type="text" class="inp_txt_session required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="">
 						</div>
 						<!--<div class="sessionboxSub" style="width:110px;">
 						<h3>Order Number<span class="redstar">*</span></h3>
