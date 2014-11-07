@@ -18,6 +18,10 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
 							<?php if(isset($_SESSION['error_msg']))
 								echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?>
 					</div>
+					<div class="green">
+							<?php if(isset($_SESSION['succ_msg']))
+								echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);?>
+					</div>
 					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2 class="dotted-line">UserName<span class="redstar">*</span></h2>

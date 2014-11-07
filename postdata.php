@@ -567,7 +567,15 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		 if(isset($_POST['currentPassword']) && $_POST['currentPassword']!=""){
 			 $obj = new Users();
 			 $resp = $obj->changePwd();
-			 header('Location: change_password.php');
+			 if($resp){
+			 	session_destroy();
+				session_start();
+				$message= "New password has been updated successfully";
+				$_SESSION['succ_msg'] = $message;
+			 	header('Location: index.php');
+			 }else{
+			 	header('Location: change_password.php');
+			 }
 		}
 		break;
 
