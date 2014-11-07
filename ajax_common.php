@@ -582,7 +582,7 @@ switch ($codeBlock) {
 		if(count($dataAll)>0){
 			echo '2';
 		}else{
-			//if only session name is provide, just create a session and exit
+			//if only session name and duration is provide, just create a session and exit
 			$currentDateTime = date("Y-m-d H:i:s");
 			if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']=="") && (isset($_POST['room_id']) && $_POST['room_id']=="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']=="") ){
 					//check the total no of values in subject session to make a new order no
@@ -590,8 +590,12 @@ switch ($codeBlock) {
 					$sessCount_res = mysqli_query($db, $sessCount_query);
 					$sessCount_data = mysqli_fetch_assoc($sessCount_res);
 					$txtOrderNum =  $sessCount_data['total'] +1;
+					$duration = $_POST['duration'];
+					if($_POST['duration']==""){
+						$duration = 60;
+					}
 					//add new session
-					$result = mysqli_query($db, "INSERT INTO subject_session (id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, date_add, date_update) VALUES('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());");
+					$result = mysqli_query($db, "INSERT INTO subject_session (id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '".$duration."', NOW(), NOW());");
 					
 				//if only teacher name is also provided then create an un-reserved activity
 				if(mysqli_affected_rows($db)>0){
@@ -604,7 +608,7 @@ switch ($codeBlock) {
 								$actCnt = substr($dRow['name'],1);
 								$actName = 'A'.($actCnt+1);
 								//insert new activity
-								$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, duration, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '".$actName."', '".$_POST['programId']."', '".$_POST['cycleId']."', '".$_POST['subjectId']."', '".$sessionId."', '".$_POST['slctTeacher']."', '".$group_id."','', '', '','', '' , '0', NOW(), NOW());");
+								$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '".$actName."', '".$_POST['programId']."', '".$_POST['cycleId']."', '".$_POST['subjectId']."', '".$sessionId."', '".$_POST['slctTeacher']."', '".$group_id."','', '', '', '' , '0', NOW(), NOW());");
 								if(mysqli_affected_rows($db)>0){
 									echo 1;
 								}else{
@@ -842,7 +846,7 @@ switch ($codeBlock) {
 						$sessCount_res = mysqli_query($db, $sessCount_query);
 						$sessCount_data = mysqli_fetch_assoc($sessCount_res);
 						$txtOrderNum =  $sessCount_data['total'] +1;
-						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, date_add, date_update) VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', NOW(), NOW());"); 
+						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '".$_POST['duration']."', NOW(), NOW());"); 
 						if(mysqli_affected_rows($db)>0){
 							$sessionId = mysqli_insert_id($db);
 							//get last created activity name
@@ -851,7 +855,7 @@ switch ($codeBlock) {
 							$actCnt = substr($dRow['name'],1);
 							$actName = 'A'.($actCnt+1);
 							//insert new activity
-							$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, duration, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '".$actName."', '".$_POST['programId']."', '".$_POST['cycleId']."', '".$_POST['subjectId']."', '".$sessionId."', '".$_POST['slctTeacher']."', '".$group_id."','".$_POST['room_id']."', '".$_POST['tslot_id']."', '".$_POST['duration']."', '".$tsIdsAll."', '".$_POST['subSessDate']."', '".$reserved_flag."', NOW(), NOW());");
+							$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '".$actName."', '".$_POST['programId']."', '".$_POST['cycleId']."', '".$_POST['subjectId']."', '".$sessionId."', '".$_POST['slctTeacher']."', '".$group_id."','".$_POST['room_id']."', '".$_POST['tslot_id']."', '".$tsIdsAll."', '".$_POST['subSessDate']."', '".$reserved_flag."', NOW(), NOW());");
 							if(mysqli_affected_rows($db)>0){
 								echo 1;
 							}else{
