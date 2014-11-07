@@ -73,5 +73,11 @@ class Areas extends Base {
 				header('Location: areas.php?edit='.base64_encode($_POST['areaId']));
 				return 0;
 			}
-		}
+	}
+		
+	 public function detailArea() {
+			$area_query="select * from area order by area_name";
+			$q_res = mysqli_query($this->conn, $area_query);
+			return $q_res;
+	}
 }
