@@ -68,7 +68,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                         <h2>Schedule Name <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt alphanumeric" id="txtSchd" maxlength="50" name="txtSchd">
+                        <input type="text" class="inp_txt" id="txtSchd" maxlength="50" name="txtSchd">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

@@ -28,6 +28,20 @@ $payrate = isset($_GET['edit'])? $row['payrate'] : (isset($_POST['txtPayrate'])?
 
 
 ?>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/additional-methods.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+    $('#frmProff').validate({ // initialize the plugin
+        rules: {
+            actual: {
+                required: true,
+                email: true
+            }
+        }
+    });
+});
+</script>
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -99,21 +113,21 @@ $payrate = isset($_GET['edit'])? $row['payrate'] : (isset($_POST['txtPayrate'])?
                         <h2>Desigation</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt alphanumeric" id="txtDegination" maxlength="20" name="txtDegination" value="<?php echo $degination;?>">
+                        <input type="text" class="inp_txt" id="txtDegination" maxlength="20" name="txtDegination" value="<?php echo $degination;?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Qualifications</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt alphanumeric" id="txtQualification" maxlength="50" name="txtQualification" value="<?php echo $qualification;?>"/>
+                        <input type="text" class="inp_txt" id="txtQualification" maxlength="50" name="txtQualification" value="<?php echo $qualification;?>"/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Pay Rate</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt alphanumeric" id="txtPayrate" maxlength="50" name="txtPayrate" value="<?php echo $payrate;?>"/>
+                        <input type="text" class="inp_txt" id="txtPayrate" maxlength="50" name="txtPayrate" value="<?php echo $payrate;?>"/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

@@ -1203,11 +1203,14 @@ $(document).ready(function(){
 function createTeachAvailRule(){
 	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
 	var regx = /^[A-Za-z0-9 .]+$/;
-    if (!regx.test($('#txtSchd').val())) {
+    /*if (!regx.test($('#txtSchd').val())) {
         alert('Please select a valid schedule name with alphanumeric options.');
 		return false;
-    }
-    else if($('#fromTeachAval').val()==""){
+    }*/
+    if($('#txtSchd').val()==""){
+		alert('Please select a valid Schedule Name.');
+		return false;
+	}else if($('#fromTeachAval').val()==""){
 			alert('Please select a valid From Time.');
 	}else if($('#toTeachAval').val()==""){ 
 			alert('Please select a valid To Time.');

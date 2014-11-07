@@ -28,7 +28,7 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
                     </div>
                     <div class="clear"></div>
                     <div class="txtfield1">
-                        <input type="text" class="inp_txt alphanumeric" id="txtUName" maxlength="50" name="txtUName" autocomplete="off" >
+                        <input type="text" class="inp_txt" id="txtUName" maxlength="50" name="txtUName" autocomplete="off" >
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
