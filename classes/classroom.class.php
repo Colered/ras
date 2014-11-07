@@ -57,6 +57,7 @@ class Classroom extends Base {
 			{
 				$message="Room with same neam already exists.";
 				$_SESSION['error_msg'] = $message;
+				header('Location: rooms.php?edit='.base64_encode($_POST['roomId']));
 				return 0;
 			}elseif ($result = mysqli_query($this->conn, "Update room  Set building_id = '".$_POST['slctBuilding']."', room_type_id = '".$_POST['slctRmType']."', room_name = '".Base::cleanText($_POST['txtRmName'])."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['roomId']."'")) {
    					$message="Room has been updated successfully";
@@ -65,6 +66,7 @@ class Classroom extends Base {
 				}else{
 					$message="Cannot update the Room";
 					$_SESSION['error_msg'] = $message;
+					header('Location: rooms.php?edit='.base64_encode($_POST['roomId']));
 					return 0;
 				}
 			}

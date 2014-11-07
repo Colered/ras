@@ -67,6 +67,7 @@ class Buildings extends Base {
 			if(count($dataAll)>0) {
 				$message="Building Name already exists.";
 				$_SESSION['error_msg'] = $message;
+				header('Location: buildings.php?edit='.base64_encode($_POST['buldId']));
 				return 0;
 			}elseif ($result = mysqli_query($this->conn, "Update building set building_name = '".Base::cleanText($_POST['txtBname'])."',location = '".Base::cleanText($_POST['txtBlocation'])."', is_default = '".$_POST['is_default']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
 				$message="Building has been updated successfully";
@@ -75,6 +76,7 @@ class Buildings extends Base {
 			}else{
 				$message="Cannot update the Building";
 				$_SESSION['error_msg'] = $message;
+				header('Location: buildings.php?edit='.base64_encode($_POST['buldId']));
 				return 0;
 			}
     }
