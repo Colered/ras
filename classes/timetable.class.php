@@ -87,7 +87,7 @@ class Timetable extends Base {
 							if($start_time >= $end_time)
 							{
 								$end_time = date("h:i A", strtotime($start_time." + 15 minutes"));
-								$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, ta.duration, ta.timeslot_id from teacher_activity ta 
+								$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id from teacher_activity ta 
 								inner join subject_session s on s.id = ta.session_id
 								inner join program_years py on py.id = ta.program_year_id
 								inner join subject su on su.id = ta.subject_id
@@ -153,7 +153,7 @@ class Timetable extends Base {
 						$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 						foreach($unreserved_times as $un_tsid)
 						{							
-							$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,s.order_number,ta.duration 
+							$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,s.order_number,s.duration 
 							from teacher_activity ta 
 							inner join subject_session s on s.id = ta.session_id 
 							inner join program_years py on py.id = ta.program_year_id 
