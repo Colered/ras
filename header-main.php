@@ -72,7 +72,7 @@ require_once('config.php');
                             </ul>
                         </li>
 					</li>
-					<li class="upp right"><a href="logout.php/">Logout</a></li>
+					<li class="upp right" style="float:right"><a href="logout.php/">Logout</a></li>
 				</ul>
 				<?php } ?>
 			</div>

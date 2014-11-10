@@ -79,8 +79,8 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                             </ul>
                         </li>
 
-						<li class="upp right"><a href="logout.php">Logout</a></li>
-						<li class="upp right"><a href="change_password.php">Change Password</a></li>
+						<li class="upp right"  style="float:right"><a href="logout.php">Logout</a></li>
+						<li class="upp right"  style="float:right"><a href="change_password.php">Change Password</a></li>
                     </ul>
 					<?php } ?>
                 </div>
