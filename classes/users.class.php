@@ -44,16 +44,16 @@ class Users extends Base {
 					$body  =  "
 					Website Url : $url <br/>
 					Your Email Id : $to <br/>
-					Here is your password  : $pass <br/>
+					Here is your password  : $pass <br/><br/><br/><br/>
 					Sincerely,<br/>
 					BARNA";
 					$from = "roa57113@gmail.com";
 					$subject = "Your password has been recovered";
-					$headers1 = "From: $from\n";
+					$headers1 = 'From: Password Recovered <$from>' . "\r\n";
 					$headers1 .= "Content-type: text/html;charset=iso-8859-1\r\n";
 					$headers1 .= "X-Priority: 1\r\n";
 					$headers1 .= "X-MSMail-Priority: High\r\n";
-					$headers1 .= "X-Mailer: Reset Password\r\n";
+					$headers1 .= "X-Mailer: Password Recovered\r\n";
 					$sentmail = mail ( $to, $subject, $body, $headers1 );
 					//If the message is sent successfully, display sucess message otherwise display an error message.
 					if($sentmail==1){
