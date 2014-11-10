@@ -31,23 +31,44 @@ switch ($codeBlock) {
 	case "del_teacher":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
+			//delete the teacher
 			$del_query="delete from teacher where id='".$id."'";
 			$qry = mysqli_query($db, $del_query);
-			if(mysqli_affected_rows($db)>0)
+			if(mysqli_affected_rows($db)>0){
+				// delete all activities related to the teacher
+				$del_act_query="delete from teacher_activity where teacher_id ='".$id."'";
+				mysqli_query($db, $del_act_query);
+				// delete all the rule associated to this teacher from teacher_availability_rule_teacher_map
+				$del_teacher_avail_query="delete from teacher_availability_rule_teacher_map where teacher_id ='".$id."'";
+				mysqli_query($db, $del_teacher_avail_query);
+				// delete all the exception dates for the teacher availability from teacher_availability_exception
+				$del_exception_query="delete from teacher_availability_exception where teacher_id teacher_id ='".$id."'";
+				mysqli_query($db, $del_exception_query);
 				echo 1;
-			else
+			}else{
 				echo 0;
+			}
 		}
 	 break;
 	 case "del_buld":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
-			$del_area_query="delete from building where id='".$id."'";
-			$qry = mysqli_query($db, $del_area_query);
-			if(mysqli_affected_rows($db)>0)
+			$del_buld_query="delete from building where id='".$id."'";
+			$qry = mysqli_query($db, $del_buld_query);
+			if(mysqli_affected_rows($db)>0){
+				// delete all the rule associated to this rooms classroom_availability_rule_room_map
+				$del_room_query="delete from classroom_availability_rule_room_map where room_id IN(select id from room where building_id='".$id."')";
+				mysqli_query($db, $del_room_query);
+				// delete all the exception dates for the room
+				$del_exception_query="delete from classroom_availability_exception where room_id IN(select id from room where building_id='".$id."')";
+				mysqli_query($db, $del_exception_query);
+				// delete all the rooms associated to this building
+				$del_rules_query="delete from room where building_id='".$id."'";
+				mysqli_query($db, $del_rules_query);
 				echo 1;
-			else
+			}else{
 				echo 0;
+			}
 		}
 	break;
 	case "del_program":
@@ -126,10 +147,17 @@ switch ($codeBlock) {
 		$id = $_POST['id'];
 		$del_room_query="delete from room where id='".$id."'";
 		$qry = mysqli_query($db, $del_room_query);
-		if(mysqli_affected_rows($db)>0)
+		if(mysqli_affected_rows($db)>0){
+			// delete all the rule associated to this rooms classroom_availability_rule_room_map
+			$del_room_query="delete from classroom_availability_rule_room_map where room_id ='".$id."'";
+			mysqli_query($db, $del_room_query);
+			// delete all the exception dates for the room
+			$del_exception_query="delete from classroom_availability_exception where room_id ='".$id."'";
+			mysqli_query($db, $del_exception_query);
 			echo 1;
-		else
+		}else{
 			echo 0;
+		}
 	}
     break;
 	case "del_group":

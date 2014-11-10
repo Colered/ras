@@ -260,7 +260,7 @@ function deleteBuld($id){
 	if($id==""){
 		alert("Please select a building to delete");
 		return false;
-	}else if(confirm("Are you sure you want to delete the Building?")) {
+	}else if(confirm("Are you sure you want to delete the Building? It will also delete all the rooms and other associated data.")) {
 	    $.ajax({
                 type: "POST",
                 url: "ajax_common.php",
