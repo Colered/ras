@@ -478,10 +478,12 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 											$year = $date_array['0'];
 											$month = $date_array['1'];
 											$day = $date_array['2'];
-											$zone=3600*+5;//India
-											$eventstart = gmmktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
-											$cal_time = gmdate('His', $eventstart + $zone);
-											$cal_id = $obj->addWebCalEntry($date, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id);
+											//$zone=3600*+5;//India
+											date_default_timezone_set("America/New_York");
+											$eventstart = mktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
+											$eventstartdate = gmdate ( 'Ymd', $eventstart );
+											$cal_time = gmdate('His', $eventstart);
+											$cal_id = $obj->addWebCalEntry($eventstartdate, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id);
 											if($cal_id){
 												$obj->addWebCalEntryUser($cal_id);
 
