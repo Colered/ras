@@ -47,7 +47,7 @@ class Users extends Base {
 					Here is your password  : $pass <br/>
 					Sincerely,<br/>
 					BARNA";
-					$from = "colered.edu.do";
+					$from = "roa57113@gmail.com";
 					$subject = "Your password has been recovered";
 					$headers1 = "From: $from\n";
 					$headers1 .= "Content-type: text/html;charset=iso-8859-1\r\n";
