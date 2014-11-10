@@ -40,21 +40,20 @@ class Users extends Base {
 					$rows=mysqli_fetch_array($result);
 					$pass  =  base64_decode($rows['password']);
 					$to = $rows['email'];
-					$url = "localhost/ras";
+					$url = $_SERVER['HTTP_HOST'];
 					$body  =  "
-					Url : $url;
-					email Details is : $to;
-					Here is your password  : $pass;
-					Sincerely,
-					Cidot Team";
-					$from = "dwarikesh.sharma811@gmail.com";
+					Website Url : $url <br/>
+					Your Email Id : $to <br/>
+					Here is your password  : $pass <br/>
+					Sincerely,<br/>
+					BARNA";
+					$from = "colered.edu.do";
 					$subject = "Your password has been recovered";
 					$headers1 = "From: $from\n";
 					$headers1 .= "Content-type: text/html;charset=iso-8859-1\r\n";
 					$headers1 .= "X-Priority: 1\r\n";
 					$headers1 .= "X-MSMail-Priority: High\r\n";
-					$headers1 .= "X-Mailer: Just My Server\r\n";
-					$headers1;
+					$headers1 .= "X-Mailer: Reset Password\r\n";
 					$sentmail = mail ( $to, $subject, $body, $headers1 );
 					//If the message is sent successfully, display sucess message otherwise display an error message.
 					if($sentmail==1){
