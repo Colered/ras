@@ -2108,7 +2108,7 @@ function checkweekTS()
 		}
 	}
 }
-function deleteRuleTeacher($id){
+function deleteRuleTeacher($id, $tid){
 	if($id==""){
 		alert("Please select a rule to delete");
 		return false;
@@ -2122,7 +2122,11 @@ function deleteRuleTeacher($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                       window.location.href = 'teacher_availability.php';
+						if($tid==0){
+                       		window.location.href = 'teacher_availability.php';
+						}else{
+							window.location.href = 'teacher_availability.php?tid='+$tid;
+						}
 					}else{
 						alert("Cannot delete the selected Rule, as this rule is associated with some teacher.");
 					}
