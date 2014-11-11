@@ -160,7 +160,7 @@ class Programs extends Base {
 		$row = $result->fetch_assoc();
 		return $row['no_of_cycle'];
     }
-    //function to get cycle info by program id  
+    //function to get cycle info by program id
 	public function getCyclesInfo($prog_id)
 	{
 		$SQL = "select start_week, end_week, week1, week2, occurrence from cycle where program_year_id ='".$prog_id."'";
@@ -168,22 +168,22 @@ class Programs extends Base {
 		$row_cnt = $result->num_rows;
 		$data = '';
 		$numSufArr = array('0'=>'1st','1'=>'2nd','2'=>'3rd');
-		$daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
+		$daysDBArr = array('0'=>'<span style="text-decoration: underline;">Mon</span>','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 		if($row_cnt > 0){
 		$data .= '<table cellspacing="0" cellpadding="0" style="border:none;">';
-		$data .= '<tr><td>Number of Cycle:'.$this->getCyclesInProgram($prog_id).'</td></tr>';
+		$data .= '<tr><td>Number of Cycles:'.$this->getCyclesInProgram($prog_id).'</td></tr>';
 		$i=0;
+		//get the timeslot from TS ids
+		$tsobj = new Timeslot();
 		while($row = $result->fetch_assoc())
 		{
 			$week1 = '';
 			$week2 = '';
 			if(count(unserialize($row['week1']))>0){
 				foreach(unserialize($row['week1']) as $key=> $value)
-				{	
-					//get the timeslot from TS ids
-					$tsobj = new Timeslot();
+				{
 					$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
-					$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";	
+					$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";
 				}
 			}
 			if(count(unserialize($row['week2']))>0)
@@ -192,8 +192,8 @@ class Programs extends Base {
 					foreach(unserialize($row['week2']) as $key=> $value)
 					{
 						$tsobj = new Timeslot();
-						$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');	
-						$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";	
+						$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
+						$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";
 					}
 				}
 			}
@@ -219,11 +219,17 @@ class Programs extends Base {
 	  	$result= $this->conn->query($query);
 	  	$num_rows = $result->num_rows;
 	  	$dt = '';
+	  	$i=0;
 	  	if($num_rows > 0){
-	  	    $dt .= '<tr><td>Exceptions:</td></tr>';
+	  	    $dt .= '<tr><td><div style="width:110px;float:left;">Exceptions:</div>';
 			while($row = $result->fetch_assoc()){
-               $dt .= '<tr><td>'.$row['exception_date'].'</td></tr>';
+			   $i++;
+               $dt .= '<div style="width:110px;float:left;">'.$row['exception_date'].'</div>';
+               if(!($i%3))
+               $dt .= '<div style="width:110px;float:left;">&nbsp;</div>';
+
 			}
+			$dt .= '</td></tr>';
 			return $dt;
 		}
     }
@@ -614,7 +620,7 @@ class Programs extends Base {
 	   		if(in_array($data['id'], $params))
 		   {
 			   $options .= '<option value="'.$data['id'].'" selected="selected">'.$data['start_time'].'-'.$data['end_time'].'</option>';
-		   }else{			   
+		   }else{
 			   $options .= '<option value="'.$data['id'].'">'.$data['start_time'].'-'.$data['end_time'].'</option>';
 		   }
 		}
