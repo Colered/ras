@@ -53,19 +53,32 @@ class Timetable extends Base {
 		$q_res = mysqli_query($this->conn, $cycle_query);
 		return $q_res;
    	}
+	
 	public function generateTimetable($date, $end_date, $from_time)
 	{	
 		$start_date = $date;
 		$programs = $this->search_programs($start_date,$from_time,$end_date);
-		//print"<pre>";print_r($programs);die;		
+		//print"<pre>";print_r($programs);die("here");
+		$new_programs = array();
+		foreach($programs as $newkey => &$values)
+		{
+			uksort($values, function($a, $b){
+			$a = new DateTime($a);
+			$b = new DateTime($b);
+
+			return $a->getTimestamp() - $b->getTimestamp();
+		});
+		$new_programs[$newkey] =  $values;		
+		}
+		//print"<pre>";print_r($new_programs);die;
 		$reserved_array = array();
 		$reserved_teachers = array();
 		$reserved_rooms = array();
 		$i=0;
-		foreach($programs as $key=>$value)
+		foreach($new_programs as $key=>$value)
 		{				
 			$program_id = $key;
-			$reserved_timeslots = array();					
+								
 			foreach($value as $k=>$v)
 			{
 				$date = $k;
@@ -81,6 +94,7 @@ class Timetable extends Base {
 						$start_time =  date('h:i A',strtotime($start_time));
 						if($start_time >= $end_time)
 						{
+							$reserved_timeslots = array();
 							$end_time = date("h:i A", strtotime($start_time." + 15 minutes"));
 							$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id from teacher_activity ta 
 							inner join subject_session s on s.id = ta.session_id
@@ -126,24 +140,28 @@ class Timetable extends Base {
 										$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
 										$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['room_id'];
 										$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['teacher_id'];
-										$ts_array = explode(",",$result_reserv_act['timeslot_id']);
+										$ts_array = explode(",",$result_reserv_act['timeslot_id']);									
 										foreach($ts_array as $ts_id)
 										{
 											$reserved_timeslots[] = trim($ts_id);
-										}										
+										}	
+										
 										break;
 									}								
 								}							
 							}
 						}
 					}
+					
 					$total_timeslots = array();
 					foreach($v as $start_id)
 					{
 						$total_timeslots[] = $start_id;
 					}
-					$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);						
+					
+					$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);	
 					$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+					
 					foreach($unreserved_times as $un_tsid)
 					{							
 						$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,s.order_number,s.duration 
@@ -164,8 +182,10 @@ class Timetable extends Base {
 							$ts_cnt = count(array_intersect($unreserved_timeslots, $time));								
 							if($ts_cnt == count($time))
 							{
+								
 								if($this->checkTeacherAvailability($result_free_act['teacher_id'],$date,$all_ts))
 								{
+									
 									if(!$this->isTeacherReserved($date,$start_time,$end_time,$result_free_act['teacher_id'],$reserved_teachers))
 									{
 										$room_id = $this->getRoomBySubject($result_free_act['subject_id'],$date);
@@ -278,7 +298,8 @@ class Timetable extends Base {
 				}
 			}
 			$i++;
-		}		
+		}	
+		//print"<pre>";print_r($reserved_array);die;
 		if(empty($reserved_array))
 		{
 			$err['system_error'] = 'System could not generate the timetable. Please check your data first';
