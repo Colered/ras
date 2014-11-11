@@ -88,7 +88,20 @@ class Timeslot extends Base {
 			$q_res = mysqli_query($this->conn, $tsbyids_query);
 			$allTSVal = array();
 			while($tsdata= mysqli_fetch_array($q_res)){
-				$allTSVal[] = $tsdata['start_time'].'-'.$tsdata['end_time'];
+				//$allTSVal[] = $tsdata['start_time'].'-'.$tsdata['end_time'];
+				$startArr[] = $tsdata['start_time'];
+				$endArr[] = $tsdata['end_time'];
+			}
+			$startnewArr = array_diff($startArr,$endArr);
+			$endnewArr = array_diff($endArr,$startArr);
+			foreach($startnewArr as $val){
+			   $startTmpArr[] = $val;
+			}
+			foreach($endnewArr as $val2){
+			   $endTmpArr[] = $val2;
+			}
+			for($i=0;$i<count($startTmpArr);$i++){
+               $allTSVal[] = $startTmpArr[$i].'-'.$endTmpArr[$i];
 			}
 			return $allTSVal;
 	}

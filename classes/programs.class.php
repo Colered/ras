@@ -168,7 +168,7 @@ class Programs extends Base {
 		$row_cnt = $result->num_rows;
 		$data = '';
 		$numSufArr = array('0'=>'1st','1'=>'2nd','2'=>'3rd');
-		$daysDBArr = array('0'=>'<span style="text-decoration: underline;">Mon</span>','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
+		$daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 		if($row_cnt > 0){
 		$data .= '<table cellspacing="0" cellpadding="0" style="border:none;">';
 		$data .= '<tr><td>Number of Cycles:'.$this->getCyclesInProgram($prog_id).'</td></tr>';
@@ -183,7 +183,7 @@ class Programs extends Base {
 				foreach(unserialize($row['week1']) as $key=> $value)
 				{
 					$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
-					$week1 = $week1." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";
+					$week1 = $week1." ".'<span style="text-decoration: underline;">'.$daysDBArr[$key].'</span>'.":&nbsp;".implode(',',$timeslotVal)."<br/>";
 				}
 			}
 			if(count(unserialize($row['week2']))>0)
@@ -193,7 +193,7 @@ class Programs extends Base {
 					{
 						$tsobj = new Timeslot();
 						$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
-						$week2 = $week2." ".$daysDBArr[$key].":".implode(',',$timeslotVal)."<br/>";
+						$week2 = $week2." ".'<span style="text-decoration: underline;">'.$daysDBArr[$key].'</span>'.":&nbsp;".implode(',',$timeslotVal)."<br/>";
 					}
 				}
 			}
@@ -221,12 +221,12 @@ class Programs extends Base {
 	  	$dt = '';
 	  	$i=0;
 	  	if($num_rows > 0){
-	  	    $dt .= '<tr><td><div style="width:110px;float:left;">Exceptions:</div>';
+	  	    $dt .= '<tr><td><div style="width:90px;float:left;">Exceptions:</div>';
 			while($row = $result->fetch_assoc()){
 			   $i++;
-               $dt .= '<div style="width:110px;float:left;">'.$row['exception_date'].'</div>';
-               if(!($i%3))
-               $dt .= '<div style="width:110px;float:left;">&nbsp;</div>';
+               $dt .= '<div style="width:90px;float:left;">'.$row['exception_date'].'</div>';
+               if(!($i%4))
+               $dt .= '<div style="width:90px;float:left;">&nbsp;</div>';
 
 			}
 			$dt .= '</td></tr>';
