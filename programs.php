@@ -72,7 +72,7 @@ $(document).ready(function() {
 						<h2>Company</h2>
 					</div>
 					<div class="txtfield">
-						<input type="text" class="inp_txt alphanumeric" id="txtCompanyName" maxlength="100" name="txtCompanyName" value="<?php echo $company_name;?>">
+						<input type="text" class="inp_txt" id="txtCompanyName" maxlength="100" name="txtCompanyName" value="<?php echo $company_name;?>">
 					</div>
 					<div class="clear"></div>
                     <div class="custtd_left">
