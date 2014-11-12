@@ -148,9 +148,32 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 									<?php //get the day and timeslot
 									$dayData = $obj->getTeacherAvailDay($data['id']);
 									while($ddata = $dayData->fetch_assoc()){
-										$timeslotData2 = $obj->getTeacherAvailTimeslot($ddata['timeslot_id']);?>
-										<li><?php echo $ddata['day_name']." ";
-											echo str_replace(",", ",<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $ddata['timeslot_id']);
+										//$timeslotData2 = $obj->getTeacherAvailTimeslot($ddata['timeslot_id']);
+										
+										$tempData  = explode(',', $ddata['timeslot_id']);
+										unset($startArr, $endArr);
+										foreach($tempData as $data){
+											$tempts = explode('-', $data);
+											$startArr[] =$tempts[0];
+											$endArr[]=$tempts[1];
+										}
+										$startnewArr = array_diff($startArr,$endArr);
+										$endnewArr = array_diff($endArr,$startArr);
+										unset($startTmpArr, $endTmpArr);
+										foreach($startnewArr as $val){
+										   $startTmpArr[] = $val;
+										}
+										foreach($endnewArr as $val2){
+										   $endTmpArr[] = $val2;
+										}
+										unset($allTSVal);
+										for($i=0;$i<count($startTmpArr);$i++){
+										   $allTSVal[] = $startTmpArr[$i].'-'.$endTmpArr[$i];
+										}
+										$finalTSval = implode(', ', $allTSVal);
+										
+										?>
+										<li><span style="text-decoration:underline"><?php echo $ddata['day_name'].'</span>:&nbsp;'.$finalTSval;
 											?>
 										</li>
 									<?php } ?>

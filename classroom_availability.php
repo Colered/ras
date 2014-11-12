@@ -167,15 +167,38 @@ if(isset($_GET['rid']) && $_GET['rid']!=""){
 									$dayData = $obj->getClassroomAvailDay($data['id']);
 
 									while($ddata = $dayData->fetch_assoc()){
-										$timeslotData = $obj->getClassroomAvailTimeslot($ddata['timeslot_id']);?>
-										<li><?php
+										$timeslotData = $obj->getClassroomAvailTimeslot($ddata['timeslot_id']);
+										$tempData  = explode(',', $ddata['timeslot_id']);
+										unset($startArr, $endArr);
+										foreach($tempData as $data){
+											$tempts = explode('-', $data);
+											$startArr[] =$tempts[0];
+											$endArr[]=$tempts[1];
+										}
+										$startnewArr = array_diff($startArr,$endArr);
+										$endnewArr = array_diff($endArr,$startArr);
+										unset($startTmpArr, $endTmpArr);
+										foreach($startnewArr as $val){
+										   $startTmpArr[] = $val;
+										}
+										foreach($endnewArr as $val2){
+										   $endTmpArr[] = $val2;
+										}
+										unset($allTSVal);
+										for($i=0;$i<count($startTmpArr);$i++){
+										   $allTSVal[] = $startTmpArr[$i].'-'.$endTmpArr[$i];
+										}
+										$finalTSval = implode(', ', $allTSVal);
+										?>
+										<li><span style="text-decoration:underline"><?php
 											if($ddata['day']==0){echo $day_name="Mon ";}
 											if($ddata['day']==1){echo $day_name="Tue ";}
 											if($ddata['day']==2){echo $day_name="Wed ";}
 											if($ddata['day']==3){echo $day_name="Thu ";}
 											if($ddata['day']==4){echo $day_name="Fri ";}
 											if($ddata['day']==5){echo $day_name="Sat ";}
-											echo str_replace(",", ",<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $ddata['timeslot_id']);
+											echo '</span>:&nbsp;';
+											echo $finalTSval;
 											?>
 										</li>
 									<?php } ?>
