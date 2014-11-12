@@ -4613,7 +4613,7 @@ function print_entry ( $event, $date ) {
   static $viewEventStr, $viewTaskStr;
 
   if ( empty ( $viewEventStr ) ) {
-    $viewEventStr = translate ( 'vView this event' );
+    $viewEventStr = translate ( 'View this event' );
     $viewTaskStr = translate ( 'View this task' );
   }
 
