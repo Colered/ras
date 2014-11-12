@@ -22,7 +22,7 @@ $(document).ready(function(){
     <div id="main">
     <?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";} ?>
         <div class="full_w">
-            <div class="h_title">Teacher Activity View<a href="teacher_activity.php" class="gird-addnew" title="Add New Activity">Add new</a></div>
+            <div class="h_title">Teacher Activity View<!--<a href="teacher_activity.php" class="gird-addnew" title="Add New Activity">Add new</a>--></div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -78,7 +78,7 @@ $(document).ready(function(){
 							<td class="align-center"><?php echo $res_flag;?></td>
 							<td class="align-center"><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
-								<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&cycle_id=<?php echo base64_encode($row['cycle_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a>
+								<?php /*?><a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&cycle_id=<?php echo base64_encode($row['cycle_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a><?php */?>
 								<a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
 							</td>
 						</tr>
