@@ -33,7 +33,7 @@ $(document).ready(function(){
 							<th>Unit</th>
 							<th>Company</th>
 							<th>Program Type</th>
-							<th>Program Duration</th>
+							<!--<th>Program Duration</th>-->
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -57,7 +57,7 @@ $(document).ready(function(){
 							<td><?php echo $progUnit;?></td>
 							<td class="align-center"><?php echo ($row['company']<>"") ? $row['company']: 'N/A';?></td>
 							<td class="align-center"><?php echo $pTypeArr[$row['program_type']];?></td>
-							<td class="align-center"><?php echo $objP->formatDate($row['start_date']);?> - <?php echo $objP->formatDate($row['end_date']);?></td>
+							<!--<td class="align-center"><?php echo $objP->formatDate($row['start_date']);?> - <?php echo $objP->formatDate($row['end_date']);?></td>-->
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
 								<a href="#" class="table-icon delete" onClick="deleteProgram(<?php echo $row['id'] ?>)"></a>

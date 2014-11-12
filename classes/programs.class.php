@@ -293,7 +293,8 @@ class Programs extends Base {
 	public function getProgramYearName($year_id){
 		$result =  $this->conn->query("select name,start_year,end_year from program_years where id='".$year_id."'");
 		$row = $result->fetch_assoc();
-		return $row['name'].' '.$row['start_year'].' '.$row['end_year'];
+		//return $row['name'].' '.$row['start_year'].' '.$row['end_year'];
+		return $row['name'];
 	}
     // function to delete programs from program year table
     //as well as associated to other tables

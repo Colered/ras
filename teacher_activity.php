@@ -28,7 +28,8 @@ $rel_session = $objS->getSessions();
 					<option value="" selected="selected">--Select Program--</option>
 					<?php
 						while($row = $rel_prog->fetch_assoc()){
-							echo '<option value="'.$row['id'].'">'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
+							//echo '<option value="'.$row['id'].'">'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
+							echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
 						}
 					?>
 					</select>

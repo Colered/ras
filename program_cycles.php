@@ -15,21 +15,21 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $unitArr[]= explode(',',$row['unit']);
     //get all the cycles related to data
     $cycleData = $objP->getProgramCycleList($programId);
-	
+
     while($data = $cycleData->fetch_assoc()){
-       $cycleIdsArr[]= $data['id'];       
+       $cycleIdsArr[]= $data['id'];
        $start_week[] = $data['start_week'];
        $end_week[] = $data['end_week'];
 	   $occurrence[] = $data['occurrence'];
 	   $week1[] = unserialize($data['week1']);
 	   $week2[] = unserialize($data['week2']);
-       
+
     }
 	//print"<pre>";print_r($week1);print"</pre>";
     // set the value
-	
+
     $totcycle = $objP->getCyclesInProgram($programId);
-	
+
 }
 $no_of_cycles = isset($_GET['edit']) ? $totcycle : (isset($_POST['slctNumcycle'])? $_POST['slctNumcycle']:'');
 $cycleIdsArr = (!empty($cycleIdsArr) ? $cycleIdsArr : array());
@@ -92,7 +92,8 @@ $(document).ready(function() {
 						<option value="" selected="selected">--Select Program--</option>
 						<?php
 							while($row = $rel_prog->fetch_assoc()){
-								echo '<option value="'.$row['id'].'">'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
+								//echo '<option value="'.$row['id'].'">'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
+								echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
 							}
 						?>
 						</select>
@@ -183,7 +184,7 @@ $(document).ready(function() {
                         <?php $options = $objP->getTimeslotOptions($week1[0][5]);echo $options;?>
                         </select>
 						</div>
-					  </div>	
+					  </div>
                     </div>
 					<div class="clear"></div>
 					<div class="custtd_left" id="custtd_leftc1w2" style="display:none;">
@@ -227,10 +228,10 @@ $(document).ready(function() {
                          <?php $options = $objP->getTimeslotOptions($week2[0][5]);echo $options;?>
                         </select>
 						</div>
-					  </div> 
+					  </div>
 					  </div>
 						<div class="clear"></div>
-	
+
 						<div class="custtd_left">
 							<h2>Add Exception</h2>
 						</div>
@@ -249,10 +250,10 @@ $(document).ready(function() {
                         $objP->getProgExceptions($programId,1);
 					 } ?>
 					</div>
-					
-					<div class="clear"></div>					
+
+					<div class="clear"></div>
                     <div class="clear"></div>
-				
+
 					<div id="secondCycle" style="display:none;border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 						<div class="custtd_left">
 							<h2>2nd cycle<span class="redstar">*</span></h2>
@@ -281,7 +282,7 @@ $(document).ready(function() {
 						<div class="clear"></div>
 						<div class="custtd_left" id="custtd_leftc2w1" style="display:none;">
 							<h2>Days and Timeslot 1st<span class="redstar">*</span></h2>
-						</div>					
+						</div>
 						<div class="txtfield">
 						  <div id="c2week1" style="display:none;">
 							<div class="tmSlotc2w1">
@@ -320,7 +321,7 @@ $(document).ready(function() {
 							<?php $options = $objP->getTimeslotOptions($week1[1][5]);echo $options;?>
 							</select>
 							</div>
-						  </div>	
+						  </div>
 						</div>
 					<div class="clear"></div>
 					<div class="clear"></div>
@@ -365,7 +366,7 @@ $(document).ready(function() {
                         <?php $options = $objP->getTimeslotOptions($week2[1][5]);echo $options;?>
                         </select>
 						</div>
-					  </div>	
+					  </div>
 	                </div>
 					<div class="clear"></div>
 					<div class="custtd_left">
@@ -388,7 +389,7 @@ $(document).ready(function() {
 						</div>
 					 <div class="clear"></div>
 					 <div class="clear"></div>
-					
+
 					<div id="thirdCycle" style="display:none;border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 						<div class="custtd_left">
 							<h2>3rd cycle<span class="redstar">*</span></h2>
@@ -417,7 +418,7 @@ $(document).ready(function() {
 						<div class="clear"></div>
 						<div class="custtd_left" id="custtd_leftc3w1" style="display:none;">
 							<h2>Days and Timeslot 1st<span class="redstar">*</span></h2>
-						</div>					
+						</div>
 						<div class="txtfield">
 						  <div id="c3week1" style="display:none;">
 							<div class="tmSlotc3w1">
@@ -456,7 +457,7 @@ $(document).ready(function() {
 							  <?php $options = $objP->getTimeslotOptions($week1[2][5]);echo $options;?>
 							</select>
 							</div>
-						  </div>	
+						  </div>
 						</div>
 					<div class="clear"></div>
 					<div class="clear"></div>
@@ -501,7 +502,7 @@ $(document).ready(function() {
                          <?php $options = $objP->getTimeslotOptions($week2[2][5]);echo $options;?>
                         </select>
 						</div>
-					  </div>	
+					  </div>
 	                </div>
 					<div class="clear"></div>
 					<div class="custtd_left">
@@ -526,9 +527,9 @@ $(document).ready(function() {
 						<div class="clear"></div>
 					</div>
                     <div class="clear"></div>
-					
+
 					</div>
-							
+
 					</div>
                     <div class="clear"></div>
 

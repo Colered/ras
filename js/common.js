@@ -1499,10 +1499,12 @@ function changeExceptionData(pid){
 $(function() {
 	var start_date1 = $('#program_start_date').val();
 	var end_date1 = $('#program_end_date').val();
+	var cycle1_endweekdate = $('#endweek1').val();
+	var cycle2_endweekdate = $('#endweek2').val();
 	
     //for cycle 1
 	$("#startweek1").datepicker({
-		minDate: start_date1,
+		//minDate: start_date1,
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1513,13 +1515,13 @@ $(function() {
 		    var date2 = $('#startweek1').datepicker('getDate');
 			date2.setDate(date2.getDate() + 1);
 		    $("#endweek1").datepicker("option", "minDate", date2);
-			$("#endweek1").datepicker("option", "maxDate", end_date1);
+			//$("#endweek1").datepicker("option", "maxDate", end_date1);
 			$("#exceptnProgAval1").datepicker("option", "minDate", selectedDate);
 			$('#exceptnProgAval1').val('');
 		}
 	});
 	$("#endweek1").datepicker({
-		maxDate: end_date1,
+		//maxDate: end_date1,
 	    dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1544,6 +1546,7 @@ $(function() {
 	});
 	//for cycle 2
 	$("#startweek2").datepicker({
+	    minDate: cycle1_endweekdate,
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1554,7 +1557,7 @@ $(function() {
 			var date2 = $('#startweek2').datepicker('getDate');
 			date2.setDate(date2.getDate() + 1);
 			$("#endweek2").datepicker("option", "minDate", date2);
-			$("#endweek2").datepicker("option", "maxDate", end_date1);
+			//$("#endweek2").datepicker("option", "maxDate", end_date1);
 			$("#exceptnProgAval2").datepicker("option", "minDate", selectedDate);
 			$('#exceptnProgAval2').val('');
 		}
@@ -1584,6 +1587,7 @@ $(function() {
 	});
 	//for cycle 3
 	$("#startweek3").datepicker({
+	    minDate: cycle2_endweekdate,
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1595,7 +1599,7 @@ $(function() {
 			date2.setDate(date2.getDate() + 1);
 			$("#endweek3").datepicker("option", "minDate", date2);
 			$("#exceptnProgAval3").datepicker("option", "minDate", selectedDate);
-			$("#endweek3").datepicker("option", "maxDate", end_date1);
+			//$("#endweek3").datepicker("option", "maxDate", end_date1);
 			$('#exceptnProgAval3').val('');
 		}
 	});

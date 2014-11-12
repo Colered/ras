@@ -74,7 +74,7 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
 							  $program_year_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
 							  $selected = (trim($progId) == trim($program_data['id'])) ? ' selected="selected"' : '';
 							  ?>
-					          <option value="<?php echo $program_data['id'];?>" <?php echo $selected;?>><?php echo $program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];?></option>
+					          <option value="<?php echo $program_data['id'];?>" <?php echo $selected;?>><?php echo $program_data['name'];?></option>
 					     	 <?php } ?>
                         </select>
                     </div>

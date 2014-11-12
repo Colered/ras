@@ -60,7 +60,8 @@ $(document).ready(function(){
 							$program_query="select * from  program_years where id='".$data['program_year_id']."'";
 							$program_result= mysqli_query($db, $program_query);
 							$program_data = mysqli_fetch_assoc($program_result);
-							$program_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
+							//$program_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
+							$program_detail=$program_data['name'];
 							echo $program_detail;
 						?>
 						</td>
@@ -79,7 +80,7 @@ $(document).ready(function(){
 												  </tr> ';
 							}
 		   					$sessionHtml.='</tbody></table>';
-						
+
 						if($count>0){ ?>
 						<td class="align-center" width="200">
 						 	<img id="sessionNameImg<?php echo $data['id'];?>" src="images/plus_icon.png" alt="Smiley face" class="sessionNameImg" onclick="getSessionName(<?php echo $data['id']?>);">

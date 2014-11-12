@@ -90,14 +90,14 @@ $(document).ready(function() {
 						</script>
                     </div>
                     <div class="clear"></div>
-                    <div class="custtd_left">
+                   <!-- <div class="custtd_left">
                         <h2>Program Duration <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
                         From:<input type="text" size="12" id="fromPrgm" name="prog_from_date" value="<?php echo $objP->formatDate($program_from_date);?>" class="required" readonly/>
                         To:<input type="text" size="12" id="toPrgm" name="prog_to_date" value="<?php echo $objP->formatDate($program_to_date);?>" class="required" readonly/>
                     </div>
-                    <div class="clear"></div>
+                    <div class="clear"></div>-->
                     <div class="custtd_left">
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>

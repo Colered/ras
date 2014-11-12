@@ -28,7 +28,8 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
                         <?php
 							while($row = $rel_prog->fetch_assoc()){
 							    $selectedProg = (isset($programId) && $programId==$row['id']) ? 'selected' : '';
-								echo '<option value="'.$row['id'].'" '.$selectedProg.'>'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
+								//echo '<option value="'.$row['id'].'" '.$selectedProg.'>'.$row['name'].' '.$row['start_year'].' '.$row['end_year'].'</option>';
+								echo '<option value="'.$row['id'].'" '.$selectedProg.'>'.$row['name'].'</option>';
 							}
                         ?>
                         </select>
