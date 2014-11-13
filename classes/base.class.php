@@ -49,6 +49,7 @@ abstract class Base
 	//function to clean input text
 	public function cleanText($txt){
 		$str = strip_tags($txt);
+		$str = str_replace("&nbsp;","",$str);
 		return trim($str);
 	}
 	//function to fetch a

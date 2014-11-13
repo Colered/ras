@@ -6,11 +6,11 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 	$row_cnt = $result->num_rows;
     $row = $result->fetch_assoc();
     // set the value
-    $button_save = 'Edit Professor';
+    $button_save = 'Edit Teacher';
     $years = floor($row['experience']/12);
     $months = $row['experience']-$years*12;
 }else{
-    $button_save = 'Add Professor';
+    $button_save = 'Add Teacher';
     $years = isset($_POST['years']) ? $_POST['years']:'';
     $months = isset($_POST['months']) ? $_POST['months']:'';
 }
@@ -58,7 +58,7 @@ $(document).ready(function () {
 					<div class="clear"></div>
 
                     <div class="custtd_left">
-                        <h2>Professor Name<span class="redstar">*</span></h2>
+                        <h2>Teacher Name<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
                         <input type="text" class="inp_txt required" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
