@@ -473,7 +473,7 @@ table td{
 }
 table tr:hover td{ 
 	background: #fff8cf;
-	color: #000000; 
+	color: #000000!important; 
 }
 table .chb{ 
 	width: 20px; 
