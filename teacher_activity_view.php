@@ -22,7 +22,7 @@ $(document).ready(function(){
     <div id="main">
     <?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";} ?>
         <div class="full_w">
-            <div class="h_title">Teacher Activity View<!--<a href="teacher_activity.php" class="gird-addnew" title="Add New Activity">Add new</a>--></div>
+            <div class="h_title">Activity View<!--<a href="teacher_activity.php" class="gird-addnew" title="Add New Activity">Add new</a>--></div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -52,10 +52,12 @@ $(document).ready(function(){
 							//echo $row['session_id']."---"; print"<pre>";print_r($session_array);print"</pre>";
 							if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
 							{
-								$trBColor1 = ' style="background-color:#FF0000;"';
+								$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
+								$tdColor = ' style="color:#FFFFFF;"';
 								$session_array[] = $row['session_id'];
 							}else{
 								$trBColor1 = '';
+								$tdColor = '';
 							}
 							$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
 							$teacher_name = $row['teacher_name'].$email;
@@ -66,17 +68,17 @@ $(document).ready(function(){
 							  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
 						?>
 						<tr<?php echo $trBColor;echo $trBColor1;?>>
-							<td class="align-center"><?php echo $row['id'];?></td>
-							<td><?php echo $row['name'];?></td>
-							<td><?php echo $row['program_name'];?></td>
-							<td><?php echo $row['subject_name'];?></td>
-							<td><?php echo $row['session_name'];?></td>
-							<td><?php echo $teacher_name;?></td>
-							<td><?php echo $objB->getRoomFullName($row['room_id']);?></td>
-							<td><?php echo $objT->formatDate($row['act_date']);?></td>
-							<td><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
-							<td class="align-center"><?php echo $res_flag;?></td>
-							<td class="align-center"><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
+							<td <?php echo $tdColor;?> class="align-center"><?php echo $row['id'];?></td>
+							<td<?php echo $tdColor;?>><?php echo $row['name'];?></td>
+							<td<?php echo $tdColor;?>><?php echo $row['program_name'];?></td>
+							<td<?php echo $tdColor;?>><?php echo $row['subject_name'];?></td>
+							<td<?php echo $tdColor;?>><?php echo $row['session_name'];?></td>
+							<td<?php echo $tdColor;?>><?php echo $teacher_name;?></td>
+							<td<?php echo $tdColor;?>><?php echo $objB->getRoomFullName($row['room_id']);?></td>
+							<td<?php echo $tdColor;?>><?php echo $objT->formatDate($row['act_date']);?></td>
+							<td<?php echo $tdColor;?>><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
+							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
+							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<?php /*?><a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&cycle_id=<?php echo base64_encode($row['cycle_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a><?php */?>
 								<a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>

@@ -232,7 +232,7 @@ switch ($codeBlock) {
 				$del_activity_query="select session_id from teacher_activity where session_id = '".$_POST['sessionID']."' and id!='".$_POST['activityId']."'";
 				$qry = mysqli_query($db, $del_activity_query);
 				if(mysqli_affected_rows($db)>0){
-					//delete only activity not the session 
+					//delete only activity not the session
 					$del_act_query="delete from teacher_activity where id='".$_POST['activityId']."'";
 					$qry = mysqli_query($db, $del_act_query);
 					if(mysqli_affected_rows($db)>0)
@@ -389,15 +389,15 @@ switch ($codeBlock) {
 			$dateTo=$_POST['dateTo'];
 			$cnt=$_POST['countRule'];
 			//check if the rule name exists
-			$rule_query="select id, rule_name from classroom_availability_rule where rule_name='".$_POST['SchdName']."'";
+			$rule_query="select id, rule_name from classroom_availability_rule where rule_name='".Base::cleanText($_POST['SchdName'])."'";
 			$q_res = mysqli_query($db, $rule_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			//echo "count=".count($dataAll);
 			if(count($dataAll)>0){
 				echo '0';
-			}elseif(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!="" && $_POST['SchdName']!=""){
+			}elseif(isset($_POST['dateFrom']) && $_POST['dateFrom']!="" && isset($_POST['dateTo']) && $_POST['dateTo']!="" && $_POST['days']!="" && Base::cleanText($_POST['SchdName'])!=""){
 
-			 $rule_qry="INSERT INTO  classroom_availability_rule VALUES ('', '".$_POST['SchdName']."', '".$dateFrom."','".$dateTo."','".$currentDateTime."', '".$currentDateTime."')";
+			 $rule_qry="INSERT INTO  classroom_availability_rule VALUES ('', '".Base::cleanText($_POST['SchdName'])."', '".$dateFrom."','".$dateTo."','".$currentDateTime."', '".$currentDateTime."')";
 				 $result_qry=mysqli_query($db,$rule_qry);
 				 $j=0;
 				 if($result_qry){
@@ -598,7 +598,7 @@ switch ($codeBlock) {
 				$options .='<option value="">--Select Cycle--</option>';
 				$cycle_query="select no_of_cycle from cycle where program_year_id='".$_POST['progId']."' limit 1";
 				$qry = mysqli_query($db, $cycle_query);
-				$data = mysqli_fetch_row($qry); 
+				$data = mysqli_fetch_row($qry);
 				for($i=1; $i<=$data[0]; $i++){
 					$options .='<option value="'.$i.'" >'.$i.'</option>';
 				}
@@ -627,7 +627,7 @@ switch ($codeBlock) {
 					}
 					//add new session
 					$result = mysqli_query($db, "INSERT INTO subject_session (id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '".$duration."', NOW(), NOW());");
-					
+
 				//if only teacher name is also provided then create an un-reserved activity
 				if(mysqli_affected_rows($db)>0){
 						if(isset($_POST['slctTeacher']) && $_POST['slctTeacher']!=""){
@@ -653,7 +653,7 @@ switch ($codeBlock) {
 				}
 	    	 exit;
 			}
-			
+
 			//if all fields are present then first add session and then create activities after checking the availability
 		if((isset($_POST['txtSessionName']) && $_POST['txtSessionName']!="") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher']!="") && (isset($_POST['tslot_id']) && $_POST['tslot_id']!="")&& (isset($_POST['duration']) && $_POST['duration']!="") && (isset($_POST['room_id']) && $_POST['room_id']!="") && (isset($_POST['subSessDate']) && $_POST['subSessDate']!="")){
 					//calculate all TS ids for the activity
@@ -679,12 +679,12 @@ switch ($codeBlock) {
 						$final_programs = array();
 						$sql_pgm_cycle = mysqli_query($db, "select * from cycle where program_year_id = '".$_POST['programId']."' and '".$_POST['subSessDate']."' between start_week and end_week");
 						$dayFromDate = date('w', strtotime($_POST['subSessDate']));
-    					$day = $dayFromDate - 1; 
+    					$day = $dayFromDate - 1;
 						//$pgm_cycle_data = mysqli_fetch_assoc($sql_pgm_cycle);
-						$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle); 
+						$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
 						if($pgm_cycle_cnt > 0)
 						{
-							$result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle);	
+							$result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle);
 							//echo $result_pgm_cycle['occurrence'];
 							if($result_pgm_cycle['occurrence'] == '1w')
 							{
@@ -706,7 +706,7 @@ switch ($codeBlock) {
 											exit;
 										}
 									}
-								}						
+								}
 							}else if($result_pgm_cycle['occurrence'] == '2w'){
 								$obj = new Subjects();
 								$week = $obj->getWeekFromDate($_POST['subSessDate'],$result_pgm_cycle['start_week'],$result_pgm_cycle['end_week']);
@@ -752,7 +752,7 @@ switch ($codeBlock) {
 											}
 										}
 									}
-								}					
+								}
 							}
 						}else{
 							echo 9;
@@ -783,7 +783,7 @@ switch ($codeBlock) {
 						}
 					}
 					//check if teacher is available on the given time and day
-					if($valid==1){ 
+					if($valid==1){
 						//check if the selected date is not added as exception by the teacher while providing availability
 						$query = "select id from teacher_availability_exception where teacher_id = '".$_POST['slctTeacher']."' and exception_date = '".$_POST['subSessDate']."'";
 						$q_res = mysqli_query($db, $query);
@@ -793,8 +793,8 @@ switch ($codeBlock) {
 							$day = date('w', strtotime($_POST['subSessDate']));
 							$final_day = $day - 1;
 							//check if teacher is available on the given time and day
-							$teachAvail_query="select tm.id 
-												from teacher_availability_rule_teacher_map tm 
+							$teachAvail_query="select tm.id
+												from teacher_availability_rule_teacher_map tm
 												inner join teacher_availability_rule_day_map td on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
 												inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
 												where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and tm.teacher_id='".$_POST['slctTeacher']."' and td.actual_timeslot_id like '%".$tsIdsAll."%'";
@@ -812,7 +812,7 @@ switch ($codeBlock) {
 					}
 					//check if teacher is not engaged in some other reserved activity
 					if($valid==1){
-						$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '".RexExpFormat($tsIdsAll)."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'"; 
+						$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '".RexExpFormat($tsIdsAll)."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
 						$q_res = mysqli_query($db, $teachAvail_query);
 						if(mysqli_affected_rows($db)>0){
 							echo 3;
@@ -822,7 +822,7 @@ switch ($codeBlock) {
 					}
 					//Rule: A teacher cannot have more than 4 sessions per day
 					if($valid==1){
-						$teachAvail_query="select id from teacher_activity where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'"; 
+						$teachAvail_query="select id from teacher_activity where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'";
 						$q_res = mysqli_query($db, $teachAvail_query);
 						if(mysqli_affected_rows($db)>=4){
 							echo 10;
@@ -877,7 +877,7 @@ switch ($codeBlock) {
 						$sessCount_res = mysqli_query($db, $sessCount_query);
 						$sessCount_data = mysqli_fetch_assoc($sessCount_res);
 						$txtOrderNum =  $sessCount_data['total'] +1;
-						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '".$_POST['duration']."', NOW(), NOW());"); 
+						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '".$_POST['subjectId']."', '".$_POST['cycleId']."', '".$_POST['txtSessionName']."', '".$txtOrderNum."', '".$_POST['txtareaSessionDesp']."', '".$_POST['txtCaseNo']."', '".$_POST['txtareatechnicalNotes']."', '".$_POST['duration']."', NOW(), NOW());");
 						if(mysqli_affected_rows($db)>0){
 							$sessionId = mysqli_insert_id($db);
 							//get last created activity name
@@ -900,7 +900,7 @@ switch ($codeBlock) {
 				}
 	}else{
 			echo 8;
-		}	
+		}
 	}
 	break;
 	case "del_sub_activity_session":
@@ -958,12 +958,12 @@ switch ($codeBlock) {
 						$final_programs = array();
 						$sql_pgm_cycle = mysqli_query($db, "select * from cycle where program_year_id = '".$_POST['programId']."' and '".$_POST['subSessDate']."' between start_week and end_week");
 						$dayFromDate = date('w', strtotime($_POST['subSessDate']));
-						$day = $dayFromDate - 1; 
+						$day = $dayFromDate - 1;
 						//$pgm_cycle_data = mysqli_fetch_assoc($sql_pgm_cycle);
-						$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle); 
+						$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
 						if($pgm_cycle_cnt > 0)
 						{
-							$result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle);	
+							$result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle);
 							//echo $result_pgm_cycle['occurrence']; die;
 							if($result_pgm_cycle['occurrence'] == '1w')
 							{
@@ -985,7 +985,7 @@ switch ($codeBlock) {
 											exit;
 										}
 									}
-								}						
+								}
 							}else if($result_pgm_cycle['occurrence'] == '2w'){
 								$obj = new Subjects();
 								$week = $obj->getWeekFromDate($_POST['subSessDate'],$result_pgm_cycle['start_week'],$result_pgm_cycle['end_week']);
@@ -1031,7 +1031,7 @@ switch ($codeBlock) {
 											}
 										}
 									}
-								}					
+								}
 							}
 						}else{
 							echo 9;
@@ -1062,7 +1062,7 @@ switch ($codeBlock) {
 						}
 					}
 					//check if teacher is available on the given time and day
-					if($valid==1){ 
+					if($valid==1){
 						//check if the selected date is not added as exception by the teacher while providing availability
 						$query = "select id from teacher_availability_exception where teacher_id = '".$_POST['slctTeacher']."' and exception_date = '".$_POST['subSessDate']."'";
 						$q_res = mysqli_query($db, $query);
@@ -1072,11 +1072,11 @@ switch ($codeBlock) {
 							$day = date('w', strtotime($_POST['subSessDate']));
 							$final_day = $day - 1;
 							//check if teacher is available on the given time and day
-							$teachAvail_query="select tm.id 
-												from teacher_availability_rule_teacher_map tm 
-												inner join teacher_availability_rule_day_map td 
+							$teachAvail_query="select tm.id
+												from teacher_availability_rule_teacher_map tm
+												inner join teacher_availability_rule_day_map td
 												on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
-												inner join teacher_availability_rule ta 
+												inner join teacher_availability_rule ta
 												on ta.id = td.teacher_availability_rule_id
 												where start_date <= '".$_POST['subSessDate']."' and end_date >= '".$_POST['subSessDate']."' and day= '".$final_day."' and tm.teacher_id='".$_POST['slctTeacher']."' and td.actual_timeslot_id like '%".$tsIdsAll."%'";
 							$q_res = mysqli_query($db, $teachAvail_query);
@@ -1093,11 +1093,11 @@ switch ($codeBlock) {
 					}
 					//check if teacher is not engaged in some other reserved activity
 					if($valid==1){
-						//echo $teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id like '%$tsIdsAll,%' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'"; 
+						//echo $teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id like '%$tsIdsAll,%' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
 						$teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '".RexExpFormat($tsIdsAll)."' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
-						
+
 						 //destination REGEXP '".RexExpFormat($group_name)."'
-						
+
 						$q_res = mysqli_query($db, $teachAvail_query);
 						if(mysqli_affected_rows($db)>0){
 							echo 3;
@@ -1107,7 +1107,7 @@ switch ($codeBlock) {
 					}
 					//Rule: a teacher cannot have more than 4 sessions per day
 					if($valid==1){
-						$teachAvail_query="select id from teacher_activity where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'"; 
+						$teachAvail_query="select id from teacher_activity where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'";
 						$q_res = mysqli_query($db, $teachAvail_query);
 						if(mysqli_affected_rows($db)>=4){
 							echo 10;
@@ -1153,10 +1153,10 @@ switch ($codeBlock) {
 							exit;
 						}
 					}
-					
+
 		}else{
 				echo 8;
-			}	
+			}
 		}
 		echo $valid;
 		break;
@@ -1240,8 +1240,7 @@ switch ($codeBlock) {
 				else
 					echo 0;
 			}
-			break;
-		
+			break;		
 }
 ?>
 
