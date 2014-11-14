@@ -2178,8 +2178,8 @@ function deleteRuleClassroom($id){
 }
 $(document).ready(function() {
    $(".additionalDayButt1").click(function(e){ 
-	   if($('#timeSlot1 option:selected').length <= 0){
-			alert('Please select atleast one timeslot for cycle-1.');			
+	   if($('#timeSlot1 option:selected').length <= 0 || $('#additionalDayCal1').val() == ''){
+			alert('Atleast one timeslot and date needs to be selected for cycle-1.');			
 		}else{
 			var max_fields = 10; 
 			var x = 1,y=0; 
@@ -2221,8 +2221,8 @@ $(document).ready(function() {
 		}	
 	});
 	$(".additionalDayButt2").click(function(e){ 
-	   if($('#timeSlot2 option:selected').length <= 0){
-			alert('Please select atleast one timeslot for cycle-2.');			
+	   if($('#timeSlot2 option:selected').length <= 0 || $('#additionalDayCal2').val() == ''){
+			alert('Atleast one timeslot and date needs to be selected for cycle-2');			
 		}else{
 			var max_fields = 10; 
 			var x = 1,y=0; 
@@ -2263,8 +2263,8 @@ $(document).ready(function() {
 		}	
 	});
 	$(".additionalDayButt3").click(function(e){ 
-	   if($('#timeSlot3 option:selected').length <= 0){
-			alert('Please select atleast one timeslot for cycle-3.');			
+	   if($('#timeSlot3 option:selected').length <= 0 || $('#additionalDayCal3').val()){
+			alert('Atleast one timeslot and date needs to be selected for cycle-3');			
 		}else{
 			var max_fields = 10; 
 			var x = 1,y=0; 
