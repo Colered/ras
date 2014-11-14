@@ -600,7 +600,13 @@ div.divSession{
 .sched-data{width:200px; vertical-align:top; border:1px solid #E3E3E3!important;}
 .slctTs{min-width:92px;}
 .divException{ text-align:right}
-.exceptionTbl{ width:60px;}
+.exceptionTbl,.additionTbl{ width:40%;}
+.divAddition1,.divAddition2,.divAddition3
+{
+	margin-top:52px;
+	margin-left:270px;
+}
+
 .divException{ padding-left:80px}
 #sesssionTable th, td {
  border: 1px solid black;

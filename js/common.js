@@ -1517,6 +1517,7 @@ $(function() {
 		    $("#endweek1").datepicker("option", "minDate", date2);
 			//$("#endweek1").datepicker("option", "maxDate", end_date1);
 			$("#exceptnProgAval1").datepicker("option", "minDate", selectedDate);
+			$("#additionalDayCal1").datepicker("option", "minDate", selectedDate);			
 			$('#exceptnProgAval1').val('');
 		}
 	});
@@ -1533,6 +1534,7 @@ $(function() {
 			date2.setDate(date2.getDate() + 1);
 			$("#startweek2").datepicker("option", "minDate", date2);
 			$("#exceptnProgAval1").datepicker("option", "maxDate", selectedDate);
+			$("#additionalDayCal1").datepicker("option", "maxDate", selectedDate);
 			$('#exceptnProgAval1').val('');
 		}
 	});
@@ -1544,6 +1546,14 @@ $(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
+	  $("#exceptnProgAval1, #additionalDayCal1, #additionalDayCal2, #additionalDayCal3").datepicker({
+	  dateFormat: 'dd-mm-yy',
+	  defaultDate: "+1w",
+	  changeMonth: true,
+	  numberOfMonths: 1,
+	  changeMonth: true, 
+	  changeYear: true,
+	 });
 	//for cycle 2
 	$("#startweek2").datepicker({
 	    minDate: cycle1_endweekdate,
@@ -1559,6 +1569,7 @@ $(function() {
 			$("#endweek2").datepicker("option", "minDate", date2);
 			//$("#endweek2").datepicker("option", "maxDate", end_date1);
 			$("#exceptnProgAval2").datepicker("option", "minDate", selectedDate);
+			$("#additionalDayCal2").datepicker("option", "minDate", selectedDate);
 			$('#exceptnProgAval2').val('');
 		}
 	});
@@ -1574,6 +1585,7 @@ $(function() {
 			date2.setDate(date2.getDate() + 1);
 			$("#startweek3").datepicker("option", "minDate", date2);
 			$("#exceptnProgAval2").datepicker("option", "maxDate", selectedDate);
+			$("#additionalDayCal2").datepicker("option", "maxDate", selectedDate);
 			$('#exceptnProgAval2').val('');
 		}
 	});
@@ -1599,6 +1611,7 @@ $(function() {
 			date2.setDate(date2.getDate() + 1);
 			$("#endweek3").datepicker("option", "minDate", date2);
 			$("#exceptnProgAval3").datepicker("option", "minDate", selectedDate);
+			$("#additionalDayCal3").datepicker("option", "minDate", selectedDate);
 			//$("#endweek3").datepicker("option", "maxDate", end_date1);
 			$('#exceptnProgAval3').val('');
 		}
@@ -1612,6 +1625,7 @@ $(function() {
 		changeYear: true,
 		onSelect: function(selectedDate) {
 			$("#exceptnProgAval3").datepicker("option", "maxDate", selectedDate);
+			$("#additionalDayCal3").datepicker("option", "maxDate", selectedDate);
 			$('#exceptnProgAval3').val('');
 		}
 	});
@@ -2160,5 +2174,162 @@ function deleteRuleClassroom($id){
                 }
         });
     }
+    return false;
+}
+$(document).ready(function() {
+   $(".additionalDayButt1").click(function(e){ 
+	   if($('#timeSlot1 option:selected').length <= 0){
+			alert('Please select atleast one timeslot for cycle-1.');			
+		}else{
+			var max_fields = 10; 
+			var x = 1,y=0; 
+			var additional_date = $('#additionalDayCal1').val();
+			var time_slot1 = $('#timeSlot1').val();
+			
+			 $.ajax({
+				url: "./ajax_common.php",
+				type: "POST",
+				data: {
+					'time_slot': time_slot1,
+					'codeBlock': 'getTimeslots',
+				},
+				success: function(data) {
+					var dataArray =data.split("_");
+					 $("#time_slot"+maxSerialNumVal).html(dataArray[0]);
+					 $("#timeslot"+maxSerialNumVal).val(dataArray[0]);
+					 $("#act_timeslot"+maxSerialNumVal).val(dataArray[1]);
+				},
+				error: function(errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+			e.preventDefault();
+			var programId=$('#programId').val();
+			var maxSerialNum=parseInt($('#maxSessListVal1').val(),10);
+			if(programId!=""){
+				var maxSerialNumVal=maxSerialNum + 1;
+				$('#maxSessListVal1').val(maxSerialNumVal);
+				if(maxSerialNum==0){
+					$(".divAddition1").append('<div class="additionList1"><table id="dataaddtables1" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
+				}
+				if(additional_date!=''){
+					$('#dataaddtables1').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate1[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot1[]" id="timeslot'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot1[]" id="act_timeslot'+maxSerialNumVal+'" value=""/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+					$('#additionalDayCal1').val('');
+					$('#timeSlot1').val('');
+				}
+			}
+		}	
+	});
+	$(".additionalDayButt2").click(function(e){ 
+	   if($('#timeSlot2 option:selected').length <= 0){
+			alert('Please select atleast one timeslot for cycle-2.');			
+		}else{
+			var max_fields = 10; 
+			var x = 1,y=0; 
+			var additional_date = $('#additionalDayCal2').val();
+			var time_slot2 = $('#timeSlot2').val();
+			var maxSerialNum=parseInt($('#maxSessListVal2').val(),10);
+			 $.ajax({
+				url: "./ajax_common.php",
+				type: "POST",
+				data: {
+					'time_slot': time_slot2,
+					'codeBlock': 'getTimeslots',
+				},
+				success: function(data) {
+					var dataArray =data.split("_");
+					 $("#time_slot2"+maxSerialNumVal).html(dataArray[0]);
+					 $("#timeslot2"+maxSerialNumVal).val(dataArray[0]);
+					 $("#act_timeslot2"+maxSerialNumVal).val(dataArray[1]);
+				},
+				error: function(errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+			e.preventDefault();
+			var programId=$('#programId').val();			
+			if(programId!=""){
+				var maxSerialNumVal=maxSerialNum + 1;
+				$('#maxSessListVal2').val(maxSerialNumVal);
+				if(maxSerialNum==0){
+					$(".divAddition2").append('<div class="additionList2"><table id="dataaddtables2" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
+				}
+				if(additional_date!=''){
+					$('#dataaddtables2').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate2[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot2'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot2[]" id="timeslot2'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot2[]" id="act_timeslot2'+maxSerialNumVal+'" value=""/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+					$('#additionalDayCal2').val('');
+					$('#timeSlot2').val('');
+				}
+			}
+		}	
+	});
+	$(".additionalDayButt3").click(function(e){ 
+	   if($('#timeSlot3 option:selected').length <= 0){
+			alert('Please select atleast one timeslot for cycle-3.');			
+		}else{
+			var max_fields = 10; 
+			var x = 1,y=0; 
+			var additional_date = $('#additionalDayCal3').val();
+			var time_slot3 = $('#timeSlot3').val();
+			var maxSerialNum=parseInt($('#maxSessListVal3').val(),10);
+			 $.ajax({
+				url: "./ajax_common.php",
+				type: "POST",
+				data: {
+					'time_slot': time_slot3,
+					'codeBlock': 'getTimeslots',
+				},
+				success: function(data) {
+					var dataArray =data.split("_");
+					 $("#time_slot3"+maxSerialNumVal).html(dataArray[0]);
+					 $("#timeslot3"+maxSerialNumVal).val(dataArray[0]);
+					 $("#act_timeslot3"+maxSerialNumVal).val(dataArray[1]);
+				},
+				error: function(errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+			e.preventDefault();
+			var programId=$('#programId').val();			
+			if(programId!=""){
+				var maxSerialNumVal=maxSerialNum + 1;
+				$('#maxSessListVal3').val(maxSerialNumVal);
+				if(maxSerialNum==0){
+					$(".divAddition3").append('<div class="additionList3"><table id="dataaddtables3" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
+				}
+				if(additional_date!=''){
+					$('#dataaddtables3').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate3[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot3'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot3[]" id="timeslot3'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot3[]" id="act_timeslot3'+maxSerialNumVal+'" value=""/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+					$('#additionalDayCal3').val('');
+					$('#timeSlot3').val('');
+				}
+			}
+		}	
+	});
+});
+//Ajax delete the program cycle exception function 
+function deleteAddProgCycle($sessionId, $serialId){
+	if(confirm("Are you sure you want to delete the Additional Date?")) {
+		if($sessionId == 0){
+			$('#'+$serialId).closest('tr').remove();
+			$('.green, .red').hide();
+		}else{
+			$.ajax({
+					type: "POST",
+					url: "ajax_common.php",
+					data: {
+						'id': $sessionId,
+						'codeBlock': 'deleteAddProgCycle',
+					},
+					success: function($succ){
+						if($succ==1){
+							$('#'+$sessionId).closest('tr').remove();
+							$('.green, .red').hide();
+						}else{
+							alert("Cannot delete the selected row.");
+							$('.green, .red').hide();
+						}
+					}
+			});
+		}
+	}
     return false;
 }

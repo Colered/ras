@@ -9,8 +9,6 @@ class Programs extends Base {
      	$txtPrgmName = Base::cleanText($_POST['txtPrgmName']);
      	$txtCompanyName = Base::cleanText($_POST['txtCompanyName']);
 		$slctPrgmType = $_POST['slctPrgmType'];
-		$prog_from_date = date("Y-m-d h:i:s", strtotime($_POST['prog_from_date']));
-		$prog_to_date = date("Y-m-d h:i:s", strtotime($_POST['prog_to_date']));
 		$slctNumcycle = trim($_POST['slctNumcycle']);
 		$slctUnit = implode(',',$_POST['slctUnit']);
 
@@ -22,7 +20,7 @@ class Programs extends Base {
 			$_SESSION['error_msg'] = $message;
 			return 0;
 		}
-		$sql = "INSERT INTO program (program_name,unit,company, program_type, start_date, end_date , date_add) VALUES ('".$txtPrgmName."','".$slctUnit."','".$txtCompanyName."', '".$slctPrgmType."', '".$prog_from_date."', '".$prog_to_date."', NOW())";
+		$sql = "INSERT INTO program (program_name,unit,company, program_type, date_add) VALUES ('".$txtPrgmName."','".$slctUnit."','".$txtCompanyName."', '".$slctPrgmType."', NOW())";
 		$rel = $this->conn->query($sql);
 		$last_ins_id = $this->conn->insert_id;
 		if(!$rel){
@@ -32,10 +30,7 @@ class Programs extends Base {
 			//INSERT PROGRAM YEARS  DATA
 			for($j=1; $j<=$slctPrgmType; $j++){
 				$progName = $txtPrgmName.'-'.$j;
-				$start_year = date("Y", strtotime($prog_from_date));
-				$start_year = $start_year + ($j-1);
-				$end_year = $start_year + 1;
-				$sql = "INSERT INTO program_years (program_id, name, start_year, end_year) VALUES ('".$last_ins_id."', '".$progName."', '".$start_year."', '".$end_year."')";
+				$sql = "INSERT INTO program_years (program_id, name) VALUES ('".$last_ins_id."', '".$progName."')";
 				$rel = $this->conn->query($sql);
 			}
 			//END HERE
@@ -53,8 +48,6 @@ class Programs extends Base {
 		$txtPrgmName = Base::cleanText($_POST['txtPrgmName']);
      	$txtCompanyName = Base::cleanText($_POST['txtCompanyName']);
 		$slctPrgmType = $_POST['slctPrgmType'];
-		$prog_from_date = date("Y-m-d h:i:s", strtotime($_POST['prog_from_date']));
-		$prog_to_date = date("Y-m-d h:i:s", strtotime($_POST['prog_to_date']));
 		$slctUnit = implode(',',$_POST['slctUnit']);
 
 		$result =  $this->conn->query("SELECT program_name FROM program WHERE program_name='".$txtPrgmName."' AND id != '".$edit_id."'");
@@ -71,8 +64,6 @@ class Programs extends Base {
 						   unit = '".$slctUnit."',
 						   company = '".$txtCompanyName."',
 						   program_type = '".$slctPrgmType."',
-						   start_date = '".$prog_from_date."',
-						   end_date = '".$prog_to_date."',
 						   date_update = now() WHERE id=$edit_id";
 			$rel = $this->conn->query($sql);
 			if(!$rel){
@@ -85,14 +76,9 @@ class Programs extends Base {
 			  $z = 1;
 			  while($row = $result->fetch_assoc()){
 					$progName = $txtPrgmName.'-'.$z;
-					$start_year = date("Y", strtotime($prog_from_date));
-					$start_year = $start_year + ($z-1);
-					$end_year = $start_year + 1;
-
-                    $sql = "UPDATE program_years SET
-				  						   name = '".$progName."',
-				  						   start_year = '".$start_year."',
-				  						   end_year = '".$end_year."' WHERE id='".$row['id']."'";
+					$sql = "UPDATE program_years SET
+				  						   name = '".$progName."'
+				  						   WHERE id='".$row['id']."'";
 
 			        $rel = $this->conn->query($sql);
 			        $z++;
@@ -113,11 +99,7 @@ class Programs extends Base {
 			  }else if($slctPrgmType > ($z-1)){
 			     for($j=$z; $j<=$slctPrgmType; $j++){
 					$progName = $txtPrgmName.'-'.$j;
-					$start_year = date("Y", strtotime($prog_from_date));
-					$start_year = $start_year + ($j-1);
-					$end_year = $start_year + 1;
-
-					$sql = "INSERT INTO program_years (program_id, name, start_year, end_year) VALUES ('".$edit_id."', '".$progName."', '".$start_year."', '".$end_year."')";
+					$sql = "INSERT INTO program_years (program_id, name) VALUES ('".$edit_id."', '".$progName."')";
 					$rel = $this->conn->query($sql);
 				 }
 			  }
@@ -326,6 +308,7 @@ class Programs extends Base {
         $preNumCycle = ($_POST['preNumCycle'] > 0) ? $_POST['preNumCycle'] : 0;
         if($edit_id==$slctProgram_id)
         {
+			//echo $slctNumcycle;print"<pre>";print_r($_POST);print"</pre>";die("1");
 			if($slctNumcycle==$preNumCycle){//echo $slctNumcycle;print"<pre>";print_r($_POST);print"</pre>";die("1");
 				for($i=1; $i<=$slctNumcycle; $i++){
 				   $cycle_edit_id = $_POST['preCycleId'.$i];
@@ -345,6 +328,7 @@ class Programs extends Base {
 						$rel = $this->conn->query($sql);
 					   //add program exception
 					   $this->addProgramException($slctProgram_id,$i);
+					    $this->addProgramAddition($slctProgram_id,$i);
 					 }else{
 						 $sql = "update cycle set
 								 no_of_cycle='".$slctNumcycle."',
@@ -357,6 +341,7 @@ class Programs extends Base {
 						$rel = $this->conn->query($sql);
 					   //add program exception
 					   $this->addProgramException($slctProgram_id,$i);
+					   $this->addProgramAddition($slctProgram_id,$i);
 					 }
 
 				}
@@ -381,6 +366,7 @@ class Programs extends Base {
 							$rel = $this->conn->query($sql);
 						   //add program exception
 						   $this->addProgramException($slctProgram_id,$j);
+						   $this->addProgramAddition($slctProgram_id,$j);
 						 }else{
 							 $sql = "update cycle set
 									 no_of_cycle='".$slctNumcycle."',
@@ -393,6 +379,7 @@ class Programs extends Base {
 							$rel = $this->conn->query($sql);
 						   //add program exception
 						   $this->addProgramException($slctProgram_id,$j);
+						   $this->addProgramAddition($slctProgram_id,$j);
 						 }
 					}else{
 						 $cycle_edit_id = $_POST['preCycleId'.$j];
@@ -431,6 +418,7 @@ class Programs extends Base {
 								$rel = $this->conn->query($sql);
 							   //add program exception
 							   $this->addProgramException($slctProgram_id,$i);
+							   $this->addProgramAddition($slctProgram_id,$i);
 							 }else{
 								 $sql = "update cycle set
 										 no_of_cycle='".$slctNumcycle."',
@@ -443,6 +431,7 @@ class Programs extends Base {
 								$rel = $this->conn->query($sql);
 							   //add program exception
 							   $this->addProgramException($slctProgram_id,$i);
+							   $this->addProgramAddition($slctProgram_id,$i);
 							 }
 					 }else{
 						$start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
@@ -460,6 +449,7 @@ class Programs extends Base {
 						 }
 						 //add program exception
 						 $this->addProgramException($slctProgram_id,$i);
+						 $this->addProgramAddition($slctProgram_id,$i);
 					 }
 
 				 }//die;
@@ -511,6 +501,42 @@ class Programs extends Base {
 		$html .='</tbody></table></div>';
 		echo $html;
     }
+	//function to add row of the program additional date
+    public function getProgAddition($py_id,$cycle_num)
+    {
+		$x=0;
+		$html='';
+		$query="select * from program_cycle_additional_day_time where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
+		$result= $this->conn->query($query);
+		while($data = $result->fetch_assoc()){
+			$x++;
+			if($x==1){
+				$html .='<div class="additionList'.$cycle_num.'">
+					<table id="dataaddtables'.$cycle_num.'" class="additionTbl">
+					  <thead>
+					   <tr>
+						<th>Sr. No.</th>
+						<th>Additional Date</th>
+						<th>Timeslots</th>
+						<th>Remove</th>
+					   </tr>
+					  </thead>
+					  <tbody>';
+			 }
+			$html .='<tr>
+					<td>'.$x.'</td>
+					<td>'.date('d-m-Y',strtotime($data['additional_date'])).'</td>
+					<td style="display:none"><input type="hidden" name="additionDate'.$cycle_num.'[]" id="additionDate'.$x.'" value="'.$data['additional_date'].'" />
+					<input type="hidden" name="program_cycleRowId'.$cycle_num.'[]" id="program_cycleRowId'.$x.'"  value="'.$data['id'].'"/></td>
+					<td>'.$data['timeslot_id'].'</td>
+					<td style="display:none"><input type="hidden" name="time_slot'.$cycle_num.'[]" id="time_slot'.$x.'" value="'.$data['timeslot_id'].'" />
+					<input type="hidden" name="actual_time_slot'.$cycle_num.'[]" id="actual_time_slot'.$x.'" value="'.$data['actual_timeslot_id'].'" /></td>
+					<td id="'.$data['id'].'"><a class="remove_field" onclick="deleteAddProgCycle('.$data['id'].', 0);">Remove</a></td></tr>';
+		}
+		$html .='<input type="hidden" name="maxSessListVal'.$cycle_num.'" id="maxSessListVal'.$cycle_num.'"  value="'.$x.'"/>';
+		$html .='</tbody></table></div>';
+		echo $html;
+    }
 
     //function to add program exception
     public function addProgramException($py_id,$cycle_no)
@@ -518,11 +544,28 @@ class Programs extends Base {
 		//delete old exceptions
 		$query="delete from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_no."'";
 		$qry = $this->conn->query($query);
+		//print"<pre>";print_r($_POST['exceptionDate'.$cycle_no]);
 		//add new exceptions
 		foreach($_POST['exceptionDate'.$cycle_no] as $exceptionDate){
 		    $exceptionDate = date("Y-m-d",strtotime($exceptionDate));
 			$currentDateTime = date("Y-m-d H:i:s");
-			$result =$this->conn->query("INSERT INTO program_cycle_exception(program_year_id,cycle_id,exception_date,date_add,date_update) VALUES ('".$py_id."','".$cycle_no."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');");
+			$result =$this->conn->query("INSERT INTO program_cycle_exception(program_year_id,cycle_id,exception_date,date_add,date_update) VALUES ('".$py_id."','".$cycle_no."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');");			
+		}
+    }
+	//function to add program additional dates
+    public function addProgramAddition($py_id,$cycle_no)
+    {
+		//delete old exceptions
+		$query="delete from program_cycle_additional_day_time where program_year_id='".$py_id."' AND cycle_id='".$cycle_no."'";
+		$qry = $this->conn->query($query);
+		//add new exceptions
+		for($k=0; $k<count($_POST['additionDate'.$cycle_no]); $k++){
+		    //$additionDate = date("Y-m-d",strtotime($additionDate));
+			$additionDate = date("Y-m-d",strtotime($_POST['additionDate'.$cycle_no][$k]));
+			$timeslot_id = $_POST['time_slot'.$cycle_no][$k];
+			$actual_timeslot_id = $_POST['actual_time_slot'.$cycle_no][$k];
+			$currentDateTime = date("Y-m-d H:i:s");
+			$result =$this->conn->query("INSERT INTO program_cycle_additional_day_time(program_year_id,cycle_id,additional_date,timeslot_id,actual_timeslot_id,date_add,date_update) VALUES ('".$py_id."','".$cycle_no."', '".$additionDate."', '".$timeslot_id."','".$actual_timeslot_id."','".$currentDateTime."', '".$currentDateTime."');");
 		}
     }
     //function to get program activity cycle number
@@ -611,7 +654,7 @@ class Programs extends Base {
 			  </select>
 			</div>';
 	}
-	public function getTimeslotOptions($params='')
+	public function getTimeslotOptions($params = array())
 	{
 	  	//echo $params;
 	   $objTS = new Timeslot();

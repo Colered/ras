@@ -19,8 +19,8 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 $program_name = isset($_GET['edit']) ? $row['program_name'] : (isset($_POST['txtPrgmName'])? $_POST['txtPrgmName']:'');
 $company_name = isset($_GET['edit']) ? $row['company'] : (isset($_POST['txtCompanyName'])? $_POST['txtCompanyName']:'');
 $program_type = isset($_GET['edit']) ? $row['program_type'] : (isset($_POST['slctPrgmType'])? $_POST['slctPrgmType']:'');
-$program_from_date = isset($_GET['edit']) ? $row['start_date'] : (isset($_POST['prog_from_date'])? $_POST['prog_from_date']:'');
-$program_to_date = isset($_GET['edit']) ? $row['end_date'] : (isset($_POST['prog_to_date'])? $_POST['prog_to_date']:'');
+//$program_from_date = isset($_GET['edit']) ? $row['start_date'] : (isset($_POST['prog_from_date'])? $_POST['prog_from_date']:'');
+//$program_to_date = isset($_GET['edit']) ? $row['end_date'] : (isset($_POST['prog_to_date'])? $_POST['prog_to_date']:'');
 
 $unitArr1 = isset($_GET['edit']) ? (isset($unitArr[0])? $unitArr[0]: array()) : (!empty($_POST['slctUnit']) ? $_POST['slctUnit'] : array());
 

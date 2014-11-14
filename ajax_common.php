@@ -84,6 +84,9 @@ switch ($codeBlock) {
 			//delete associated program cycle exceptions
 			$del_pgm_cycle_exp_query="delete from program_cycle_exception where program_year_id in(select id from program_years where program_id='".$id."')";
 		    mysqli_query($db, $del_pgm_cycle_exp_query);
+			//delete associated program cycle additional day and time
+			$del_pgm_cycle_add_date="delete from program_cycle_additional_day_time where program_year_id in(select id from program_years where program_id='".$id."')";
+		    mysqli_query($db, $del_pgm_cycle_add_date);
 		    //delete associated groups
 			$del_pg_query="delete from program_group where program_year_id in(select id from program_years where program_id='".$id."')";
 			mysqli_query($db, $del_pg_query);
@@ -1212,6 +1215,32 @@ switch ($codeBlock) {
 			}
 		}
     	break;
+		case "getTimeslots":
+			if(isset($_POST['time_slot']) && $_POST['time_slot']!="")
+			{
+				foreach($_POST['time_slot'] as $ts_id)
+				{
+					$query = "select timeslot_range from timeslot where id = '".$ts_id."'";
+					$q_res = mysqli_query($db, $query);
+					$data= mysqli_fetch_array($q_res);
+					$timeslots[] = $data['timeslot_range'];					
+				}
+				$ts_values = implode(",",$timeslots);
+				$ts_id = implode(",",$_POST['time_slot']);
+				echo $ts_values."_".$ts_id;die;			
+			}
+			break;
+			case "deleteAddProgCycle":
+			if(isset($_POST['id'])){
+				$id = $_POST['id'];
+				$del_ExcepTeachAvail_query="delete from program_cycle_additional_day_time where id='".$id."'";
+				$qry = mysqli_query($db, $del_ExcepTeachAvail_query);
+				if(mysqli_affected_rows($db)>0)
+					echo 1;
+				else
+					echo 0;
+			}
+			break;
 		
 }
 ?>

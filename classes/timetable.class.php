@@ -57,8 +57,9 @@ class Timetable extends Base {
 	public function generateTimetable($date, $end_date, $from_time)
 	{	
 		$start_date = $date;
-		$programs = $this->search_programs($start_date,$from_time,$end_date);
-		//print"<pre>";print_r($programs);die("here");
+		//function call to search all programs with their dates and times, which occur in the timetable range
+		$programs = $this->search_programs($start_date,$from_time,$end_date);		
+		//sort the programs array by date
 		$new_programs = array();
 		foreach($programs as $newkey => &$values)
 		{
@@ -77,14 +78,15 @@ class Timetable extends Base {
 		$i=0;
 		foreach($new_programs as $key=>$value)
 		{				
-			$program_id = $key;
-								
+			$program_id = $key;								
 			foreach($value as $k=>$v)
 			{
 				$date = $k;
+				//check if the date is a holiday. If not proceed further
 				if(!$this->checkHoliday($date))
 				{
-					$end_time = '';				
+					$end_time = '';	
+					//search all the reserved activities for that date
 					foreach($v as $start_id)
 					{
 						$timeslots = array();
@@ -94,7 +96,7 @@ class Timetable extends Base {
 						$start_time =  date('h:i A',strtotime($start_time));
 						if($start_time >= $end_time)
 						{
-							$reserved_timeslots = array();
+							$reserved_timleslots = array();
 							$end_time = date("h:i A", strtotime($start_time." + 15 minutes"));
 							$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id from teacher_activity ta 
 							inner join subject_session s on s.id = ta.session_id
@@ -106,7 +108,7 @@ class Timetable extends Base {
 							while($result_reserv_act = mysqli_fetch_array($sql_reserv_act))
 							{							
 								$end_time = date("h:i A", strtotime($start_time." + ".$result_reserv_act['duration']." minutes"));
-								//$min_order_id = $this->getMinimumOrderBySubject($result_reserv_act['subject_id']);
+								//Here will check if the activity is not already allocated and all the sessions with lesser order number are allocated, we will proceed with this activity
 								if(!$this->search_array($result_reserv_act['name'],$reserved_array)) 
 								{									
 									$order_no_array = $this->getSubjectsWithLessOrder($result_reserv_act['subject_id'],$result_reserv_act['order_number']);
@@ -152,16 +154,14 @@ class Timetable extends Base {
 							}
 						}
 					}
-					
+					//search the free activities for the remaining timeslots for the same date
 					$total_timeslots = array();
 					foreach($v as $start_id)
 					{
 						$total_timeslots[] = $start_id;
-					}
-					
+					}					
 					$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);	
-					$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
-					
+					$unreserved_times = $this->getTimeSlots($unreserved_timeslots);					
 					foreach($unreserved_times as $un_tsid)
 					{							
 						$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,s.order_number,s.duration 
@@ -182,20 +182,23 @@ class Timetable extends Base {
 							$ts_cnt = count(array_intersect($unreserved_timeslots, $time));								
 							if($ts_cnt == count($time))
 							{
-								
+								//first we will check if the teacher of the free activity is available at that time
 								if($this->checkTeacherAvailability($result_free_act['teacher_id'],$date,$all_ts))
 								{
-									
+									//Then we will check if the teacher is not busy with any other activity at that time
 									if(!$this->isTeacherReserved($date,$start_time,$end_time,$result_free_act['teacher_id'],$reserved_teachers))
 									{
+										//Here we will get the room of a subject that lies with in that week range
 										$room_id = $this->getRoomBySubject($result_free_act['subject_id'],$date);
 										if($room_id)
 										{
+											//If room found,we will check its availability at that time
 											if($this->checkRoomAvailability($room_id,$date,$all_ts))
 											{
+												//If available,we will check if room is not busy with any other activity
 												if(!$this->isRoomReserved($date,$start_time,$end_time,$room_id,$reserved_rooms))
 												{
-													//$min_order_id = $this->getMinimumOrderBySubject($result_free_act['subject_id']);
+													//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
 													if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
 													{
 														$order_no_array = $this->getSubjectsWithLessOrder($result_free_act['subject_id'],$result_free_act['order_number']);
@@ -239,12 +242,14 @@ class Timetable extends Base {
 											}
 										}
 										else
-										{
+										{ //if no room we get, then we will search for rooms for that time
 											$rooms = $this->search_room($date,$all_ts);
 											foreach($rooms as $room)
 											{
+												//Here, will check if the room is not busy with any other activity
 												if(!$this->isRoomReserved($date,$start_time,$end_time,$room['id'],$reserved_rooms))
 												{
+													//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
 													if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
 													{
 														$order_no_array = $this->getSubjectsWithLessOrder($result_free_act['subject_id'],$result_free_act['order_number']);
@@ -298,8 +303,8 @@ class Timetable extends Base {
 				}
 			}
 			$i++;
-		}	
-		//print"<pre>";print_r($reserved_array);die;
+		}		
+		//If array is empty,means no activity has been allocated. We will shoe the message to user
 		if(empty($reserved_array))
 		{
 			$err['system_error'] = 'System could not generate the timetable. Please check your data first';
@@ -307,6 +312,8 @@ class Timetable extends Base {
 		}			
 		return $reserved_array;		
 	}
+
+	//function to check if the teacher is not allocated to any other activity at the same date and same time
 	public function isTeacherReserved($date,$start_time,$end_time,$teacher_id,$reserved_teachers = array())
 	{
 		if(array_key_exists($date, $reserved_teachers))
@@ -331,6 +338,8 @@ class Timetable extends Base {
 			}
 		}
 	}
+
+	//function to check if the room is not allocated to any other activity at the same date and same time
 	public function isRoomReserved($date,$start_time,$end_time,$room_id,$reserved_rooms = array())
 	{
 		if(array_key_exists($date, $reserved_rooms))
@@ -355,6 +364,8 @@ class Timetable extends Base {
 			}
 		}
 	}
+
+	//function to add the timetable basic details in database
 	public function addTimetable($name, $start_date, $end_date)
 	{
 		$sql_insert = "insert into timetable set
@@ -371,6 +382,8 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
+
+	//function to add the full timetable details in database
 	public function addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd)
 	{
 		$sql_insert = "insert into timetable_detail set
@@ -393,6 +406,8 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
+
+	//function to add the activities in calendar table so that they show up in calendar
 	public function addWebCalEntry($date, $cal_time, $name, $room_name, $description, $duration, $teacher_id, $subject_id, $room_id, $program_year_id)
 	{
 		$sql_insert_cal = "insert into webcal_entry set
@@ -421,6 +436,8 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
+
+	//function to add the activities in calendar table so that they show up in calendar
 	public function addWebCalEntryUser($cal_id)
 	{
 		$sql_insert_cal_user = "insert into webcal_entry_user set
@@ -434,6 +451,8 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
+
+	//function to search a value in an array recursively
 	public function search_array($needle, $haystack)
 	{
 		 if(in_array($needle, $haystack)) {
@@ -445,6 +464,8 @@ class Timetable extends Base {
 		 }
 	   return false;
 	}
+
+	//function to check teacher availability at a particular date, day and timeslots
 	public function checkTeacherAvailability($teacher_id,$date,$tsIdsAll)
 	{
 		//check if the selected date is not added as exception by the teacher while providing availability
@@ -468,6 +489,8 @@ class Timetable extends Base {
 			}			
 		}
 	}
+
+	//function to check room availability at a particular date, day and timeslots
 	public function checkRoomAvailability($room_id,$date,$tsIdsAll)
 	{
 		//check if the selected date is not added as exception in classroom availability
@@ -490,6 +513,8 @@ class Timetable extends Base {
 			}
 		}
 	}
+
+	//function to search room on a particular date and timeslot
 	public function search_room($date,$slot)
 	{
 		$rooms = array();
@@ -524,112 +549,113 @@ class Timetable extends Base {
 	public function search_programs($start_date,$from_time,$end_date)
 	{
 		$final_pgms = array();
-		$last_day = 5;
-		$sql_pgm = $this->conn->query("SELECT distinct py.id as program_id
-														FROM program_years py
-														INNER JOIN program p on p.id = py.program_id
-														WHERE DATE_FORMAT(start_date,'%Y-%m-%d') >= '".$start_date."' and start_year = '".$from_time."' and DATE_FORMAT(start_date,'%Y-%m-%d') <= '".$end_date."'");	
-		$pgm_cnt = mysqli_num_rows($sql_pgm);
-		if($pgm_cnt > 0)
+		$last_day = 5;	
+		$sql_pgm_cycle = $this->conn->query("select * from cycle where start_week >= '".$start_date."' and start_week <= '".$end_date."'");
+		$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
+		if($pgm_cycle_cnt > 0)
 		{
-			while($result_pgm = mysqli_fetch_array($sql_pgm))
+			while($result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle))
 			{
-				$sql_pgm_cycle = $this->conn->query("select * from cycle where program_year_id = '".$result_pgm['program_id']."' and start_week >= '".$start_date."' and start_week <= '".$end_date."'");
-				$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
-				if($pgm_cycle_cnt > 0)
+				if($result_pgm_cycle['end_week'] > $end_date)
 				{
-					while($result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle))
+					$end_week = $end_date;
+				}else{
+					$end_week = $result_pgm_cycle['end_week'];
+					}
+				if($result_pgm_cycle['occurrence'] == '1w')
+				{	
+					$week1 = unserialize($result_pgm_cycle['week1']);
+					foreach($week1 as $key=> $value)
 					{
-						if($result_pgm_cycle['end_week'] > $end_date)
+						$day = $key + 1;
+						$dateArr = $this->getDateForSpecificDayBetweenDates($result_pgm_cycle['start_week'],$end_week,$day);	
+						foreach($dateArr as $val)
 						{
-							$end_week = $end_date;
-						}else{
-							$end_week = $result_pgm_cycle['end_week'];
+							$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
+							if(mysqli_num_rows($sql_pgm_exp) == 0)
+							{
+								$final_pgms[$result_pgm_cycle['program_year_id']][$val] = $value;
 							}
-						if($result_pgm_cycle['occurrence'] == '1w')
-						{	
+						}								
+					}													
+				}else if($result_pgm_cycle['occurrence'] == '2w'){
+					$weeks = $this->countWeeksBetweenDates($result_pgm_cycle['start_week'],$end_week);
+					$start_week = $result_pgm_cycle['start_week'];
+					for($i=0; $i < $weeks; $i++)
+					{
+						if($i%2 == 0)
+						{
+							$day = date("w", strtotime($start_week));
+							$day = $day-1;
+							$rem_days = $last_day-$day;
+							$date = new DateTime($start_week);
+							$date->modify('+'.$rem_days.' day');
+							$end_week = $date->format('Y-m-d');
+							if($end_week > $end_date){
+								$end_week = $end_date;
+							}
 							$week1 = unserialize($result_pgm_cycle['week1']);
 							foreach($week1 as $key=> $value)
 							{
-								$day = $key + 1;
-								$dateArr = $this->getDateForSpecificDayBetweenDates($result_pgm_cycle['start_week'],$end_week,$day);	
+								$day = $key + 1;										
+								$dateArr = $this->getDateForSpecificDayBetweenDates($start_week,$end_week,$day);
 								foreach($dateArr as $val)
 								{
-									$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm['program_id']."'");
+									$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
 									if(mysqli_num_rows($sql_pgm_exp) == 0)
 									{
-										$final_pgms[$result_pgm['program_id']][$val] = $value;
+										$final_pgms[$result_pgm_cycle['program_year_id']][$val] = $value;
 									}
-								}								
-							}							
-						}else if($result_pgm_cycle['occurrence'] == '2w'){
-							$weeks = $this->countWeeksBetweenDates($result_pgm_cycle['start_week'],$end_week);
-							$start_week = $result_pgm_cycle['start_week'];
-							for($i=0; $i < $weeks; $i++)
+								}														
+							}
+							$date = new DateTime($end_week);
+							$date->modify('+2 day');
+							$start_week = $date->format('Y-m-d');
+						}else{
+							if(count(unserialize($result_pgm_cycle['week2'])) > 0)
 							{
-								if($i%2 == 0)
+								$day = date("w", strtotime($start_week));
+								$day = $day-1;
+								$rem_days = $last_day-$day;
+								$date = new DateTime($start_week);
+								$date->modify('+'.$rem_days.' day');
+								$end_week = $date->format('Y-m-d');	
+								$week2 = unserialize($result_pgm_cycle['week2']);
+								foreach($week2 as $key=> $value)
 								{
-									$day = date("w", strtotime($start_week));
-									$day = $day-1;
-									$rem_days = $last_day-$day;
-									$date = new DateTime($start_week);
-									$date->modify('+'.$rem_days.' day');
-									$end_week = $date->format('Y-m-d');
-									if($end_week > $end_date){
-										$end_week = $end_date;
-									}
-									$week1 = unserialize($result_pgm_cycle['week1']);
-									foreach($week1 as $key=> $value)
+									$day = $key + 1;
+									$dateArr = $this->getDateForSpecificDayBetweenDates($start_week,$end_week,$day);
+									foreach($dateArr as $val)
 									{
-										$day = $key + 1;										
-										$dateArr = $this->getDateForSpecificDayBetweenDates($start_week,$end_week,$day);
-										foreach($dateArr as $val)
+										$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
+										if(mysqli_num_rows($sql_pgm_exp) == 0)
 										{
-											$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm['program_id']."'");
-											if(mysqli_num_rows($sql_pgm_exp) == 0)
-											{
-												$final_pgms[$result_pgm['program_id']][$val] = $value;
-											}
-										}														
-									}
-									$date = new DateTime($end_week);
-									$date->modify('+2 day');
-									$start_week = $date->format('Y-m-d');
-								}else{
-									if(count(unserialize($result_pgm_cycle['week2'])) > 0)
-									{
-										$day = date("w", strtotime($start_week));
-										$day = $day-1;
-										$rem_days = $last_day-$day;
-										$date = new DateTime($start_week);
-										$date->modify('+'.$rem_days.' day');
-										$end_week = $date->format('Y-m-d');	
-										$week2 = unserialize($result_pgm_cycle['week2']);
-										foreach($week2 as $key=> $value)
-										{
-											$day = $key + 1;
-											$dateArr = $this->getDateForSpecificDayBetweenDates($start_week,$end_week,$day);
-											foreach($dateArr as $val)
-											{
-												$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm['program_id']."'");
-												if(mysqli_num_rows($sql_pgm_exp) == 0)
-												{
-													$final_pgms[$result_pgm['program_id']][$val] = $value;
-												}
-											}														
+											$final_pgms[$result_pgm_cycle['program_year_id']][$val] = $value;
 										}
-									}
-									$date = new DateTime($end_week);
-									$date->modify('+2 day');
-									$start_week = $date->format('Y-m-d');
+									}														
 								}
-							}							
+							}
+							$date = new DateTime($end_week);
+							$date->modify('+2 day');
+							$start_week = $date->format('Y-m-d');
 						}
-					}					
+					}							
 				}
-			}
-		}	
-	return $final_pgms;
+				$sql_pgm_add_date = $this->conn->query("select additional_date,actual_timeslot_id from program_cycle_additional_day_time where cycle_id = '".$result_pgm_cycle['id']."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
+				while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
+				{
+					$ts_array = explode(",",$result_pgm_add_date['actual_timeslot_id']);
+					if(array_key_exists($result_pgm_add_date['additional_date'],$final_pgms[$result_pgm_cycle['program_year_id']]))
+					{
+						$new_arr = array_unique(array_merge($final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_add_date['additional_date']],$ts_array));		
+						$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_add_date['additional_date']] = $new_arr;
+					}else{
+						$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_add_date['additional_date']] = $ts_array;
+					}
+				}	
+			}					
+		}		
+		return $final_pgms;
 	}
 
 	//function will check the number of weeks between two dates
@@ -677,6 +703,7 @@ class Timetable extends Base {
 		}
 		return($dateArr);
 	}
+
 	public function deleteData()
 	{
 		$sql_delete_tt = $this->conn->query("DELETE FROM timetable");
@@ -684,6 +711,8 @@ class Timetable extends Base {
 		$sql_delete_cal = $this->conn->query("DELETE FROM webcal_entry");
 		$sql_delete_cal_user = $this->conn->query("DELETE FROM webcal_entry_user");
 	}
+
+	//function to check the timetable name,if it already exists in database
 	public function checkName($name)
 	{
 		$sql_select = $this->conn->query("select id from timetable where timetable_name = '".$name."'");
@@ -695,6 +724,8 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
+
+	//function to check if there is a holiday on a particular date
 	public function checkHoliday($date)
 	{
 		$sql_select = $this->conn->query("select id from holidays where holiday_date = '".$date."'");
@@ -707,12 +738,16 @@ class Timetable extends Base {
 		}
 
 	}
+
+	//function to get room name by id
 	public function getRoomName($room_id)
 	{
 		$sql_room_name = $this->conn->query("select room_name from room where id = '".$room_id."'");
 		$rooms = mysqli_fetch_array($sql_room_name);
 		return $rooms['room_name'];
 	}
+
+	//function to get room of a subject within a week range
 	public function getRoomBySubject($subject_id,$date)
 	{
 		$sql_select = $this->conn->query("select id,room_id,act_date from teacher_activity where subject_id = '".$subject_id."' and reserved_flag = 1");
@@ -735,6 +770,8 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
+
+	//function to get all sessions with lesser order than the current one
 	public function getSubjectsWithLessOrder($subject_id, $order_no)
 	{
 		//$order_no = array();
@@ -752,6 +789,8 @@ class Timetable extends Base {
 		}
 		return $order_no_arr;
 	}
+
+	//function to get the timeslot value by id
 	public function getTimeSlots($ts_array)
 	{
 		$tt_array = array();

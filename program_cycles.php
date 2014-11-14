@@ -3,6 +3,7 @@ include('header.php');
 $objP = new Programs();
 $objTS = new Timeslot();
 $programId = '';
+
 //get the list of all available timeslots
 $options = "";
 $rel_prog = $objP->getProgramListYearWise();
@@ -69,9 +70,7 @@ $(document).ready(function() {
 			  <input type="hidden" name="form_action" value="add_edit_cycles" />
 			  <?php if(isset($_GET['edit'])){?>
 			  	<input type="hidden" name="programId" value="<?php echo $_GET['edit'];?>" />
-				<input type="hidden" name="program_start_date" id="program_start_date" value="<?php echo date('d-m-Y',strtotime($row1['start_date']));?>" />
-				<input type="hidden" name="program_end_date" id="program_end_date" value="<?php echo date('d-m-Y',strtotime($row1['end_date']));?>" />
-			  	<input type="hidden" name="preNumCycle" value="<?php echo $no_of_cycles;?>" />
+				<input type="hidden" name="preNumCycle" value="<?php echo $no_of_cycles;?>" />
 			  	<?php
 			  	   $ct = 0;
 			  	   foreach($cycleIdsArr as $val){
@@ -151,37 +150,65 @@ $(document).ready(function() {
 					    <div class="tmSlotc1w1">
 						<input type="checkbox" id="c1-w1-0" value="Mon1C1W1" class="days" <?php if(isset($week1[0][0])) echo 'checked';?>/><span class="dayName"> Mon </span>
 						<select id="ts-avail-c1-w1-0" name="cycle1[week1][0][]" class="slctTs required" multiple="multiple">
-							<?php $options = $objP->getTimeslotOptions($week1[0][0]);echo $options;?>
+							<?php if(isset($week1[0][0]))
+									$arr = $week1[0][0];
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w1">
                         <input type="checkbox" id="c1-w1-1" value="Tue1C1W1" class="days" <?php if(isset($week1[0][1])) echo 'checked';?>/><span class="dayName"> Tue </span>
 						<select id="ts-avail-c1-w1-1" name="cycle1[week1][1][]" class="slctTs required" multiple="multiple">
-                          <?php $options = $objP->getTimeslotOptions($week1[0][1]);echo $options;?>
+                          <?php if(isset($week1[0][1]))
+						        $arr = $week1[0][1]; 
+								else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w1">
                         <input type="checkbox" id="c1-w1-2"  value="Wed1C1W1" class="days" <?php if(isset($week1[0][2])) echo 'checked';?>/><span class="dayName"> Wed </span>
 						 <select id="ts-avail-c1-w1-2" name="cycle1[week1][2][]" class="slctTs required" multiple="multiple">
-                          <?php $options = $objP->getTimeslotOptions($week1[0][2]);echo $options;?>
+                          <?php if(isset($week1[0][2]))
+									$arr = $week1[0][2];
+								else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w1">
                         <input type="checkbox" id="c1-w1-3"  value="Thu1C1W1" class="days" <?php if(isset($week1[0][3])) echo 'checked';?>/><span class="dayName"> Thu </span>
 						 <select id="ts-avail-c1-w1-3" name="cycle1[week1][3][]" class="slctTs required" multiple="multiple">
-                           <?php $options = $objP->getTimeslotOptions($week1[0][3]);echo $options;?>
+                           <?php if(isset($week1[0][3]))
+									$arr = $week1[0][3];
+								 else
+									$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w1">
                         <input type="checkbox" id="c1-w1-4"  value="Fri1C1W1" class="days" <?php if(isset($week1[0][4])) echo 'checked';?>/><span class="dayName"> Fri </span>
 						 <select id="ts-avail-c1-w1-4" name="cycle1[week1][4][]" class="slctTs required" multiple="multiple">
-                           <?php $options = $objP->getTimeslotOptions($week1[0][4]);echo $options;?>
+                          <?php if(isset($week1[0][4]))
+									$arr = $week1[0][4];
+								else
+									$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w1">
                         <input type="checkbox" id="c1-w1-5" value="Sat1C1W1" class="days" <?php if(isset($week1[0][5])) echo 'checked';?>/><span class="dayName"> Sat </span>
 						 <select id="ts-avail-c1-w1-5" name="cycle1[week1][5][]" class="slctTs required" multiple="multiple">
-                        <?php $options = $objP->getTimeslotOptions($week1[0][5]);echo $options;?>
+                         <?php if(isset($week1[0][5]))
+									$arr = $week1[0][5];
+								else
+									$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 					  </div>
@@ -195,37 +222,67 @@ $(document).ready(function() {
 					    <div class="tmSlotc1w2">
                         <input type="checkbox" id="c1-w2-0" value="Mon2C1W2" class="days" <?php if(isset($week2[0][0])) echo 'checked';?>/><span class="dayName"> Mon </span>
 						<select id="ts-avail-c1-w2-0" name="cycle1[week2][0][]" class="slctTs required" multiple="multiple">
-							<?php $options = $objP->getTimeslotOptions($week2[0][0]);echo $options;?>
+							<?php if(isset($week2[0][0]))
+									$arr = $week2[0][0];
+								  else
+									$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w2">
                         <input type="checkbox" id="c1-w2-1" value="Tue2C1W2" class="days" <?php if(isset($week2[0][1])) echo 'checked';?>/><span class="dayName"> Tue </span>
 						<select id="ts-avail-c1-w2-1" name="cycle1[week2][1][]" class="slctTs required" multiple="multiple">
-                         <?php $options = $objP->getTimeslotOptions($week2[0][1]);echo $options;?>
+                         <?php if(isset($week2[0][1]))
+									$arr = $week2[0][1];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w2">
                         <input type="checkbox" id="c1-w2-2" value="Wed2C1W2" class="days" <?php if(isset($week2[0][2])) echo 'checked';?>/><span class="dayName"> Wed </span>
 						 <select id="ts-avail-c1-w2-2" name="cycle1[week2][2][]" class="slctTs required" multiple="multiple">
-                         <?php $options = $objP->getTimeslotOptions($week2[0][2]);echo $options;?>
+                         <?php if(isset($week2[0][2]))
+									$arr = $week2[0][2];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w2">
                         <input type="checkbox" id="c1-w2-3" value="Thu2C1W2" class="days" <?php if(isset($week2[0][3])) echo 'checked';?>/><span class="dayName"> Thu </span>
 						 <select id="ts-avail-c1-w2-3" name="cycle1[week2][3][]" class="slctTs required" multiple="multiple">
-                         <?php $options = $objP->getTimeslotOptions($week2[0][3]);echo $options;?>
+                         <?php if(isset($week2[0][3]))
+									$arr = $week2[0][3];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w2">
                         <input type="checkbox" id="c1-w2-4" value="Fri2C1W2" class="days" <?php if(isset($week2[0][4])) echo 'checked';?>/><span class="dayName"> Fri </span>
 						 <select id="ts-avail-c1-w2-4" name="cycle1[week2][4][]" class="slctTs required" multiple="multiple">
-                           <?php $options = $objP->getTimeslotOptions($week2[0][4]);echo $options;?>
+                           <?php if(isset($week2[0][4]))
+									$arr = $week2[0][4];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc1w2">
                         <input type="checkbox" id="c1-w2-5" value="Sat2C1W2" class="days" <?php if(isset($week2[0][5])) echo 'checked';?>/><span class="dayName"> Sat </span>
 						 <select id="ts-avail-c1-w2-5" name="cycle1[week2][5][]" class="slctTs required" multiple="multiple">
-                         <?php $options = $objP->getTimeslotOptions($week2[0][5]);echo $options;?>
+                          <?php if(isset($week2[0][5]))
+									$arr = $week2[0][5];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 					  </div>
@@ -249,11 +306,38 @@ $(document).ready(function() {
 					if($programId!=""){
                         $objP->getProgExceptions($programId,1);
 					 } ?>
+					
+					
+					<div class="clear"></div>
+					<!--add new additional day and time-->
+					<div class="clear"></div>
+						<div class="custtd_left">
+							<h2>Add Additional Day and Timeslot</h2>
+						</div>
+						<div class="txtfield">
+							<input type="text" size="14" id="additionalDayCal1" name="additionalDayCal1" readonly />
+						</div>
+						<div class="txtfield">
+						<select id="timeSlot1" name="additionalDayTS1[]" class="timeSlot1" multiple="multiple">
+							<?php $options = $objP->getTimeslotOptions();echo $options;?>
+                        </select>
+						</div>
+					<div class="addbtnAddition">
+						<input type="button" name="btnAddMore" class="additionalDayButt1" value="Add">
 					</div>
+					<div class="divAddition1">
+					<?php
+					if($programId!=""){
+                        $objP->getProgAddition($programId,1);
+					 } ?>
+					
 
 					<div class="clear"></div>
-                    <div class="clear"></div>
-
+					
+					<div class="clear"></div>
+					</div>
+					<!--End-->
+					
 					<div id="secondCycle" style="display:none;border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 						<div class="custtd_left">
 							<h2>2nd cycle<span class="redstar">*</span></h2>
@@ -288,37 +372,67 @@ $(document).ready(function() {
 							<div class="tmSlotc2w1">
 							<input type="checkbox" id="c2-w1-0" value="MonC2W1" class="days" <?php if(isset($week1[1][0])) echo 'checked';?>/><span class="dayName"> Mon </span>
 							<select id="ts-avail-c2-w1-0" name="cycle2[week1][0][]" class="slctTs required" multiple="multiple">
-								<?php $options = $objP->getTimeslotOptions($week1[1][0]);echo $options;?>
+								<?php if(isset($week1[1][0]))
+									$arr = $week1[1][0];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc2w1">
 							<input type="checkbox" id="c2-w1-1" value="TueC2W1" class="days"  <?php if(isset($week1[1][1])) echo 'checked';?>/><span class="dayName"> Tue </span>
 							<select id="ts-avail-c2-w1-1" name="cycle2[week1][1][]" class="slctTs required" multiple="multiple">
-							  <?php $options = $objP->getTimeslotOptions($week1[1][1]);echo $options;?>
+							  <?php if(isset($week1[1][1]))
+									$arr = $week1[1][1];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc2w1">
 							<input type="checkbox" id="c2-w1-2" value="WedC2W1" class="days"  <?php if(isset($week1[1][2])) echo 'checked';?>/><span class="dayName"> Wed </span>
 							 <select id="ts-avail-c2-w1-2" name="cycle2[week1][2][]" class="slctTs required" multiple="multiple">
-							 <?php $options = $objP->getTimeslotOptions($week1[1][2]);echo $options;?>
+							 <?php if(isset($week1[1][2]))
+									$arr = $week1[1][2];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc2w1">
 							<input type="checkbox" id="c2-w1-3" value="ThuC2W1" class="days"  <?php if(isset($week1[1][3])) echo 'checked';?>/><span class="dayName"> Thu </span>
 							 <select id="ts-avail-c2-w1-3" name="cycle2[week1][3][]" class="slctTs required" multiple="multiple">
-							   <?php $options = $objP->getTimeslotOptions($week1[1][3]);echo $options;?>
+							   <?php if(isset($week1[1][3]))
+									$arr = $week1[1][3];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc2w1">
 							<input type="checkbox" id="c2-w1-4" value="FriC2W1" class="days"  <?php if(isset($week1[1][4])) echo 'checked';?>/><span class="dayName"> Fri </span>
 							 <select id="ts-avail-c2-w1-4" name="cycle2[week1][4][]" class="slctTs required" multiple="multiple">
-							<?php $options = $objP->getTimeslotOptions($week1[1][4]);echo $options;?>
+							<?php if(isset($week1[1][4]))
+									$arr = $week1[1][4];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlot">
 							<input type="checkbox" id="c2-w1-5" value="SatC2W1" class="days"  <?php if(isset($week1[1][5])) echo 'checked';?>/><span class="dayName"> Sat </span>
 							 <select id="ts-avail-c2-w1-5" name="cycle2[week1][5][]" class="slctTs required" multiple="multiple">
-							<?php $options = $objP->getTimeslotOptions($week1[1][5]);echo $options;?>
+							<?php if(isset($week1[1][5]))
+									$arr = $week1[1][5];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 						  </div>
@@ -333,37 +447,67 @@ $(document).ready(function() {
 					    <div class="tmSlotc2w2">
                         <input type="checkbox" id="c2-w2-0" value="MonC2W2" class="days" <?php if(isset($week2[1][0])) echo 'checked';?>/><span class="dayName"> Mon </span>
 						<select id="ts-avail-c2-w2-0" name="cycle2[week2][0][]" class="slctTs required" multiple="multiple">
-							<?php $options = $objP->getTimeslotOptions($week2[1][0]);echo $options;?>
+							<?php if(isset($week2[1][0]))
+									$ar = $week2[1][0];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc2w2">
                         <input type="checkbox" id="c2-w2-1" value="TueC2W2" class="days" <?php if(isset($week2[1][1])) echo 'checked';?>/><span class="dayName"> Tue </span>
 						<select id="ts-avail-c2-w2-1" name="cycle2[week2][1][]" class="slctTs required" multiple="multiple">
-							<?php $options = $objP->getTimeslotOptions($week2[1][1]);echo $options;?>
+							<?php if(isset($week2[1][1]))
+									$arr = $week2[1][1];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc2w2">
                         <input type="checkbox" id="c2-w2-2" value="WedC2W2" class="days" <?php if(isset($week2[1][2])) echo 'checked';?>/><span class="dayName"> Wed </span>
 						 <select id="ts-avail-c2-w2-2" name="cycle2[week2][2][]" class="slctTs required" multiple="multiple">
-                           <?php $options = $objP->getTimeslotOptions($week2[1][2]);echo $options;?>
+                           <?php if(isset($week2[1][2]))
+									$arr = $week2[1][2];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc2w2">
                         <input type="checkbox" id="c2-w2-3" value="ThuC2W2" class="days" <?php if(isset($week2[1][3])) echo 'checked';?>/><span class="dayName"> Thu </span>
 						 <select id="ts-avail-c2-w2-3" name="cycle2[week2][3][]" class="slctTs required" multiple="multiple">
-                           <?php $options = $objP->getTimeslotOptions($week2[1][3]);echo $options;?>
+                           <?php if(isset($week2[1][3]))
+									$arr = $week2[1][3];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc2w2">
                         <input type="checkbox" id="c2-w2-4" value="FriC2W2" class="days" <?php if(isset($week2[1][4])) echo 'checked';?>/><span class="dayName"> Fri </span>
 						 <select id="ts-avail-c2-w2-4" name="cycle2[week2][4][]" class="slctTs required" multiple="multiple">
-                          <?php $options = $objP->getTimeslotOptions($week2[1][4]);echo $options;?>
+                          <?php if(isset($week2[1][4]))
+									$arr = $week2[1][4];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc2w2">
                         <input type="checkbox" id="c2-w2-5" value="SatC2W2" class="days" <?php if(isset($week2[1][5])) echo 'checked';?>/><span class="dayName"> Sat </span>
 						 <select id="ts-avail-c2-w2-5" name="cycle2[week2][5][]" class="slctTs required" multiple="multiple">
-                        <?php $options = $objP->getTimeslotOptions($week2[1][5]);echo $options;?>
+                         <?php if(isset($week2[1][5]))
+									$arr = $week2[1][5];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 					  </div>
@@ -386,9 +530,37 @@ $(document).ready(function() {
 						if($programId!=""){
 							 $objP->getProgExceptions($programId,2);
 						 } ?>
-						</div>
-					 <div class="clear"></div>
-					 <div class="clear"></div>
+						 <div class="clear"></div>
+						  <!--add new additional day and time-->
+							<div class="clear"></div>
+								<div class="custtd_left">
+									<h2>Add Additional Day and Timeslot</h2>
+								</div>
+								<div class="txtfield">
+									<input type="text" size="14" id="additionalDayCal2" name="additionalDayCal2" readonly />
+								</div>
+								<div class="txtfield">
+								<select id="timeSlot2" name="additionalDayTS2[]" class="timeSlot2" multiple="multiple">
+									<?php $options = $objP->getTimeslotOptions();echo $options;?>
+								</select>
+								</div>
+							<div class="addbtnAddition">
+								<input type="button" name="btnAddMore" class="additionalDayButt2" value="Add">
+							</div>
+							<div class="divAddition2">
+							<?php
+							if($programId!=""){
+								$objP->getProgAddition($programId,2);
+							 } ?>
+							
+
+							<div class="clear"></div>
+							
+							<div class="clear"></div>
+							</div>							
+						<!--End-->
+					
+					 
 
 					<div id="thirdCycle" style="display:none;border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 						<div class="custtd_left">
@@ -424,37 +596,67 @@ $(document).ready(function() {
 							<div class="tmSlotc3w1">
 							<input type="checkbox" id="c3-w1-0" value="MonC3W1" class="days" <?php if(isset($week1[2][0])) echo 'checked';?>/><span class="dayName"> Mon </span>
 							<select id="ts-avail-c3-w1-0" name="cycle3[week1][0][]" class="slctTs required" multiple="multiple">
-								<?php $options = $objP->getTimeslotOptions($week1[2][0]);echo $options;?>
+								<?php if(isset($week1[2][0]))
+									$arr = $week1[2][0];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc3w1">
 							<input type="checkbox" id="c3-w1-1" value="TueC3W1" class="days" <?php if(isset($week1[2][1])) echo 'checked';?>/><span class="dayName"> Tue </span>
 							<select id="ts-avail-c3-w1-1" name="cycle3[week1][1][]" class="slctTs required" multiple="multiple">
-							   <?php $options = $objP->getTimeslotOptions($week1[2][1]);echo $options;?>
+							   <?php if(isset($week1[2][1]))
+									$arr = $week1[2][1];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc3w1">
 							<input type="checkbox" id="c3-w1-2" value="WedC3W1" class="days" <?php if(isset($week1[2][2])) echo 'checked';?>/><span class="dayName"> Wed </span>
 							 <select id="ts-avail-c3-w1-2" name="cycle3[week1][2][]" class="slctTs required" multiple="multiple">
-							  <?php $options = $objP->getTimeslotOptions($week1[2][2]);echo $options;?>
+							  <?php if(isset($week1[2][2]))
+									$arr = $week1[2][2];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc3w1">
 							<input type="checkbox" id="c3-w1-3" value="ThuC3W1" class="days" <?php if(isset($week1[2][3])) echo 'checked';?>/><span class="dayName"> Thu </span>
 							 <select id="ts-avail-c3-w1-3" name="cycle3[week1][3][]" class="slctTs required" multiple="multiple">
-							  <?php $options = $objP->getTimeslotOptions($week1[2][3]);echo $options;?>
+							  <?php if(isset($week1[2][3]))
+									$arr = $week1[2][3];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc3w1">
 							<input type="checkbox" id="c3-w1-4" value="FriC3W1" class="days" <?php if(isset($week1[2][4])) echo 'checked';?>/><span class="dayName"> Fri </span>
 							 <select id="ts-avail-c3-w1-4" name="cycle3[week1][4][]" class="slctTs required" multiple="multiple">
-								<?php $options = $objP->getTimeslotOptions($week1[2][4]);echo $options;?>
+								<?php if(isset($week1[2][4]))
+									$arr = $week1[2][4];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 							<div class="tmSlotc3w1">
 							<input type="checkbox" id="c3-w1-5" value="SatC3W1" class="days" <?php if(isset($week1[2][5])) echo 'checked';?>/><span class="dayName"> Sat </span>
 							 <select id="ts-avail-c3-w1-5" name="cycle3[week1][5][]" class="slctTs required" multiple="multiple">
-							  <?php $options = $objP->getTimeslotOptions($week1[2][5]);echo $options;?>
+							  <?php if(isset($week1[2][5]))
+									$arr = $week1[2][5];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
 							</select>
 							</div>
 						  </div>
@@ -469,37 +671,67 @@ $(document).ready(function() {
 					    <div class="tmSlotc3w2">
                         <input type="checkbox" id="c3-w2-0" value="MonC3W2" class="days" <?php if(isset($week2[2][0])) echo 'checked';?>/><span class="dayName"> Mon </span>
 						<select id="ts-avail-c3-w2-0" name="cycle3[week2][0][]" class="slctTs required" multiple="multiple">
-							<?php $options = $objP->getTimeslotOptions($week2[2][0]);echo $options;?>
+							<?php if(isset($week2[2][0]))
+									$arr = $week2[2][0];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc3w2">
                         <input type="checkbox" id="c3-w2-1" value="TueC3W2" class="days" <?php if(isset($week2[2][1])) echo 'checked';?>/><span class="dayName"> Tue </span>
 						<select id="ts-avail-c3-w2-1" name="cycle3[week2][1][]" class="slctTs required" multiple="multiple">
-                           <?php $options = $objP->getTimeslotOptions($week2[2][1]);echo $options;?>
+                           <?php if(isset($week2[2][1]))
+									$arr = $week2[2][1];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc3w2">
                         <input type="checkbox" id="c3-w2-2" value="WedC3W2" class="days" <?php if(isset($week2[2][2])) echo 'checked';?>/><span class="dayName"> Wed </span>
 						 <select id="ts-avail-c3-w2-2" name="cycle3[week2][2][]" class="slctTs required" multiple="multiple">
-                          <?php $options = $objP->getTimeslotOptions($week2[2][2]);echo $options;?>
+                          <?php if(isset($week2[2][2]))
+									$arr = $week2[2][2];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc3w2">
                         <input type="checkbox" id="c3-w2-3" value="ThuC3W2" class="days" <?php if(isset($week2[2][3])) echo 'checked';?>/><span class="dayName"> Thu </span>
 						 <select id="ts-avail-c3-w2-3" name="cycle3[week2][3][]" class="slctTs required" multiple="multiple">
-                          <?php $options = $objP->getTimeslotOptions($week2[2][3]);echo $options;?>
+                          <?php if(isset($week2[2][3]))
+									$arr = $week2[2][3];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc3w2">
                         <input type="checkbox" id="c3-w2-4" value="FriC3W2" class="days" <?php if(isset($week2[2][4])) echo 'checked';?>/><span class="dayName"> Fri </span>
 						 <select id="ts-avail-c3-w2-4" name="cycle3[week2][4][]" class="slctTs required" multiple="multiple">
-                          <?php $options = $objP->getTimeslotOptions($week2[2][4]);echo $options;?>
+                          <?php if(isset($week2[2][4]))
+									$arr = $week2[2][4];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 						<div class="tmSlotc3w2">
                         <input type="checkbox" id="c3-w2-5" value="SatC3W2" class="days" <?php if(isset($week2[2][5])) echo 'checked';?>/><span class="dayName"> Sat </span>
 						 <select id="ts-avail-c3-w2-5" name="cycle3[week2][5][]" class="slctTs required" multiple="multiple">
-                         <?php $options = $objP->getTimeslotOptions($week2[2][5]);echo $options;?>
+                        <?php if(isset($week2[2][5]))
+									$arr = $week2[2][5];
+									else
+								$arr = array();
+								$options = $objP->getTimeslotOptions($arr);
+								echo $options;?>
                         </select>
 						</div>
 					  </div>
@@ -522,6 +754,35 @@ $(document).ready(function() {
 						if($programId!=""){
 							 $objP->getProgExceptions($programId,3);
 						 } ?>
+						 <div class="clear"></div>
+						  <!--add new additional day and time-->
+						<div class="clear"></div>
+							<div class="custtd_left">
+								<h2>Add Additional Day and Timeslot</h2>
+							</div>
+							<div class="txtfield">
+								<input type="text" size="14" id="additionalDayCal3" name="additionalDayCal3" readonly />
+							</div>
+							<div class="txtfield">
+							<select id="timeSlot3" name="additionalDayTS3[]" class="timeSlot3" multiple="multiple">
+								<?php $options = $objP->getTimeslotOptions();echo $options;?>
+							</select>
+							</div>
+						<div class="addbtnAddition">
+							<input type="button" name="btnAddMore" class="additionalDayButt3" value="Add">
+						</div>
+						<div class="divAddition3">
+							<?php
+							if($programId!=""){
+								$objP->getProgAddition($programId,3);
+							 } ?>
+							
+
+							<div class="clear"></div>
+							
+							<div class="clear"></div>
+						</div>
+						<!--End-->	
 						</div>
 						<div class="clear"></div>
 						<div class="clear"></div>
@@ -561,4 +822,3 @@ $(document).ready(function(){
 });
 </script>
 <?php include('footer.php'); ?>
-
