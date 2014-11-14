@@ -47,7 +47,7 @@ abstract class Base
 	}//end of formatDate function
 
 	//function to clean input text
-	public function cleanText($txt){
+	public static function cleanText($txt){
 		$str = strip_tags($txt);
 		$str = str_replace("&nbsp;","",$str);
 		return trim($str);
