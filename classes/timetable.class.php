@@ -96,7 +96,7 @@ class Timetable extends Base {
 						$start_time =  date('h:i A',strtotime($start_time));
 						if($start_time >= $end_time)
 						{
-							$reserved_timleslots = array();
+							$reserved_timeslots = array();
 							$end_time = date("h:i A", strtotime($start_time." + 15 minutes"));
 							$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id from teacher_activity ta 
 							inner join subject_session s on s.id = ta.session_id
