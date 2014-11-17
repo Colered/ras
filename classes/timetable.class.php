@@ -92,7 +92,6 @@ class Timetable extends Base {
 					//check if the date is a holiday. If not proceed further
 					if(!$this->checkHoliday($date))
 					{
-						$this->checkCycleId($program_id,$date);
 						$end_time = '';	
 						//search all the reserved activities for that date
 						foreach($v as $start_id)
@@ -665,13 +664,6 @@ class Timetable extends Base {
 			}					
 		}		
 		return $final_pgms;
-	}
-
-	function checkCycleId($program_id,$date)
-	{
-		$sql_get_cycle = $this->conn->query("select * from cycle where program_year_id = '".$program_id."' and '".$date."' between start_week and end_week");
-
-
 	}
 
 	//function will check the number of weeks between two dates
