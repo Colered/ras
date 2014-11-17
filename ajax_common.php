@@ -596,11 +596,17 @@ switch ($codeBlock) {
 	case "getCycles":
 		if(isset($_POST['progId']) && $_POST['progId']!=""){
 				$options .='<option value="">--Select Cycle--</option>';
-				$cycle_query="select no_of_cycle from cycle where program_year_id='".$_POST['progId']."' limit 1";
-				$qry = mysqli_query($db, $cycle_query);
-				$data = mysqli_fetch_row($qry);
-				for($i=1; $i<=$data[0]; $i++){
-					$options .='<option value="'.$i.'" >'.$i.'</option>';
+				$cycle_query="select * from cycle where program_year_id='".$_POST['progId']."'";
+				$cycleDataall = mysqli_query($db, $cycle_query);
+				$cycleData = array();
+				while ($cycleDatas = mysqli_fetch_assoc($cycleDataall)){
+					$cycleData[] = $cycleDatas['id'];
+				}
+				if(count($cycleData)>0){
+					for($i=0; $i<count($cycleData); $i++){
+						$indexData = $i+1;
+						$options .='<option value="'.$cycleData[$i].'" >'.$indexData.'</option>';
+					}
 				}
 		}
 		echo $options;

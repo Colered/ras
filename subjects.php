@@ -2,7 +2,7 @@
 ob_start();
 include('header.php');
 $subjectName=""; $subjectCode=""; $sessionNum=""; $subjectCode="";$areaCode="";$areaName="";$programName="";$roomType="";$roomName="";$subjectId="";
-$program_year_detail="";$programYearId=""; $cycle_no="";$cycleData="";$disTest=""; $disSession=""; $disDivCss=""; $disFDivCss="";$subIdEncrypt="";
+$program_year_detail="";$programYearId=""; $cycle_no="";$cycleData=array();$disTest=""; $disSession=""; $disDivCss=""; $disFDivCss="";$subIdEncrypt="";
 $objT = new Teacher();
 $rel_teacher = $objT->getTeachers();
 $objS = new Subjects();
@@ -24,7 +24,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$row = $result->fetch_assoc();
 	if( $row){
 		if(isset($row['program_year_id'])){
-		$cycleData = $obj->getCycleByProgId($row['program_year_id']);
+		$cycleDataall = $obj->getCycleDataByProgId($row['program_year_id']);
+		while ($cycleDatas = mysqli_fetch_assoc($cycleDataall)){
+			$cycleData[] = $cycleDatas['id'];
+		}
 		}
 		if(isset($row['cycle_no'])){
 			$cycle_no = $row['cycle_no'];
@@ -86,11 +89,12 @@ $progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctPr
                         <select id="slctCycle" name="slctCycle" class="select1 required" <?php echo $disTest; ?>>
                             <option value="" selected="selected">--Select Cycle--</option>
 							 <?php
-							  for($i=1; $i<=$cycleData; $i++){
-							  $selected = ($i == $cycle_no) ? ' selected="selected"' : '';
+							 if(count($cycleData)>0){
+							  for($i=0; $i<count($cycleData); $i++){
+							  $selected = ($cycleData[$i] == $cycle_no) ? ' selected="selected"' : '';
 							  ?>
-					          <option value="<?php echo $i;?>" <?php echo $selected;?>><?php echo $i; ?></option>
-					     	 <?php } ?>
+					          <option value="<?php echo $cycleData[$i];?>" <?php echo $selected;?>><?php echo $i+1; ?></option>
+					     	 <?php } } ?>
                         </select>
                     </div>
                     <div class="clear"></div>

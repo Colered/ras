@@ -254,6 +254,16 @@ class Subjects extends Base {
 		}
 		return $data;
    }
+   
+    /*function for get all-cycle-data from program id*/
+ 	public function getCycleDataByProgId($progId){
+		$result="";
+		if($progId!=""){
+				$cycle_query="select * from cycle where program_year_id='".$progId."'";
+				$result = $this->conn->query($cycle_query);
+		}
+		return $result;
+   }
   //get weeks from date
   public function getWeekFromDate($date,$start_week,$end_week)
 	{
