@@ -27,7 +27,7 @@ $(document).ready(function(){
                     <tr>
                         <th >ID</th>
                         <th >Subject Name</th>
-						<th >Cycle No.</th>
+						<!--<th >Cycle No.</th>-->
                         <th >Subject Code </th>
                         <th >Area</th>
                         <th >Program</th>
@@ -44,7 +44,7 @@ $(document).ready(function(){
 					<tr>
                         <td class="align-center"><?php echo $data['id']; ?></td>
                         <td class="align-center"><?php echo $data['subject_name']; ?></td>
-						<td class="align-center"><?php echo $data['cycle_no']; ?></td>
+						<?php /*?><td class="align-center"><?php echo $data['cycle_no']; ?></td><?php */?>
                         <td class="align-center"><?php echo $data['subject_code']; ?></td>
                         <td class="align-center">
 						<?php
