@@ -2263,7 +2263,7 @@ $(document).ready(function() {
 		}	
 	});
 	$(".additionalDayButt3").click(function(e){ 
-	   if($('#timeSlot3 option:selected').length <= 0 || $('#additionalDayCal3').val()){
+	   if($('#timeSlot3 option:selected').length <= 0 || $('#additionalDayCal3').val() == ''){
 			alert('Atleast one timeslot and date needs to be selected for cycle-3');			
 		}else{
 			var max_fields = 10; 
