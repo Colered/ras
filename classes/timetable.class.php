@@ -605,7 +605,7 @@ class Timetable extends Base {
 							$week1 = unserialize($result_pgm_cycle['week1']);
 							foreach($week1 as $key=> $value)
 							{
-								$day = $key + 1;										
+								$day = $key + 1;
 								$dateArr = $this->getDateForSpecificDayBetweenDates($start_week,$end_week,$day);
 								foreach($dateArr as $val)
 								{
@@ -619,15 +619,15 @@ class Timetable extends Base {
 							$date = new DateTime($end_week);
 							$date->modify('+2 day');
 							$start_week = $date->format('Y-m-d');
-						}else{
+						}else{	
+							$day = date("w", strtotime($start_week));
+							$day = $day-1;
+							$rem_days = $last_day-$day;
+							$date = new DateTime($start_week);
+							$date->modify('+'.$rem_days.' day');
+							$end_week = $date->format('Y-m-d');	
 							if(count(unserialize($result_pgm_cycle['week2'])) > 0)
 							{
-								$day = date("w", strtotime($start_week));
-								$day = $day-1;
-								$rem_days = $last_day-$day;
-								$date = new DateTime($start_week);
-								$date->modify('+'.$rem_days.' day');
-								$end_week = $date->format('Y-m-d');	
 								$week2 = unserialize($result_pgm_cycle['week2']);
 								foreach($week2 as $key=> $value)
 								{
