@@ -186,6 +186,7 @@ $(document).ready(function(){
 		$("#areaForm").validate();
 		$("#roomsForm").validate();
 		$("#buildings").validate();
+		$("#locations").validate();
 		$("#frmProgram").validate();
 		$("#frmProff").validate();
 		$("#frmSgroup").validate();
@@ -281,6 +282,7 @@ function deleteBuld($id){
     }
     return false;
 }
+
 //Ajax delete the teacher function 
 function deleteTeacher($id){
 	if($id==""){
@@ -2170,6 +2172,33 @@ function deleteRuleClassroom($id){
                        window.location.href = 'classroom_availability.php';
 					}else{
 					   alert("Cannot delete the selected Rule, as this rule is associated with some classroom.");
+					}
+                }
+        });
+    }
+    return false;
+}
+
+//ajax delete the location
+function deleteLoc($id){
+	if($id==""){
+		alert("Please select a location to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Location?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_loc',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest('tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Location, as this location is associated with some buildings.");
+						$('.green, .red').hide();
 					}
                 }
         });

@@ -83,6 +83,39 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: buildings.php');
 			}
 		break;
+		case 'addEditLoc':
+			if($_POST['txtLname']!="" ){
+				$obj = new Locations();
+				if(isset($_POST['locId']) && $_POST['locId']!=''){
+					//update new building
+					$resp = $obj->updateLoc();
+				}else{
+					//add new building
+					$resp = $obj->addLocation();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='formloc' method='post' action='locations.php'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formloc.submit();}submit_back();</script>";
+					exit();
+					//end return back
+				}else{
+					header('Location: locations_view.php');
+					exit();
+				}
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				header('Location: locations.php');
+			}
+		break;
 		case "add_edit_professor":
 			//add and edit professor
 		  if(trim($_POST['txtPname'])!="" ){

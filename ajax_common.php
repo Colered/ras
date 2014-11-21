@@ -70,7 +70,7 @@ switch ($codeBlock) {
 				echo 0;
 			}
 		}
-	break;
+	break;	
 	case "del_program":
 	if(isset($_POST['id'])){
 		$id = $_POST['id'];
@@ -1221,6 +1221,21 @@ switch ($codeBlock) {
 			}
 		}
     	break;
+		case "del_loc":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];			
+			$query = "select id from building where location_id = '".$id."'";
+			$q_res = mysqli_query($db, $query);
+			if(mysqli_affected_rows($db)<=0){
+				// then delete the location
+				$del_buld_query="delete from location where id='".$id."'";
+				$qry = mysqli_query($db, $del_buld_query);
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}
+		break;
 		case "getTimeslots":
 			if(isset($_POST['time_slot']) && $_POST['time_slot']!="")
 			{
