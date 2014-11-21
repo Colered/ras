@@ -140,7 +140,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 					    $count = 0;
 					   	while($data = $teacherAvailData->fetch_assoc()){
 							if($count%6 == 0){ echo "<tr>"; }?>
-								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 300px;"><li style="min-height:20px;" class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b>
+								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 140px;"><li style="min-height:20px;" class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b>
 								<span style="padding-left:10px; cursor:pointer; padding-top:5px;"><img alt="Delete Rule" style="margin-bottom:-3px;" onclick="deleteRuleTeacher(<?php echo $data['id']; ?>, '<?php echo $teachID = ($teachId !="" ? $teachId : 0); ?>');" src="images/delete-rule.png" /></span>
 								</li>
 								<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span>

@@ -41,14 +41,14 @@ class Buildings extends Base {
 	}
 	/*function for listing Area*/
 	public function viewBuld() {
-			$area_query="select * from building order by is_default DESC";
+			$area_query="select bd.*, lc.id as locationId, lc.name from building as bd LEFT JOIN location as lc ON bd.location_id = lc.id order by bd.is_default DESC";
 			$q_res = mysqli_query($this->conn, $area_query);
 			return $q_res;
 	}
 
 	/*function for fetch data using building ID*/
 	public function getDataByBuldID($id) {
-			$area_query="select * from building where id='".$id."' limit 1";
+			$area_query="select bd.*, lc.id as locationId, lc.name from building as bd LEFT JOIN location as lc ON bd.location_id = lc.id where bd.id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $area_query);
 			if(mysqli_num_rows($q_res)<=0)
 				return 0;
@@ -69,7 +69,7 @@ class Buildings extends Base {
 				$_SESSION['error_msg'] = $message;
 				header('Location: buildings.php?edit='.base64_encode($_POST['buldId']));
 				return 0;
-			}elseif ($result = mysqli_query($this->conn, "Update building set building_name = '".Base::cleanText($_POST['txtBname'])."',location = '".Base::cleanText($_POST['txtBlocation'])."', is_default = '".$_POST['is_default']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
+			}elseif ($result = mysqli_query($this->conn, "Update building set building_name = '".Base::cleanText($_POST['txtBname'])."',location_id = '".Base::cleanText($_POST['txtBlocation'])."', is_default = '".$_POST['is_default']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['buldId']."'")) {
 				$message="Building has been updated successfully";
 				$_SESSION['succ_msg'] = $message;
 				return 1;
@@ -110,5 +110,11 @@ class Buildings extends Base {
 	  }else{
 	    return '';
 	  }
+	}
+	/*function for listing Locations*/
+	public function viewLocation() {
+			$location_query="select * from location";
+			$q_res = mysqli_query($this->conn, $location_query);
+			return $q_res;
 	}
 }

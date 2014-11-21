@@ -42,7 +42,7 @@ $(document).ready(function(){
 					<tr>
                         <td class="align-center"><?php echo $data['id'] ?></td>
                         <td><?php echo $data['building_name'] ?></td>
-                        <td><?php echo $data['location'] ?></td>
+                        <td><?php echo $data['name'] ?></td>
 						<td class="align-center"><?php if($data['is_default']=='1'){echo 'Yes';}else{echo 'No';} ?></td>
                         <td><?php echo $data['date_add'] ?></td>
 						<td><?php echo $data['date_update'] ?></td>

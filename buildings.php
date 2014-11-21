@@ -1,13 +1,15 @@
 <?php include('header.php');
 $buldName=""; $buldId="";
 $obj = new Buildings();
+$locations = $obj->viewLocation();
+
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$buldId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByBuldID($buldId);
 	$row = $result->fetch_assoc();
 }
 $buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBname'])? $obj->cleanText($_POST['txtBname']):'');
-$location = isset($_GET['edit']) ? $row['location'] : (isset($_POST['txtBlocation'])? $obj->cleanText($_POST['txtBlocation']):'');
+$location = isset($_GET['edit']) ? $row['locationId'] : (isset($_POST['txtBlocation'])? $obj->cleanText($_POST['txtBlocation']):'');
 $is_default = isset($_GET['edit']) ? $row['is_default'] : (isset($_POST['is_default'])? $obj->cleanText($_POST['is_default']):'');
 //$hiddenVal = ($buldName!="") ? "EditBuld":"Buld";
 ?>
@@ -35,7 +37,15 @@ $is_default = isset($_GET['edit']) ? $row['is_default'] : (isset($_POST['is_defa
 						<h2>Location</h2>
 					</div>
 					<div class="txtfield">
-						<input type="text" class="inp_txt" id="txtBlocation" name="txtBlocation" value="<?php echo $location;?>">
+						<!--<input type="text" class="inp_txt" id="txtBlocation" name="txtBlocation" value="<?php echo $location;?>">-->
+						<select class="inp_txt required" name="txtBlocation" id="txtBlocation">
+						<option value="">Select Location</option>
+						<?php while ($locationData = $locations->fetch_assoc()){ 
+						$selecval = $locationData['id']==$location ?"selected":'';
+						?>
+						<option value="<?php echo $locationData['id']; ?>" <?php echo $selecval; ?>><?php echo $locationData['name']; ?></option>
+						<?php } ?>
+						</select>
 					</div>
 					<div class="clear"></div>
 					<div class="custtd_left">
