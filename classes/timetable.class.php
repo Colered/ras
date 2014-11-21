@@ -79,20 +79,27 @@ class Timetable extends Base {
 		$reserved_array = array();
 		$reserved_teachers = array();
 		$reserved_rooms = array();
-		$i=0;
+		$teachers_count = array();
+		$teachers_sat = array();
+		$locations = array();
+		$i=0;		
 		foreach($new_programs as $key=>$cycles)
 		{				
 			$program_id = $key;
 			foreach($cycles as $cyc_id=>$value)
 			{
 				$cycle_id = $cyc_id;
+				//print"<pre>";print_r($new_programs[$program_id][$cycle_id]);die;
 				foreach($value as $k=>$v)
 				{
 					$date = $k;
+					$f_day = $this->getDayFromDate($date);
 					//check if the date is a holiday. If not proceed further
 					if(!$this->checkHoliday($date))
 					{
 						$end_time = '';	
+						$sat_flag = 0;	
+						$reserved_timeslots = array();
 						//search all the reserved activities for that date
 						foreach($v as $start_id)
 						{
@@ -102,65 +109,93 @@ class Timetable extends Base {
 							$start_time = $start_time['0'];
 							$start_time =  date('h:i A',strtotime($start_time));
 							if($start_time >= $end_time)
-							{
-								$reserved_timeslots = array();
+							{								
 								$end_time = date("h:i A", strtotime($start_time." + 15 minutes"));
-								$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id from teacher_activity ta 
+								$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id, b.location_id from teacher_activity ta 
 								inner join subject_session s on s.id = ta.session_id
 								inner join program_years py on py.id = ta.program_year_id
 								inner join subject su on su.id = ta.subject_id
 								inner join teacher t on t.id = ta.teacher_id
 								inner join room r on r.id = ta.room_id
+								inner join building b on r.building_id = b.id
 								where start_time = '".$start_id."' and reserved_flag = 1 and DATE_FORMAT(act_date,'%Y-%m-%d') = '".$date."' and ta.program_year_id = '".$program_id."' and su.cycle_no = '".$cycle_id."'");
 								while($result_reserv_act = mysqli_fetch_array($sql_reserv_act))
 								{							
 									$end_time = date("h:i A", strtotime($start_time." + ".$result_reserv_act['duration']." minutes"));
 									//Here will check if the activity is not already allocated and all the sessions with lesser order number are allocated, we will proceed with this activity
 									if(!$this->search_array($result_reserv_act['name'],$reserved_array)) 
-									{									
-										$order_no_array = $this->getSubjectsWithLessOrder($result_reserv_act['subject_id'],$result_reserv_act['order_number']);
-										$order_no_value = 0;
-										foreach($order_no_array as $order_no)
+									{
+										if((array_key_exists($date,$teachers_count) && array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]) && $teachers_count[$date][$result_reserv_act['teacher_id']] < 4) || !array_key_exists($date,$teachers_count) || !array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]))
 										{
-											if($this->search_array($result_reserv_act['subject_id']."-".$order_no,$reserved_array))
+											if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_reserv_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)))				
 											{
-												$order_no_value++;
-											}else{
-												break;
+												if((array_key_exists($date,$locations) && array_key_exists($result_reserv_act['teacher_id'],$locations[$date]) && in_array($result_reserv_act['location_id'],$locations[$date])) || !array_key_exists($date,$locations) || !array_key_exists($result_reserv_act['teacher_id'],$locations[$date]))
+												{
+													$order_no_array = $this->getSubjectsWithLessOrder($result_reserv_act['subject_id'],$result_reserv_act['order_number']);
+													$order_no_value = 0;
+													foreach($order_no_array as $order_no)
+													{
+													   if($this->search_array($result_reserv_act['subject_id']."-".$order_no,$reserved_array))
+														{
+															$order_no_value++;
+														}else{
+															break;
+														}
+													}
+													if($order_no_value == count($order_no_array))
+													{														
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_reserv_act['activity_id'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_reserv_act['name'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_reserv_act['program_year_id'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_reserv_act['program_name'];							
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_reserv_act['teacher_id'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_reserv_act['teacher_name'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_reserv_act['group_id'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $result_reserv_act['room_id'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $result_reserv_act['room_name'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_reserv_act['session_id'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_reserv_act['session_name'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_reserv_act['subject_id'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_reserv_act['subject_name'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_reserv_act['order_number'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
+														$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id;
+														$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['room_id'];
+														$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['teacher_id'];
+														$ts_array = explode(",",$result_reserv_act['timeslot_id']);								
+														foreach($ts_array as $ts_id)
+														{
+															$reserved_timeslots[] = trim($ts_id);
+														}
+														
+														if(array_key_exists($date,$teachers_count) && array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]))
+														{
+															$teachers_count[$date][$result_reserv_act['teacher_id']] = $teachers_count[$date][$result_reserv_act['teacher_id']] + 1;
+														}else{
+															$teachers_count[$date][$result_reserv_act['teacher_id']] = 1;
+														}
+														if($f_day == 5 && $sat_flag == 0)
+														{
+															if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_reserv_act['teacher_id'],$teachers_sat[$cycle_id]))
+															{
+															$teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] = $teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] + 1;
+															}else{
+																$teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] = 1;
+															}													
+															$sat_flag++;
+														}
+														$locations[$date][$result_reserv_act['teacher_id']] = $result_reserv_act['location_id'];
+														break;													
+													}
+												}
 											}
 										}
-										if($order_no_value == count($order_no_array))
-										{
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_reserv_act['activity_id'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_reserv_act['name'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_reserv_act['program_year_id'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_reserv_act['program_name'];							
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_reserv_act['teacher_id'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_reserv_act['teacher_name'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_reserv_act['group_id'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $result_reserv_act['room_id'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $result_reserv_act['room_name'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_reserv_act['session_id'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_reserv_act['session_name'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_reserv_act['subject_id'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_reserv_act['subject_name'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_reserv_act['order_number'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
-											$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
-											$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['room_id'];
-											$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['teacher_id'];
-											$ts_array = explode(",",$result_reserv_act['timeslot_id']);									
-											foreach($ts_array as $ts_id)
-											{
-												$reserved_timeslots[] = trim($ts_id);
-											}	
-											
-											break;
-										}								
 									}							
 								}
 							}
 						}
+						//print"<pre>";print_r($reserved_timeslots);die;
 						//search the free activities for the remaining timeslots for the same date
 						$total_timeslots = array();
 						foreach($v as $start_id)
@@ -168,9 +203,10 @@ class Timetable extends Base {
 							$total_timeslots[] = $start_id;
 						}					
 						$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);	
-						$unreserved_times = $this->getTimeSlots($unreserved_timeslots);					
+						$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+						
 						foreach($unreserved_times as $un_tsid)
-						{							
+						{
 							$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,s.order_number,s.duration 
 							from teacher_activity ta 
 							inner join subject_session s on s.id = ta.session_id 
@@ -182,7 +218,7 @@ class Timetable extends Base {
 							while($result_free_act = mysqli_fetch_array($sql_free_act))
 							{
 								$start_time = $un_tsid;
-								$end_time = date("h:i A", strtotime($start_time." + ".$result_free_act['duration']." minutes"));		
+								$end_time = date("h:i A", strtotime($start_time." + ".$result_free_act['duration']." minutes"));	
 								$objT = new Teacher();
 								$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
 								$time = explode(",",$all_ts);						
@@ -191,127 +227,178 @@ class Timetable extends Base {
 								{
 									//first we will check if the teacher of the free activity is available at that time
 									if($this->checkTeacherAvailability($result_free_act['teacher_id'],$date,$all_ts))
-									{
+									{										
 										//Then we will check if the teacher is not busy with any other activity at that time
 										if(!$this->isTeacherReserved($date,$start_time,$end_time,$result_free_act['teacher_id'],$reserved_teachers))
-										{
-											//Here we will get the room of a subject that lies with in that week range
-											$room_id = $this->getRoomBySubject($result_free_act['subject_id'],$date);
-											if($room_id)
-											{
-												//If room found,we will check its availability at that time
-												if($this->checkRoomAvailability($room_id,$date,$all_ts))
-												{
-													//If available,we will check if room is not busy with any other activity
-													if(!$this->isRoomReserved($date,$start_time,$end_time,$room_id,$reserved_rooms))
+										{										
+											if((array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count[$date]) && $teachers_count[$date][$result_free_act['teacher_id']] < 4) || !array_key_exists($date,$teachers_count) || !array_key_exists($result_free_act['teacher_id'],$teachers_count[$date]))
+											{												
+												if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_free_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)))
+												{																				
+													//Here we will get the room of a subject that lies with in that week range
+													$room_id = $this->getRoomBySubject($result_free_act['subject_id'],$date);	
+													if($room_id)
 													{
-														//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
-														if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
-														{
-															$order_no_array = $this->getSubjectsWithLessOrder($result_free_act['subject_id'],$result_free_act['order_number']);
-															$order_no_value = 0;
-															foreach($order_no_array as $order_no)
-															{
-																if($this->search_array($result_free_act['subject_id']."-".$order_no,$reserved_array))
-																{
-																	$order_no_value++;
-																}else{
-																	break;
+														//If room found,we will check its availability at that time
+														if($this->checkRoomAvailability($room_id,$date,$all_ts))
+														{															
+															//If available,we will check if room is not busy with any other activity
+															if(!$this->isRoomReserved($date,$start_time,$end_time,$room_id,$reserved_rooms))
+															{																
+																$loc_id = $this->getLocation($room_id);							
+																if((array_key_exists($date,$locations) && array_key_exists($result_free_act['teacher_id'],$locations[$date]) && in_array($loc_id,$locations[$date])) || !array_key_exists($date,$locations) || !array_key_exists($result_free_act['teacher_id'],$locations[$date]))
+																{																	
+																	//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
+																	if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
+																	{
+																		$order_no_array = $this->getSubjectsWithLessOrder($result_free_act['subject_id'],$result_free_act['order_number']);
+																		$order_no_value = 0;
+																		foreach($order_no_array as $order_no)
+																		{
+																			if($this->search_array($result_free_act['subject_id']."-".$order_no,$reserved_array))
+																			{
+																				$order_no_value++;
+																			}else{
+																				break;
+																			}
+																		}
+																		if($order_no_value == count($order_no_array))
+																		{
+																			$room_name = $this->getRoomName($room_id);				
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_free_act['activity_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_free_act['name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_free_act['program_year_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_free_act['group_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_free_act['session_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_free_act['session_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_free_act['subject_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_free_act['subject_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_free_act['order_number'];	
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id."-".$f_day;
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $room_id;
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
+																			$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
+																			$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
+																			$unreserved_timeslots = array_diff($unreserved_timeslots,$time);
+																			$unreserved_times = $this->getTimeSlots($unreserved_timeslots);	
+																			if(array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count))
+																			{
+																				$teachers_count[$date][$result_free_act['teacher_id']] = $teachers_count[$date][$result_free_act['teacher_id']] + 1;
+																			}else{
+																				$teachers_count[$date][$result_free_act['teacher_id']] = 1;
+																			}
+																			
+																			if($f_day == 5 && $sat_flag == 0)
+																			{
+																				if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id]))
+																				{
+																				$teachers_sat[$cycle_id][$result_free_act['teacher_id']] = $teachers_sat[$cycle_id][$result_free_act['teacher_id']] + 1;
+																				}else{
+																					$teachers_sat[$cycle_id][$result_free_act['teacher_id']] = 1;
+																				}														
+																				$sat_flag++;
+																			}
+																			$locations[$date][$result_free_act['teacher_id']] = $loc_id;
+																			break;												
+																		}											
+																	}
 																}
 															}
-															if($order_no_value == count($order_no_array))
+														}
+													}
+													else
+													{ //if no room we get, then we will search for rooms for that time
+														$rooms = $this->search_room($date,$all_ts);
+														//print"<pre>";print_r($rooms);die;
+														foreach($rooms as $room)
+														{
+															//Here, will check if the room is not busy with any other activity
+															if(!$this->isRoomReserved($date,$start_time,$end_time,$room['id'],$reserved_rooms))
 															{
-																$room_name = $this->getRoomName($room_id);
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_free_act['activity_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_free_act['name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_free_act['program_year_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_free_act['group_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_free_act['session_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_free_act['session_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_free_act['subject_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_free_act['subject_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_free_act['order_number'];	
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $room_id;
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
-																$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
-																$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
-																$unreserved_timeslots = array_diff($unreserved_timeslots,$time);
-																$unreserved_times = $this->getTimeSlots($unreserved_timeslots);		
-																break;												
-															}											
+																if((array_key_exists($date,$locations) && array_key_exists($result_free_act['teacher_id'],$locations[$date]) && in_array($room['location_id'],$locations[$date])) || !array_key_exists($date,$locations) || !array_key_exists($result_free_act['teacher_id'],$locations[$date]))
+																{
+																	//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
+																	if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
+																	{
+																		$order_no_array = $this->getSubjectsWithLessOrder($result_free_act['subject_id'],$result_free_act['order_number']);
+																		$order_no_value = 0;
+																		foreach($order_no_array as $order_no)
+																		{
+																			if($this->search_array($result_free_act['subject_id']."-".$order_no,$reserved_array))
+																			{
+																				$order_no_value++;
+																			}else{
+																				break;
+																			}
+																		}
+																		if($order_no_value == count($order_no_array))
+																		{
+																			$room_name = $this->getRoomName($room['id']);
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_free_act['activity_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_free_act['name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_free_act['program_year_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_free_act['group_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_free_act['session_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_free_act['session_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_free_act['subject_id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_free_act['subject_name'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_free_act['order_number'];	
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id."-".$f_day;
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $room['id'];
+																			$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
+																			$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
+																			$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room['id'];													
+																			if(array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count[$date]))
+																			{
+																				$teachers_count[$date][$result_free_act['teacher_id']] = $teachers_count[$date][$result_free_act['teacher_id']] + 1;
+																			}else{
+																				$teachers_count[$date][$result_free_act['teacher_id']] = 1;
+																			}
+																			if($f_day == 5 && $sat_flag == 0)
+																			{
+																				if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id]))
+																				{
+																				$teachers_sat[$cycle_id][$result_free_act['teacher_id']] = $teachers_sat[$cycle_id][$result_free_act['teacher_id']] + 1;
+																				}else{
+																					$teachers_sat[$cycle_id][$result_free_act['teacher_id']] = 1;
+																				}
+																				$sat_flag++;
+																			}
+																			$unreserved_timeslots = array_diff($unreserved_timeslots,$time);
+																			$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+																			$locations[$date][$result_free_act['teacher_id']] = $room['location_id'];
+																			$flag = 1;
+																			break;												
+																		}											
+																	}
+																}
+															}
 														}
 													}
 												}
 											}
-											else
-											{ //if no room we get, then we will search for rooms for that time
-												$rooms = $this->search_room($date,$all_ts);
-												foreach($rooms as $room)
-												{
-													//Here, will check if the room is not busy with any other activity
-													if(!$this->isRoomReserved($date,$start_time,$end_time,$room['id'],$reserved_rooms))
-													{
-														//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
-														if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
-														{
-															$order_no_array = $this->getSubjectsWithLessOrder($result_free_act['subject_id'],$result_free_act['order_number']);
-															$order_no_value = 0;
-															foreach($order_no_array as $order_no)
-															{
-																if($this->search_array($result_free_act['subject_id']."-".$order_no,$reserved_array))
-																{
-																	$order_no_value++;
-																}else{
-																	break;
-																}
-															}
-															if($order_no_value == count($order_no_array))
-															{
-																$room_name = $this->getRoomName($room['id']);
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_free_act['activity_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_free_act['name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_free_act['program_year_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_free_act['group_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_free_act['session_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_free_act['session_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_free_act['subject_id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_free_act['subject_name'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_free_act['order_number'];	
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $room['id'];
-																$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
-																$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
-																$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room['id'];
-																$unreserved_timeslots = array_diff($unreserved_timeslots,$time);
-																$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
-																$flag = 1;
-																break;												
-															}											
-														}
-													}
-												}
-											}										
 										}
 									}								
 								}
 								if($flag == 1)
 									break;
 							}
-						}						
+						}					
 					}
 				}
 			}
 			$i++;
-		}		
+		}//print"<pre>";print_r($reserved_array);die;
 		//If array is empty,means no activity has been allocated. We will shoe the message to user
 		if(empty($reserved_array))
 		{
@@ -371,6 +458,13 @@ class Timetable extends Base {
 				}
 			}
 		}
+	}
+
+	public function getDayFromDate($date)
+	{
+		$day = date('w', strtotime($date));
+		$final_day = $day - 1;
+		return $final_day;
 	}
 
 	//function to add the timetable basic details in database
@@ -484,6 +578,7 @@ class Timetable extends Base {
 			$day = date('w', strtotime($date));
 			$final_day = $day - 1;
 			//check if teacher is available on the given time and day
+			
 			$teachAvail_query=$this->conn->query("select tm.id 
 								from teacher_availability_rule_teacher_map tm 
 								inner join teacher_availability_rule_day_map td 
@@ -528,11 +623,12 @@ class Timetable extends Base {
 		$rooms = array();
 		$day = date('w', strtotime($date));
 		$final_day = $day - 1;
-		$sql_room = $this->conn->query("select distinct room_id, room.room_name
+		$sql_room = $this->conn->query("select distinct room_id, room.room_name, b.location_id
 								from classroom_availability_rule_room_map cm
 								inner join classroom_availability_rule_day_map cd on cd.classroom_availability_rule_id = cm.classroom_availability_rule_id
 								inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
 								inner join room on room.id = cm.room_id
+								inner join building b on room.building_id = b.id
 								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and actual_timeslot_id like '%".$slot."%'");
 								
 							
@@ -545,6 +641,7 @@ class Timetable extends Base {
 			{
 				$rooms[$k]['id'] = $result_room['room_id'];
 				$rooms[$k]['room_name'] = $result_room['room_name'];
+				$rooms[$k]['location_id'] = $result_room['location_id'];
 				$k++;
 				
 			}				
@@ -576,7 +673,8 @@ class Timetable extends Base {
 					foreach($week1 as $key=> $value)
 					{
 						$day = $key + 1;
-						$dateArr = $this->getDateForSpecificDayBetweenDates($result_pgm_cycle['start_week'],$end_week,$day);	
+						$dateArr = $this->getDateForSpecificDayBetweenDates($result_pgm_cycle['start_week'],$end_week,$day);
+						
 						foreach($dateArr as $val)
 						{
 							$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
@@ -585,7 +683,7 @@ class Timetable extends Base {
 								$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$val] = $value;
 							}
 						}								
-					}													
+					}											
 				}else if($result_pgm_cycle['occurrence'] == '2w'){
 					$weeks = $this->countWeeksBetweenDates($result_pgm_cycle['start_week'],$end_week);
 					$start_week = $result_pgm_cycle['start_week'];
@@ -647,8 +745,9 @@ class Timetable extends Base {
 							$date->modify('+2 day');
 							$start_week = $date->format('Y-m-d');
 						}
-					}							
+					}								
 				}
+				//print"<pre>";print_r($final_pgms);die;
 				$sql_pgm_add_date = $this->conn->query("select additional_date,actual_timeslot_id from program_cycle_additional_day_time where additional_date between  '".$result_pgm_cycle['start_week']."' and '".$result_pgm_cycle['end_week']."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
 				while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
 				{
@@ -758,6 +857,7 @@ class Timetable extends Base {
 	//function to get room of a subject within a week range
 	public function getRoomBySubject($subject_id,$date)
 	{
+		
 		$sql_select = $this->conn->query("select id,room_id,act_date from teacher_activity where subject_id = '".$subject_id."' and reserved_flag = 1");
 		$row_cnt = mysqli_num_rows($sql_select);
 		if($row_cnt > 0)
@@ -777,6 +877,13 @@ class Timetable extends Base {
 		}else{
 			return 0;
 		}
+	}
+
+	public function getLocation($room_id)
+	{
+		$sql_select = $this->conn->query("select location_id from building b inner join room r on r.building_id = b.id where r.id = '".$room_id."'");
+		$result = mysqli_fetch_array($sql_select);
+		return $result['location_id'];
 	}
 
 	//function to get all sessions with lesser order than the current one
