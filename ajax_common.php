@@ -845,6 +845,71 @@ switch ($codeBlock) {
 							exit;
 						}
 					}
+					//Rule: a teacher cannot have classes in different locations the same day
+					if($valid==1){
+						$loc_query = "select location_id from room r inner join building b on b.id = r.building_id where r.id = '".$_POST['room_id']."'";
+						$loc_res = mysqli_query($db, $loc_query);
+						$dataLoc = mysqli_fetch_assoc($loc_res);
+						$teachAvail_query="select location_id from teacher_activity ta inner join room r on r.id = ta.room_id
+						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'";						
+						$q_res = mysqli_query($db, $teachAvail_query);
+						if(mysqli_affected_rows($db)>0){
+							$dataAll = mysqli_fetch_assoc($q_res);
+							if($dataAll['location_id'] != $dataLoc['location_id']){
+							echo 11;
+							$valid=0;
+							exit;
+							}
+						}					
+					}
+					//Rule: a teacher can have maximum two saturdays per cycle
+					if($valid==1){
+						$cycle_query = "select id from cycle where program_year_id = '".$_POST['programId']."' and start_week <= '".$_POST['subSessDate']."' and end_week >= '".$_POST['subSessDate']."'";
+						$cycle_res = mysqli_query($db, $cycle_query);
+						$dataCycle = mysqli_fetch_assoc($cycle_res);
+
+						$teachAvail_query="select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='".$dataCycle['id']."' and teacher_id='".$_POST['slctTeacher']."' and act_date != '".$_POST['subSessDate']."'";						
+						$q_res = mysqli_query($db, $teachAvail_query);
+						$count = 0;
+						while($dataAll = mysqli_fetch_assoc($q_res))
+						{
+							$day = date('w', strtotime($dataAll['act_date']));
+							$final_day = $day - 1;
+							if($final_day == 5)
+							{
+								$count++;
+							}							
+						}
+						if($count >= 2){
+							echo 12;
+							$valid=0;
+							exit;
+						}
+					}
+					//Rule the sessions scheduled on Saturdays should be from the same academic area.
+					if($valid==1){
+						$day = date('w', strtotime($_POST['subSessDate']));
+						$final_day = $day - 1;
+						if($final_day == 5)
+						{
+							$sub_query = "select area_id from subject s where id = '".$_POST['subjectId']."'";
+							$sub_res = mysqli_query($db, $sub_query);
+							$dataSub = mysqli_fetch_assoc($sub_res);
+							$teachAvail_query="select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='".$_POST['subSessDate']."'";
+							$q_res = mysqli_query($db, $teachAvail_query);
+							if(mysqli_affected_rows($db)>0){
+								$dataAll = mysqli_fetch_assoc($q_res);	
+								if($dataAll['area_id'] != $dataSub['area_id'])
+								{
+									echo 13;
+									$valid=0;
+									exit;
+								}								
+							}
+						}															
+					}
+					
+
 					//check if room is free at given time and day
 					if($valid==1){
 						//check if the selected date is not added as exception in classroom availability
@@ -1130,6 +1195,70 @@ switch ($codeBlock) {
 							exit;
 						}
 					}
+					//Rule: a teacher cannot have classes in different locations the same day
+					if($valid==1){
+						$loc_query = "select location_id from room r inner join building b on b.id = r.building_id where r.id = '".$_POST['room_id']."'";
+						$loc_res = mysqli_query($db, $loc_query);
+						$dataLoc = mysqli_fetch_assoc($loc_res);
+						$teachAvail_query="select location_id from teacher_activity ta inner join room r on r.id = ta.room_id
+						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='".$_POST['subSessDate']."' and teacher_id='".$_POST['slctTeacher']."'";						
+						$q_res = mysqli_query($db, $teachAvail_query);
+						if(mysqli_affected_rows($db)>0){
+							$dataAll = mysqli_fetch_assoc($q_res);
+							if($dataAll['location_id'] != $dataLoc['location_id']){
+							echo 11;
+							$valid=0;
+							exit;
+							}
+						}					
+					}
+					//Rule: a teacher can have maximum two saturdays per cycle
+					if($valid==1){
+						$cycle_query = "select id from cycle where program_year_id = '".$_POST['programId']."' and start_week <= '".$_POST['subSessDate']."' and end_week >= '".$_POST['subSessDate']."'";
+						$cycle_res = mysqli_query($db, $cycle_query);
+						$dataCycle = mysqli_fetch_assoc($cycle_res);
+
+						$teachAvail_query="select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='".$dataCycle['id']."' and teacher_id='".$_POST['slctTeacher']."' and act_date != '".$_POST['subSessDate']."'";						
+						$q_res = mysqli_query($db, $teachAvail_query);
+						$count = 0;
+						while($dataAll = mysqli_fetch_assoc($q_res))
+						{
+							$day = date('w', strtotime($dataAll['act_date']));
+							$final_day = $day - 1;
+							if($final_day == 5)
+							{
+								$count++;
+							}							
+						}
+						if($count >= 2){
+							echo 12;
+							$valid=0;
+							exit;
+						}
+					}
+					//Rule the sessions scheduled on Saturdays should be from the same academic area.
+					if($valid==1){
+						$day = date('w', strtotime($_POST['subSessDate']));
+						$final_day = $day - 1;
+						if($final_day == 5)
+						{
+							$sub_query = "select area_id from subject s where id = '".$_POST['subjectId']."'";
+							$sub_res = mysqli_query($db, $sub_query);
+							$dataSub = mysqli_fetch_assoc($sub_res);
+							$teachAvail_query="select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='".$_POST['subSessDate']."'";
+							$q_res = mysqli_query($db, $teachAvail_query);
+							if(mysqli_affected_rows($db)>0){
+								$dataAll = mysqli_fetch_assoc($q_res);	
+								if($dataAll['area_id'] != $dataSub['area_id'])
+								{
+									echo 13;
+									$valid=0;
+									exit;
+								}								
+							}
+						}															
+					}
+
 					//check if room is free at given time and day
 					if($valid==1){
 						//check if the selected date is not added as exception in classroom availability

@@ -621,6 +621,18 @@ $(document).ready(function() {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher already have 4 sessions allocated to him on selected day.');
+						}else if($succ==11){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Teacher is already allocated to some different location the same day.');
+						}else if($succ==12){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Teacher is already allocated to two saturdays of this cycle.');
+						}else if($succ==13){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('The sessions scheduled on Saturdays should be from the same academic area.');
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -697,6 +709,12 @@ $(document).ready(function() {
 							alert('Program is not available on the selected day and time.');
 						}else if($succ==10){
 							alert('Teacher already have 4 sessions allocated to him on selected day.');
+						}else if($succ==11){
+							alert('Teacher is already allocated to some different location the same day.');
+						}else if($succ==12){							
+							alert('Teacher is already allocated to two saturdays of this cycle.');
+						}else if($succ==13){							
+							alert('The sessions scheduled on Saturdays should be from the same academic area.');
 						}else{
 							alert("Cannot create the session.");
 						}
