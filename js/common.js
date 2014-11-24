@@ -2155,7 +2155,7 @@ function deleteRuleTeacher($id, $tid){
     }
     return false;
 }
-function deleteRuleClassroom($id){
+function deleteRuleClassroom($id, $rid){
 	if($id==""){
 		alert("Please select a rule to delete");
 		return false;
@@ -2169,7 +2169,11 @@ function deleteRuleClassroom($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                       window.location.href = 'classroom_availability.php';
+					   if($rid==0){
+                       		window.location.href = 'classroom_availability.php';
+					   }else{
+						   	window.location.href = 'classroom_availability.php?rid='+$rid;
+						}
 					}else{
 					   alert("Cannot delete the selected Rule, as this rule is associated with some classroom.");
 					}
