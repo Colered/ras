@@ -20,12 +20,21 @@ switch ($codeBlock) {
     case "del_area":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
-			$del_area_query="delete from area where id='".$id."'";
-			$qry = mysqli_query($db, $del_area_query);
-			if(mysqli_affected_rows($db)>0)
-				echo 1;
-			else
-				echo 0;
+			//check if are is being used for any subject
+			$sub_query="select id from subject where area_id='".$_POST['id']."'";
+			$q_res = mysqli_query($db, $sub_query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0)
+			{
+				echo 2;
+			}else{
+				$del_area_query="delete from area where id='".$id."'";
+				$qry = mysqli_query($db, $del_area_query);
+				if(mysqli_affected_rows($db)>0)
+					echo 1;
+				else
+					echo 0;
+			}
 		}
     break;
 	case "del_teacher":

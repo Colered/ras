@@ -247,6 +247,9 @@ function deleteArea($id){
 					if($succ==1){
                         $('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
+					}else if($succ==2){
+						alert("Cannot delete this area as this is being used by some other subjects.");
+						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected Area.");
 						$('.green, .red').hide();
