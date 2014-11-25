@@ -457,7 +457,7 @@ class Timetable extends Base {
 				$et = DateTime::createFromFormat('H:i a', trim($ts_array['1']));
 				$s_time = DateTime::createFromFormat('H:i a', $start_time);
 				$e_time = DateTime::createFromFormat('H:i a', $end_time);					
-				if(($s_time >= $st && $e_time <= $et) || ($st >= $s_time && $et <= $e_time))
+				if(($s_time >= $st && $s_time <= $et) || ($e_time >= $st && $e_time <= $et))
 				{												
 					if($this->search_array($teacher_id,$reserved_teachers[$date][$key]))
 					{
@@ -501,7 +501,7 @@ class Timetable extends Base {
 				$et = DateTime::createFromFormat('H:i a', trim($ts_array['1']));
 				$s_time = DateTime::createFromFormat('H:i a', $start_time);
 				$e_time = DateTime::createFromFormat('H:i a', $end_time);					
-				if(($s_time >= $st && $e_time <= $et) || ($st >= $s_time && $et <= $e_time))
+				if(($s_time >= $st && $s_time <= $et) || ($e_time >= $st && $e_time <= $et))
 				{												
 					if($this->search_array($room_id,$reserved_rooms[$date][$key]))
 					{
