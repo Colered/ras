@@ -355,6 +355,7 @@ switch ($codeBlock) {
 			else
 				echo 0;
 		}
+	break;
 	case "deleteExcepTeachAvail":
 		if(isset($_POST['id'])){
 			$id = $_POST['id'];
@@ -387,7 +388,7 @@ switch ($codeBlock) {
 	     }
 	  }
 	 echo $options;
-	 break;
+	break;
 	case "createClassAvailabilityRules":
 			$objCA = new Classroom_Availability();
 			$_POST['timeSoltArr1'] = $objCA->getTimeslotId($_POST['timeSoltArr']);
@@ -602,6 +603,7 @@ switch ($codeBlock) {
 			echo 0;
 		}
 	}
+	break;
 	case "getCycles":
 		if(isset($_POST['progId']) && $_POST['progId']!=""){
 				$options .='<option value="">--Select Cycle--</option>';
@@ -1399,7 +1401,7 @@ switch ($codeBlock) {
 				else
 					echo 0;
 			}
-			break;		
+		break;		
 }
 ?>
 
