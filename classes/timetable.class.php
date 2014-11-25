@@ -81,6 +81,7 @@ class Timetable extends Base {
 		$teachers_sat = array();
 		$locations = array();
 		$reserved_areas = array();
+		$reserved_subject_rooms = array();
 		$i=0;		
 		foreach($new_programs as $key=>$cycles)
 		{				
@@ -247,7 +248,12 @@ class Timetable extends Base {
 												if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_free_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)))
 												{																				
 													//Here we will get the room of a subject that lies with in that week range
-													$room_id = $this->getRoomBySubject($result_free_act['subject_id'],$date);													
+													$room_id_res = $this->getRoomBySubject($result_free_act['subject_id'],$date);
+													if($room_id_res == ''){
+														$room_id = $this->getRoomFromReservedAct($result_free_act['subject_id'],$date,$reserved_subject_rooms);
+													}else{
+														$room_id = $room_id_res;
+													}												
 													if($room_id)
 													{
 														//If room found,we will check its availability at that time
@@ -299,6 +305,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
 																				$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
 																				$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
+																				$reserved_subject_rooms[$date][$result_free_act['subject_id']] = $room_id;
 																				$unreserved_timeslots = array_diff($unreserved_timeslots,$time);
 																				$unreserved_times = $this->getTimeSlots($unreserved_timeslots);	
 																				if(array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count))
@@ -380,7 +387,8 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $room['id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
 																				$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
-																				$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room['id'];													
+																				$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room['id'];	
+																				$reserved_subject_rooms[$date][$result_free_act['subject_id']] = $room['id'];
 																				if(array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count[$date]))
 																				{
 																					$teachers_count[$date][$result_free_act['teacher_id']] = $teachers_count[$date][$result_free_act['teacher_id']] + 1;
@@ -425,8 +433,9 @@ class Timetable extends Base {
 					}
 				}
 			}
+			
 			$i++;
-		}///print"<pre>";print_r($reserved_areas);die;
+		}
 		//If array is empty,means no activity has been allocated. We will shoe the message to user
 		if(empty($reserved_array))
 		{
@@ -457,6 +466,24 @@ class Timetable extends Base {
 					}else{
 						return 0;
 					}
+				}
+			}
+		}
+	}
+	public function getRoomFromReservedAct($subject_id,$date,$reserved_rooms = array())
+	{
+		
+		foreach($reserved_rooms as $key => $value)
+		{
+			$timestamp = strtotime($key);
+			$startDateOfWeek = (date("D", $timestamp) == 'Mon') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Last Monday', $timestamp));
+			$endDateOfWeek = (date("D", $timestamp) == 'Sun') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Next Sunday', $timestamp));
+			if($date >= $startDateOfWeek && $date <= $endDateOfWeek)
+			{
+				if(array_key_exists($subject_id,$reserved_rooms[$key]))
+				{
+					$rid = $reserved_rooms[$key][$subject_id];
+					return $rid;
 				}
 			}
 		}
