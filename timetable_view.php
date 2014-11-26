@@ -47,13 +47,15 @@ $(document).ready(function(){
                 <tbody>
                 <?php
                      while ($data = $result->fetch_assoc()){
+						 $day = date('w', strtotime($data['date']));
+						 $final_day = $day - 1;
                          $ttYear=$obj->getTimetableYear($data['tt_id']);
 						 $ttDetail=$ttYear->fetch_assoc();
                 ?>
 					<tr>
                         <td class="align-center"><?php echo $data['id']; ?></td>
 						<td class="align-center"><?php echo $ttDetail['start_date'].' to '.$ttDetail['end_date'] ; ?></td>
-						<td class="align-center"><?php echo $daysArr[$data['day']];?></td>
+						<td class="align-center"><?php echo $daysArr[$final_day];?></td>
 						<td class="align-center"><?php echo $data['date']; ?></td>
 						<td class="align-center"><?php echo $data['timeslot']; ?></td>
 						<td class="align-center">
