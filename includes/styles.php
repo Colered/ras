@@ -1318,6 +1318,7 @@ echo '  body {
     cursor: default;
 	click_events: none;
   }
+  .minical td.hasevents{background-color:#FFFF33;}
   #eventcomment {
    padding:.25em;
    border:1px solid ' . $GLOBALS['TABLEBG'] . ';
