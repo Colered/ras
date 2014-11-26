@@ -1401,7 +1401,17 @@ switch ($codeBlock) {
 				else
 					echo 0;
 			}
-		break;		
+		break;
+		case "del_timetable":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$objTT = new Timetable();
+			if($objTT->deleteData())
+				echo 1;
+			else
+				echo 0;
+		}
+		break;	
 }
 ?>
 
