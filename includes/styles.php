@@ -1314,6 +1314,10 @@ echo '  body {
   #useriframe {
     height:280px;
   }
+  a.entry{
+    cursor: default;
+	click_events: none;
+  }
   #eventcomment {
    padding:.25em;
    border:1px solid ' . $GLOBALS['TABLEBG'] . ';
