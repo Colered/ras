@@ -308,7 +308,7 @@ class Timetable extends Base {
 																				$reserved_subject_rooms[$date][$result_free_act['subject_id']] = $room_id;
 																				$unreserved_timeslots = array_diff($unreserved_timeslots,$time);
 																				$unreserved_times = $this->getTimeSlots($unreserved_timeslots);	
-																				if(array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count))
+																				if(array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count[$date]))
 																				{
 																					$teachers_count[$date][$result_free_act['teacher_id']] = $teachers_count[$date][$result_free_act['teacher_id']] + 1;
 																				}else{
