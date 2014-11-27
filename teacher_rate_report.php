@@ -2,7 +2,6 @@
 include('header.php');
 $result = '';
 $teachers_result = '';
-//print"<pre>";print_r($_POST);print"</pre>";
 if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
 {
 	if($_POST['fromTmDuratn'] != "" || $_POST['toTmDuratn'] != "")
@@ -15,6 +14,7 @@ if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
 		$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
 		$result = $objTime->getTeachersInRange($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id);
 		$teachers_result = $objTime->getTeacherId($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id);
+		
 		
 	}else{		
 		$message="Please enter all required fields";
@@ -55,6 +55,20 @@ function submitFunction()
 			 	Teacher's Rate Report
 			 </div>
 		</div>
+		<?php if(isset($_POST['btnGenrtReport'])){?>
+		<div>
+			<form action="excel_export_example.php" method="post" id="export-form">
+					<?php
+					foreach($_POST as $value)
+					{
+					  echo '<input type="hidden" name="postdata[]" value="'. $value. '">';
+					}
+					?>
+					<button onclick="document.getElementById('#export-form').submit();" class="btn-export"><span class="btn-export-text">Export</span></button>					
+			</form>
+				<button onclick="printDiv('printing-div')" class="btn-export"><span class="btn-export-text">Print</span></button>
+		</div>
+		<?php } ?>		
 		<form id="teacher_rate_report" name="teacher_rate_report" method="post" action="teacher_rate_report.php" novalidate="novalidate">
 		<input type="hidden" value="Generate Report" name="btnGenrtReport"/>
 			 <div class="filter-teache-report" style="padding-top:20px;" ><strong> Time Interval: </strong>
@@ -75,8 +89,14 @@ function submitFunction()
 					<?php 
 					$result_techName = $objT->getTeachers();
 					if($result_techName->num_rows){
-					while ($row_techName =$result_techName->fetch_assoc()){?>
-						<option value="<?php echo $row_techName['id'];?>"><?php echo $row_techName['teacher_name'];?></option>
+					while ($row_techName =$result_techName->fetch_assoc()){
+						if($row_techName['id'] == $_POST['teacher'])
+						{
+							$selected = 'selected="selected"';
+						}else{
+							$selected = '';
+						}?>						
+						<option <?php echo $selected;?> value="<?php echo $row_techName['id'];?>"><?php echo $row_techName['teacher_name'];?></option>
 					<?php } 
 					}
 					?>
@@ -86,13 +106,19 @@ function submitFunction()
 			
 			<div class="filter-teache-report">
 				<strong>Program:</strong>
-				<select id="program" name="program" class="select-filter"> 
+				<select id="program" name="program" class="select-filter" onchange="submitFunction();"> 
 				 <option value="" selected="selected">--Select--</option>
 				 <?php 
-					$result_prgm=$objP->getProgramListData();
+					$result_prgm=$objP->getProgramListYearWise();
 					if($result_prgm->num_rows){
-					while ($row_prgm =$result_prgm->fetch_assoc()){?>
-						<option value="<?php echo $row_prgm['program_name'];?>"><?php echo $row_prgm['program_name'];?></option>
+					while ($row_prgm =$result_prgm->fetch_assoc()){
+						if($row_prgm['id'] == $_POST['program'])
+						{
+							$selected = 'selected="selected"';
+						}else{
+							$selected = '';
+						}?>
+						<option <?php echo $selected;?> value="<?php echo $row_prgm['id'];?>"><?php echo $row_prgm['name'];?></option>
 					<?php } 
 					}
 				 ?>
@@ -101,13 +127,19 @@ function submitFunction()
 			</div>
 			<div class="filter-teache-report">	
 				<strong>Area:</strong>
-				<select id="area" name="area" class="select-filter"> 
+				<select id="area" name="area" class="select-filter" onchange="submitFunction();"> 
 					<option value="" selected="selected">--Select--</option>
 					<?php 
 					$result_area=$objA->detailArea();
 					if($result_area->num_rows){
-					while ($row_area =$result_area->fetch_assoc()){?>
-						<option value="<?php echo $row_prgm['area_name'];?>"><?php echo $row_area['area_name'];?></option>
+					while ($row_area =$result_area->fetch_assoc()){
+						if($row_area['id'] == $_POST['area'])
+						{
+							$selected = 'selected="selected"';
+						}else{
+							$selected = '';
+						}?>
+						<option <?php echo $selected;?> value="<?php echo $row_area['id'];?>"><?php echo $row_area['area_name'];?></option>
 					<?php } 
 					}
 				 ?>
@@ -115,7 +147,7 @@ function submitFunction()
 				</select>
 				
 			</div>
-			<div class="filter-teache-report">	
+			<div class="filter-teache-report" style="display:none;">	
 				<strong>Type of profesor:</strong>
 				<select id="profesor" name="profesor" class="select-filter"> 
 					<option value="" selected="selected">--Select--</option>
@@ -129,7 +161,7 @@ function submitFunction()
 					?>
 				</select>
 			</div>
-			<div class="filter-teache-report">
+			<div class="filter-teache-report" style="display:none;">
 				<strong>Cycle:</strong>
 				<select id="cycle" name="cycle" class="select-filter"> 
 					<option value="" selected="selected">--Select--</option>
@@ -137,11 +169,7 @@ function submitFunction()
 					<option value="2">2</option>
 					<option value="3">3</option>
 				</select>
-			</div>
-			<div>
-				<button onclick="location.href = 'excel_export_example.php';" class="btn-export"><span class="btn-export-text">Export</span></button>
-				<button onclick="printDiv('printing-div')" class="btn-export"><span class="btn-export-text">Print</span></button>
-			</div>
+			</div>			
 			<?php } ?>
 		</div>
 		</form>
@@ -183,17 +211,24 @@ function submitFunction()
 			   </tbody>				
             </table>
 			<table>
-			<tr>
 			<?php 
 			if($teachers_result)
 			{
-				$total = '';
+				$total = '';$sum = '';
 				while($row = $teachers_result->fetch_assoc())
 				{
 					$total += $row['payrate']*$row['session_id'];
-				}?>
+					$sum += $row['session_id'];
+				}
+				if($total == '')
+					$total = '0';
+				if($sum == '')
+					$sum = '0';
+				?>
 				<tr>
-				<td colspan="8" style="float:right;width:178px;background-color: #1c478e;color:#fff;">Rs. <?php echo $total;?></td>
+				<td style="float:left;width:178px;background-color: #1c478e;color:#fff;">Total</td>
+				<td style="width:80px;background-color: #1c478e;color:#fff;"><?php echo $sum;?></td>
+				<td colspan="6" style="width:0px;background-color: #1c478e;color:#fff;">Rs. <?php echo $total;?></td>
 				</tr>
 			<?php }
 			?>		
