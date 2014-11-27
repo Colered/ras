@@ -13,7 +13,7 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
                 <div class="custtable_left">
                     <img src="images/lock.jpg" id="lock-img" class="lock-img" />
                 </div>
-                <div class="custtable_left " >
+                <div class="custtable_left " style="padding-left:14px;">
 					<div class="custtd_left error">
 							<?php if(isset($_SESSION['error_msg']))
 								echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?>
@@ -23,27 +23,27 @@ if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){
 								echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);?>
 					</div>
 					<div class="clear"></div>
-                    <div class="custtd_left">
-                        <h2 class="dotted-line">UserName<span class="redstar">*</span></h2>
+                    <div class="custtd_left" style="padding-left:14px;">
+                        <h2 class=""><strong>User Name</strong><span class="redstar">*</span></h2>
                     </div>
                     <div class="clear"></div>
-                    <div class="txtfield1">
+                    <div class="txtfield1" style="border-left:none;">
                         <input type="text" class="inp_txt" id="txtUName" maxlength="50" name="txtUName" autocomplete="off" >
                     </div>
                     <div class="clear"></div>
-                    <div class="custtd_left">
-                        <h2 class="dotted-line">Password<span class="redstar">*</span></h2>
+                    <div class="custtd_left" style="padding-left:14px;">
+                        <h2 class=""><strong>Password</strong><span class="redstar">*</span></h2>
                     </div>
                     <div class="clear"></div>
-                    <div class="txtfield1">
+                    <div class="txtfield1" style="border-left:none;">
                         <input type="password" class="inp_txt" id="txtPwd" maxlength="50" name="txtPwd" autocomplete="off" >
                     </div>
                     <div class="clear"></div>
-					 <div class="txtfield1">
+					 <div class="txtfield1" style="border-left:none;">
                        <a href="forgot.php">Forgot Password</a>
                     </div>
                     <div class="clear"></div>
-                    <div class="txtfield1">
+                    <div class="txtfield1" style="border-left:none;">
                         <input type="submit" name="login" class="buttonsub" value="Login">
                     </div>
                 </div>
