@@ -1,5 +1,29 @@
 <?php
 include('header.php');
+$result = '';
+$teachers_result = '';
+//print"<pre>";print_r($_POST);print"</pre>";
+if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
+{
+	if($_POST['fromTmDuratn'] != "" || $_POST['toTmDuratn'] != "")
+	{
+		$objTime = new Timetable();
+		$teacher_id = isset($_POST['teacher'])?$_POST['teacher']:'';
+		$program_id = isset($_POST['program'])?$_POST['program']:'';
+		$area_id = isset($_POST['area'])?$_POST['area']:'';
+		$profesor_id = isset($_POST['profesor'])?$_POST['profesor']:'';
+		$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
+		$result = $objTime->getTeachersInRange($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id);
+		$teachers_result = $objTime->getTeacherId($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id);
+		
+	}else{		
+		$message="Please enter all required fields";
+		$_SESSION['error_msg'] = $message;
+		header('Location: teacher_rate_report.php');			
+	}
+}
+$fromTmDuratn = isset($_POST['fromTmDuratn'])?$_POST['fromTmDuratn']:'';
+$toTmDuratn = isset($_POST['toTmDuratn'])?$_POST['toTmDuratn']:'';
 $objT = new Teacher();
 $objP = new Programs();
 $objA = new Areas();
@@ -13,6 +37,10 @@ $(document).ready(function(){
 		"bJQueryUI":true
 	});
 })
+function submitFunction()
+{
+	$('#teacher_rate_report').submit();
+}
 </script>
 <style type="text/css">
 	@import "css/demo_table_jui.css";
@@ -22,18 +50,33 @@ $(document).ready(function(){
     <div id="main">
     <?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";} ?>
         <div class="full_w">
-            <div class="h_title non-printable">
-			 <div class="filter-teache-report1">
-			 	Teacher Report
+		<div class="h_title non-printable">
+			<div class="filter-teache-report1">
+			 	Teacher's Rate Report
 			 </div>
+		</div>
+		<form id="teacher_rate_report" name="teacher_rate_report" method="post" action="teacher_rate_report.php" novalidate="novalidate">
+		<input type="hidden" value="Generate Report" name="btnGenrtReport"/>
+			 <div class="filter-teache-report" style="padding-top:20px;" ><strong> Time Interval: </strong>
+				From: <input type="text" size="12" id="fromTmDuratn" name="fromTmDuratn" value="<?php echo $fromTmDuratn;?>"/>
+				To: <input type="text" size="12" id="toTmDuratn" name="toTmDuratn" value="<?php echo $toTmDuratn;?>"/>
+			</div>
+			<div class="txtfield">
+				<input style="margin-top: 15px;" class="buttonsub" type="submit" value="Generate Report" name="btnGenrtReport">
+			</div>
+		
+            <div class="clear"></div>
+            <div class="non-printable">
+			<?php if(isset($_POST['btnGenrtReport'])){?>
 			 <div class="filter-teache-report">
-			  Teacher:<select id="teacher" name="teacher" class="select-filter"> 
+			  <strong>Teacher:</strong>
+			  	<select id="teacher" name="teacher" class="select-filter" onchange="submitFunction();"> 
 					<option value="" selected="selected">--Select--</option>
 					<?php 
 					$result_techName = $objT->getTeachers();
 					if($result_techName->num_rows){
 					while ($row_techName =$result_techName->fetch_assoc()){?>
-						<option value="<?php echo $row_techName['teacher_name'];?>"><?php echo $row_techName['teacher_name'];?></option>
+						<option value="<?php echo $row_techName['id'];?>"><?php echo $row_techName['teacher_name'];?></option>
 					<?php } 
 					}
 					?>
@@ -42,7 +85,8 @@ $(document).ready(function(){
 			</div>
 			
 			<div class="filter-teache-report">
-				Program:<select id="teacher" name="teacher" class="select-filter"> 
+				<strong>Program:</strong>
+				<select id="program" name="program" class="select-filter"> 
 				 <option value="" selected="selected">--Select--</option>
 				 <?php 
 					$result_prgm=$objP->getProgramListData();
@@ -56,7 +100,8 @@ $(document).ready(function(){
 				
 			</div>
 			<div class="filter-teache-report">	
-				Area:<select id="teacher" name="teacher" class="select-filter"> 
+				<strong>Area:</strong>
+				<select id="area" name="area" class="select-filter"> 
 					<option value="" selected="selected">--Select--</option>
 					<?php 
 					$result_area=$objA->detailArea();
@@ -71,7 +116,8 @@ $(document).ready(function(){
 				
 			</div>
 			<div class="filter-teache-report">	
-				Type of profesor:<select id="teacher" name="teacher" class="select-filter"> 
+				<strong>Type of profesor:</strong>
+				<select id="profesor" name="profesor" class="select-filter"> 
 					<option value="" selected="selected">--Select--</option>
 					<?php 
 						$result_teach_type = $objT->getTeachers();
@@ -84,7 +130,8 @@ $(document).ready(function(){
 				</select>
 			</div>
 			<div class="filter-teache-report">
-				Cyclo:<select id="teacher" name="teacher" class="select-filter"> 
+				<strong>Cycle:</strong>
+				<select id="cycle" name="cycle" class="select-filter"> 
 					<option value="" selected="selected">--Select--</option>
 					<option value="1">1</option>
 					<option value="2">2</option>
@@ -95,7 +142,9 @@ $(document).ready(function(){
 				<button onclick="location.href = 'excel_export_example.php';" class="btn-export"><span class="btn-export-text">Export</span></button>
 				<button onclick="printDiv('printing-div')" class="btn-export"><span class="btn-export-text">Print</span></button>
 			</div>
+			<?php } ?>
 		</div>
+		</form>
 			<div id="printing-div">
             <table id="datatables" class="display printable">
                 <thead>
@@ -113,26 +162,42 @@ $(document).ready(function(){
                     </tr>
                 </thead>
                 <tbody>
-				<?php
-					$result = $objT->getTeachers();
-					if($result->num_rows){
-						while($row = $result->fetch_assoc())
-						{?>
-						<tr>
-							<td class="align-center"><?php echo $row['id'];?></td>
-							<td><?php echo $row['date_add'];?></td>
-							<td><?php echo $row['teacher_name'];?></td>
-							<td><?php echo $row['teacher_type'];?></td>
-							<td><?php echo "XYZ";?></td>
-							<td><?php echo "XYZ";?></td>
-							<td><?php echo "XYZ";?></td>
-							<td><?php echo "XYZ";?></td>
-							<td><?php echo $row['payrate'];?></td>
-						</tr>
-					<?php } ?>
-				<?php } ?>
-				</tbody>
+				<?php	
+						if($result)
+						{
+							while($row = $result->fetch_assoc())
+							{?>
+							<tr>
+								<td class="align-center"><?php echo $row['id'];?></td>	
+								<td><?php echo $row['date'];?></td>
+								<td><?php echo $row['teacher_name'];?></td>
+								<td><?php echo $row['teacher_type'];?></td>
+								<td><?php echo $row['name'];?></td>
+								<td><?php echo $row['company'];?></td>
+								<td><?php echo $row['unit'];?></td>
+								<td><?php echo $row['session_name'];?></td>
+								<td><?php echo $row['payrate'];?></td>
+							</tr>
+						<?php } 
+						}?>			
+			   </tbody>				
             </table>
+			<table>
+			<tr>
+			<?php 
+			if($teachers_result)
+			{
+				$total = '';
+				while($row = $teachers_result->fetch_assoc())
+				{
+					$total += $row['payrate']*$row['session_id'];
+				}?>
+				<tr>
+				<td colspan="8" style="float:right;width:178px;background-color: #1c478e;color:#fff;">Rs. <?php echo $total;?></td>
+				</tr>
+			<?php }
+			?>		
+			</table>
 			</div>
 			<?php if(isset($_SESSION['error_msg'])){ ?>
 					<div><span class="red center"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>

@@ -2411,3 +2411,14 @@ function deleteAddProgCycle($sessionId, $serialId){
 	}
     return false;
 }
+
+//function to print reports
+function printDiv(divName) {
+  $(".dataTables_length,.dataTables_filter,.dataTables_info,.dataTables_paginate").css("display","none");
+  var printContents = document.getElementById(divName).innerHTML;
+  var originalContents = document.body.innerHTML;
+  document.body.innerHTML = printContents;
+  window.print();
+  document.body.innerHTML = originalContents;
+  $(".dataTables_length,.dataTables_filter,.dataTables_info,.dataTables_paginate").show();;
+}

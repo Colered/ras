@@ -636,8 +636,35 @@ width: 150px;
 float: left;
 text-align: left;
 }
-.filteration{
-padding-right:20px;
+[10:41:07] Dwarikesh Sharma: .filteration{
 float:right;
 color:#333399;
+width: 92px;
+
+}
+.filteration-lable{
+width:auto;
+}
+.filter-teache-report {
+    float: left;
+    height: 32px;
+    width: auto;
+ 	padding-left:45px;
+	color:#000066;
+}
+.filter-teache-report1 {
+    float: left;
+}
+.select-filter{
+ width: 88px;
+}
+.btn-export{
+float:right;
+position:relative;
+border:medium outset;
+padding:7px 12px 7px 30px!important;
+}
+.btn-export-text{
+position:absolute;top:0;left:0;
+width:40px;
 }
