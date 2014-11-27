@@ -3433,11 +3433,7 @@ function html_for_event_day_at_a_glance ( $event, $date ) {
    . $linkid . '" '
   // Make sure clones have parents URL date.
   . ( $can_access != 0 && $time_only != 'Y'
-    ? 'href="view_entry.php?id=' . $id . '&amp;date='
-     . ( $getClone ? $getClone : $date )
-     . ( strlen ( $GLOBALS['user'] ) > 0
-      ? '&amp;user=' . $GLOBALS['user']
-      : ( $class == 'layerentry' ? '&amp;user=' . $getLogin : '' ) ) . '"'
+    ? ''
     : '' ) . '>' . ( $getPri == 3 ? '<strong>' : '' );
 
   if ( $login != $getLogin && strlen ( $getLogin ) ) {
@@ -3583,7 +3579,7 @@ function html_for_event_week_at_a_glance ( $event, $date,
   // Build entry link if UAC permits viewing.
   if ( $can_access != 0 && $time_only != 'Y' ) {
     // Make sure clones have parents URL date.
-    $href = 'href="view_entry.php?id=' . $id . '&amp;date='
+    /*$href = 'href="view_entry.php?id=' . $id . '&amp;date='
      . ( $getClone ? $getClone : $date );
     if ( $getCalTypeName == 'task' ) {
       $hour_arr[$ind] .= '<img src="images/task.gif" class="bullet" alt="*" /> ';
@@ -3597,7 +3593,8 @@ function html_for_event_week_at_a_glance ( $event, $date,
 
 
 
-    }
+    }*/
+	$href='';
   }
 
   $hour_arr[$ind] .= $title . '" class="' . $class . '" id="' . $linkid . '" '

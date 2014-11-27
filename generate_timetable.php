@@ -16,15 +16,16 @@ $toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';
 								echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?>
 					</div>
 					<div class="clear"></div>
-                    <div class="custtd_left">
+                    
+					<div class="custtd_left" style="display:none">
                         <h2>Name<span class="redstar">*</span></h2>
                     </div>
-                    <div class="txtfield">
-                        <input type="text" class="inp_txt" required="true" id="txtAName" maxlength="50" name="txtAName" value="<?php echo $name; ?>">
+                    <div class="txtfield" style="display:none">
+                        <input type="text" class="inp_txt" required="true" id="txtAName" maxlength="50" name="txtAName" value="<?php echo 'Schedule-'.time(); ?>">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
-                        <h2>Time Interval<span class="redstar">*</span></h2>
+                        <h2><strong>Time Interval</strong><span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
                         From:<input type="text" required="true" id="fromGenrtTmtbl" name="fromGenrtTmtbl" size="13" value="<?php echo $fromGenrtTmtbl; ?>">
@@ -34,10 +35,10 @@ $toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';
                     <div class="custtd_left">
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
-                    <div class="txtfield">
+                    <div class="txtfield" style="padding-left:41px; padding-top:10px;">
                         <input type="submit" name="btnGenrtTimetbl" class="buttonsub" value="Generate Timetable">
                     </div>
-                    <div class="txtfield">
+                    <div class="txtfield" style="padding-top:10px;">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'timetable_dashboard.php';">
                     </div>
                 </div>	

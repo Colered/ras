@@ -888,10 +888,11 @@ class Timetable extends Base {
 
 	public function deleteData()
 	{
-		$sql_delete_tt = $this->conn->query("DELETE FROM timetable");
-		$sql_delete = $this->conn->query("DELETE FROM timetable_detail");
-		$sql_delete_cal = $this->conn->query("DELETE FROM webcal_entry");
-		$sql_delete_cal_user = $this->conn->query("DELETE FROM webcal_entry_user");
+		$sql_delete_tt = $this->conn->query("TRUNCATE TABLE timetable");
+		$sql_delete = $this->conn->query("TRUNCATE TABLE timetable_detail");
+		$sql_delete_cal = $this->conn->query("TRUNCATE TABLE webcal_entry");
+		$sql_delete_cal_user = $this->conn->query("TRUNCATE TABLE webcal_entry_user");
+		return 1;
 	}
 
 	//function to check the timetable name,if it already exists in database
@@ -992,5 +993,12 @@ class Timetable extends Base {
 			$tt_array[] =  $tslot['0'];
 		}
 		return $tt_array;
+	}
+	//function to list timetable
+	public function getTimetablesData()
+	{
+		$tt_query="select * from timetable limit 1"; 
+		$q_res = mysqli_query($this->conn, $tt_query);
+		return $q_res;
 	}		
 }

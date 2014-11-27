@@ -636,11 +636,10 @@ width: 150px;
 float: left;
 text-align: left;
 }
-[10:41:07] Dwarikesh Sharma: .filteration{
+.filteration{
 float:right;
 color:#333399;
 width: 92px;
-
 }
 .filteration-lable{
 width:auto;
@@ -668,3 +667,4 @@ padding:7px 12px 7px 30px!important;
 position:absolute;top:0;left:0;
 width:40px;
 }
+.minical td.hasevents{background-color:#FFFF33;}

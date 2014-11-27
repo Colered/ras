@@ -2411,7 +2411,6 @@ function deleteAddProgCycle($sessionId, $serialId){
 	}
     return false;
 }
-
 //function to print reports
 function printDiv(divName) {
   $(".dataTables_length,.dataTables_filter,.dataTables_info,.dataTables_paginate").css("display","none");
@@ -2422,3 +2421,31 @@ function printDiv(divName) {
   document.body.innerHTML = originalContents;
   $(".dataTables_length,.dataTables_filter,.dataTables_info,.dataTables_paginate").show();;
 }
+//Ajax delete the timetable
+function deleteTimetable($id){
+if($id==""){
+		alert("Please select a timetable to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the timetable?")) {
+		$.ajax({
+		type: "POST",
+		url: "ajax_common.php",
+		data: {
+			'id': $id,
+			'codeBlock': 'del_timetable',
+			},
+		success: function($succ){
+			if($succ==1){
+					$('#'+$id).closest('tr').remove();
+					$('.green, .red').hide();
+				}else{
+					alert("Cannot delete the selected timetable.");
+					$('.green, .red').hide();
+				}
+			  }
+		});
+    }
+    return false;
+}
+
+
