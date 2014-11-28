@@ -50,7 +50,7 @@ function submitFunction()
         <div class="full_w">
 		<div class="h_title non-printable">
 			<div class="filter-teache-report1">
-			 	Teacher's Rate Report
+			 	Activity Report
 			 </div>
 		</div>
 		<?php if(isset($_POST['btnGenrtReport'])){?>
