@@ -193,6 +193,8 @@ $(document).ready(function(){
 		$("#frmTactivity").validate();
 		$("#teacherAvailabilityForm").validate();
 		$("#classroomAvailabilityForm").validate();
+		$("#teacher_report").validate();
+		$("#teacher_rate_report").validate();
 		$("#timetable").validate();
 		//$("#changePwdForm").validate();
 		$( "#forgotPwdForm" ).validate({

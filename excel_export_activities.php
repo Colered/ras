@@ -2,7 +2,7 @@
 include('config.php');
 
 // file name for download
-$filename = "teacher_report_" . date('Ymd') . ".xls";
+$filename = "academic_report_" . date('Ymd') . ".xls";
 header("Content-Disposition: attachment; filename=\"$filename\"");
 header("Content-Type: application/vnd.ms-excel");
 
@@ -56,59 +56,33 @@ $q_res = mysqli_query($db,$teacher_sql);
 $data = array();
 while($row = mysqli_fetch_array($q_res))
 {
-	$data[] = array("Date" => $row['date'], "Teacher Name" => $row['teacher_name'], "Teacher Type" => $row['teacher_type'],"Program" => $row['name'], "Company" => $row['company'], "Module" => $row['unit'], "Sessions" => $row['session_name'], "Payrate" => $row['payrate']);  
-}  
-
-$total_sql = "select distinct teacher_id,count(session_id) as session_id,t.teacher_name,t.payrate from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
-if($teacher_id != '')
-{
-	 $total_sql .= " and teacher_id = '".$teacher_id."'";
-}
-if($program_id != '')
-{
-	$total_sql .= " and td.program_year_id = '".$program_id."'";
-}
-if($area_id != '')
-{
-	$total_sql .= " and su.area_id = '".$area_id."'";
-}
-if($profesor_id != '')
-{
-	$total_sql .= " and t.teacher_type = '".$profesor_id."'";
-}
-if($cycle_id != '')
-{
-	$cyc_arr = explode(",",$cycle_id);
-	$total_sql .= " and (";			
-	for($i=0;$i<count($cyc_arr);$i++)
+	$cyc_sql = "SELECT * FROM cycle WHERE program_year_id ='".$row['program_id']."' and start_week <= '".$row['date']."' and end_week >= '".$row['date']."'";
+	$q_res_sql = mysqli_query($db, $cyc_sql);
+	$cycdata = mysqli_fetch_array($q_res_sql);
+	if($cycdata['no_of_cycle'] == 1)
 	{
-		if($i == count($cyc_arr)-1)
-		{
-			$total_sql .= "td.cycle_id = '".$cyc_arr[$i]."'";
-		}else{
-			$total_sql .= "td.cycle_id = '".$cyc_arr[$i]."' || ";
-		}
+		$cycle_id = 1;
+	}elseif($cycdata['no_of_cycle'] == 2){
+		$cyc_sql_no = "SELECT min(id) as min_id,max(id) as max_id FROM cycle WHERE program_year_id ='".$row['program_id']."'";
+		$q_res_no = mysqli_query($db, $cyc_sql_no);
+		$row_res = mysqli_fetch_array($q_res_no);
+		if($cycdata['id'] == $row_res['min_id'])
+			$cycle_id = 1;
+		else
+			$cycle_id = 2;
+	}elseif($cycdata['no_of_cycle'] == 3){
+		$cyc_sql_no = "SELECT min(id) as min_id,max(id) as max_id FROM cycle WHERE program_year_id ='".$row['program_id']."'";
+		$q_res_no = mysqli_query($db, $cyc_sql_no);
+		$row_res = mysqli_fetch_array($q_res_no);
+		if($cycdata['id'] == $row_res['min_id'])
+			$cycle_id = 1;
+		elseif($cycdata['id'] == $row_res['max_id'])
+			$cycle_id = 3;
+		else
+			$cycle_id = 2;
 	}
-	$total_sql .= ")";
-}
-if($module != '')
-{
-	$total_sql .= " and p.unit = '".$module."'";
-}
-$total_sql .= " group by td.teacher_id order by td.teacher_id";
-$result = mysqli_query($db,$total_sql);
-$total = '';$sum = '';
-while($result_row = mysqli_fetch_array($result))
-{
-	$total += $result_row['payrate']*$result_row['session_id'];
-	$sum += $result_row['session_id'];
-}
-if($total == '')
-	$total = '0';
-if($sum == '')
-	$sum = '0';
-
-$data[] = array("Date" => "Total", "Teacher Name" => "", "Teacher Type" => "","Program" => "", "Company" => "", "Module" => "", "Sessions" => $sum, "Payrate" => $total);
+	$data[] = array("Date" => $row['date'], "Timeslot" => $row['timeslot'], "Program" => $row['name'], "Company" => $row['company'], "Module" => $row['unit'], "Cycle" => $cycle_id, "Area" => $row['area_name'], "Subject" => $row['subject_name'], "Session" => $row['session_name'],  "Teacher Name" => $row['teacher_name'], "Teacher Type" => $row['teacher_type'], "Classroom" => $row['room_name'], "Case No" => $row['case_number'], "Technical Notes" => $row['technical_notes']);  
+}  
 
 function cleanData(&$str)
   {

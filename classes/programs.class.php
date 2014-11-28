@@ -676,4 +676,8 @@ class Programs extends Base {
 		$result =  $this->conn->query("select py.*, py.id as progid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id GROUP BY cy.program_year_id");
 		return $result;
 	}
+	public function getUnit(){
+		$result =  $this->conn->query("select * from unit");
+		return $result;
+	}
 }

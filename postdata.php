@@ -489,13 +489,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										$subject_name = $v['subject_name'];
 										$session_name = $v['session_name'];
 										$teacher_name = $v['teacher_name'];
+										$cycle_id = $v['cycle_id'];
 										$subject_id = $v['subject_id'];
 										$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
 										$date = $v['date'];
 										$date_add = date("Y-m-d H:i:s");
 										$date_upd = date("Y-m-d H:i:s");
 
-										$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd);
+										$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd,$cycle_id);
 										if($resp)
 										{
 											$ts_array = explode("-", $timeslot);

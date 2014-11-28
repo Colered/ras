@@ -53,8 +53,37 @@ class Timetable extends Base {
 		$q_res = mysqli_query($this->conn, $cycle_query);
 		return $q_res;
    	}
-	public function getTeachersInRange($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id=''){
-		 $teacher_sql = "select t.id,td.date,t.teacher_name,t.teacher_type,py.name,p.company,u.name as unit,t.payrate,s.session_name from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit inner join subject_session s on s.id = td.session_id where date between '".$from."' and '".$to."'";
+	public function getCycleId($date,$program_id)
+	{
+		$cyc_sql = "SELECT * FROM cycle WHERE program_year_id ='".$program_id."' and start_week <= '".$date."' and end_week >= '".$date."'";
+		$q_res = mysqli_query($this->conn, $cyc_sql);
+		$data = mysqli_fetch_array($q_res);
+		if($data['no_of_cycle'] == 1)
+		{
+			$cycle_id = 1;
+		}elseif($data['no_of_cycle'] == 2){
+			$cyc_sql_no = "SELECT min(id) as min_id,max(id) as max_id FROM cycle WHERE program_year_id ='".$program_id."'";
+			$q_res_no = mysqli_query($this->conn, $cyc_sql_no);
+			$row = mysqli_fetch_array($q_res_no);
+			if($data['id'] == $row['min_id'])
+				$cycle_id = 1;
+			else
+				$cycle_id = 2;
+		}elseif($data['no_of_cycle'] == 3){
+			$cyc_sql_no = "SELECT min(id) as min_id,max(id) as max_id FROM cycle WHERE program_year_id ='".$program_id."'";
+			$q_res_no = mysqli_query($this->conn, $cyc_sql_no);
+			$row = mysqli_fetch_array($q_res_no);
+			if($data['id'] == $row['min_id'])
+				$cycle_id = 1;
+			elseif($data['id'] == $row['max_id'])
+				$cycle_id = 3;
+			else
+				$cycle_id = 2;
+		}
+		return $cycle_id;
+	}
+	public function getTeachersInRange($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id='',$module=''){
+		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit inner join subject_session s on s.id = td.session_id inner join area a on a.id = su.area_id inner join room r on r.id = td.room_id where date between '".$from."' and '".$to."'";
 		 if($teacher_id != '')
 		{
 			 $teacher_sql .= " and teacher_id = '".$teacher_id."'";
@@ -67,12 +96,37 @@ class Timetable extends Base {
 		{
 			$teacher_sql .= " and su.area_id = '".$area_id."'";
 		}
-		$teacher_sql .= " order by td.teacher_id";		
+		if($profesor_id != '')
+		{
+			$teacher_sql .= " and t.teacher_type = '".$profesor_id."'";
+		}
+		if($cycle_id != '')
+		{
+			$cyc_arr = explode(",",$cycle_id);
+			$teacher_sql .= " and (";			
+			for($i=0;$i<count($cyc_arr);$i++)
+			{
+				if($i == count($cyc_arr)-1)
+				{
+					$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."'";
+				}else{
+					$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."' || ";
+				}
+			}
+			$teacher_sql .= ")";
+		}
+		if($module != '')
+		{
+			$teacher_sql .= " and p.unit = '".$module."'";
+		}
+
+		$teacher_sql .= " order by td.teacher_id";
+		//echo $teacher_sql;die;
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
-	public function getTeacherId($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id=''){
-		$teacher_sql = "select distinct teacher_id,count(session_id) as session_id,t.teacher_name,t.payrate from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id where date between '".$from."' and '".$to."'";
+	public function getTeacherId($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id='',$module=''){
+		$teacher_sql = "select distinct teacher_id,count(session_id) as session_id,t.teacher_name,t.payrate from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit where date between '".$from."' and '".$to."'";
 		if($teacher_id != '')
 		{
 			 $teacher_sql .= " and teacher_id = '".$teacher_id."'";
@@ -85,17 +139,58 @@ class Timetable extends Base {
 		{
 			$teacher_sql .= " and su.area_id = '".$area_id."'";
 		}
+		if($profesor_id != '')
+		{
+			$teacher_sql .= " and t.teacher_type = '".$profesor_id."'";
+		}
+		if($cycle_id != '')
+		{
+			$cyc_arr = explode(",",$cycle_id);
+			$teacher_sql .= " and (";			
+			for($i=0;$i<count($cyc_arr);$i++)
+			{
+				if($i == count($cyc_arr)-1)
+				{
+					$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."'";
+				}else{
+					$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."' || ";
+				}
+			}
+			$teacher_sql .= ")";
+		}
+		if($module != '')
+		{
+			$teacher_sql .= " and p.unit = '".$module."'";
+		}
 		$teacher_sql .= " group by td.teacher_id order by td.teacher_id";
 		//echo $teacher_sql;die;
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
-	/*public function getAllTeachers($from,$to){
-		$teacher_sql = "select distinct teacher_id,t.teacher_name from timetable_detail td inner join teacher t on t.id = td.teacher_id where date between '".$from."' and '".$to."' group by td.teacher_id order by td.teacher_id";
-		$q_res = mysqli_query($this->conn, $teacher_sql);
-		return $q_res;
-	}*/
-	
+	public function getAllCycle()
+	{
+		 $row_program_ids=$array1=$array2=$array3=array();
+		 $result=$this->conn->query("select DISTINCT program_year_id FROM  cycle");
+		 $i=1;
+		 while($data=$result->fetch_assoc()){
+						$sql="SELECT * FROM cycle WHERE program_year_id ='".$data['program_year_id']."' GROUP BY id HAVING COUNT( * ) >=1 ORDER BY id ASC ";
+						$cycle_ids=$this->conn->query($sql);
+						$group="$"."group".$i;
+						$group=array();
+						while($data1=$cycle_ids->fetch_assoc()){
+						   $group[]=$data1['id'];
+						}
+						$i++;
+						$array1[]=(isset($group['0'])) ? ($group['0']) : '';
+						$array2[]=(isset($group['1'])) ? ($group['1']) : '';
+						$array3[]=(isset($group['2'])) ? ($group['2']) : '';
+		 }
+		 $strArray1=implode(",",$array1);
+		 $strArray2=implode(",",$array2);
+		 $strArray3=implode(",",$array3);
+		 return array($strArray1,$strArray2,$strArray3);
+     }
+
 	public function generateTimetable($date, $end_date, $from_time)
 	{	
 		$start_date = $date;
@@ -342,7 +437,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_free_act['order_number'];	
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
-																				$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id."-".$f_day;
+																				$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id;
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $room_id;
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
 																				$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
@@ -425,7 +520,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_free_act['order_number'];	
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] =  $result_free_act['subject_id']."-".$result_free_act['order_number'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
-																				$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id."-".$f_day;
+																				$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id;
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $room['id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $room_name;
 																				$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_free_act['teacher_id'];
@@ -583,7 +678,7 @@ class Timetable extends Base {
 	}
 
 	//function to add the full timetable details in database
-	public function addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd)
+	public function addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd,$cycle_id)
 	{
 		$sql_insert = "insert into timetable_detail set
 									   tt_id = '".$tt_id."',
@@ -597,7 +692,8 @@ class Timetable extends Base {
 									   date = '".date('Ymd', strtotime($date))."',
 									   timeslot = '".$timeslot."',
 									   date_add = '".$date_add."',
-									   date_upd = '".$date_upd."'";
+									   date_upd = '".$date_upd."',
+									   cycle_id = '".$cycle_id."'";
 		if($this->conn->query($sql_insert))
 		{
 			 return 1;
