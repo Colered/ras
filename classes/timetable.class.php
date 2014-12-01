@@ -1118,5 +1118,34 @@ class Timetable extends Base {
 		$tt_query="select * from timetable limit 1"; 
 		$q_res = mysqli_query($this->conn, $tt_query);
 		return $q_res;
-	}		
+	}
+	public function checkTimetable()
+	{
+		$tt_query="select * from timetable_detail"; 
+		$q_res = mysqli_query($this->conn, $tt_query);
+		return $q_res;
+	}
+	public function getLowestActDetail()
+	{
+		$tt_query="select * from timetable_detail where id='1'"; 
+		$q_res = mysqli_query($this->conn, $tt_query);
+		return $q_res;
+	}
+	public function getLowestTeachAct($activity_id)
+	{
+		$tt_query="select * from teacher_activity where id='".$activity_id."'"; 
+		$q_res = mysqli_query($this->conn, $tt_query);
+		return $q_res;
+	}	
+	public function updateTeachAct($activity_id,$room_id,$date,$timeslot_id,$start_time,$date_update)
+	{
+		$sql_upd = "update teacher_activity set room_id = '".$room_id."',
+												timeslot_id = '".$timeslot_id."',
+												start_time = '".$start_time."',
+												act_date = '".$date."',
+												reserved_flag = '1',
+												date_update = '".$date_update."'
+												where id = '".$activity_id."'";
+		$q_res = mysqli_query($this->conn, $sql_upd);
+	}
 }

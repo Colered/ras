@@ -410,8 +410,8 @@ class Teacher extends Base {
 		foreach($ts_array as $val)
 		{			
 			$time = explode("-",$val);
-			$start_time  = $time['0'];
-			$end_time = $time['1'];
+			$start_time  = trim($time['0']);
+			$end_time = trim($time['1']);
 			$sql_time_slct = "select id from timeslot where start_time = '".$start_time."' OR end_time = '".$end_time."'";
 			//get all the ids between two nos
 			$q_res= mysqli_query($this->conn, $sql_time_slct);

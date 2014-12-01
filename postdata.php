@@ -614,7 +614,22 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			 }
 		}
 		break;
-
-	}
+		case "acceptAllocation":
+			if(isset($_POST['btnacceptallo']) && $_POST['btnacceptallo'] != '')
+			{
+				$objTime = new Timetable();
+				$objT = new Teacher();								
+				$resp = $objTime->checkTimetable();	
+				while($row = mysqli_fetch_array($resp))
+				{
+					$all_ts = $objT -> getTimeslotId($row['timeslot']);
+					$time = explode(",",$all_ts);
+					$start_time = $time[0];
+					$objTime->updateTeachAct($row['activity_id'],$row['room_id'],$row['date'],$all_ts,$start_time,$row['date_upd']);	
+				}
+				header('Location: teacher_activity_view.php');
+			}
+			break;
+		}
 }
 ?>

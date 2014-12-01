@@ -2,6 +2,14 @@
 include('header.php');
 $objT = new Teacher();
 $objB = new Buildings();
+$objTime = new Timetable();
+$result_time = $objTime->checkTimetable();
+$row_time = $result_time->fetch_assoc();
+$result_id = $objTime->getLowestActDetail();
+$row_id = $result_id->fetch_assoc();
+$result_act_id = $objTime->getLowestTeachAct($row_id['activity_id']);
+$row_act_id = $result_act_id->fetch_assoc();
+
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -23,6 +31,19 @@ $(document).ready(function(){
     <?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";} ?>
         <div class="full_w">
             <div class="h_title">Activity View<!--<a href="teacher_activity.php" class="gird-addnew" title="Add New Activity">Add new</a>--></div>
+			<?php
+			if($result_time && $row_id['date_upd'] != $row_act_id['date_update'])
+			{
+				$readonly = '';				
+			}else{				
+				$readonly = 'disabled="disabled"';
+			}?>
+			<div style="float:right">
+				<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
+				<input type="hidden" value="acceptAllocation" name="form_action">
+				<input type="submit" <?php echo $readonly;?> value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
+				</form>
+			</div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
