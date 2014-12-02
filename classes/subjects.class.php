@@ -254,7 +254,7 @@ class Subjects extends Base {
 		}
 		return $data;
    }
-   
+
     /*function for get all-cycle-data from program id*/
  	public function getCycleDataByProgId($progId){
 		$result="";
@@ -266,7 +266,7 @@ class Subjects extends Base {
    }
   //get weeks from date
   public function getWeekFromDate($date,$start_week,$end_week)
-	{
+  {
 		$myweek = date("W",strtotime($date)) % 2 ;
 		if($myweek == '0')
 		{
@@ -274,5 +274,31 @@ class Subjects extends Base {
 		}else{
 			return 2;
 		}
+   }
+
+	public function getSessionRow($sessid)
+	{
+		 $query="SELECT subs.id,
+						subs.duration,
+						subs.session_name,
+						subs.technical_notes,
+						subs.case_number,
+						subs.description FROM subject_session AS subs WHERE subs.id='".$sessid."'";
+		$result = $this->conn->query($query);
+		$row = $result->fetch_assoc();
+   		return $row;
+    }
+
+	public function getActRow($actid)
+	{
+		 $query="SELECT ta.start_time,
+						ta.act_date,
+						ta.teacher_id,
+						ta.room_id,
+						ta.timeslot_id FROM teacher_activity as ta WHERE ta.id='".$actid."'";
+		$result = $this->conn->query($query);
+		$row = $result->fetch_assoc();
+		return $row;
 	}
+
 }

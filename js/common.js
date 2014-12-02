@@ -581,6 +581,8 @@ $(document).ready(function() {
 						'tslot_id': $('#tslot_id').val(),
 						'duration': $('#duration').val(),
 						'subSessDate': $('#subSessDate').val(),
+						'sess_hidden_id': $('#sess_hidden_id').val(),
+						'act_hidden_id': $('#act_hidden_id').val(),
 						'codeBlock': 'checkAvailabilitySession',
 					},
 					success: function($succ){
@@ -687,6 +689,8 @@ $(document).ready(function() {
 						'tslot_id': $('#tslot_id').val(),
 						'duration': $('#duration').val(),
 						'subSessDate': $('#subSessDate').val(),
+						'sess_hidden_id': $('#sess_hidden_id').val(),
+						'act_hidden_id': $('#act_hidden_id').val(),
 						'codeBlock': 'add_sub_session',
 					},
 					success: function($succ){
