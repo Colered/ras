@@ -308,7 +308,7 @@ while ($row = $rel_teacher->fetch_assoc()) {
                                     if ($subj_session_data['activityId'] != "") {
                                         $actID = $subj_session_data['activityId'];
                                     }
-                                    $edit_session_lnk = ' | <a href="subjects.php?edit=' . $subIdEncrypt . '&edit_actid=' . $actID . '&edit_sessid=' . $subj_session_data['sessionID'] . '">Edit</a>';
+                                    $edit_session_lnk = ' |  <a class="table-icon edit" href="subjects.php?edit=' . $subIdEncrypt . '&edit_actid=' . $actID . '&edit_sessid=' . $subj_session_data['sessionID'] . '"></a>';
 
 
                                     //setting default duration as 15 min for the activities
@@ -331,7 +331,7 @@ while ($row = $rel_teacher->fetch_assoc()) {
           						<th >Case No</th>
                                                         <th >Technical Notes</th>
                                                         <th >Description</th>
-                                                        <th >Remove</th>
+                                                        <th >Actions</th>
 							</tr>
        					      </thead>
        					      <tbody>';
@@ -356,7 +356,7 @@ while ($row = $rel_teacher->fetch_assoc()) {
 								<input type="hidden" name="sessionOrder[]" id="sessionOrder' . $x . '"  value="' . $subj_session_data['order_number'] . '"/>
 								<input type="hidden" name="sessionRowId[]" id="sessionRowId' . $x . '"  value="' . $subj_session_data['id'] . '"/>
 								<input type="hidden" name="sessionSubId[]" id="sessionSubId' . $x . '"  value="' . $subj_session_data['sessionID'] . '"/></td>
-								<td id=' . $x . '><a class="remove_field" onclick="removeSession(' . $actID . ',' . $subj_session_data['sessionID'] . ', ' . $subjectId . ', ' . $x . ');">Remove</a>' . $edit_session_lnk . '</td></tr>';
+								<td style="width:50px" id=' . $x . '><a class="table-icon delete remove_field" onclick="removeSession(' . $actID . ',' . $subj_session_data['sessionID'] . ', ' . $subjectId . ', ' . $x . ');"></a>' . $edit_session_lnk . '</td></tr>';
                                 }
                                 $sessionHtml.='<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="' . $x . '"/>';
                                 $sessionHtml.='<input type="hidden" name="EditMaxExceptnListVal" id="EditMaxExceptnListVal"  value="' . $x . '"/>';

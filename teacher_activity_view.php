@@ -34,14 +34,14 @@ $(document).ready(function(){
 			<?php
 			if($result_time && $row_id['date_upd'] != $row_act_id['date_update'])
 			{
-				$readonly = '';				
+				$readonly = 'class="buttonsub"';				
 			}else{				
-				$readonly = 'disabled="disabled"';
+				$readonly = 'class="buttonsub" disabled="disabled" style="background-color:#CCCCCC; background-image:none"';
 			}?>
 			<div style="float:right">
 				<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
 				<input type="hidden" value="acceptAllocation" name="form_action">
-				<input type="submit" <?php echo $readonly;?> value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
+				<input  type="submit" <?php echo $readonly;?> value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
 				</form>
 			</div>
             <table id="datatables" class="display">
