@@ -792,6 +792,19 @@ switch ($codeBlock) {
                                 }
                             }
                         }
+						//check for additional days availability
+						$sql_pgm_add_date = mysqli_query($db, "select additional_date,actual_timeslot_id from program_cycle_additional_day_time where additional_date between  '".$result_pgm_cycle['start_week']."' and '".$result_pgm_cycle['end_week']."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
+						while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
+						{
+							$ts_array = explode(",",$result_pgm_add_date['actual_timeslot_id']);
+							if(array_key_exists($result_pgm_add_date['additional_date'],$final_programs))
+							{
+								$new_arr = array_unique(array_merge($final_programs,$ts_array));		
+								$final_programs[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $new_arr;
+							}else{
+								$final_programs[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $ts_array;
+							}
+						}	
                     } else {
                         echo 9;
                         $valid = 0;
