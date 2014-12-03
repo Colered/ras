@@ -46,7 +46,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                 <div id="nav">
                     <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ ?>
 					<ul>
-						<li class="upp"><a href="">Dashboard</a>
+						<li class="upp"><a href="timetable_dashboard.php">Dashboard</a>
 						   
 						</li>
                         <li class="upp"><a href="">Timetable</a>

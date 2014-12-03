@@ -14,7 +14,7 @@ $result=$obj->getTimetablesData();
                     </div>
                     <div class="custtd_right">
                         <!--<a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>-->
-						<a target="_blank" href="month.php"><input type="button" name="btnSubject" class="buttonsub" value="Calendar View"></a>
+						<a href="month.php"><input type="button" name="btnSubject" class="buttonsub" value="Calendar View"></a>
                     </div>
                     <div class="custtd_right">
                         <a href="timetable_view.php"><input type="button" name="btnSubject" class="buttonsub" value="Table View"></a>
