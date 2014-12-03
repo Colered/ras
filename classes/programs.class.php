@@ -680,4 +680,28 @@ class Programs extends Base {
 		$result =  $this->conn->query("select * from unit");
 		return $result;
 	}
+	//Getting the cycle ids into the option dropdown menu in cycle filetration
+	public function getCycle(){
+		 $row_program_ids=$array1=$array2=$array3=array();
+		 $result=$this->conn->query("select DISTINCT program_year_id FROM  cycle");
+		 $i=1;
+		 while($data=$result->fetch_assoc()){
+		 	$sql="SELECT * FROM cycle WHERE program_year_id ='".$data['program_year_id']."' GROUP BY id HAVING COUNT( * ) >=1 ORDER BY id ASC ";
+			$cycle_ids=$this->conn->query($sql);
+			$group="$"."group".$i;
+			$group=array();
+			while($data1=$cycle_ids->fetch_assoc()){
+			   $group[]=$data1['id'];
+			}
+			$i++;
+			$array1[]=(isset($group['0'])) ? ($group['0']) : '';
+			$array2[]=(isset($group['1'])) ? ($group['1']) : '';
+			$array3[]=(isset($group['2'])) ? ($group['2']) : '';
+		 }
+		 $strArray1=implode(",",$array1);
+		 $strArray2=implode(",",$array2);
+		 $strArray3=implode(",",$array3);
+		 return array($strArray1,$strArray2,$strArray3);
+	}
+	
 }

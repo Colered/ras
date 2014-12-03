@@ -677,17 +677,16 @@ $logoutStr = translate ( 'Logout' );
   ) . '&nbsp;</td>
         </tr>
       </table>';*/
-
+	  
+	  
+// working comment,need to remove the comment	  
+/*
 $menuHtml .= '
       <table width="100%" class="ThemeMenubar" cellspacing="0" cellpadding="0" summary="">
         <tr>
-          <td class="ThemeMenubackgr"></td>'
- . ( $MENU_DATE_TOP == 'Y' && $menuConfig['MENU_DATE_TOP'] ? '
-          <td class="ThemeMenubackgr ThemeMenu" align="right">
-            ' . print_menu_dates ( true ) . '
-          </td>' : '' ) . '
-          <td class="ThemeMenubackgr ThemeMenu" align="right">'
- . ( ! empty ( $logout_url ) && $menuConfig['Login'] // Using http_auth.
+          <td class="ThemeMenubackgr"></td>'. ( $MENU_DATE_TOP == 'Y' && $menuConfig['MENU_DATE_TOP'] ? '
+          <td class="ThemeMenubackgr ThemeMenu" align="right">' . print_menu_dates ( true ) . '</td>' : '' ) . '
+          <td class="ThemeMenubackgr ThemeMenu" align="right">'. ( ! empty ( $logout_url ) && $menuConfig['Login'] // Using http_auth.
   ? '<a class="menuhref" title="'
    . ( strlen ( $login ) && $login != '__public__'
     ? $logoutStr . '" href="' . $logout_url . '">' . $logoutStr
@@ -699,6 +698,12 @@ $menuHtml .= '
   ) . '&nbsp;</td>
         </tr>
       </table>';
+*/
+
+
+$menuHtml .= '<table class="ThemeMenubar" cellspacing="0" cellpadding="0" summary="">
+'. ( $MENU_DATE_TOP == 'Y' && $menuConfig['MENU_DATE_TOP'] ? '<tr class="ThemeMenubackgr ThemeMenu" align="right">' . print_menu_dates ( true ) . '</tr>' : '' ) . '
+</table>';
 
 // Add function to onload string as needed.
 $BodyX = ( empty ( $BodyX ) ? 'onload="' : substr ( $BodyX, 0, -1 ) )

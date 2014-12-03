@@ -1,7 +1,17 @@
 <?php
 /* $Id: year.php,v 1.67.2.4 2008/03/31 21:03:41 umcesrjones Exp $ */
 include_once 'includes/init.php';
-send_no_cache_header ();
+include_once 'includes/header.php';
+
+//send_no_cache_header ();
+
+$program_id=(isset($_REQUEST['program_id'])) ? ($_REQUEST['program_id']) : '';
+$teacher_id=(isset($_REQUEST['teacher_id'])) ? ($_REQUEST['teacher_id']) : '';
+$subject_id=(isset($_REQUEST['subject_id'])) ? ($_REQUEST['subject_id']) : '';
+$room_id=(isset($_REQUEST['room_id'])) ? ($_REQUEST['room_id']) : '';
+$area_id=(isset($_REQUEST['area_id'])) ? ($_REQUEST['area_id']) : '';
+$teacher_type_id=(isset($_REQUEST['teacher_type_id'])) ? ($_REQUEST['teacher_type_id']) : '';
+$cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
 
 //check UAC
 if ( ! access_can_access_function ( ACCESS_YEAR ) || 
@@ -43,12 +53,44 @@ if ( ! empty ( $BOLD_DAYS_IN_YEAR ) && $BOLD_DAYS_IN_YEAR == 'Y' ) {
     $startdate, $enddate, $cat_id );
 
   /* Pre-load the non-repeating events for quicker access */
-  $events = read_events (
-    ( ! empty ( $user ) && strlen ( $user ) ? $user : $login ),
-    $startdate, $enddate, $cat_id );
-  $boldDays = true;
   
+  	if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
+		$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
+	}else{
+ 		$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login ),$startdate, $enddate, $cat_id);
+	}
+
+ 	/*if($teacher_id!=""){
+	$events = read_events_teacher ( ( ! empty ( $user ) && strlen ( $user ) )
+	  ? $user : $login, $startdate, $enddate,'',$teacher_id);
+	}else if($program_id!=""){
+	$events = read_events_program ( ( ! empty ( $user ) && strlen ( $user ) )
+	  ? $user : $login, $startdate, $enddate, '' ,$program_id);
+	}else if($subject_id!=""){
+	$events = read_events_subject ( ( ! empty ( $user ) && strlen ( $user ) )
+	  ? $user : $login, $startdate, $enddate, $cat_id ,$subject_id);
+	}else if($room_id!=""){
+	$events = read_events_room ( ( ! empty ( $user ) && strlen ( $user ) )
+	  ? $user : $login, $startdate, $enddate, $cat_id ,$room_id);
+	}else if($area_id!=""){
+		$events = read_events_area ( ( ! empty ( $user ) && strlen ( $user ) )
+  	  ? $user : $login, $startdate, $enddate, $cat_id ,$area_id);
+	}else if($teacher_type_id){
+		$events = read_events_teacher_type ( ( ! empty ( $user ) && strlen ( $user ) )
+  	  ? $user : $login, $startdate, $enddate, $cat_id ,$teacher_type_id);
+
+	}else if($cycle_id!=""){
+		$events = read_events_cycle ( ( ! empty ( $user ) && strlen ( $user ) )
+  	  ? $user : $login, $startdate, $enddate, $cat_id ,$cycle_id);
+	}else{
+	 $events = read_events (( ! empty ( $user ) && strlen ( $user ) 
+	  ? $user : $login ),$startdate, $enddate, $cat_id );
+	 
+	}*/
+	
+  $boldDays = true;
   $catSelectStr = print_category_menu ( 'year', $thisyear, $cat_id );
+  $navStr = display_navigation ( 'year' );
 }
 
 // Disable $DISPLAY_ALL_DAYS_IN_MONTH.
@@ -64,6 +106,7 @@ $nextStr = translate ( 'Next' );
 $prevStr = translate ( 'Previous' );
 $userStr = ( empty ( $user ) ? '' : '&amp;user=' . $user );
 
+$fullnameStr='';
 if ( $single_user == 'N' ) {
   if ( ! empty ( $user ) ) {
     user_load_variables ( $user, 'user_' );
@@ -81,7 +124,6 @@ if ( empty ( $friendly ) ) {
   $printerStr = generate_printer_friendly ( 'year.php' );
 } else
   $unapprovedStr = $printerStr = '';
-
 $yr_rows = 3;
 /* TODO: Move $yr_rows = 3 to webcal_config as default.
  * Add to webcal_user_prefs for each user.
@@ -91,32 +133,47 @@ $m = 1;
 
 $gridOmonths = '';
 
+$COUNT=0;
 for ( $r = 1; $r <= $yr_rows; $r++ ) {
   $gridOmonths .= '        <tr>';
-
+ 
   for( $c = 1; $c <= $yr_cols; $c++, $m++ ) {
+  $COUNT=$COUNT+1;
     $gridOmonths .= '
-          <td>' . display_small_month ( $m, $year, false ) . '</td>';
+          <td>' . display_small_month ( $m, $year, false,'','','',$COUNT) . '</td>';
   }
   $gridOmonths .= '
         </tr>';
 }
-
 $trailerStr = print_trailer ();
 print_header ();
+
+echo <<<EOT
+    <table id="filters-table" border="0" width="70%" cellpadding="1" style=" padding-left:98px">
+      <tr>
+        <td id="filters-td" valign="top" width="70%" rowspan="2" style="padding-top:0px;">
+			<fieldset>
+  				<legend>Filters:</legend>
+ 				{$navStr}
+			</fieldset>
+		 </td>
+       </tr>
+    </table>
+EOT;
+
 echo <<<EOT
     <div class="title">
-      <a title="{$prevStr}" class="prev" href="year.php?year={$prevYear}{$userStr}">
-        <img src="images/leftarrow.gif" alt="{$prevStr}" /></a>
+      <a title="{$prevStr}" class="prev" href="year.php?year={$prevYear}{$userStr}" >
+        <img src="images/leftarrow.gif" alt="{$prevStr}" style="padding-left:92px;"/></a>
       <a title="{$nextStr}" class="next" href="year.php?year={$nextYear}{$userStr}">
-        <img src="images/rightarrow.gif" alt="{$nextStr}" /></a>
+        <img src="images/rightarrow.gif" alt="{$nextStr}"  style="padding-right:74px;"/></a>
       <span class="date">{$thisyear}</span><br />
       <span class="user">{$fullnameStr}</span><br />
       {$asstModeStr}
       {$catSelectStr}
     </div><br />
     <div align="center">
-      <table id="monthgrid">
+      <table id="monthgrid" width="100%" style="padding-left:92px;">
         {$gridOmonths}
       </table>
     </div><br />

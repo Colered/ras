@@ -2,11 +2,16 @@
 /* $Id: week.php,v 1.133.2.5 2008/09/27 14:50:18 cknudsen Exp $ */
 include_once 'includes/init.php';
 include_once 'config.php';
+include_once 'includes/header.php';
 //check UAC
 $program_id=(isset($_REQUEST['program_id'])) ? ($_REQUEST['program_id']) : '';
 $teacher_id=(isset($_REQUEST['teacher_id'])) ? ($_REQUEST['teacher_id']) : '';
 $subject_id=(isset($_REQUEST['subject_id'])) ? ($_REQUEST['subject_id']) : '';
 $room_id=(isset($_REQUEST['room_id'])) ? ($_REQUEST['room_id']) : '';
+$area_id=(isset($_REQUEST['area_id'])) ? ($_REQUEST['area_id']) : '';
+$teacher_type_id=(isset($_REQUEST['teacher_type_id'])) ? ($_REQUEST['teacher_type_id']) : '';
+$cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
+
 if ( ! access_can_access_function ( ACCESS_WEEK ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )
   send_to_preferred_view ();
@@ -59,25 +64,13 @@ if ( $DISPLAY_SM_MONTH == 'Y' && $BOLD_DAYS_IN_YEAR == 'Y' ) {
 $repeated_events = read_repeated_events ( ( strlen ( $user )
     ? $user : $login ), $evStart, $evEnd, $cat_id );
 
-/* Pre-load the non-repeating events for quicker access. */
-// Start the search ONE_WEEK early to account for cross-day events.
-$events = read_events ( ( strlen ( $user )
-    ? $user : $login ), $evStart - 604800, $evEnd, $cat_id );
 
-if($program_id!=""){
-	$events = read_events_program (( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd,'',$program_id);
+if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
+	$events = read_events_filters ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
+}else{
+ 	$events = read_events ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, $cat_id );
 }
 
-if($teacher_id!=""){
-	$events = read_events_teacher (( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd,'',$teacher_id);
-}
-
-if($subject_id!=""){
-$events = read_events_subject ( ( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd, '' ,$subject_id);
-}
-if($room_id!=""){
-$events = read_events_room ( ( strlen ( $user )? $user : $login), $evStart - 604800,$evEnd, '' ,$room_id);
-}
 if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
   /* Pre-load tasks for quicker access. */
   $tasks = read_tasks ( ! empty ( $user ) && strlen ( $user ) && $is_assistant
@@ -85,6 +78,7 @@ if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
 
 $eventsStr = $filler = $headerStr = $minical_tasks = $untimedStr = '';
 $navStr = display_navigation ( 'week' );
+$week_name_display=display_navigation_current_month( 'week' );
 for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   $days[$i] = ( $wkstart + ( 86400 * $i ) ) + 43200;
   $weekdays[$i] = weekday_name ( ( $i + $WEEK_START ) % 7, $DISPLAY_LONG_DAYS );
@@ -257,10 +251,25 @@ print_header ( array ( 'js/popups.php/true' ), generate_refresh_meta (), '',
   false, false, false, false );
 
 echo <<<EOT
-    <table width="100%" cellpadding="1">
+    <table id="filters-table" border="0" width="70%" cellpadding="1" style="padding-left:92px;">
       <tr>
-        <td id="printarea" style="vertical-align:top; width:{$tableWidth};" >
-        {$navStr}
+        <td id="filters-td" valign="top" width="70%" rowspan="2" style="padding-top:0px;">
+			<fieldset>
+  				<legend>Filters:</legend>
+ 				{$navStr}
+			</fieldset>
+		 </td>
+       </tr>
+    </table>
+EOT;
+
+
+
+echo <<<EOT
+    <table width="100%" cellpadding="1" style="padding-left:92px;padding-right:92px;">
+      <tr>
+        <td id="printarea" style="vertical-align:top; width:{$tableWidth}; padding-top:44px; " >
+        {$week_name_display}
         </td>
         {$filler}
       </tr>

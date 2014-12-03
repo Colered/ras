@@ -2,37 +2,39 @@
 /* $Id: month.php,v 1.95.2.9 2010/08/15 18:54:34 cknudsen Exp $ */
 include_once 'includes/init.php';
 include_once 'config.php';
+include_once 'includes/header.php';
+
 //check UAC
 if ( ! access_can_access_function ( ACCESS_MONTH ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  ){
   send_to_preferred_view ();
 
   }
-if ( ( $user != $login ) && $is_nonuser_admin )
-{ 
+if ( ( $user != $login ) && $is_nonuser_admin ){ 
   load_user_layers ( $user );
-  }
-else{
+}else{
 if ( empty ( $user ) )
 	load_user_layers ();
 }
-$cat_id = getValue ( 'cat_id', '-?[0-9,\-]*', true );
-$program_id = getValue ( 'program_id', '-?[0-9,\-]*', true );
-$teacher_id = getValue ( 'teacher_id', '-?[0-9,\-]*', true );
-$subject_id = getValue ( 'subject_id', '-?[0-9,\-]*', true );
-$room_id = getValue ( 'room_id', '-?[0-9,\-]*', true );
+ 
+ $cat_id = getValue ( 'cat_id', '-?[0-9,\-]*', true );
+ $program_id=(isset($_POST['program_id']))?$_POST['program_id']:'';
+ $teacher_id=(isset($_POST['teacher_id']))?$_POST['teacher_id']:'';
+ $subject_id=(isset($_POST['subject_id']))?$_POST['subject_id']:'';
+ $room_id=(isset($_POST['room_id']))?$_POST['room_id']:'';
+ $area_id=(isset($_POST['area_id']))?$_POST['area_id']:'';
+ $teacher_type_id=(isset($_POST['teacher_type_id']))?$_POST['teacher_type_id']:'';
+ $cycle_id=(isset($_POST['cycle_id']))?$_POST['cycle_id']:'';
+ 
 load_user_categories ();
-
 $next = mktime ( 0, 0, 0, $thismonth + 1, 1, $thisyear );
 $nextYmd = date ( 'Ymd', $next );
 $nextyear = substr ( $nextYmd, 0, 4 );
 $nextmonth = substr ( $nextYmd, 4, 2 );
-
 $prev = mktime ( 0, 0, 0, $thismonth - 1, 1, $thisyear );
 $prevYmd = date ( 'Ymd', $prev );
 $prevyear = substr ( $prevYmd, 0, 4 );
 $prevmonth = substr ( $prevYmd, 4, 2 );
-
 if ( $BOLD_DAYS_IN_YEAR == 'Y' ) {
   $boldDays = true;
   $startdate = mktime ( 0, 0, 0, $prevmonth, 0, $prevyear );
@@ -42,36 +44,10 @@ if ( $BOLD_DAYS_IN_YEAR == 'Y' ) {
   $startdate = mktime ( 0, 0, 0, $thismonth, 0, $thisyear );
   $enddate = mktime ( 23, 59, 59, $thismonth + 1, 0, $thisyear );
 }
-/* Pre-Load the repeated events for quicker access */
-/*if($teacher_id!=""){
-$repeated_events = read_repeated_events (
-  ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, $cat_id);
+if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
+	$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
 }else{
-$repeated_events = read_repeated_events_teacher (//Dwarikesh
-  ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, $cat_id,$teacher_id );
-}*///end dwarikesh
-//echo "repeate=";
-//print_r($repeated_events);query_events_teahcer1
-if($teacher_id==""){
-$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, $cat_id);
-}else{
-$events = read_events_teacher ( ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate,'',$teacher_id);
-}
-if($program_id!=""){
-$events = read_events_program ( ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, '' ,$program_id);
-}
-if($subject_id!=""){
-$events = read_events_subject ( ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, $cat_id ,$subject_id);
-}
-if($room_id!=""){
-$events = read_events_room ( ( ! empty ( $user ) && strlen ( $user ) )
-  ? $user : $login, $startdate, $enddate, $cat_id ,$room_id);
+ 	$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, $cat_id);
 }
 if ( $DISPLAY_TASKS_IN_GRID == 'Y' ){
   /* Pre-load tasks for quicker access */
@@ -87,12 +63,11 @@ $monthURL = 'month.php?' . ( ! empty ( $cat_id )
 $printerStr = $smallTasks = $unapprovedStr = '';
 if ( empty ( $DISPLAY_TASKS ) || $DISPLAY_TASKS == 'N' &&
   $DISPLAY_SM_MONTH != 'N' ) {
-  $nextMonth1 = display_small_month ( $nextmonth, $nextyear, true, true,
+     $nextMonth1 = display_small_month ( $nextmonth, $nextyear, true, true,
     'nextmonth', $monthURL );
-  $prevMonth1 = display_small_month ( $prevmonth, $prevyear, true, true,
+    $prevMonth1 = display_small_month ( $prevmonth, $prevyear, true, true,
     'prevmonth', $monthURL );
 }
-
 if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
   if (  $DISPLAY_SM_MONTH != 'N' ) {
   $nextMonth2 = display_small_month ( $nextmonth, $nextyear, true, false,
@@ -107,29 +82,36 @@ if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
 }
 $eventinfo = ( ! empty ( $eventinfo ) ? $eventinfo : '' );
 $monthStr = display_month ( $thismonth, $thisyear );
-
 $navStr = display_navigation ( 'month' );
+$month_name_display=display_navigation_current_month( 'month' );
 if ( empty ( $friendly ) ) {
   $unapprovedStr = display_unapproved_events (
     ( $is_assistant || $is_nonuser_admin ? $user : $login ) );
   $printerStr = generate_printer_friendly ( 'month.php' );
 }
-
 $trailerStr = print_trailer ();
-
 $HeadX = generate_refresh_meta ()
   . '<script src="includes/js/weekHover.js" type="text/javascript"></script>';
-
 print_header ( array ( 'js/popups.php/true', 'js/visible.php' ), $HeadX,
 '', false, false, false, false );
-
 echo <<<EOT
-    <table border="0" width="100%" cellpadding="1">
+    <table id="filters-table" border="0" width="70%" cellpadding="1" style="padding-left:92px;">
+      <tr>
+        <td id="filters-td" valign="top" width="70%" rowspan="2">
+			<fieldset>
+  				<legend>Filters:</legend>
+ 				{$navStr}
+			</fieldset>
+		 </td>
+       </tr>
+    </table>
+EOT;
+echo <<<EOT
+    <table border="0" width="100%" cellpadding="1" style="padding-left:92px;padding-right:92px;">
       <tr>
         <td id="printarea" valign="top" width="{$tableWidth}" rowspan="2">
-          {$prevMonth1}{$nextMonth1}
-          {$navStr}
-          {$monthStr}
+		  {$prevMonth1}{$month_name_display}{$nextMonth1}
+		  {$monthStr}
         </td>
         <td valign="top" align="center">
           {$prevMonth2}{$nextMonth2}<div id="minitask">{$smallTasks}</div>

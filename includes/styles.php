@@ -135,13 +135,20 @@ if ( ! empty ( $_SERVER['PHP_SELF'] ) && !
 ';
 }
 
-echo '  body {
-    margin:2px;
-    background:' . $GLOBALS['BGCOLOR'] . ( empty ( $GLOBALS['BGIMAGE'] )
-  ? '' : ' url( ' . $GLOBALS['BGIMAGE'] . ' ) ' . $GLOBALS['BGREPEAT'] ) . ';
-    color:' . $GLOBALS['TEXTCOLOR'] . ';
-    font-family:' . $GLOBALS['FONTS'] . ';
-  }
+echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
+		color: #909090;
+		font-family: Tahoma, Arial, Helvetica, sans-serif;
+		font-size: 11px;
+		margin: 0;
+	}
+  #header #top {
+    height: 71px;
+    padding: 6px 20px 0 10px;
+   }
+   .wrap{
+	margin: 0 auto;
+	width: 100%;
+	}
   a {
     color:' . $GLOBALS['TEXTCOLOR'] . ';
     text-decoration:none;
@@ -149,6 +156,7 @@ echo '  body {
   a:hover {
     color:#0000ff;
   }
+  
   abbr {
     cursor:help;
   }
@@ -163,7 +171,7 @@ echo '  body {
     font-size:18px;
   }
   fieldset {
-    width:96%;
+    width:95%;
   }
   label {
     font-weight:bold;
@@ -369,6 +377,7 @@ echo '  body {
     margin-bottom:0;
     font-size:9px;
     text-align:right;
+	padding-right:99px;
   }
   #yearform {
     clear:right;
@@ -1279,9 +1288,298 @@ echo '  body {
     padding-left:5px;
     font-size:12px;
   }
+  /* ThemeMenu Style Sheet */
+.ThemeMenubar {
+  float:right;
+  width:30%;
+}
+
+.ThemeMenubackgr {
+  /*background: #D0D0D0;
+  border-bottom: 1px solid #D0D0D0;*/
+}
+
+.ThemeMenu, .ThemeMenubar a, .ThemeMenubar td {
+  /*color: #000000;*/
+}
+
+.ThemeMenu,.ThemeSubMenuTable {
+/*  font-family:  arial, verdana, sans-serif;
+  padding:  0;
+  font-size: 1em;
+  white-space:  nowrap;
+  cursor:    default;
+  height: 25px;
+  vertical-align:middle;*/
+}
+
+.ThemeSubMenu {
+  position:  absolute;
+  visibility:  hidden;
+  /*
+     Netscape/Mozilla renders borders by increasing
+     their z-index.  The following line is necessary
+     to cover any borders underneath
+  */
+  z-index:  100;
+  border:    0;
+  padding:  1px;
+  background-color:  #D0D0D0;
+  overflow:  visible;
+  border:    1px solid #8C867B;
+}
+
+.ThemeSubMenuTable {
+  overflow:  visible;
+}
+
+.ThemeMainItem,.ThemeMainItemHover,.ThemeMainItemActive,
+.ThemeMenuItem,.ThemeMenuItemHover,.ThemeMenuItemActive {
+  border:    0;
+  cursor:    default;
+  white-space:  nowrap;
+}
+
+.ThemeMainItem {
+  /*  jgh - no longer needed
+  background-color:  #EFEBDE;
+  */
+}
+
+.ThemeMainItemHover,.ThemeMainItemActive {
+  background-color:  #C0C0C0;
+}
+
+.ThemeMenuItem {
+  background-color:  #D0D0D0;
+}
+
+.ThemeMenuItemHover,.ThemeMenuItemActive {
+  background-color:  #C0C0C0;
+}
+
+/* horizontal main menu */
+
+.ThemeMainItem {
+  padding: 1px;
+  border: 0;
+}
+
+td.ThemeMainItemHover,td.ThemeMainItemActive {
+  padding:  0px;
+  border:  1px solid #FFFFFF;
+}
+
+.ThemeMainFolderLeft,.ThemeMainItemLeft,
+.ThemeMainFolderText,.ThemeMainItemText,
+.ThemeMainFolderRight,.ThemeMainItemRight {
+  background-color:  inherit;
+}
+
+/* vertical main menu sub components */
+
+td.ThemeMainFolderLeft,td.ThemeMainItemLeft {
+  padding-top:  2px;
+  padding-bottom:  2px;
+  padding-left:  0px;
+  padding-right:  2px;
+  border-top:  1px solid #FFFFFF;
+  border-bottom:  1px solid #FFFFFF;
+  border-left:  1px solid #FFFFFF;
+  background-color:  inherit;
+}
+
+td.ThemeMainFolderText,td.ThemeMainItemText {
+  padding-top:  2px;
+  padding-bottom:  2px;
+  padding-left:  5px;
+  padding-right:  5px;
+  border-top:  1px solid #FFFFFF;
+  border-bottom:  1px solid #FFFFFF;
+  background-color:  inherit;
+  white-space:  nowrap;
+}
+
+td.ThemeMainFolderRight,td.ThemeMainItemRight {
+  padding-top:  2px;
+  padding-bottom:  2px;
+  padding-left:  0px;
+  padding-right:  0px;
+  border-top:  1px solid #FFFFFF;
+  border-bottom:  1px solid #FFFFFF;
+  border-right:  1px solid #FFFFFF;
+  background-color:  inherit;
+}
+
+tr.ThemeMainItem td.ThemeMainFolderLeft,
+tr.ThemeMainItem td.ThemeMainItemLeft {
+  padding-top:  3px;
+  padding-bottom:  3px;
+  padding-left:  1px;
+  padding-right:  2px;
+  white-space:  nowrap;
+  border:    0;
+  background-color:  inherit;
+}
+
+tr.ThemeMainItem td.ThemeMainFolderText,
+tr.ThemeMainItem td.ThemeMainItemText {
+  padding-top:  3px;
+  padding-bottom:  3px;
+  padding-left:  5px;
+  padding-right:  5px;
+  border:    0;
+  background-color:  inherit;
+}
+
+tr.ThemeMainItem td.ThemeMainItemRight,
+tr.ThemeMainItem td.ThemeMainFolderRight {
+  padding-top:  3px;
+  padding-bottom:  3px;
+  padding-left:  0px;
+  padding-right:  1px;
+  border:    0;
+  background-color:  inherit;
+}
+
+/* sub menu sub components */
+
+.ThemeMenuFolderLeft,.ThemeMenuItemLeft {
+  padding-top:  2px;
+  padding-bottom:  2px;
+  padding-left:  1px;
+  padding-right:  3px;
+  border-top:  1px solid #FFFFFF;
+  border-bottom:  1px solid #FFFFFF;
+  border-left:  1px solid #FFFFFF;
+  background-color:  inherit;
+  white-space:  nowrap;
+}
+
+.ThemeMenuFolderText,.ThemeMenuItemText {
+  padding-top:  2px;
+  padding-bottom:  2px;
+  padding-left:  5px;
+  padding-right:  5px;
+  border-top:  1px solid #FFFFFF;
+  border-bottom:  1px solid #FFFFFF;
+  background-color:  inherit;
+  white-space:  nowrap;
+}
+
+.ThemeMenuFolderRight,.ThemeMenuItemRight {
+  padding-top:  2px;
+  padding-bottom:  2px;
+  padding-left:  0px;
+  padding-right:  0px;
+  border-top:  1px solid #FFFFFF;
+  border-bottom:  1px solid #FFFFFF;
+  border-right:  1px solid #FFFFFF;
+  background-color:  inherit;
+  white-space:  nowrap;
+}
+
+.ThemeMenuItem .ThemeMenuFolderLeft,
+.ThemeMenuItem .ThemeMenuItemLeft {
+  padding-top:  3px;
+  padding-bottom:  3px;
+  padding-left:  2px;
+  padding-right:  3px;
+  white-space:  nowrap;
+  border:   0px;
+  background-color:  #C0C0C0;
+}
+
+.ThemeMenuItem .ThemeMenuFolderText,
+.ThemeMenuItem .ThemeMenuItemText {
+  padding-top:  3px;
+  padding-bottom:  3px;
+  padding-left:  5px;
+  padding-right:  5px;
+  border:    0px;
+  background-color:  inherit;
+}
+
+.ThemeMenuItem .ThemeMenuFolderRight,
+.ThemeMenuItem .ThemeMenuItemRight {
+  padding-top:  3px;
+  padding-bottom:  3px;
+  padding-left:  0px;
+  padding-right:  1px;
+  border:    0;
+  background-color:  inherit;
+}
+
+/* menu splits */
+
+.ThemeMenuSplit {
+  margin:    2px;
+  height:    1px;
+  overflow:  hidden;
+  background-color:  inherit;
+  border-top:  1px solid #8C867B;
+}
+
+/* image shadow animation */
+
+/*
+  seq1:  image for normal
+  seq2:  image for hover and active
+
+  To use, in the icon field, input the following:
+  <img class="seq1" src="normal.gif" /><img class="seq2" src="hover.gif" />
+*/
+
+.ThemeMenuItem img.seq1 {
+  display:  inline;
+}
+
+.ThemeMenuItemHover seq2,
+.ThemeMenuItemActive seq2 {
+  display:  inline;
+}
+
+.ThemeMenuItem .seq2,
+.ThemeMenuItemHover .seq1,
+.ThemeMenuItemActive .seq1 {
+  display:  none;
+}
+.test{
+ 	background-color: #008000;
+    border: 1px solid #8bcf54;
+    color: #008000;
+	cursor: pointer;
+    display: inline-block;
+    font-family: arial,helvetica,sans-serif;
+    font-weight: bold;
+    min-width: 70px;
+    padding: 3px;
+    text-decoration: none;
+	text-align:center;
+}
+#filters-table{
+padding-top:-5px;
+}
+#filters-td{
+margin-top:50px;
+
+}
+.text-menu-filter{
+
+color:white;}
+
   .layers p label {
     font-size:13px;
   }
+  .logo-img{
+	height:67px;
+	}
+  .top-view-date-name,.top-view-title {
+    color:' . $GLOBALS['H2COLOR'] . ';
+    font-weight:normal;
+    font-size:16px;
+    text-align:center;
+   }	
   #securityAudit {
     border: 1px solid #c0c0c0;
   }
@@ -1324,5 +1622,6 @@ echo '  body {
    border:1px solid ' . $GLOBALS['TABLEBG'] . ';
    background:' . $CELLBG . ';
   }' . $end_style;
-
+ 	
+  	
 ?>

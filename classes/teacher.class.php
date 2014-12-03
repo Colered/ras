@@ -371,25 +371,81 @@ class Teacher extends Base {
 		  return $row['teacher_name'].'('.$row['email'].')';
 		}
     }
-	public function getWebTeachersDetail($teacher_id='')
-	{
-		$row=$rowmainArr=$newArr=array();
-		$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.teacher_id='".$teacher_id."' ORDER BY we.cal_time, we.cal_name ");
+	public function getWebTeachersDetail($program_id='',$teacher_id='',$subject_id='',$room_id='',$area_id='',$teacher_type_id='',$cycle_id='')
+	{ 
+	    $row=$rowmainArr=$newArr=array();
+		if($cycle_id!=""){
+		$cycleArr=explode("#",$cycle_id);
+		$cycle_ids=explode(",",$cycleArr['0']);
+		for($i=0;$i<count($cycle_ids);$i++){
+		    $sql_query="SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id ";
+		$sql_query .= "and we.cycle_id='".$cycle_ids[$i]."' ";
+			
+		if($teacher_id!=""){
+		
+		  $sql_query .= "and we.teacher_id='".$teacher_id."' ";
+		}
+		if($program_id!=""){
+		  $sql_query .= "and we.program_year_id='".$program_id."' ";
+		}
+		if($subject_id!=""){
+		   $sql_query .= "and we.subject_id='".$subject_id."' ";
+		}
+		if($room_id!=""){
+		   $sql_query .= "and we.room_id='".$room_id."' ";
+		}
+		if($area_id!=""){
+		   $sql_query .= "and we.area_id='".$area_id."' ";
+		}
+		if($teacher_type_id!=""){
+		   $sql_query .= "and we.teacher_type_id='".$teacher_type_id."' ";
+		}
+		$sql_query.="ORDER BY we.cal_time, we.cal_name";
+		$result =  $this->conn->query($sql_query);
+			if($result->num_rows){
+				while ($rows =$result->fetch_assoc()){
+					$row[]=$rows;
+				}
+		   }
+	   }
+	 }else{
+		$sql_query="SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id ";
+		if($teacher_id!=""){
+		  $sql_query .= "and we.teacher_id='".$teacher_id."' ";
+		}
+		if($program_id!=""){
+		  $sql_query .= "and we.program_year_id='".$program_id."' ";
+		}
+		if($subject_id!=""){
+		   $sql_query .= "and we.subject_id='".$subject_id."' ";
+		}
+		if($room_id!=""){
+		   $sql_query .= "and we.room_id='".$room_id."' ";
+		}
+		if($area_id!=""){
+		   $sql_query .= "and we.area_id='".$area_id."' ";
+		}
+		if($teacher_type_id!=""){
+		   $sql_query .= "and we.teacher_type_id='".$teacher_type_id."' ";
+		}
+		$sql_query.="ORDER BY we.cal_time, we.cal_name";
+		$result =  $this->conn->query($sql_query);
 		if($result->num_rows){
 			while ($rows =$result->fetch_assoc()){
 					$row[]=$rows;
 			}
 		}
-		if(count($row)>0){
-		   $rowNewArr=array(array());
-		   for($i=0;$i<count($row);$i++){
-		    $j=0;
+	  }
+	  if(count($row)>0){
+		 $rowNewArr=array(array());
+		  for($i=0;$i<count($row);$i++){
+		   $j=0;
 		    foreach($row[$i] as $key=>$val){
 			  $rowNewArr[$i][$j]=$val;
 			  $j++;
 		   	}
-		  }
-		  return $rowNewArr;
+	   	  }
+		 return $rowNewArr;
 		}
 	}
 	//function to check allocated room for a subject
@@ -425,5 +481,10 @@ class Teacher extends Base {
 		}
 		$timeslotIds = implode(',',$timeslots);		
 		return $timeslotIds;
+	}
+	public function getTeachersType()
+	{
+		$result =  $this->conn->query("select * from teacher_type order by teacher_type_name");
+		return $result;
 	}
 }

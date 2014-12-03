@@ -983,7 +983,7 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
   $login, $today, $user, $WEEK_START, $WEEKENDBG;
 
   $ret = '
-    <table class="main" cellspacing="0" cellpadding="0" id="month_main">
+    <table class="main" cellspacing="0" cellpadding="0" id="month_main" style="padding-top:20px">
       <tr>' . ( $DISPLAY_WEEKNUMBER == 'Y' ? '
         <th class="empty"></th>' : '' );
 
@@ -1009,15 +1009,14 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
     $ret .= '
       <tr>';
     if ( $DISPLAY_WEEKNUMBER == 'Y' ) {
-      $tmp = date ( 'W', $i + 86400 );
+	  $tmp = date ( 'W', $i + 86400 );
       $ret .= '
         <td class="weekcell"><a title="' . $weekStr . ' ' . $tmp . '" href="'
        . ( $demo ? '' : 'week.php?date=' . date ( 'Ymd', $i + 86400 ) )
        . ( ! empty ( $user ) && $user != $login ? '&amp;user=' . $user : '' )
        . ( empty ( $cat_id ) ? '' : '&amp;cat_id=' . $cat_id ) . '"' . '>';
 	
-	 // print_r($ret);die;
-      $wkStr = $WKStr . $tmp;
+	  $wkStr = $WKStr . $tmp;
       $wkStr2 = '';
 
       if ( $charset == 'UTF-8' )
@@ -1029,8 +1028,7 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
       }
       $ret .= $wkStr2 . '</a></td>';
     }
-	//print_r($ret);die;
-    for ( $j = 0; $j < 7; $j++ ) {
+	for ( $j = 0; $j < 7; $j++ ) {
       $date = $i + ( $j * 86400 + 43200 );
       $dateYmd = date ( 'Ymd', $date );
       $dateD = date ( 'd', $date );
@@ -1040,8 +1038,7 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
         <td';
 
       $currMonth = ( $dateYmd >= $monthstart && $dateYmd <= $monthend );
-	  //print_r($currMonth);die;
-      if ( $currMonth ||
+	  if ( $currMonth ||
         ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) && $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
         $class = ( $currMonth
           ? ( ! $demo && $dateYmd == $todayYmd ? 'today' : ( $is_weekend ? 'weekend' : '' ) )
@@ -1067,10 +1064,7 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
             $ret_events = translate ( 'My event text' );
           }
         }
-		//echo 'Yes'.'<br>';
-		//echo $ret_events;
-		//print_r($ret_events);die;
-        $class = trim ( $class );
+		$class = trim ( $class );
         $class .= ( ! empty ( $ret_events ) &&
           strstr ( $ret_events, 'class="entry"' ) ? ' hasevents' : '' );
 
@@ -1085,15 +1079,12 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
   return $ret . '
     </table>';
 }
-
-/* Generate the HTML for the navigation bar.
- */
-function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
+function display_navigation_current_month ( $name, $show_arrows = true, $show_cats = true ) {
  global $cat_id, $CATEGORIES_ENABLED, $caturl, $DATE_FORMAT_MY,
   $DISPLAY_SM_MONTH, $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $is_admin,
   $is_assistant, $is_nonuser_admin, $login, $nextYmd, $nowYmd, $prevYmd,
   $single_user, $spacer, $thisday, $thismonth, $thisyear, $user, $user_fullname,
-  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id;
+  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id,$area_id,$teacher_type_id,$cycle_id;
   if ( empty ( $name ) )
     return;
 
@@ -1102,7 +1093,7 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
   $u_url = ( ! empty ( $user ) && $user != $login
     ? 'user=' . $user . '&amp;' : '' );
   $ret = '
-      <div class="topnav"'
+      <div class="top-view-name"'
   // Hack to prevent giant space between minicals and navigation in IE.
   . ( get_web_browser () == 'MSIE' ? ' style="zoom:1"' : '' )
    . '>' . ( $show_arrows &&
@@ -1113,9 +1104,9 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
         <a title="' . $prevStr . '" class="prev" href="' . $name . '.php?'
      . $u_url . 'date=' . $prevYmd . $caturl
      . '"><img src="images/leftarrow.gif" alt="' . $prevStr . '" /></a>' : '' ) . '
-        <div class="title">
-          <span class="date">';
-
+        <div class="top-view-title" style= "'.(($name == "month")? "padding-top:119px;width:122px;float:left;padding-left:280px" : " ").'">
+          <span class="top-view-date-name">';
+  
   if ( $name == 'day' )
     $ret .= date_to_str ( $nowYmd );
   elseif ( $name == 'week' )
@@ -1129,6 +1120,76 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
      . date_to_str ( sprintf ( "%04d%02d01", $thisyear, $thismonth ),
       $DATE_FORMAT_MY, false, false, true );
   }
+  
+  return $ret . '</span></div></div>';
+}
+/*function display_navigation_current_month ( $name, $show_arrows = true, $show_cats = true ) {
+ global $cat_id, $CATEGORIES_ENABLED, $caturl, $DATE_FORMAT_MY,
+  $DISPLAY_SM_MONTH, $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $is_admin,
+  $is_assistant, $is_nonuser_admin, $login, $nextYmd, $nowYmd, $prevYmd,
+  $single_user, $spacer, $thisday, $thismonth, $thisyear, $user, $user_fullname,
+  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id,$area_id,$teacher_type_id,$cycle_id;
+  if ( empty ( $name ) )
+    return;
+
+  $nextStr = translate ( 'Next' );
+  $prevStr = translate ( 'Previous' );
+  $u_url = ( ! empty ( $user ) && $user != $login
+    ? 'user=' . $user . '&amp;' : '' );
+  $ret = '
+      <div class="top-view-name"'
+  // Hack to prevent giant space between minicals and navigation in IE.
+  . ( get_web_browser () == 'MSIE' ? ' style="zoom:1"' : '' )
+   . '>' . ( $show_arrows &&
+    ( $name != 'month' || $DISPLAY_SM_MONTH == 'N' || $DISPLAY_TASKS == 'Y' ) ? '
+        <a title="' . $nextStr . '" class="next" href="' . $name . '.php?'
+     . $u_url . 'date=' . $nextYmd . $caturl
+     . '"><img src="images/rightarrow.gif" alt="' . $nextStr . '" /></a>
+        <a title="' . $prevStr . '" class="prev" href="' . $name . '.php?'
+     . $u_url . 'date=' . $prevYmd . $caturl
+     . '"><img src="images/leftarrow.gif" alt="' . $prevStr . '" /></a>' : '' ) . '
+        <div class="top-view-title">
+          <span class="top-view-date-name">';
+  
+  if ( $name == 'day' )
+    $ret .= date_to_str ( $nowYmd );
+  elseif ( $name == 'week' )
+    $ret .= date_to_str ( date ( 'Ymd', $wkstart ), '', false )
+     . '&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;'
+     . date_to_str ( date ( 'Ymd', $wkend - 86400 ), '', false )
+     . ( $DISPLAY_WEEKNUMBER == 'Y' ? " \n(" . translate ( 'Week' ) . ' '
+       . date ( 'W', $wkstart + 86400 ) . ')' : '' );
+  elseif ( $name == 'month' || $name == 'view_l' ) {
+    $ret .= $spacer
+     . date_to_str ( sprintf ( "%04d%02d01", $thisyear, $thismonth ),
+      $DATE_FORMAT_MY, false, false, true );
+  }
+  
+  return $ret . '</span></div></div>';
+}*/
+/* Generate the HTML for the navigation bar.
+ */
+ 
+ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
+ global $cat_id, $CATEGORIES_ENABLED, $caturl, $DATE_FORMAT_MY,
+  $DISPLAY_SM_MONTH, $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $is_admin,
+  $is_assistant, $is_nonuser_admin, $login, $nextYmd, $nowYmd, $prevYmd,
+  $single_user, $spacer, $thisday, $thismonth, $thisyear, $user, $user_fullname,
+  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id,$area_id,$teacher_type_id,$cycle_id;
+  if ( empty ( $name ) )
+    return;
+
+  $nextStr = translate ( 'Next' );
+  $prevStr = translate ( 'Previous' );
+  $u_url = ( ! empty ( $user ) && $user != $login
+    ? 'user=' . $user . '&amp;' : '' );
+  $ret = '
+      <div class="topnav"'
+  // Hack to prevent giant space between minicals and navigation in IE.
+  . ( get_web_browser () == 'MSIE' ? ' style="zoom:1"' : '' )
+   . '>
+        <div class="title">
+          <span class="date">';
 
   return $ret . '</span>
           <span class="user">'
@@ -1139,18 +1200,10 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
     ? '<br />-- ' . translate ( 'Admin mode' ) . ' --' : '' )
    . ( $is_assistant
     ? '<br />-- ' . translate ( 'Assistant mode' ) . ' --' : '' ) . '</span>'
-   . ( $CATEGORIES_ENABLED == 'Y' && $show_cats &&
-    ( ! $user || ( $user == $login || $is_assistant ) ) ?'</br></br>'.print_category_menu ( $name,
-      sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),
-      $cat_id ) : '' )
-	 .( $CATEGORIES_ENABLED == 'Y'? print_program_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_id ) : '' )
-	 .( $CATEGORIES_ENABLED == 'Y'? print_teacher_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$teacher_id ) : '' )
-	 .( $CATEGORIES_ENABLED == 'Y'? print_subject_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$subject_id ) : '' )
-	 .( $CATEGORIES_ENABLED == 'Y'? print_room_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$room_id ) : '' ).'
-	  </div>
+   .( $CATEGORIES_ENABLED == 'Y'? print_filter_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id) : '' ).
+	  '</div>
       </div><br />';
 }
-
 /* Prints out a minicalendar for a month.
  *
  * @todo Make day.php NOT be a special case
@@ -1165,14 +1218,14 @@ function display_navigation ( $name, $show_arrows = true, $show_cats = true ) {
  *                               month.php?  or  view_l.php?id=7&amp;)
  */
 function display_small_month ( $thismonth, $thisyear, $showyear,
-  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ) {
+  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='') {
   global $boldDays, $caturl, $DATE_FORMAT_MY, $DISPLAY_ALL_DAYS_IN_MONTH,
   $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $get_unapproved, $login,
   $MINI_TARGET, // Used by minical.php
   $SCRIPT, $SHOW_EMPTY_WEEKENDS,//Used by year.php
   $thisday, // Needed for day.php
   $today, $use_http_auth, $user, $WEEK_START;
-
+  
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
   $u_url = ( $user != $login && ! empty ( $user )
@@ -1181,8 +1234,7 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
 
   // Start the minical table for each month.
   $ret = '
-    <table class="minical"'
-   . ( $minical_id != '' ? ' id="' . $minical_id . '"' : '' ) . '>';
+    <table class="minical"'. ( $minical_id != '' ? ' id="' . $minical_id . '"' : '' ) . '>';
 
   $monthstart = date ( 'Ymd', mktime ( 0, 0, 0, $thismonth, 1, $thisyear ) );
   $monthend = date ( 'Ymd', mktime ( 0, 0, 0, $thismonth + 1, 0, $thisyear ) );
@@ -1273,21 +1325,20 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
       $title = '';
       $ret .= '
           <td';
-
       if ( $boldDays ) {
         $ev = get_entries ( $dateYmd, $get_unapproved, true, true );
         if ( count ( $ev ) > 0 ) {
           $hasEvents = true;
           $title = $ev[0]->getName ();
-        } else {
+	    } else {
           $rep = get_repeating_entries ( $user, $dateYmd, $get_unapproved );
           if ( count ( $rep ) > 0 ) {
             $hasEvents = true;
             $title = $rep[0]->getName ();
-          }
+	     }
         }
       }
-      if ( ( $dateYmd >= $monthstart && $dateYmd <= $monthend ) ||
+	  if ( ( $dateYmd >= $monthstart && $dateYmd <= $monthend ) ||
           ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) &&
             $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
         $class =
@@ -1320,7 +1371,7 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
     } // end for $j
     $ret .= '
         </tr>';
-  } // end for $i
+  } 
   return $ret . '
       </tbody>
     </table>';
@@ -4937,9 +4988,6 @@ function query_events ( $user, $want_repeated, $date_filter, $cat_id = '',
   global $db_connection_info, $jumpdate, $layers, $login, $max_until,
   $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
   global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
-  //echo '<br>';
-  //echo "cat_id=".$cat_id;
-  //echo "teacher_id=".$teacher_id;
   // New multiple categories requires some checking to see if this cat_id is
   // valid for this cal_id. It could be done with nested SQL,
   // but that may not work for all databases. This might be quicker also.
@@ -5075,8 +5123,7 @@ function query_events ( $user, $want_repeated, $date_filter, $cat_id = '',
       if ( $item->getLogin () == $user ) {
 	   // Insert this one before all other ones with this ID.
         array_splice ( $result, $first_i_this_id, 0, array ( $item ) );
-		//print_r($result);die;
-        $i++;
+		$i++;
 		if ( $first_i_this_id + 1 < $i ) {
 		  // There's another one with the same ID as the one we inserted.
           // Check for dup and if so, delete it.
@@ -5226,9 +5273,6 @@ function query_events ( $user, $want_repeated, $date_filter, $cat_id = '',
  */
 function read_events ( $user, $startdate, $enddate, $cat_id = '') {
   global $layers, $login;
-  
-  //echo "teacher_id =".$teacher_id ;
-
   // Shift date/times to UTC.
   $start_date = gmdate ( 'Ymd', $startdate );
   $end_date = gmdate ( 'Ymd', $enddate );
@@ -5240,60 +5284,18 @@ function read_events ( $user, $startdate, $enddate, $cat_id = '') {
      . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
      . gmdate ( 'His', $enddate ) . ' ) )', $cat_id);
 }
-function read_events_teacher ( $user, $startdate, $enddate, $cat_id = '',$teacher_id ) {
+function read_events_filters ( $user, $startdate, $enddate, $cat_id = '',$program_id='',$teacher_id='',$subject_id='',$room_id='',$area_id='',$teacher_type_id='',$cycle_id='') {
   global $layers, $login;
-  
-  //echo "read_events_teacher teacher_id =".$teacher_id ;
-
   // Shift date/times to UTC.
   $start_date = gmdate ( 'Ymd', $startdate );
   $end_date = gmdate ( 'Ymd', $enddate );
-  return query_events_teachers ( $user, false, ' AND ( ( we.cal_date >= ' . $start_date
+  return query_events_filters ( $user, false, ' AND ( ( we.cal_date >= ' . $start_date
      . ' AND we.cal_date <= ' . $end_date
      . ' AND we.cal_time = -1 ) OR ( we.cal_date > ' . $start_date
      . ' AND we.cal_date < ' . $end_date . ' ) OR ( we.cal_date = ' . $start_date
      . ' AND we.cal_time >= ' . gmdate ( 'His', $startdate )
      . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
-     . gmdate ( 'His', $enddate ) . ' ) )','', $teacher_id);
-}
-function read_events_subject ( $user, $startdate, $enddate, $cat_id = '',$subject_id ) {
-  global $layers, $login;
-  // Shift date/times to UTC.
-  $start_date = gmdate ( 'Ymd', $startdate );
-  $end_date = gmdate ( 'Ymd', $enddate );
-  return query_events_subject ( $user, false, ' AND ( ( we.cal_date >= ' . $start_date
-     . ' AND we.cal_date <= ' . $end_date
-     . ' AND we.cal_time = -1 ) OR ( we.cal_date > ' . $start_date
-     . ' AND we.cal_date < ' . $end_date . ' ) OR ( we.cal_date = ' . $start_date
-     . ' AND we.cal_time >= ' . gmdate ( 'His', $startdate )
-     . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
-     . gmdate ( 'His', $enddate ) . ' ) )','', $subject_id);
-}
-function read_events_room ( $user, $startdate, $enddate, $cat_id = '',$room_id ) {
-  global $layers, $login;
-  // Shift date/times to UTC.
-  $start_date = gmdate ( 'Ymd', $startdate );
-  $end_date = gmdate ( 'Ymd', $enddate );
-  return query_events_room ( $user, false, ' AND ( ( we.cal_date >= ' . $start_date
-     . ' AND we.cal_date <= ' . $end_date
-     . ' AND we.cal_time = -1 ) OR ( we.cal_date > ' . $start_date
-     . ' AND we.cal_date < ' . $end_date . ' ) OR ( we.cal_date = ' . $start_date
-     . ' AND we.cal_time >= ' . gmdate ( 'His', $startdate )
-     . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
-     . gmdate ( 'His', $enddate ) . ' ) )','', $room_id);
-}
-function read_events_program ( $user, $startdate, $enddate, $cat_id = '',$program_id ) {
-	 global $layers, $login;
-	 // Shift date/times to UTC.
-	  $start_date = gmdate ( 'Ymd', $startdate );
-	  $end_date = gmdate ( 'Ymd', $enddate );
-	  return query_events_program ( $user, false, ' AND ( ( we.cal_date >= ' . $start_date
-		 . ' AND we.cal_date <= ' . $end_date
-		 . ' AND we.cal_time = -1 ) OR ( we.cal_date > ' . $start_date
-		 . ' AND we.cal_date < ' . $end_date . ' ) OR ( we.cal_date = ' . $start_date
-		 . ' AND we.cal_time >= ' . gmdate ( 'His', $startdate )
-		 . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
-		 . gmdate ( 'His', $enddate ) . ' ) )','', $program_id);
+     . gmdate ( 'His', $enddate ) . ' ) )', '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
 }
 /* Reads all the repeated events for a user.
  *
@@ -5332,21 +5334,7 @@ function read_repeated_events ( $user, $date = '', $enddate = '', $cat_id = '',$
       ? 'AND ( wer.cal_end >= ' . $date . ' OR wer.cal_end IS NULL )' : '' ),
     $cat_id,'',$teacher_id);
 }
-//Dwarikesh teacher repeate function 
-function read_repeated_events_teacher ( $user, $date = '', $enddate = '',$cat_id = '',$teacher_id='' ) {
-  global $jumpdate, $layers, $login, $max_until;
-  // echo "Dwarikesh=".$teacher_id;die;
-  // This date should help speed up things
-  // by eliminating events that won't display anyway.
-  $jumpdate = $date;
-  $max_until = $enddate + 86400;
-  if ( $date != '' )
-    $date = gmdate ( 'Ymd', $date );
 
-  return query_events_teacher ( $user, true, ( $date != ''
-      ? 'AND ( wer.cal_end >= ' . $date . ' OR wer.cal_end IS NULL )' : '' ),
-   $cat_id,'',$teacher_id);
-}
 //end teacher repeat function
 /* Reads all the tasks for a user with due date within the specified date range.
  *
@@ -6225,540 +6213,206 @@ function require_valide_referring_url ()
   }
 }
 
-function print_teacher_menu ( $form, $date = '', $teacher_id = '' ) {
+function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$subject_id='',$room_id='',$area_id='',$teacher_type_id='',$cycle_id='' ) {
+  
 	 global $db, $login, $user, $CATEGORIES_ENABLED;
-	 $obj=new Teacher();
-	 $teacher_result = $obj->getTeachers();
-	 while($row = $teacher_result->fetch_assoc()){
-	 $teacher[] = $row;
+	 $query_val='';
+	 $objP=new Programs();
+	 //Program loading list array
+	 $programs_result = $objP->getProgramListYearWise();
+	 while($row_program = $programs_result->fetch_assoc()){
+	 	$programs[] = $row_program;
 	 }
+	 //Teacher loading list array
+	 $objT=new Teacher();
+	 $teacher_result = $objT->getTeachers();
+	 while($row_teacher = $teacher_result->fetch_assoc()){
+	 	$teacher[] = $row_teacher;
+	 }
+	 //Subject loading list array
+	 $objS=new Subjects();
+	 $subject_result = $objS->getSubjects();
+	 while($row_subject = $subject_result->fetch_assoc()){
+	 	$subject[] = $row_subject;
+	 }
+	 //Room loading list array
+	 $objR=new Classroom();
+	 $room_result = $objR->getRoom();
+	 while($row_room = $room_result->fetch_assoc()){
+	 	$room[] = $row_room;
+	 }
+	 //Area loading list array
+	 $objA=new Areas();
+	 $area_result = $objA->detailArea();
+	 while($row_area = $area_result->fetch_assoc()){
+	  $area[] = $row_area;
+	 }
+	 //Teacher Type loading list array
+	 $objTT=new Teacher();
+	 $teacher_type_result = $objTT->getTeachersType();
+	 while($row_type = $teacher_type_result->fetch_assoc()){
+	 	$teacher_type[] = $row_type;
+	 }
+	 //Cycle loading list array
+	 $objP_cycle=new Programs();
+	 $cycle_result = $objP_cycle->getCycle();
+	 
 	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
     return false;
-
+  
   $catStr = translate ( 'Teacher' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectTeacher" '. 'class="categories " style="float:left;padding-left:20px;">' . ( empty ( $date ) ? '' : '
-      <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
-     . '" value="' . $date . '" />' )
-   . ( ! empty ( $user ) && $user != $login ? '
-      <input type="hidden" name="user" value="' . $user . '" />' : '' )
-   . $catStr . ':
-      <select name="teacher_id" onchange="document.SelectTeacher.submit()">';
-  // loading all teacher list
-  if ( is_array ( $teacher ) ) {
-  $ret .= ' <option value="">All</option>';
-    foreach ( $teacher as $K => $V ) {
-      if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-	    
-        $ret .= '
-        <option value="' . $teacher[$K]['id'] . '"';
-		if ( $teacher_id == $teacher[$K]['id'] ) {
-        $printerStr .= '<span id="cat">' . $catStr . ': ' . $teacher[$K]['teacher_name'] . '</span>';
-		$ret .= ' selected="selected"';
-		 }
-       	$ret .= ">{$V['teacher_name']}</option>";
-      }
-    }
-  }
-  return $ret . '
-      </select>
-    </form>'
-  // This is used for Printer Friendly view.
-  . $printerStr;
-
-}
-function print_program_menu ( $form, $date = '', $program_id = '' ) {
-	 global $db, $login, $user, $CATEGORIES_ENABLED;
-	 $obj=new Programs();
-	 $programs_result = $obj->getProgramListYearWise();
-	 while($row = $programs_result->fetch_assoc()){
-	 $programs[] = $row;
-	 }
-	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
-    return false;
-
-  $catStr = translate ( 'Program' );
-  $printerStr = '';
-  $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectProgram" '. 'class="categories " style="float:left;padding-left:150px;">' . ( empty ( $date ) ? '' : '
-      <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
-     . '" value="' . $date . '" />' )
-   . ( ! empty ( $user ) && $user != $login ? '
-      <input type="hidden" name="user" value="' . $user . '" />' : '' )
-   . $catStr . ':
-      <select name="program_id" onchange="document.SelectProgram.submit()">';
-  // loading all teacher list
-  if ( is_array ( $programs ) ) {
-  $ret .= ' <option value="">All</option>';
-    foreach ( $programs as $K => $V ) {
-      if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-	    
-        $ret .= '
-        <option value="' . $programs[$K]['id'] . '"';
-		if ( $program_id == $programs[$K]['id'] ) {
-        $printerStr .= '<span id="cat">' . $catStr . ': ' . $programs[$K]['name'] . '</span>';
-		$ret .= ' selected="selected"';
-		 }
-       	$ret .= ">{$V['name']}</option>";
-      }
-    }
-  }
-  return $ret . '
-      </select>
-    </form>'
-  // This is used for Printer Friendly view.
-  . $printerStr;
-
-}
-function print_subject_menu( $form, $date = '', $subject_id = '' ) {
-	 global $db, $login, $user, $CATEGORIES_ENABLED;
-	 $obj=new Subjects();
-	 $subject_result = $obj->getSubjects();
-	 while($row = $subject_result->fetch_assoc()){
-	 $subject[] = $row;
-	 }
-	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
-    return false;
-
-  $catStr = translate ( 'Subject' );
-  $printerStr = '';
-  $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectSubject" '. 'class="categories" style="float:left;padding-left:20px;">' . ( empty ( $date ) ? '' : '
-      <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
-     . '" value="' . $date . '" />' )
-   . ( ! empty ( $user ) && $user != $login ? '
-      <input type="hidden" name="user" value="' . $user . '" />' : '' )
-   . $catStr . ':
-      <select name="subject_id" onchange="document.SelectSubject.submit()">';
-  // loading all subject list
-  if ( is_array ( $subject ) ) {
-  $ret .= ' <option value="">All</option>';
-    foreach ( $subject as $K => $V ) {
-      if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-		$ret .= '
-        <option value="' . $subject[$K]['id'] . '"';
-		if ( $subject_id == $subject[$K]['id'] ) {
-        $printerStr .= '<span id="cat">' . $catStr . ': ' . $subject[$K]['subject_name'] . '</span>';
-		$ret .= ' selected="selected"';
-		}
-       	$ret .= ">{$V['subject_name']}</option>";
-      }
-    }
-  }
-  return $ret . '
-      </select>
-    </form>'
-  // This is used for Printer Friendly view.
-  . $printerStr;
-}
-function print_room_menu( $form, $date = '', $room_id = '' ) {
-	 global $db, $login, $user, $CATEGORIES_ENABLED;
-	 $obj=new Classroom();
-	 $room_result = $obj->getRoom();
-	 while($row = $room_result->fetch_assoc()){
-	 $room[] = $row;
-	 }
-	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
-    return false;
-
-  $catStr = translate ( 'Classroom' );
-  $printerStr = '';
-  $ret = '
-    <form action="' . $form . '.php" method="get" name="SelectRoom" '. 'class="categories" style="float:left;padding-left:20px;">' . ( empty ( $date ) ? '' : '
-      <input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' )
-     . '" value="' . $date . '" />' )
-   . ( ! empty ( $user ) && $user != $login ? '
-      <input type="hidden" name="user" value="' . $user . '" />' : '' )
-   . $catStr . ':
-      <select name="room_id" onchange="document.SelectRoom.submit()">';
-  // loading all subject list
-  if ( is_array ( $room ) ) {
-  $ret .= ' <option value="">All</option>';
-    foreach ( $room as $K => $V ) {
-      if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-	  	$ret .= '
-        <option value="' . $room[$K]['id'] . '"';
-		if ( $room_id == $room[$K]['id'] ) {
-        $printerStr .= '<span id="cat">' . $catStr . ': ' . $room[$K]['room_name'] . '</span>';
-		$ret .= ' selected="selected"';
-		}
-       	$ret .= ">{$V['room_name']}</option>";
-      }
-    }
-  }
-  return $ret . '
-      </select>
-    </form>'
-  // This is used for Printer Friendly view.
-  . $printerStr;
-}
-/*function get_teacher_by_id ( $id, $user, $asterisk = false ) {
-  global $login;
-
-  if ( empty ( $id ) )
-    return false;
-
-    $teacher = array ();
-	$obj = new Teacher();
-	$res = $obj->getTeachers();
-	while($row = $res->fetch_assoc()){
-    $teacher[] = $row;
-  }
- //dbi_free_result ( $res );
-  return $teacher;
-}*/
-
-
-function query_events_teacher ( $user, $want_repeated, $date_filter, $cat_id = '',
-  $is_task = false,$teacher_id='') {
-  global $db_connection_info, $jumpdate, $layers, $login, $max_until,
-  $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
-  global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
-/*   echo '<br>';
-  echo "cat_id========".$cat_id;
-  echo "teacher_id=".$teacher_id;*/
-
-  // New multiple categories requires some checking to see if this cat_id is
-  // valid for this cal_id. It could be done with nested SQL,
-  // but that may not work for all databases. This might be quicker also.
-  $catlist = $cloneRepeats = $layers_byuser = $result = array ();
-  $teacherlist = $cloneRepeats = $layers_byuser = $result = array ();
-
-  $sql = 'SELECT DISTINCT( cal_id ) FROM webcal_entry_categories ';
-  // None was selected...return only events without categories.
-  if ( $cat_id == -1 )
-    $rows = dbi_get_cached_rows ( $sql, array () );
-  elseif ( ! empty ( $cat_id ) ) {
-    $cat_array = explode ( ',', $cat_id );
-    $placeholders = '';
-    for ( $p_i = 0, $cnt = count ( $cat_array ); $p_i < $cnt; $p_i++ ) {
-      $placeholders .= ( $p_i == 0 ) ? '?' : ', ?';
-    }
-    $rows = dbi_get_cached_rows ( $sql . 'WHERE cat_id IN ( ' . $placeholders
-       . ' )', $cat_array );
-  }
-  if ( ! empty ( $cat_id ) ) {
-    // $rows = dbi_get_cached_rows ( $sql, array ( $cat_id ) );
-    if ( $rows ) {
-      for ( $i = 0, $cnt = count ( $rows ); $i < $cnt; $i++ ) {
-        $row = $rows[$i];
-        $catlist[$i] = $row[0];
-      }
-    }
-  }
-  $catlistcnt = count ( $catlist );
-  $query_params = array ();
-  $sql = 'SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time,
-    we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access,
-    we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login,
-    we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time,
-    weu.cal_percent, we.cal_mod_date, we.cal_mod_time '
-   . ( $want_repeated
-    ? ', wer.cal_type, wer.cal_end, wer.cal_frequency,
-      wer.cal_days, wer.cal_bymonth, wer.cal_bymonthday,
-      wer.cal_byday, wer.cal_bysetpos, wer.cal_byweekno,
-      wer.cal_byyearday, wer.cal_wkst, wer.cal_count, wer.cal_endtime
-      FROM webcal_entry we, webcal_entry_repeats wer, webcal_entry_user weu
-      WHERE we.cal_id = wer.cal_id AND '
-    : 'FROM webcal_entry we, webcal_entry_user weu WHERE ' )
-   . 'we.cal_id = weu.cal_id AND weu.cal_status IN ( \'A\',\'W\' ) ';
-
-  if ( $catlistcnt > 0 ) {
-    $placeholders = '';
-    for ( $p_i = 0; $p_i < $catlistcnt; $p_i++ ) {
-      $placeholders .= ( $p_i == 0 ) ? '?' : ', ?';
-      $query_params[] = $catlist[$p_i];
-    }
-
-    if ( $cat_id > 0 )
-      $sql .= 'AND we.cal_id IN ( ' . $placeholders . ' ) ';
-    elseif ( $cat_id == -1 ) // Eliminate events with categories.
-      $sql .= 'AND we.cal_id NOT IN ( ' . $placeholders . ' ) ';
-  } else
-  if ( ! empty ( $cat_id ) )
-    // Force no rows to be returned. No matching entries in category.
-    $sql .= 'AND 1 = 0 ';
-
-  $sql .= 'AND we.cal_type IN '
-   . ( $is_task == false
-    ? '( \'E\',\'M\' ) ' : '( \'N\',\'T\' ) AND ( we.cal_completed IS NULL ) ' )
-   . ( strlen ( $user ) > 0 ? 'AND ( weu.cal_login = ? ' : '' );
-
-  $query_params[] = $user;
-
-  if ( $user == $login && strlen ( $user ) > 0 && $layers ) {
-    foreach ( $layers as $layer ) {
-      $layeruser = $layer['cal_layeruser'];
-
-      $sql .= 'OR weu.cal_login = ? ';
-      $query_params[] = $layeruser;
-
-      // While we are parsing the whole layers array, build ourselves
-      // a new array that will help when we have to check for dups.
-      $layers_byuser[$layeruser] = $layer['cal_dups'];
-    }
-  }
-
-  $rows = dbi_get_cached_rows ( $sql . ( $user == $login &&
-      strlen ( $user ) && $PUBLIC_ACCESS_DEFAULT_VISIBLE == 'Y'
-      ? 'OR weu.cal_login = \'__public__\' ' : '' )
-     . ( strlen ( $user ) > 0 ? ') ' : '' ) . $date_filter
-
-    // Now order the results by time, then name if not tasks.
-    . ( ! $is_task ? ' ORDER BY we.cal_time, we.cal_name' : '' ), $query_params );
-  if ( $rows ) {
-    $i = 0;
-    $checkdup_id = $first_i_this_id = -1;
-    for ( $ii = 0, $cnt = count ( $rows ); $ii < $cnt; $ii++ ) {
-      $row = $rows[$ii];
-      if ( $row[9] == 'D' || $row[9] == 'R' )
-        continue; // Don't show deleted/rejected ones.
-
-      // Get primary category for this event, used for icon and color.
-      $categories = get_categories_by_id ( $row[4], $user );
-      $cat_keys = array_keys ( $categories );
-      $primary_cat = ( empty ( $cat_keys[0] ) ? '' : $cat_keys[0] );
-
-      if ( $login == '__public__' && ! empty ( $OVERRIDE_PUBLIC ) &&
-        $OVERRIDE_PUBLIC == 'Y' ) {
-        $evt_name = $OVERRIDE_PUBLIC_TEXT;
-        $evt_descr = $OVERRIDE_PUBLIC_TEXT;
-      } else {
-        $evt_name = $row[0];
-        $evt_descr = $row[1];
-      }
-
-      if ( $want_repeated && ! empty ( $row[20] ) ) // row[20] = cal_type
-        $item = new RepeatingEvent ( $evt_name, $evt_descr, $row[2], $row[3],
-          $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10],
-          $primary_cat, $row[11], $row[12], $row[13], $row[14], $row[15],
-          $row[16], $row[17], $row[18], $row[19], $row[20], $row[21], $row[22],
-          $row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29],
-          $row[30], $row[31], $row[32], array (), array (), array () );
-      else
-        $item = new Event ( $evt_name, $evt_descr, $row[2], $row[3], $row[4],
-          $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $primary_cat,
-          $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17],
-          $row[18], $row[19] );
-
-      if ( $item->getID () != $checkdup_id ) {
-        $checkdup_id = $item->getID ();
-        $first_i_this_id = $i;
-      }
-
-      if ( $item->getLogin () == $user ) {
-        // Insert this one before all other ones with this ID.
-        array_splice ( $result, $first_i_this_id, 0, array ( $item ) );
-        $i++;
-
-        if ( $first_i_this_id + 1 < $i ) {
-          // There's another one with the same ID as the one we inserted.
-          // Check for dup and if so, delete it.
-          $other_item = $result[$first_i_this_id + 1];
-          if ( ! empty ( $layers_byuser[$other_item->getLogin ()] ) &&
-            $layers_byuser[$other_item->getLogin ()] == 'N' ) {
-            // NOTE:  array_splice requires PHP4
-            array_splice ( $result, $first_i_this_id + 1, 1 );
-            $i--;
-          }
-        }
-      } else {
-        if ( $i == $first_i_this_id || ( !
-            empty ( $layers_byuser[$item->getLogin ()] ) &&
-              $layers_byuser[$item->getLogin ()] != 'N' ) )
-          // This item either is the first one with its ID, or allows dups.
-          // Add it to the end of the array.
-          $result [$i++] = $item;
-      }
-      // Does event go past midnight?
-      if ( date ( 'Ymd', $item->getDateTimeTS () ) !=
-          date ( 'Ymd', $item->getEndDateTimeTS () ) && !
-          $item->isAllDay () && $item->getCalTypeName () == 'event' ) {
-        getOverLap ( $item, $i, true );
-        $i = count ( $result );
-      }
-    }
-  }
-
-  if ( $want_repeated ) {
-    // Now load event exceptions/inclusions and store as array.
-
-    // TODO:  Allow passing this max_until as param in case we create
-    // a custom report that shows N years of events.
-    if ( empty ( $max_until ) )
-      $max_until = mktime ( 0, 0, 0, $thismonth + 2, 1, $thisyear );
-
-    for ( $i = 0, $resultcnt = count ( $result ); $i < $resultcnt; $i++ ) {
-      if ( $result[$i]->getID () != '' ) {
-        $rows = dbi_get_cached_rows ( 'SELECT cal_date, cal_exdate
-          FROM webcal_entry_repeats_not
-          WHERE cal_id = ?', array ( $result[$i]->getID () ) );
-        for ( $ii = 0, $rowcnt = count ( $rows ); $ii < $rowcnt; $ii++ ) {
-          $row = $rows[$ii];
-          // If this is not a clone, add exception date.
-          if ( ! $result[$i]->getClone () )
-            $except_date = $row[0];
-
-          if ( $row[1] == 1 )
-            $result[$i]->addRepeatException ( $except_date, $result[$i]->getID () );
-          else
-            $result[$i]->addRepeatInclusion ( $except_date );
-        }
-        // Get all dates for this event.
-        // If clone, we'll get the dates from parent later.
-        if ( ! $result[$i]->getClone () ) {
-          $until = ( $result[$i]->getRepeatEndDateTimeTS ()
-            ? $result[$i]->getRepeatEndDateTimeTS ()
-            : // Make sure all January dates will appear in small calendars.
-            $max_until );
-
-          // Try to minimize the repeat search by shortening
-          // until if BySetPos is not used.
-          if ( ! $result[$i]->getRepeatBySetPos () && $until > $max_until )
-            $until = $max_until;
-
-          $rpt_count = 999; //Some BIG number.
-          // End date... for year view and some reports we need whole year...
-          // So, let's do up to 365 days after current month.
-          // TODO:  Add this end time as a parameter in case someone creates
-          // a custom report that asks for N years of events.
-          // $jump = mktime ( 0, 0, 0, $thismonth -1, 1, $thisyear);
-          if ( $result[$i]->getRepeatCount () )
-            $rpt_count = $result[$i]->getRepeatCount () -1;
-
-          $date = $result[$i]->getDateTimeTS ();
-          if ( $result[$i]->isAllDay () || $result[$i]->isUntimed () )
-            $date += 43200; //A simple hack to prevent DST problems.
-
-          // TODO get this to work
-          // C heck if this event id has been cached.
-          // $file = '';
-          // if ( ! empty ( $db_connection_info['cachedir'] ) ){
-          // $hash = md5 ( $result[$i]->getId () . $until . $jump );
-          // $file = $db_connection_info['cachedir'] . '/' . $hash . '.dat';
-          // }
-          // if ( file_exists ( $file ) ) {
-          // $dates =  unserialize ( file_get_contents ( $file ) );
-          // } else {
-          $dates = get_all_dates ( $date,
-            $result[$i]->getRepeatType (), $result[$i]->getRepeatFrequency (),
-            array ($result[$i]->getRepeatByMonth (),
-            $result[$i]->getRepeatByWeekNo (),
-            $result[$i]->getRepeatByYearDay (),
-            $result[$i]->getRepeatByMonthDay (),
-            $result[$i]->getRepeatByDay (), $result[$i]->getRepeatBySetPos () ),
-            $rpt_count, $until, $result[$i]->getRepeatWkst (),
-            $result[$i]->getRepeatExceptions (),
-            $result[$i]->getRepeatInclusions (), $jumpdate );
-          $result[$i]->addRepeatAllDates ( $dates );
-          // Serialize and save in cache for later use.
-          // if ( ! empty ( $db_connection_info['cachedir'] ) ) {
-          // $fd = @fopen ( $file, 'w+b', false );
-          // if ( empty ( $fd ) ) {
-          // dbi_fatal_error ( "Cache error: could not write file $file" );
-          // }
-          // fwrite ( $fd, serialize ( $dates ) );
-          // fclose ( $fd );
-          // chmod ( $file, 0666 );
-          // }
-          // }
-        } else { // Process clones if any.
-          if ( count ( $result[$i-1]->getRepeatAllDates () ) > 0 ) {
-            $parentRepeats = $result[$i-1]->getRepeatAllDates ();
-            $cloneRepeats = array();
-            for ( $j = 0, $parentRepeatscnt = count ( $parentRepeats );
-              $j < $parentRepeatscnt; $j++ ) {
-              $cloneRepeats[] = gmdate ( 'Ymd',
-                date_to_epoch ( $parentRepeats[$j] ) + ONE_DAY );
-            }
-            $result[$i]->addRepeatAllDates ( $cloneRepeats );
-          }
-        }
-      }
-    }
-  }
-  return $result;
-}
-
-function query_events_program ( $user, $want_repeated, $date_filter,$is_task = false,$program_id='') {
-  global $db_connection_info, $jumpdate, $layers, $login, $max_until,
-  $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
-  global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
- // New multiple categories requires some checking to see if this cat_id is
-  // valid for this cal_id. It could be done with nested SQL,
-  // but that may not work for all databases. This might be quicker also.
-  $programlist = $cloneRepeats = $layers_byuser = $result = array ();
-  $obj=new Programs();
-  $rows=$obj->getWebProgramsDetail($program_id);
-  if ( $rows ) {
-    $i = 0;
-    $checkdup_id = $first_i_this_id = -1;
-    for ( $ii = 0, $cnt = count ( $rows ); $ii < $cnt; $ii++ ) {
-      $row = $rows[$ii];
-	  if ( $login == '__public__' && ! empty ( $OVERRIDE_PUBLIC ) &&
-        $OVERRIDE_PUBLIC == 'Y' ) {
-     	$evt_name = $OVERRIDE_PUBLIC_TEXT;
-        $evt_descr = $OVERRIDE_PUBLIC_TEXT;
-	  } else {
-         $evt_name = $row[0];
-		 $evt_descr = $row[1];
-		}
-	if ( $want_repeated && ! empty ( $row[20] ) ) {// row[20] = cal_type
-	    $item = new RepeatingEvent ( $evt_name, $evt_descr, $row[2], $row[3],
-          $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10],
-          $primary_cat, $row[11], $row[12], $row[13], $row[14], $row[15],
-          $row[16], $row[17], $row[18], $row[19], $row[20], $row[21], $row[22],
-          $row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29],
-          $row[30], $row[31], $row[32], array (), array (), array () );
-	}else{// row[20] = cal_type
-	    $item = new Event ( $evt_name, $evt_descr, $row[2], $row[3], $row[4],
-          $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], '',
-          $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17],
-          $row[18], $row[19] );
+    <form action="' . $form . '.php" method="post" name="SelectFilterForm" '. 'class="categories " style="float:left;">
+	' . ( empty ( $date ) ? '' : '<input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' ). '" value="' .( $form != 'year' ?  $date: strtok(date('Y-m-d',strtotime($date)), "-")). '" />' )
+   . ( ! empty ( $user ) && $user != $login ? '<input type="hidden" name="user" value="' . $user . '" />' : '' )
+   . "Program". ':<select name="program_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
+   	  // loading all teacher list
+	if ( is_array ( $programs ) ) {
+	  $ret .= ' <option value="">All</option>';
+		foreach ( $programs as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			
+			$ret .= '
+			<option value="' . $programs[$K]['id'] . '"';
+			if ( $program_id == $programs[$K]['id'] ) {
+			  $printerStr .= '<span id="cat">' . $catStr . ': ' . $programs[$K]['name'] . '</span>';
+			  $ret .= ' selected="selected"';
+			 }
+			$ret .= ">{$V['name']}</option>";
 		  }
-	if ( $item->getID () != $checkdup_id ) {
-	    $checkdup_id = $item->getID ();
-        $first_i_this_id = $i;
-	 }
-	 if ( $item->getLogin () == $user ) {
-	   // Insert this one before all other ones with this ID.
-        array_splice ( $result, $first_i_this_id, 0, array ( $item ) );
-		  $i++;
-		
-        if ( $first_i_this_id + 1 < $i ) {
-		  // There's another one with the same ID as the one we inserted.
-          // Check for dup and if so, delete it.
-          $other_item = $result[$first_i_this_id + 1];
-          if ( ! empty ( $layers_byuser[$other_item->getLogin ()] ) &&
-            $layers_byuser[$other_item->getLogin ()] == 'N' ) {
-            // NOTE:  array_splice requires PHP4
-            array_splice ( $result, $first_i_this_id + 1, 1 );
-            $i--;
-          }
-        }
-      } else {
-        if ( $i == $first_i_this_id || ( !
-            empty ( $layers_byuser[$item->getLogin ()] ) &&
-              $layers_byuser[$item->getLogin ()] != 'N' ) )
-          // This item either is the first one with its ID, or allows dups.
-          // Add it to the end of the array.
-		  	$result [$i++] = $item;
-      }
-      // Does event go past midnight?
-      if ( date ( 'Ymd', $item->getDateTimeTS () ) !=
-          date ( 'Ymd', $item->getEndDateTimeTS () ) && !
-          $item->isAllDay () && $item->getCalTypeName () == 'event' ) {
-		  echo $item->getDateTimeTS ();
-		    die(hello3);
-        getOverLap ( $item, $i, true );
-        $i = count ( $result );
-      }
-    }
-  }
-return $result;
+		}
+	  }
+	  $ret .= ' </select>';
+	  $ret.='<lable style="padding-left:35px;"></lable>';
+	  $ret.=''."Teacher".': <select name="teacher_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
+	  // loading all teacher list
+	  if ( is_array ( $teacher ) ) {
+	   $ret .= ' <option value="">All</option>';
+		foreach ( $teacher as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			
+			$ret .= '
+			<option value="' . $teacher[$K]['id'] . '"';
+			if ( $teacher_id == $teacher[$K]['id'] ) {
+			$printerStr .= '<span id="cat">' . $catStr . ': ' . $teacher[$K]['teacher_name'] . '</span>';
+			$ret .= ' selected="selected"';
+			 }
+			$ret .= ">{$V['teacher_name']}</option>";
+		  }
+		}
+	  }
+	  
+	  $ret .= ' </select>';
+	  $ret.='<lable style="padding-left:35px;"></lable>';
+	  $ret.=''."Subject".': <select name="subject_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
+	  // loading all teacher list
+	 if ( is_array ( $subject ) ) {
+	  $ret .= ' <option value="">All</option>';
+		foreach ( $subject as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			$ret .= '
+			<option value="' . $subject[$K]['id'] . '"';
+			if ( $subject_id == $subject[$K]['id'] ) {
+			$printerStr .= '<span id="cat">' . $catStr . ': ' . $subject[$K]['subject_name'] . '</span>';
+			$ret .= ' selected="selected"';
+			}
+			$ret .= ">{$V['subject_name']}</option>";
+		  }
+		}
+	  }
+	  
+	  $ret .= ' </select>';
+	  $ret.='<lable style="padding-left:35px; "></lable>';
+	  $ret.=''."Room".': <select name="room_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
+	  // loading all teacher list
+	  if ( is_array ( $room ) ) {
+	  $ret .= ' <option value="">All</option>';
+		foreach ( $room as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			$ret .= '
+			<option value="' . $room[$K]['id'] . '"';
+			if ( $room_id == $room[$K]['id'] ) {
+				$printerStr .= '<span id="cat">' . $catStr . ': ' . $room[$K]['room_name'] . '</span>';
+				$ret .= ' selected="selected"';
+			}
+			$ret .= ">{$V['room_name']}</option>";
+		  }
+		}
+	  }
+	  $ret .= ' </select>';
+	  $ret.='<br><br>';
+	  $ret.='<lable style="margin-left:-178px;"></lable>';
+	  $ret.=''."Area".': <select name="area_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
+	  // loading all teacher list
+	 if ( is_array ( $area ) ) {
+	  $ret .= ' <option value="">All</option>';
+		foreach ( $area as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			$ret .= '
+			<option value="' . $area[$K]['id'] . '"';
+			if ( $area_id == $area[$K]['id'] ) {
+				$printerStr .= '<span id="cat">' . $catStr . ': ' . $area[$K]['area_name'] . '</span>';
+				$ret .= ' selected="selected"';
+			}
+			$ret .= ">{$V['area_name']}</option>";
+		  }
+		}
+	  }
+	  
+	  $ret .= ' </select>';
+	  $ret.='<lable style="padding-left:35px;"></lable>';
+	  $ret.=''."Teacher Type".': <select name="teacher_type_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
+	  // loading all teacher list
+	  if ( is_array ( $teacher_type ) ) {
+	   $ret .= ' <option value="">All</option>';
+		foreach ( $teacher_type as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			
+			$ret .= '
+			<option value="' . $teacher_type[$K]['id'] . '"';
+			if ( $teacher_type_id == $teacher_type[$K]['id'] ) { 
+				$printerStr .= '<span id="cat">' . $catStr . ': ' . $teacher_type[$K]['teacher_type_name'] . '</span>';
+				$ret .= ' selected="selected"';
+			 }
+			$ret .= ">{$V['teacher_type_name']}</option>";
+		  }
+		}
+	  }
+	  
+	  $ret .= ' </select>';
+	  $ret.='<lable style="padding-left:35px;"></lable>';
+	  $ret.=''."Cycle".': <select name="cycle_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
+	  // loading all teacher list
+	  $cycleArr=isset($cycle_id)?(explode("#",$cycle_id)):'';
+	  $cycle_val=(isset($cycleArr['1']))?(explode(",",$cycleArr['1'])):'';
+	  if ( is_array ( $cycle_result ) ) {
+	    $ret .= ' <option value="">All</option>';
+		foreach ( $cycle_result as $K => $V ) {
+			$option_text_val=$K+1;
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			
+			$ret .= '
+			<option value="' . $V .'#'.$option_text_val. '"';
+			if (((isset($cycle_val['0']))?($cycle_val['0']):'') == $option_text_val) {
+				$printerStr .= '<span id="cat">' . $catStr . ': ' .$option_text_val . '</span>';
+				$ret .= ' selected="selected"';
+			 }
+			$ret .= ">$option_text_val</option>";
+		  }
+		}
+	  }
+	  
+	  $ret .= ' </select>';
+	  //die; 
+  return $ret . ' 
+    </form>'
+  // This is used for Printer Friendly view.
+  . $printerStr;
+
 }
-function query_events_teachers ( $user, $want_repeated, $date_filter,$is_task = false,$teacher_id='') {
+//All filters
+function query_events_filters ( $user, $want_repeated, $date_filter,$is_task = false,$program_id='',$teacher_id='',$subject_id='',$room_id='',$area_id='',$teacher_type_id='',$cycle_id='') {
   global $db_connection_info, $jumpdate, $layers, $login, $max_until,
   $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
   global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
@@ -6767,7 +6421,7 @@ function query_events_teachers ( $user, $want_repeated, $date_filter,$is_task = 
   // but that may not work for all databases. This might be quicker also.
   $teacherlist = $cloneRepeats = $layers_byuser = $result = array ();
   $obj=new Teacher();
-  $rows=$obj->getWebTeachersDetail($teacher_id);
+  $rows=$obj->getWebTeachersDetail($program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
   if ( $rows ) {
     $i = 0;
     $checkdup_id = $first_i_this_id = -1;
@@ -6835,158 +6489,6 @@ function query_events_teachers ( $user, $want_repeated, $date_filter,$is_task = 
   }
 return $result;
 }
-function query_events_subject ( $user, $want_repeated, $date_filter,$is_task = false,$subject_id='') {
-  global $db_connection_info, $jumpdate, $layers, $login, $max_until,
-  $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
-  global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
- // New multiple categories requires some checking to see if this cat_id is
-  // valid for this cal_id. It could be done with nested SQL,
-  // but that may not work for all databases. This might be quicker also.
-  $teacherlist = $cloneRepeats = $layers_byuser = $result = array ();
-  $obj=new Subjects();
-  $rows=$obj->getWebSubjectDetail($subject_id);
-  if ( $rows ) {
-    $i = 0;
-    $checkdup_id = $first_i_this_id = -1;
-    for ( $ii = 0, $cnt = count ( $rows ); $ii < $cnt; $ii++ ) {
-      $row = $rows[$ii];
-	  if ( $login == '__public__' && ! empty ( $OVERRIDE_PUBLIC ) &&
-        $OVERRIDE_PUBLIC == 'Y' ) {
-     	$evt_name = $OVERRIDE_PUBLIC_TEXT;
-        $evt_descr = $OVERRIDE_PUBLIC_TEXT;
-	  } else {
-         $evt_name = $row[0];
-		 $evt_descr = $row[1];
-		}
-	if ( $want_repeated && ! empty ( $row[20] ) ) {// row[20] = cal_type
-	    $item = new RepeatingEvent ( $evt_name, $evt_descr, $row[2], $row[3],
-          $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10],
-          $primary_cat, $row[11], $row[12], $row[13], $row[14], $row[15],
-          $row[16], $row[17], $row[18], $row[19], $row[20], $row[21], $row[22],
-          $row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29],
-          $row[30], $row[31], $row[32], array (), array (), array () );
-	}else{// row[20] = cal_type
-	    $item = new Event ( $evt_name, $evt_descr, $row[2], $row[3], $row[4],
-          $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], '',
-          $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17],
-          $row[18], $row[19] );
-		  }
-	if ( $item->getID () != $checkdup_id ) {
-	    $checkdup_id = $item->getID ();
-        $first_i_this_id = $i;
-	 }
-	 if ( $item->getLogin () == $user ) {
-	   // Insert this one before all other ones with this ID.
-        array_splice ( $result, $first_i_this_id, 0, array ( $item ) );
-		  $i++;
-		
-        if ( $first_i_this_id + 1 < $i ) {
-		  // There's another one with the same ID as the one we inserted.
-          // Check for dup and if so, delete it.
-          $other_item = $result[$first_i_this_id + 1];
-          if ( ! empty ( $layers_byuser[$other_item->getLogin ()] ) &&
-            $layers_byuser[$other_item->getLogin ()] == 'N' ) {
-            // NOTE:  array_splice requires PHP4
-            array_splice ( $result, $first_i_this_id + 1, 1 );
-            $i--;
-          }
-        }
-      } else {
-        if ( $i == $first_i_this_id || ( !
-            empty ( $layers_byuser[$item->getLogin ()] ) &&
-              $layers_byuser[$item->getLogin ()] != 'N' ) )
-          // This item either is the first one with its ID, or allows dups.
-          // Add it to the end of the array.
-		  	$result [$i++] = $item;
-      }
-      // Does event go past midnight?
-      if ( date ( 'Ymd', $item->getDateTimeTS () ) !=
-          date ( 'Ymd', $item->getEndDateTimeTS () ) && !
-          $item->isAllDay () && $item->getCalTypeName () == 'event' ) {
-		  echo $item->getDateTimeTS ();
-		    die(hello3);
-        getOverLap ( $item, $i, true );
-        $i = count ( $result );
-      }
-    }
-  }
-return $result;
-}
-function query_events_room ( $user, $want_repeated, $date_filter,$is_task = false,$room_id='') {
-  global $db_connection_info, $jumpdate, $layers, $login, $max_until,
-  $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
-  global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
- // New multiple categories requires some checking to see if this cat_id is
-  // valid for this cal_id. It could be done with nested SQL,
-  // but that may not work for all databases. This might be quicker also.
-  $cloneRepeats = $layers_byuser = $result = array ();
-  $obj=new Classroom();
-  $rows=$obj->getWebRoomDetail($room_id);
-  if ( $rows ) {
-    $i = 0;
-    $checkdup_id = $first_i_this_id = -1;
-    for ( $ii = 0, $cnt = count ( $rows ); $ii < $cnt; $ii++ ) {
-      $row = $rows[$ii];
-	  if ( $login == '__public__' && ! empty ( $OVERRIDE_PUBLIC ) &&
-        $OVERRIDE_PUBLIC == 'Y' ) {
-     	$evt_name = $OVERRIDE_PUBLIC_TEXT;
-        $evt_descr = $OVERRIDE_PUBLIC_TEXT;
-	  } else {
-         $evt_name = $row[0];
-		 $evt_descr = $row[1];
-		}
-	if ( $want_repeated && ! empty ( $row[20] ) ) {// row[20] = cal_type
-	    $item = new RepeatingEvent ( $evt_name, $evt_descr, $row[2], $row[3],
-          $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10],
-          $primary_cat, $row[11], $row[12], $row[13], $row[14], $row[15],
-          $row[16], $row[17], $row[18], $row[19], $row[20], $row[21], $row[22],
-          $row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29],
-          $row[30], $row[31], $row[32], array (), array (), array () );
-	}else{// row[20] = cal_type
-	    $item = new Event ( $evt_name, $evt_descr, $row[2], $row[3], $row[4],
-          $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], '',
-          $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17],
-          $row[18], $row[19] );
-		  }
-	if ( $item->getID () != $checkdup_id ) {
-	    $checkdup_id = $item->getID ();
-        $first_i_this_id = $i;
-	 }
-	 if ( $item->getLogin () == $user ) {
-	   // Insert this one before all other ones with this ID.
-        array_splice ( $result, $first_i_this_id, 0, array ( $item ) );
-		  $i++;
-		
-        if ( $first_i_this_id + 1 < $i ) {
-		  // There's another one with the same ID as the one we inserted.
-          // Check for dup and if so, delete it.
-          $other_item = $result[$first_i_this_id + 1];
-          if ( ! empty ( $layers_byuser[$other_item->getLogin ()] ) &&
-            $layers_byuser[$other_item->getLogin ()] == 'N' ) {
-            // NOTE:  array_splice requires PHP4
-            array_splice ( $result, $first_i_this_id + 1, 1 );
-            $i--;
-          }
-        }
-      } else {
-        if ( $i == $first_i_this_id || ( !
-            empty ( $layers_byuser[$item->getLogin ()] ) &&
-              $layers_byuser[$item->getLogin ()] != 'N' ) )
-          // This item either is the first one with its ID, or allows dups.
-          // Add it to the end of the array.
-		  	$result [$i++] = $item;
-      }
-      // Does event go past midnight?
-      if ( date ( 'Ymd', $item->getDateTimeTS () ) !=
-          date ( 'Ymd', $item->getEndDateTimeTS () ) && !
-          $item->isAllDay () && $item->getCalTypeName () == 'event' ) {
-		  echo $item->getDateTimeTS ();
-		    die(hello3);
-        getOverLap ( $item, $i, true );
-        $i = count ( $result );
-      }
-    }
-  }
-return $result;
-}
+
+
 ?>

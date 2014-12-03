@@ -222,28 +222,7 @@ class Subjects extends Base {
 		$program_detail=$program_data['name'].' '.$program_data['start_year'].' '.$program_data['end_year'];
 		return $program_detail;
 	}
-	public function getWebSubjectDetail($subject_id='')
-	{
-		$row=$rowmainArr=$newArr=array();
-		$result =  $this->conn->query("SELECT we.cal_name, we.cal_description, we.cal_date, we.cal_time, we.cal_id, we.cal_ext_for_id, we.cal_priority, we.cal_access, we.cal_duration, weu.cal_status, we.cal_create_by, weu.cal_login, we.cal_type, we.cal_location, we.cal_url, we.cal_due_date, we.cal_due_time, weu.cal_percent, we.cal_mod_date, we.cal_mod_time FROM webcal_entry we,webcal_entry_user weu WHERE we.cal_id = weu.cal_id and we.subject_id='".$subject_id."' ORDER BY we.cal_time, we.cal_name ");
-		if($result->num_rows){
-			while ($rows =$result->fetch_assoc()){
-					$row[]=$rows;
-			}
-		}
-		if(count($row)>0){
-		   $rowNewArr=array(array());
-		   for($i=0;$i<count($row);$i++){
-		    $j=0;
-		    foreach($row[$i] as $key=>$val){
-			  $rowNewArr[$i][$j]=$val;
-			  $j++;
-		   	}
-		  }
-		  return $rowNewArr;
-		}
-	}
-    /*function for get cycle from program id*/
+	/*function for get cycle from program id*/
  	public function getCycleByProgId($progId){
 		$data="";
 		if($progId!=""){

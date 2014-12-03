@@ -104,7 +104,7 @@ function print_header ( $includes = '', $HeadX = '', $BodyX = '',
       $webcalendar_csscache = $_COOKIE['webcalendar_csscache'];
     else {
       $webcalendar_csscache = 1;
-      SetCookie ( 'webcalendar_csscache', $webcalendar_csscache );
+      //SetCookie ( 'webcalendar_csscache', $webcalendar_csscache );
     }
   }
   // Menu control.
@@ -316,8 +316,9 @@ function print_menu_dates ( $menu = false ) {
        . $match[1] . '" value="' . $match[2] . '" />';
     }
   }
+ 
   if ( access_can_access_function ( ACCESS_MONTH ) ) {
-    $ret .= '
+    $ret .= '<td>
             <form action="' . $monthUrl
      . '" method="get" name="SelectMonth" id="month'
      . ( $menu ? 'menu' : 'form' ) . '"> ' . $urlArgs
@@ -329,11 +330,9 @@ function print_menu_dates ( $menu = false ) {
       ( ! $user || $user == $login ) ? '
               <input type="hidden" name="cat_id" value="'
        . $cat_id . '" />' : '' ) . '
-              <label for="monthselect"><a '
-     . 'href="javascript:document.SelectMonth.submit()">'
-     . translate ( 'Month' ) . '</a>:&nbsp;</label>
+              
               <select name="date" id="monthselect" '
-     . 'onchange="document.SelectMonth.submit()">';
+     . 'onchange="document.SelectMonth.submit()" class="menu-select-filter">';
   
     if ( ! empty ( $thisyear ) && ! empty ( $thismonth ) ) {
       $m = $thismonth;
@@ -364,11 +363,13 @@ function print_menu_dates ( $menu = false ) {
   }
   if ( access_can_access_function ( ACCESS_WEEK ) ) {
     $ret .= '
-              </select>' . ( $menu ? '' : '
+              </select><label for="monthselect" class="test"><a '
+     . 'href="javascript:document.SelectMonth.submit()" class="text-menu-filter">'
+     . translate ( 'Month' ) . '</a></label>' . ( $menu ? '' : '
               <input type="submit" value="' . $goStr . '" />' ) . '
             </form>' . ( $menu ? '
-          </td>
-          <td class="ThemeMenubackgr ThemeMenu">' : '' );
+           </td></tr></br>
+          <tr class="ThemeMenubackgr ThemeMenu">' : '' );
   
     if ( $STAY_IN_VIEW == 'Y' && ! empty ( $custom_view ) )
       $weekUrl = $SCRIPT;
@@ -386,7 +387,7 @@ function print_menu_dates ( $menu = false ) {
       }
     }
     $ret .= '
-            <form action="' . $weekUrl
+           <td> <form action="' . $weekUrl
      . '" method="get" name="SelectWeek" id="week'
      . ( $menu ? 'menu' : 'form' ) . '">' . $urlArgs
      . ( ! empty ( $user ) && $user != $login ? '
@@ -397,9 +398,6 @@ function print_menu_dates ( $menu = false ) {
       ( ! $user || $user == $login ) ? '
               <input type="hidden" name="cat_id" value="'
        . $cat_id . '" />' : '' ) . '
-              <label for="weekselect"><a '
-     . 'href="javascript:document.SelectWeek.submit()">'
-     . translate ( 'Week' ) . '</a>:&nbsp;</label>
               <select name="date" id="weekselect" '
      . 'onchange="document.SelectWeek.submit()">';
   
@@ -435,11 +433,13 @@ function print_menu_dates ( $menu = false ) {
   }
   if ( access_can_access_function ( ACCESS_YEAR ) ) {
     $ret .= '
-                </select>' . ( $menu ? '' : '
+                </select><label for="weekselect" class="test"><a '
+     . 'href="javascript:document.SelectWeek.submit()" class="text-menu-filter">'
+     . translate ( 'Week' ) . '</a></label>' . ( $menu ? '' : '
               <input type="submit" value="' . $goStr . '" />' ) . '
             </form>' . ( $menu ? '
-          </td>
-          <td class="ThemeMenubackgr ThemeMenu" align="right">' : '' );
+           </td></tr><br/>
+          <tr class="ThemeMenubackgr ThemeMenu" align="right">' : '' );
   
     if ( $STAY_IN_VIEW == 'Y' && ! empty ( $custom_view ) )
       $yearUrl = $SCRIPT;
@@ -457,7 +457,7 @@ function print_menu_dates ( $menu = false ) {
       }
     }
     $ret .= '
-            <form action="' . $yearUrl . '" method="get" name="SelectYear" id="year'
+            <td><form action="' . $yearUrl . '" method="get" name="SelectYear" id="year'
      . ( $menu ? 'menu' : 'form' ) . '">' . $urlArgs
      . ( ! empty ( $user ) && $user != $login ? '
               <input type="hidden" name="user" value="' . $user . '" />' : '' )
@@ -467,9 +467,6 @@ function print_menu_dates ( $menu = false ) {
       ( ! $user || $user == $login ) ? '
               <input type="hidden" name="cat_id" value="'
        . $cat_id . '" />' : '' ) . '
-              <label for="yearselect"><a '
-     . 'href="javascript:document.SelectYear.submit()">'
-     . translate ( 'Year' ) . '</a>:&nbsp;</label>
               <select name="year" id="yearselect" '
      . 'onchange="document.SelectYear.submit()">';
   
@@ -483,9 +480,11 @@ function print_menu_dates ( $menu = false ) {
     }
   
     $ret .= '
-              </select>' . ( $menu ? '' : '
+              </select><label for="yearselect" class="test"><a '
+     . 'href="javascript:document.SelectYear.submit()" class="text-menu-filter">'
+     . translate ( 'Year' ) . '</a></label>' . ( $menu ? '' : '
               <input type="submit" value="' . $goStr . '" />' ) . '
-            </form>';
+            </form></td>';
   }
 return $ret;
 }
