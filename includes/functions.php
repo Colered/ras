@@ -1123,50 +1123,6 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
   
   return $ret . '</span></div></div>';
 }
-/*function display_navigation_current_month ( $name, $show_arrows = true, $show_cats = true ) {
- global $cat_id, $CATEGORIES_ENABLED, $caturl, $DATE_FORMAT_MY,
-  $DISPLAY_SM_MONTH, $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $is_admin,
-  $is_assistant, $is_nonuser_admin, $login, $nextYmd, $nowYmd, $prevYmd,
-  $single_user, $spacer, $thisday, $thismonth, $thisyear, $user, $user_fullname,
-  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id,$area_id,$teacher_type_id,$cycle_id;
-  if ( empty ( $name ) )
-    return;
-
-  $nextStr = translate ( 'Next' );
-  $prevStr = translate ( 'Previous' );
-  $u_url = ( ! empty ( $user ) && $user != $login
-    ? 'user=' . $user . '&amp;' : '' );
-  $ret = '
-      <div class="top-view-name"'
-  // Hack to prevent giant space between minicals and navigation in IE.
-  . ( get_web_browser () == 'MSIE' ? ' style="zoom:1"' : '' )
-   . '>' . ( $show_arrows &&
-    ( $name != 'month' || $DISPLAY_SM_MONTH == 'N' || $DISPLAY_TASKS == 'Y' ) ? '
-        <a title="' . $nextStr . '" class="next" href="' . $name . '.php?'
-     . $u_url . 'date=' . $nextYmd . $caturl
-     . '"><img src="images/rightarrow.gif" alt="' . $nextStr . '" /></a>
-        <a title="' . $prevStr . '" class="prev" href="' . $name . '.php?'
-     . $u_url . 'date=' . $prevYmd . $caturl
-     . '"><img src="images/leftarrow.gif" alt="' . $prevStr . '" /></a>' : '' ) . '
-        <div class="top-view-title">
-          <span class="top-view-date-name">';
-  
-  if ( $name == 'day' )
-    $ret .= date_to_str ( $nowYmd );
-  elseif ( $name == 'week' )
-    $ret .= date_to_str ( date ( 'Ymd', $wkstart ), '', false )
-     . '&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;'
-     . date_to_str ( date ( 'Ymd', $wkend - 86400 ), '', false )
-     . ( $DISPLAY_WEEKNUMBER == 'Y' ? " \n(" . translate ( 'Week' ) . ' '
-       . date ( 'W', $wkstart + 86400 ) . ')' : '' );
-  elseif ( $name == 'month' || $name == 'view_l' ) {
-    $ret .= $spacer
-     . date_to_str ( sprintf ( "%04d%02d01", $thisyear, $thismonth ),
-      $DATE_FORMAT_MY, false, false, true );
-  }
-  
-  return $ret . '</span></div></div>';
-}*/
 /* Generate the HTML for the navigation bar.
  */
  
@@ -5044,6 +5000,7 @@ function query_events ( $user, $want_repeated, $date_filter, $cat_id = '',
     elseif ( $cat_id == -1 ) // Eliminate events with categories.
       $sql .= 'AND we.cal_id NOT IN ( ' . $placeholders . ' ) ';
   } else
+
   if ( ! empty ( $cat_id ) )
     // Force no rows to be returned. No matching entries in category.
     $sql .= 'AND 1 = 0 ';
