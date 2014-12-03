@@ -677,8 +677,13 @@ switch ($codeBlock) {
                         if (!empty($act_hidden_id)) {
                             //update activity
                             $result2 = mysqli_query($db, "UPDATE teacher_activity SET
-																			teacher_id = '" . $_POST['slctTeacher'] . "',
-																			date_update = NOW() WHERE id = $act_hidden_id");
+															teacher_id = '" . $_POST['slctTeacher'] . "',
+															room_id = '',
+															start_time = '',
+															timeslot_id = '',
+															act_date = '',
+															reserved_flag = '0',
+															date_update = NOW() WHERE id = $act_hidden_id");
                         } else {
                             //insert new activity
                             $result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'] . "', '" . $group_id . "','', '', '', '' , '0', NOW(), NOW());");
