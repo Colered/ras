@@ -46,12 +46,24 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                 <div id="nav">
                     <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ ?>
 					<ul>
+						<li class="upp"><a href="timetable_dashboard.php">Dashboard</a>
+						   
+						</li>
                         <li class="upp"><a href="">Timetable</a>
 						   <ul>
 						   		<li>&#8250; <a href="timetable_dashboard.php">List</a></li>
                                 <li>&#8250; <a href="generate_timetable.php">Generate</a></li>
 								<li>&#8250; <a href="timetable_view.php">Table View</a></li>
-                                <li>&#8250; <a target="_blank" href="month.php">Calendar View</a></li>
+                                <li>&#8250; <a href="month.php">Calendar View</a></li>
+                           </ul>
+						</li>
+						<li class="upp"><a href="">View</a>
+						   <ul>
+						   		<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
+                                <li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
+								<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
+                                <li>&#8250; <a href="teacher_activity_view.php">Activities</a></li>
+								<li>&#8250; <a href="timetable_view.php">Timetable</a></li>
                            </ul>
 						</li>
 						<li class="upp"><a href="">Resources</a>
@@ -73,8 +85,8 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                         </li>
 						<li class="upp"><a href="">Reports</a>
                             <ul>
-							<li>&#8250; <a href="teacher_rate_report.php">Teacher's Rate Report</a></li>
-							<li>&#8250; <a href="teacher_report.php">Activity Report</a></li>
+							<li>&#8250; <a href="teacher_rate_report.php">Rate and Pay Totals</a></li>
+							<li>&#8250; <a href="teacher_report.php">Timetable Activities</a></li>
 							</ul>
 						</li>
 

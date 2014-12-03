@@ -6220,9 +6220,10 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
   $catStr = translate ( 'Teacher' );
   $printerStr = '';
   $ret = '
-    <form action="' . $form . '.php" method="post" name="SelectFilterForm" '. 'class="categories " style="float:left;">
+    <form action="' . $form . '.php" method="post" name="SelectFilterForm" '. 'class="categories " style="float:left;padding-bottom:11px;">
 	' . ( empty ( $date ) ? '' : '<input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' ). '" value="' .( $form != 'year' ?  $date: strtok(date('Y-m-d',strtotime($date)), "-")). '" />' )
    . ( ! empty ( $user ) && $user != $login ? '<input type="hidden" name="user" value="' . $user . '" />' : '' )
+   .'<lable style="padding-left:12px;"></lable>'
    . "Program". ':<select name="program_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
    	  // loading all teacher list
 	if ( is_array ( $programs ) ) {
@@ -6299,7 +6300,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  }
 	  $ret .= ' </select>';
 	  $ret.='<br><br>';
-	  $ret.='<lable style="margin-left:-178px;"></lable>';
+	  $ret.='<lable style="margin-left:-165px;padding-bottom:40px;"></lable>';
 	  $ret.=''."Area".': <select name="area_id" class="select-filter-dropdown" style="width:88px;" onchange="document.SelectFilterForm.submit()">';
 	  // loading all teacher list
 	 if ( is_array ( $area ) ) {

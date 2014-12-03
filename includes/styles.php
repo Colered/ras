@@ -177,11 +177,6 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
     font-weight:bold;
     font-size:11px;
   }
-  p,
-  input,
-  select {
-    font-size:12px;
-  }
   textarea {
     font-size:12px;
     overflow:auto;
@@ -1615,6 +1610,21 @@ color:white;}
   a.entry{
     cursor: default;
 	click_events: none;
+  }
+  #footer{
+	background: url(../images/bg_top.jpg) repeat-x top center;
+	border-top: 2px solid #00923f;
+	color: #939393;
+	float: left;
+	padding:8px 0 8px 0;
+	width: 100%;
+  }
+  #footer a{
+	color: #939393;
+	font-weight: bold;
+  }
+  .legend-calender{
+  	margin-left:20px;
   }
   .minical td.hasevents{background-color:#FFFF33;}
   #eventcomment {

@@ -255,7 +255,7 @@ echo <<<EOT
       <tr>
         <td id="filters-td" valign="top" width="70%" rowspan="2" style="padding-top:0px;">
 			<fieldset>
-  				<legend>Filters:</legend>
+  				<legend class="legend-calender">Filters:</legend>
  				{$navStr}
 			</fieldset>
 		 </td>
@@ -266,7 +266,7 @@ EOT;
 
 
 echo <<<EOT
-    <table width="100%" cellpadding="1" style="padding-left:92px;padding-right:92px;">
+    <table width="100%" cellpadding="1" style="padding-left:92px;padding-right:92px;padding-bottom:21px;">
       <tr>
         <td id="printarea" style="vertical-align:top; width:{$tableWidth}; padding-top:44px; " >
         {$week_name_display}
@@ -288,5 +288,5 @@ echo <<<EOT
     {$printerStr}
     {$trailerStr}
 EOT;
-
+include_once 'footer.php';
 ?>

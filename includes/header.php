@@ -46,38 +46,49 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                 <div id="nav">
                     <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ ?>
 					<ul>
-                        <li class="upp"><a href="timetable_dashboard.php">Timetable</a>
+						<li class="upp"><a href="">Dashboard</a>
+						   
+						</li>
+                        <li class="upp"><a href="">Timetable</a>
 						   <ul>
-                                <li>&#8250; <a href="generate_timetable.php">New</a></li>
-								<!--<li>&#8250; <a href="timetable_dashboard.php">Edit</a></li>-->
-                                <li>&#8250; <a target="_blank" href="month.php">Calendar View</a></li>
-                               <!-- <li>&#8250; <a href="timetable_dashboard.php">Save</a></li>
-                                <li>&#8250; <a href="timetable_dashboard.php">Publish</a></li>
-								<li>&#8250; <a href="timetable_dashboard.php">Delete</a></li>-->
-								<li>&#8250; <a target="_blank" href="timetable_view.php">Open Timetable</a></li>
+						   		<li>&#8250; <a href="timetable_dashboard.php">List</a></li>
+                                <li>&#8250; <a href="generate_timetable.php">Generate</a></li>
+								<li>&#8250; <a href="timetable_view.php">Table View</a></li>
+                                <li>&#8250; <a href="month.php">Calendar View</a></li>
+                           </ul>
+						</li>
+						<li class="upp"><a href="">View</a>
+						   <ul>
+						   		<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
+                                <li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
+								<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
+                                <li>&#8250; <a href="teacher_activity_view.php">Activities</a></li>
+								<li>&#8250; <a href="timetable_view.php">Timetable</a></li>
                            </ul>
 						</li>
 						<li class="upp"><a href="">Resources</a>
                             <ul>
-                                <li>&#8250; <a href="buildings_view.php">Building</a></li>
+								<li>&#8250; <a href="locations_view.php">Locations</a></li>
+                                <li>&#8250; <a href="buildings_view.php">Buildings</a></li>
 								<li>&#8250; <a href="rooms_view.php">Classrooms</a></li>
 								<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
 								<li>&#8250; <a href="programs_view.php">Programs</a></li>
 								<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
-								<!--<li>&#8250; <a href="group_view.php">Student Group</a></li>
-								<li>&#8250; <a href="program_group_view.php">Program Student Group</a></li>-->
 								<li>&#8250; <a href="areas_view.php">Areas</a></li>
 								<li>&#8250; <a href="subject_view.php">Subjects</a></li>
 								<li>&#8250; <a href="timeslots.php">Timeslots</a></li>
                                 <li>&#8250; <a href="teacher_view.php">Teachers</a></li>
                                 <li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
 								<li>&#8250; <a href="holidays_view.php">Manage Holidays</a></li>
-								<li>&#8250; <a href="teacher_activity_view.php">Teacher Activity</a></li>
-								<!--<li>&#8250; <a href="roles_management_view.php">Role Management</a></li>
-                                <li>&#8250; <a href="user_management_view.php">User Management</a></li>-->
-								<!--<li>&#8250; <a href="timetable.php">Timetable Management</a></li>-->
+								<li>&#8250; <a href="teacher_activity_view.php">Activity List</a></li>
                             </ul>
                         </li>
+						<li class="upp"><a href="">Reports</a>
+                            <ul>
+							<li>&#8250; <a href="teacher_rate_report.php">Rate and Pay Totals</a></li>
+							<li>&#8250; <a href="teacher_report.php">Timetable Activities</a></li>
+							</ul>
+						</li>
 
 						<li class="upp right"  style="float:right"><a href="logout.php">Logout</a></li>
 						<li class="upp right"  style="float:right"><a href="change_password.php">Change Password</a></li>

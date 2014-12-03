@@ -153,7 +153,7 @@ echo <<<EOT
       <tr>
         <td id="filters-td" valign="top" width="70%" rowspan="2" style="padding-top:0px;">
 			<fieldset>
-  				<legend>Filters:</legend>
+  				<legend class="legend-calender">Filters:</legend>
  				{$navStr}
 			</fieldset>
 		 </td>
@@ -182,6 +182,7 @@ echo <<<EOT
     {$trailerStr}
 EOT;
 
+include_once 'footer.php';
 ?>
 
 
