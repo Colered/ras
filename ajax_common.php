@@ -893,25 +893,29 @@ switch ($codeBlock) {
                 }
                 //Rule: a teacher can have maximum two saturdays per cycle
                 if ($valid == 1) {
-                    $cycle_query = "select id from cycle where program_year_id = '" . $_POST['programId'] . "' and start_week <= '" . $_POST['subSessDate'] . "' and end_week >= '" . $_POST['subSessDate'] . "'";
-                    $cycle_res = mysqli_query($db, $cycle_query);
-                    $dataCycle = mysqli_fetch_assoc($cycle_res);
+					$day = date('w', strtotime($_POST['subSessDate']));
+					$final_day = $day - 1;
+					if ($final_day == 5) {
+						$cycle_query = "select id from cycle where program_year_id = '" . $_POST['programId'] . "' and start_week <= '" . $_POST['subSessDate'] . "' and end_week >= '" . $_POST['subSessDate'] . "'";
+						$cycle_res = mysqli_query($db, $cycle_query);
+						$dataCycle = mysqli_fetch_assoc($cycle_res);
 
-                    $teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
-                    $q_res = mysqli_query($db, $teachAvail_query);
-                    $count = 0;
-                    while ($dataAll = mysqli_fetch_assoc($q_res)) {
-                        $day = date('w', strtotime($dataAll['act_date']));
-                        $final_day = $day - 1;
-                        if ($final_day == 5) {
-                            $count++;
-                        }
-                    }
-                    if ($count >= 2) {
-                        echo 12;
-                        $valid = 0;
-                        exit;
-                    }
+						$teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
+						$q_res = mysqli_query($db, $teachAvail_query);
+						$count = 0;
+						while ($dataAll = mysqli_fetch_assoc($q_res)) {
+							$day = date('w', strtotime($dataAll['act_date']));
+							$final_day = $day - 1;
+							if ($final_day == 5) {
+								$count++;
+							}
+						}
+						if ($count >= 2) {
+							echo 12;
+							$valid = 0;
+							exit;
+						}
+					}
                 }
                 //Rule the sessions scheduled on Saturdays should be from the same academic area.
                 if ($valid == 1) {
@@ -1231,7 +1235,6 @@ switch ($codeBlock) {
                 }
                 //check if teacher is not engaged in some other reserved activity
                 if ($valid == 1) {
-                    //echo $teachAvail_query="select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id like '%$tsIdsAll,%' and ta.act_date='".$_POST['subSessDate']."' and ta.teacher_id='".$_POST['slctTeacher']."'";
                     $teachAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.teacher_id='" . $_POST['slctTeacher'] . "'";
                     if ($sess_hidden_id <> "") {
                         $teachAvail_query .= " AND ss.id != " . $sess_hidden_id . "";
@@ -1282,24 +1285,28 @@ switch ($codeBlock) {
                 }
                 //Rule: a teacher can have maximum two saturdays per cycle
                 if ($valid == 1) {
-                    $cycle_query = "select id from cycle where program_year_id = '" . $_POST['programId'] . "' and start_week <= '" . $_POST['subSessDate'] . "' and end_week >= '" . $_POST['subSessDate'] . "'";
-                    $cycle_res = mysqli_query($db, $cycle_query);
-                    $dataCycle = mysqli_fetch_assoc($cycle_res);
+					$day = date('w', strtotime($_POST['subSessDate']));
+					$final_day = $day - 1;
+					if ($final_day == 5) {
+    					$cycle_query = "select id from cycle where program_year_id = '" . $_POST['programId'] . "' and start_week <= '" . $_POST['subSessDate'] . "' and end_week >= '" . $_POST['subSessDate'] . "'";
+						$cycle_res = mysqli_query($db, $cycle_query);
+						$dataCycle = mysqli_fetch_assoc($cycle_res);
 
-                    $teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
-                    $q_res = mysqli_query($db, $teachAvail_query);
-                    $count = 0;
-                    while ($dataAll = mysqli_fetch_assoc($q_res)) {
-                        $day = date('w', strtotime($dataAll['act_date']));
-                        $final_day = $day - 1;
-                        if ($final_day == 5) {
-                            $count++;
-                        }
-                    }
-                    if ($count >= 2) {
-                        echo 12;
-                        $valid = 0;
-                        exit;
+						$teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
+						$q_res = mysqli_query($db, $teachAvail_query);
+						$count = 0;
+						while ($dataAll = mysqli_fetch_assoc($q_res)) {
+							$day = date('w', strtotime($dataAll['act_date']));
+							$final_day = $day - 1;
+							if ($final_day == 5) {
+								$count++;
+							}
+						}
+						if ($count >= 2) {
+							echo 12;
+							$valid = 0;
+							exit;
+						}
                     }
                 }
                 //Rule the sessions scheduled on Saturdays should be from the same academic area.
