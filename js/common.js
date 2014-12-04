@@ -628,7 +628,7 @@ $(document).ready(function() {
 						}else if($succ==11){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('Teacher is already allocated to some different location the same day.');
+							alert('Selected teacher already have other classs at some different location on the selected day.');
 						}else if($succ==12){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
