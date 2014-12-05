@@ -857,14 +857,8 @@ class Timetable extends Base {
 	public function search_programs($start_date,$end_date)
 	{
 		$final_pgms = array();
-<<<<<<< HEAD
 		$last_day = 5;
 		$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE (start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."')");
-=======
-		$last_day = 5;	
-		//echo "select * from cycle where start_week >= '".$start_date."' and start_week <= '".$end_date."'";die;
-		$sql_pgm_cycle = $this->conn->query("select * from cycle where start_week >= '".$start_date."' and start_week <= '".$end_date."'");
->>>>>>> 74ce0e3cebe42c6f33158969a44047745bfd425b
 		$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
 		if($pgm_cycle_cnt > 0)
 		{

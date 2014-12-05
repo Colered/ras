@@ -444,12 +444,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
 				if(!$obj->checkName($_POST['txtAName']))
 				{
-
-<<<<<<< HEAD
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
-=======
-					//$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
->>>>>>> 74ce0e3cebe42c6f33158969a44047745bfd425b
 					$output_array = $obj->generateTimetable($start_date, $end_date);
 					if(isset($output_array['program_not_found'])){
 						$_SESSION['error_msg'] = $output_array['program_not_found'];
