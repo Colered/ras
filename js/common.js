@@ -2059,7 +2059,7 @@ function getCycleByProgId($this){
 			$("#slctCycle").html("<option value=''>--Select a program first--</option>");
 		}
 }
-$(document).ready(function(){ 
+/*$(document).ready(function(){ 
 	$("#subSessDate").datepicker({
 			dateFormat: 'yy-mm-dd',
 			defaultDate: "+1w",
@@ -2069,7 +2069,7 @@ $(document).ready(function(){
 			changeYear: true,
 	});
 });
-
+*/
 
 //Ajax to check activity availability on subject session page
 function checkAvailSubSession(program_year_id,subject_id,sessionid,teacher_id,row_id)
@@ -2453,5 +2453,33 @@ if($id==""){
     }
     return false;
 }
-
-
+//Subject's session date range when subject is in edit mode
+$(document).ready(function() {
+if($('#slctCycle option:selected').val()!=""){
+  	$.ajax({
+           type: "POST",
+           url: "ajax_common.php",
+           data: {
+					'cycle_id': $('#slctCycle option:selected').val(),
+					'codeBlock': 'getCycleDateRange',
+				 },
+                success: function($succ){
+					if($succ){
+						 var str = $succ;
+						 var DateCycle = str.split('#');
+						 $('#subSessDate').datepicker({
+							dateFormat: 'yy-mm-dd',
+							defaultDate: "+1w",
+							changeMonth: true,
+							numberOfMonths: 1,
+							changeMonth: true, 
+							changeYear: true,
+							minDate: DateCycle[0],
+							maxDate: DateCycle[1],
+							inline: true
+				   		});
+					}
+                }
+        });
+	}
+});

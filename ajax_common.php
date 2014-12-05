@@ -1440,6 +1440,16 @@ switch ($codeBlock) {
 				echo 0;
 		}
 		break;
+		case "getCycleDateRange":
+		if(isset($_POST['cycle_id'])){
+			$cycle_id = $_POST['cycle_id'];
+			$query="select start_week,end_week from cycle where id='".$cycle_id."' ";
+			$result = mysqli_query($db, $query);
+			$dataAll = mysqli_fetch_assoc($result);
+			$dateRange=$dataAll['start_week'].'#'.$dataAll['end_week'];
+			echo $dateRange;
+		}
+		break;
 }
 ?>
 
