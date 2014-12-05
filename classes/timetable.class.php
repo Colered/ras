@@ -191,11 +191,11 @@ class Timetable extends Base {
 		 return array($strArray1,$strArray2,$strArray3);
      }
 
-	public function generateTimetable($date, $end_date, $from_time)
+	public function generateTimetable($date, $end_date)
 	{	
 		$start_date = $date;
 		//function call to search all programs with their dates and times, which occur in the timetable range
-		$programs = $this->search_programs($start_date,$from_time,$end_date);		
+		$programs = $this->search_programs($start_date,$end_date);		
 		//sort the programs array by date
 		$new_programs = array();
 		foreach($programs as $pgm_id => $vals)
@@ -849,7 +849,7 @@ class Timetable extends Base {
 	}
 
 	//function to get all the programs, which lies in the duration of timetable generation period with their date and timeslot list
-	public function search_programs($start_date,$from_time,$end_date)
+	public function search_programs($start_date,$end_date)
 	{
 		$final_pgms = array();
 		$last_day = 5;	

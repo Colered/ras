@@ -445,8 +445,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if(!$obj->checkName($_POST['txtAName']))
 				{
 
-					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
-					$output_array = $obj->generateTimetable($start_date, $end_date, $from_time);
+					//$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
+					$output_array = $obj->generateTimetable($start_date, $end_date);
 					if(isset($output_array['program_not_found'])){
 						$_SESSION['error_msg'] = $output_array['program_not_found'];
 					}elseif(isset($output_array['teacher_not_found'])){
