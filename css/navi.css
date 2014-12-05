@@ -66,4 +66,15 @@
 	color:#76B9ED;
 }
 #header #nav ul li.upp ul li a:hover{color:#fff;}
-
+.help-img{
+width:24px;
+height:18px;
+}
+#about-us-tbl table {
+    border:1px solid #CCC;
+    border-collapse:collapse;
+	//color:none;
+}
+#about-us-tbl td{
+    border:none;
+}
