@@ -489,6 +489,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										$subject_name = $v['subject_name'];
 										$session_name = $v['session_name'];
 										$teacher_name = $v['teacher_name'];
+										$teacher_type = $v['teacher_type'];
 										$cycle_id = $v['cycle_id'];
 										$subject_id = $v['subject_id'];
 										$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
@@ -517,7 +518,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 											$eventstart = mktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
 											$eventstartdate = gmdate ( 'Ymd', $eventstart );
 											$cal_time = gmdate('His', $eventstart);
-											$cal_id = $obj->addWebCalEntry($eventstartdate, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id,$cycle_id,$area_id);
+											$cal_id = $obj->addWebCalEntry($eventstartdate, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id,$cycle_id,$area_id,$teacher_type);
 											if($cal_id){
 												$obj->addWebCalEntryUser($cal_id);
 

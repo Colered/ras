@@ -247,7 +247,7 @@ class Timetable extends Base {
 							if($start_time >= $end_time)
 							{								
 								$end_time = date("h:i A", strtotime($start_time." + 15 minutes"));
-								$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,su.area_id,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id, b.location_id from teacher_activity ta 
+								$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,su.area_id,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id, b.location_id from teacher_activity ta 
 								inner join subject_session s on s.id = ta.session_id
 								inner join program_years py on py.id = ta.program_year_id
 								inner join subject su on su.id = ta.subject_id
@@ -293,6 +293,7 @@ class Timetable extends Base {
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_reserv_act['program_name'];							
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_reserv_act['teacher_id'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_reserv_act['teacher_name'];
+															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_type'] = $result_reserv_act['teacher_type'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_reserv_act['group_id'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $result_reserv_act['room_id'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $result_reserv_act['room_name'];
@@ -355,7 +356,7 @@ class Timetable extends Base {
 						
 						foreach($unreserved_times as $un_tsid)
 						{
-							$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,ta.group_id,s.order_number,s.duration 
+							$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,ta.group_id,s.order_number,s.duration 
 							from teacher_activity ta 
 							inner join subject_session s on s.id = ta.session_id 
 							inner join program_years py on py.id = ta.program_year_id 
@@ -431,6 +432,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
+																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_type'] = $result_free_act['teacher_type'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_free_act['group_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_free_act['session_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_free_act['session_name'];
@@ -515,6 +517,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
+																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_type'] = $result_free_act['teacher_type'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_free_act['group_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_free_act['session_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_free_act['session_name'];
@@ -575,7 +578,7 @@ class Timetable extends Base {
 			}
 			
 			$i++;
-		}
+		}//print"<pre>";print_r($reserved_array);die;
 		//If array is empty,means no activity has been allocated. We will shoe the message to user
 		if(empty($reserved_array))
 		{
@@ -706,7 +709,7 @@ class Timetable extends Base {
 	}
 
 	//function to add the activities in calendar table so that they show up in calendar
-	public function addWebCalEntry($date, $cal_time, $name, $room_name, $description, $duration, $teacher_id, $subject_id, $room_id, $program_year_id,$cycle_id,$area_id)
+	public function addWebCalEntry($date, $cal_time, $name, $room_name, $description, $duration, $teacher_id, $subject_id, $room_id, $program_year_id,$cycle_id,$area_id,$teacher_type)
 	{
 		$sql_insert_cal = "insert into webcal_entry set
 									   cal_date = '".$date."',
@@ -726,6 +729,7 @@ class Timetable extends Base {
 									   subject_id = '".$subject_id."',
 									   room_id = '".$room_id."',
 									   program_year_id = '".$program_year_id."',
+									   teacher_type_id = '".$teacher_type."',
 									   cycle_id = '".$cycle_id."',
 									   area_id = '".$area_id."'";				   
 		if($this->conn->query($sql_insert_cal))

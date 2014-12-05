@@ -487,4 +487,9 @@ class Teacher extends Base {
 		$result =  $this->conn->query("select * from teacher_type order by teacher_type_name");
 		return $result;
 	}
+	public function getTeacherTypeById($id)
+	{
+		$result =  $this->conn->query("select * from teacher_type where id = '".$id."'");
+		return $result;
+	}
 }

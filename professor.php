@@ -26,6 +26,8 @@ $email = isset($_GET['edit'])? $row['email'] : (isset($_POST['txtEmail'])? $_POS
 $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])? $_POST['txtUname'] : '');
 $payrate = isset($_GET['edit'])? $row['payrate'] : (isset($_POST['txtPayrate'])? $_POST['txtPayrate'] : '');
 
+$result_type = $objT->getTeachersType();
+
 
 ?>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
@@ -70,10 +72,10 @@ $(document).ready(function () {
 					</div>
 					<div class="txtfield">
 					<select id="proftype" name="proftype" class="select1">
-						<option value="">--Select Type--</option>
-						<option value="resident">Resident</option>
-						<option value="nonresident">Nonresident</option>
-						<option value="associate">Associate</option>
+					<option value="">--Select Type--</option>
+					<?php while($row_type = $result_type->fetch_assoc()){?>						
+						<option value="<?php echo $row_type['id'];?>"><?php echo $row_type['teacher_type_name'];?></option>
+					<?php } ?>
 					</select>
 					<script type="text/javascript">
 						jQuery('#proftype').val("<?php echo $proftype;?>");

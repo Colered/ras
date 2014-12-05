@@ -42,11 +42,13 @@ $(document).ready(function(){
                     </tr>
                 </thead>
                 <tbody>
-                <?php while($row = $result->fetch_assoc()){ ?>
+                <?php while($row = $result->fetch_assoc()){ 
+				$type = $objT->getTeacherTypeById($row['teacher_type']);
+				$type_name = $type->fetch_assoc();?>
                     <tr>
                         <td class="align-center"><?php echo $row['id'];?></td>
                         <td><?php echo $row['teacher_name'];?></td>
-                        <td><?php echo $row['teacher_type'];?></td>
+                        <td><?php echo $type_name['teacher_type_name'];?></td>
                         <td><?php echo $row['address'];?></td>
                         <td><?php echo $objT->formatDate($row['dob']);?></td>
                         <td><?php echo $objT->formatDate($row['doj']);?></td>
