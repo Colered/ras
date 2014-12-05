@@ -195,7 +195,7 @@ class Timetable extends Base {
 	{	
 		$start_date = $date;
 		//function call to search all programs with their dates and times, which occur in the timetable range
-		$programs = $this->search_programs($start_date,$end_date);		
+		$programs = $this->search_programs($start_date,$end_date);
 		//sort the programs array by date
 		$new_programs = array();
 		foreach($programs as $pgm_id => $vals)
@@ -210,7 +210,7 @@ class Timetable extends Base {
 			});
 			$new_programs[$pgm_id][$newkey] =  $values;		
 			}
-		}		
+		}	
 		$reserved_array = array();
 		$reserved_teachers = array();
 		$reserved_rooms = array();
@@ -268,7 +268,7 @@ class Timetable extends Base {
 											if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_reserv_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)))				
 											{
 												//Here will check a teacher cannot have classes in different locations on same day
-												if((array_key_exists($date,$locations) && array_key_exists($result_reserv_act['teacher_id'],$locations[$date]) && in_array($result_reserv_act['location_id'],$locations[$date])) || !array_key_exists($date,$locations) || !array_key_exists($result_reserv_act['teacher_id'],$locations[$date]))
+												if((array_key_exists($date,$locations) && array_key_exists($result_reserv_act['teacher_id'],$locations[$date]) && $locations[$date][$result_reserv_act['teacher_id']] == $result_reserv_act['location_id']) || !array_key_exists($date,$locations) || !array_key_exists($result_reserv_act['teacher_id'],$locations[$date]))
 												{
 													//Here will check sessions from same area will be scheduled on saturday 
 													if(($f_day == 5 && array_key_exists($date,$reserved_areas) && $reserved_areas[$date] == $result_reserv_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)))
@@ -343,6 +343,7 @@ class Timetable extends Base {
 									}							
 								}
 							}
+							
 						}
 						
 						//search the free activities for the remaining timeslots for the same date
@@ -385,15 +386,15 @@ class Timetable extends Base {
 											{												
 												//Here will check a teacher can have maximum of two saturdays working per cycle
 												if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_free_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)))
-												{																				
+												{																			
 													//Here we will get the room of a subject that lies with in that week range
 													$room_id_res = $this->getRoomBySubject($result_free_act['subject_id'],$date);
-													if($room_id_res == ''){
+													if($room_id_res == '0'){
 														$room_id = $this->getRoomFromReservedAct($result_free_act['subject_id'],$date,$reserved_subject_rooms);
 													}else{
 														$room_id = $room_id_res;
-													}												
-													if($room_id)
+													}													
+													if($room_id > 0)
 													{
 														//If room found,we will check its availability at that time
 														if($this->checkRoomAvailability($room_id,$date,$all_ts))
@@ -403,7 +404,7 @@ class Timetable extends Base {
 															{																
 																$loc_id = $this->getLocation($room_id);	
 																//Here will check a teacher cannot have classes in different locations on same day
-																if((array_key_exists($date,$locations) && array_key_exists($result_free_act['teacher_id'],$locations[$date]) && in_array($loc_id,$locations[$date])) || !array_key_exists($date,$locations) || !array_key_exists($result_free_act['teacher_id'],$locations[$date]))
+																if((array_key_exists($date,$locations) && array_key_exists($result_free_act['teacher_id'],$locations[$date]) && $locations[$date][$result_free_act['teacher_id']] == $loc_id) || !array_key_exists($date,$locations) || !array_key_exists($result_free_act['teacher_id'],$locations[$date]))
 																{	
 																	//Here will check sessions from same area will be scheduled on saturday 
 																	if(($f_day == 5 && array_key_exists($date,$reserved_areas) && $reserved_areas[$date] == $result_free_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)))
@@ -487,9 +488,11 @@ class Timetable extends Base {
 															//Here, will check if the room is not busy with any other activity
 															if(!$this->isRoomReserved($date,$start_time,$end_time,$room['id'],$reserved_rooms))
 															{
+																	
 																//Here will check a teacher cannot have classes in different locations on same day
-																if((array_key_exists($date,$locations) && array_key_exists($result_free_act['teacher_id'],$locations[$date]) && in_array($room['location_id'],$locations[$date])) || !array_key_exists($date,$locations) || !array_key_exists($result_free_act['teacher_id'],$locations[$date]))
+																if((array_key_exists($date,$locations) && array_key_exists($result_free_act['teacher_id'],$locations[$date]) && $locations[$date][$result_free_act['teacher_id']] == $room['location_id']) || !array_key_exists($date,$locations) || !array_key_exists($result_free_act['teacher_id'],$locations[$date]))
 																{
+																	
 																	//Here will check sessions from same area will be scheduled on saturday 
 																	if(($f_day == 5 && array_key_exists($date,$reserved_areas) && $reserved_areas[$date] == $result_free_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)))
 																	{
@@ -578,7 +581,7 @@ class Timetable extends Base {
 			}
 			
 			$i++;
-		}//print"<pre>";print_r($reserved_array);die;
+		}//print"<pre>";print_r($locations);die;
 		//If array is empty,means no activity has been allocated. We will shoe the message to user
 		if(empty($reserved_array))
 		{
@@ -615,7 +618,7 @@ class Timetable extends Base {
 	}
 	public function getRoomFromReservedAct($subject_id,$date,$reserved_rooms = array())
 	{
-		
+		$rid = '';
 		foreach($reserved_rooms as $key => $value)
 		{
 			$timestamp = strtotime($key);
@@ -626,10 +629,14 @@ class Timetable extends Base {
 				if(array_key_exists($subject_id,$reserved_rooms[$key]))
 				{
 					$rid = $reserved_rooms[$key][$subject_id];
-					return $rid;
+					break;
 				}
 			}
 		}
+		if($rid != '')
+				return $rid;
+			else
+				return 0;
 	}
 
 	//function to check if the room is not allocated to any other activity at the same date and same time
@@ -961,14 +968,21 @@ class Timetable extends Base {
 					$ts_array = explode(",",$result_pgm_add_date['actual_timeslot_id']);
 					if(array_key_exists($result_pgm_add_date['additional_date'],$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']]))
 					{
-						$new_arr = array_unique(array_merge($final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']],$ts_array));		
-						$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $new_arr;
+						$new_arr = array_unique(array_merge($final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']],$ts_array));
+						$sorted_array = array();
+						foreach($new_arr as $new_key => $arr1)
+						{
+							$sorted_array[$new_key] = $arr1;							
+						}
+						array_multisort($sorted_array, SORT_ASC, $new_arr);	
+						$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $new_arr;											
 					}else{
 						$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $ts_array;
 					}
 				}	
 			}					
-		}		
+		}
+		
 		return $final_pgms;
 	}
 
