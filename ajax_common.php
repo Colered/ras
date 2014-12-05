@@ -1122,91 +1122,15 @@ switch ($codeBlock) {
                 $valid = 1;
                 //Rule: check if program can have class on selected date and time.
                 if ($valid == 1) {
-                    //start
-                    $final_programs = array();
-                    $sql_pgm_cycle = mysqli_query($db, "select * from cycle where program_year_id = '" . $_POST['programId'] . "' and '" . $_POST['subSessDate'] . "' between start_week and end_week");
-                    $dayFromDate = date('w', strtotime($_POST['subSessDate']));
-                    $day = $dayFromDate - 1;
-                    //$pgm_cycle_data = mysqli_fetch_assoc($sql_pgm_cycle);
-                    $pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
-                    if ($pgm_cycle_cnt > 0) {
-                        $result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle);
-                        //echo $result_pgm_cycle['occurrence']; die;
-                        if ($result_pgm_cycle['occurrence'] == '1w') {
-                            $week1 = $result_pgm_cycle['week1'];
-                            $week1 = unserialize($week1);
-                            foreach ($week1 as $key => $value) {
-                                if ($day == $key && in_array($_POST['tslot_id'], $week1[$day])) {
-                                    $sql_pgm_cycle_exp = mysqli_query($db, "SELECT exception_date from program_cycle_exception where program_year_id='" . $result_pgm_cycle['program_year_id'] . "' and exception_date='" . $_POST['subSessDate'] . "'");
-                                    $sql_pgm_cycle_exp_cnt = mysqli_num_rows($sql_pgm_cycle_exp);
-                                    if ($sql_pgm_cycle_exp_cnt <= 0) {
-                                        $final_programs[] = $result_pgm_cycle['program_year_id'];
-                                        //$i++;
-                                    } else {
-                                        echo 9;
-                                        $valid = 0;
-                                        exit;
-                                    }
-                                }
-                            }
-                        } else if ($result_pgm_cycle['occurrence'] == '2w') {
-                            $obj = new Subjects();
-                            $week = $obj->getWeekFromDate($_POST['subSessDate'], $result_pgm_cycle['start_week'], $result_pgm_cycle['end_week']);
-                            if ($week == '1') {
-                                $week1 = $result_pgm_cycle['week1'];
-                                $week1 = unserialize($week1);
-                                foreach ($week1 as $key => $value) {
-                                    if ($day == $key && in_array($_POST['tslot_id'], $week1[$day])) {
-                                        $sql_pgm_cycle_exp = mysqli_query($db, "SELECT exception_date from program_cycle_exception where program_year_id='" . $result_pgm_cycle['program_year_id'] . "' and exception_date='" . $_POST['subSessDate'] . "'");
-                                        $sql_pgm_cycle_exp_cnt = mysqli_num_rows($sql_pgm_cycle_exp);
-                                        if ($sql_pgm_cycle_exp_cnt <= 0) {
-                                            $final_programs[$i] = $result_pgm_cycle['program_year_id'];
-                                            //$i++;
-                                        } else {
-                                            echo 9;
-                                            $valid = 0;
-                                            exit;
-                                        }
-                                    }
-                                }
-                            } else if ($week == '2' and count(unserialize($result_pgm_cycle['week2'])) > 0) {
-                                $week2 = $result_pgm_cycle['week2'];
-                                $week2 = unserialize($week2);
-                                foreach ($week2 as $key => $value) {
-                                    if ($day == $key && in_array($_POST['tslot_id'], $week2[$day])) {
-                                        $sql_pgm_cycle_exp = mysqli_query($db, "SELECT exception_date from program_cycle_exception where program_year_id='" . $result_pgm_cycle['program_year_id'] . "' and exception_date='" . $_POST['subSessDate'] . "'");
-                                        $sql_pgm_cycle_exp_cnt = mysqli_num_rows($sql_pgm_cycle_exp);
-                                        if ($sql_pgm_cycle_exp_cnt <= 0) {
-                                            $final_programs[] = $result_pgm_cycle['program_year_id'];
-                                            //$i++;
-                                        } else {
-                                            echo 9;
-                                            $valid = 0;
-                                            exit;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-						//check for additional days availability
-						$sql_pgm_add_date = mysqli_query($db, "select additional_date,actual_timeslot_id from program_cycle_additional_day_time where additional_date between  '".$result_pgm_cycle['start_week']."' and '".$result_pgm_cycle['end_week']."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
-						while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
-						{
-							$ts_array = explode(",",$result_pgm_add_date['actual_timeslot_id']);
-							if(array_key_exists($result_pgm_add_date['additional_date'],$final_programs))
-							{
-								$new_arr = array_unique(array_merge($final_programs,$ts_array));		
-								$final_programs[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $new_arr;
-							}else{
-								$final_programs[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $ts_array;
-							}
-						}	
-                    } else {
-                        echo 9;
-                        $valid = 0;
-                        exit;
-                    }
-                    if (count($final_programs) <= 0) {
+					$final_programs = array(); $availTSIdsonSelDay = array();
+                    $ttObj = new Timetable();
+					$final_programs = $ttObj->search_programs($_POST['subSessDate'],$_POST['subSessDate']);
+					if(isset($final_programs[$_POST['programId']][$_POST['cycleId']][$_POST['subSessDate']])){
+						$availTSIdsonSelDay = $final_programs[$_POST['programId']][$_POST['cycleId']][$_POST['subSessDate']];
+					}
+					if(count($timeslotIdsArray)>0 && count($availTSIdsonSelDay)>0 && (count(array_intersect($timeslotIdsArray, $availTSIdsonSelDay)) == count($timeslotIdsArray))){
+						//program is available
+					}else{
                         echo 9;
                         $valid = 0;
                         exit;
