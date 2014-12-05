@@ -15,7 +15,7 @@ $profesor_id = isset($_POST['postdata'][6])?$_POST['postdata'][6]:'';
 $cycle_id = isset($_POST['postdata'][7])?$_POST['postdata'][7]:'';
 $module = isset($_POST['postdata'][8])?$_POST['postdata'][8]:'';
 
-$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit inner join subject_session s on s.id = td.session_id inner join area a on a.id = su.area_id inner join room r on r.id = td.room_id where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
+$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit inner join subject_session s on s.id = td.session_id inner join area a on a.id = su.area_id inner join room r on r.id = td.room_id left join teacher_type tt on tt.id = t.teacher_type where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
 if($teacher_id != '')
 {
 	 $teacher_sql .= " and teacher_id = '".$teacher_id."'";
@@ -56,7 +56,7 @@ $q_res = mysqli_query($db,$teacher_sql);
 $data = array();
 while($row = mysqli_fetch_array($q_res))
 {
-	$data[] = array("Date" => $row['date'], "Teacher Name" => $row['teacher_name'], "Teacher Type" => $row['teacher_type'],"Program" => $row['name'], "Company" => $row['company'], "Module" => $row['unit'], "Sessions" => $row['session_name'], "Payrate" => $row['payrate']);  
+	$data[] = array("Date" => $row['date'], "Teacher Name" => $row['teacher_name'], "Teacher Type" => $row['teacher_type_name'],"Program" => $row['name'], "Company" => $row['company'], "Module" => $row['unit'], "Sessions" => $row['session_name'], "Payrate" => $row['payrate']);  
 }  
 
 $total_sql = "select distinct teacher_id,count(session_id) as session_id,t.teacher_name,t.payrate from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";

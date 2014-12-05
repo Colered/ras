@@ -150,30 +150,18 @@ function submitFunction()
 				<select id="profesor" name="profesor" class="select-filter" onchange="submitFunction();"> 
 					<option value="" selected="selected">--Select--</option>
 					<?php 
-					if($_POST['profesor'] == 'Resident')
-					{
-						$selected1 = 'selected="selected"';
-						$selected2 = '';
-						$selected3 = '';
-					}elseif($_POST['profesor'] == 'Nonresident')
-					{
-						$selected2 = 'selected="selected"';
-						$selected1 = '';
-						$selected3 = '';
-					}elseif($_POST['profesor'] == 'Associate')
-					{
-						$selected3 = 'selected="selected"';
-						$selected1 = '';
-						$selected2 = '';
-					}else{
-						$selected1 = '';
-						$selected2 = '';
-						$selected3 = '';
+					$result_type=$objT->getTeachersType();
+					while ($row_type =$result_type->fetch_assoc()){
+						if($row_type['id'] == $_POST['profesor'])
+						{
+							$selected = 'selected="selected"';
+						}else{
+							$selected = '';
+						}?>
+						<option <?php echo $selected;?> value="<?php echo $row_type['id'];?>"><?php echo $row_type['teacher_type_name'];?></option>
+					<?php 
 					}
-					?>
-					<option <?php echo $selected1;?> value="Resident">Resident</option>
-					<option <?php echo $selected2;?> value="Nonresident">Nonresident</option>
-					<option <?php echo $selected3;?> value="Associate">Associate</option>					
+				 ?>				
 				</select>
 			</div>
 			<div class="filter-teache-report">
@@ -277,7 +265,7 @@ function submitFunction()
 								<td><?php echo $row['subject_name'];?></td>
 								<td><?php echo $row['session_name'];?></td>
 								<td><?php echo $row['teacher_name'];?></td>
-								<td><?php echo $row['teacher_type'];?></td>	
+								<td><?php echo $row['teacher_type_name'];?></td>	
 								<td><?php echo $row['room_name'];?></td>
 								<td><?php echo $row['case_number'];?></td>
 								<td><?php echo $row['technical_notes'];?></td>
