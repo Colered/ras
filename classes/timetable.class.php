@@ -289,6 +289,7 @@ class Timetable extends Base {
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_reserv_act['activity_id'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_reserv_act['name'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_reserv_act['program_year_id'];
+															$reserved_array[$date][$i][$start_time." - ".$end_time]['area_id'] = $result_reserv_act['area_id'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_reserv_act['program_name'];							
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_reserv_act['teacher_id'];
 															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_reserv_act['teacher_name'];
@@ -426,6 +427,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_free_act['activity_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_free_act['name'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_free_act['program_year_id'];
+																				$reserved_array[$date][$i][$start_time." - ".$end_time]['area_id'] = $result_free_act['area_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
@@ -509,6 +511,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_free_act['activity_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_free_act['name'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_free_act['program_year_id'];
+																				$reserved_array[$date][$i][$start_time." - ".$end_time]['area_id'] = $result_free_act['area_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_free_act['program_name'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_free_act['teacher_id'];
 																				$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_free_act['teacher_name'];
@@ -703,7 +706,7 @@ class Timetable extends Base {
 	}
 
 	//function to add the activities in calendar table so that they show up in calendar
-	public function addWebCalEntry($date, $cal_time, $name, $room_name, $description, $duration, $teacher_id, $subject_id, $room_id, $program_year_id)
+	public function addWebCalEntry($date, $cal_time, $name, $room_name, $description, $duration, $teacher_id, $subject_id, $room_id, $program_year_id,$cycle_id,$area_id)
 	{
 		$sql_insert_cal = "insert into webcal_entry set
 									   cal_date = '".$date."',
@@ -722,7 +725,9 @@ class Timetable extends Base {
 									   teacher_id = '".$teacher_id."',
 									   subject_id = '".$subject_id."',
 									   room_id = '".$room_id."',
-									   program_year_id = '".$program_year_id."'";				   
+									   program_year_id = '".$program_year_id."',
+									   cycle_id = '".$cycle_id."',
+									   area_id = '".$area_id."'";				   
 		if($this->conn->query($sql_insert_cal))
 		{
 			 $last_ins_id = $this->conn->insert_id;
@@ -771,19 +776,24 @@ class Timetable extends Base {
 			$day = date('w', strtotime($date));
 			$final_day = $day - 1;
 			//check if teacher is available on the given time and day
-			
 			$teachAvail_query=$this->conn->query("select tm.id 
 								from teacher_availability_rule_teacher_map tm 
 								inner join teacher_availability_rule_day_map td 
 								on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
 								inner join teacher_availability_rule ta 
 								on ta.id = td.teacher_availability_rule_id
-								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and tm.teacher_id='".$teacher_id."' and td.actual_timeslot_id like '%".$tsIdsAll."%'");
+								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and tm.teacher_id='".$teacher_id."' and actual_timeslot_id REGEXP '" . $this->RexExpFormat($tsIdsAll)."'");
 			if(mysqli_num_rows($teachAvail_query) > 0)
 			{
 				return 1;
 			}			
 		}
+	}
+	public function RexExpFormat($str)
+	{
+	  $TempStr="";
+	  $TempStr=$TempStr."[[:<:]]".$str."[[:>:]]";	  
+	  return $TempStr;
 	}
 
 	//function to check room availability at a particular date, day and timeslots
@@ -802,7 +812,7 @@ class Timetable extends Base {
 							inner join classroom_availability_rule_day_map cd on cd.classroom_availability_rule_id = cm.classroom_availability_rule_id
 							inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
 							inner join room on room.id = cm.room_id
-							where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and cm.room_id='".$room_id."' and actual_timeslot_id like '%".$tsIdsAll."%'");
+							where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and cm.room_id='".$room_id."' and actual_timeslot_id REGEXP '" . $this->RexExpFormat($tsIdsAll)."'");
 			if(mysqli_num_rows($classroomAvail_query) > 0)
 			{
 				return 1;
@@ -822,7 +832,7 @@ class Timetable extends Base {
 								inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
 								inner join room on room.id = cm.room_id
 								inner join building b on room.building_id = b.id
-								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and actual_timeslot_id like '%".$slot."%'");
+								where start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and actual_timeslot_id REGEXP '" . $this->RexExpFormat($slot)."'");
 								
 							
 		$k = 0;
@@ -847,8 +857,14 @@ class Timetable extends Base {
 	public function search_programs($start_date,$end_date)
 	{
 		$final_pgms = array();
+<<<<<<< HEAD
 		$last_day = 5;
 		$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE (start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."')");
+=======
+		$last_day = 5;	
+		//echo "select * from cycle where start_week >= '".$start_date."' and start_week <= '".$end_date."'";die;
+		$sql_pgm_cycle = $this->conn->query("select * from cycle where start_week >= '".$start_date."' and start_week <= '".$end_date."'");
+>>>>>>> 74ce0e3cebe42c6f33158969a44047745bfd425b
 		$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
 		if($pgm_cycle_cnt > 0)
 		{
@@ -1051,7 +1067,7 @@ class Timetable extends Base {
 	//function to get room of a subject within a week range
 	public function getRoomBySubject($subject_id,$date)
 	{
-		
+		$room_id_res = '';
 		$sql_select = $this->conn->query("select id,room_id,act_date from teacher_activity where subject_id = '".$subject_id."' and reserved_flag = 1");
 		$row_cnt = mysqli_num_rows($sql_select);
 		if($row_cnt > 0)
@@ -1063,11 +1079,14 @@ class Timetable extends Base {
 				$endDateOfWeek = (date("D", $timestamp) == 'Sun') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Next Sunday', $timestamp));
 				if($date >= $startDateOfWeek && $date <= $endDateOfWeek)
 				{
-					return $rooms['room_id'];
-				}else{
-					return 0;
+					$room_id_res = $rooms['room_id'];
+					break;
 				}
-			}					
+			}
+			if($room_id_res != '')
+				return $room_id_res;
+			else
+				return 0;
 		}else{
 			return 0;
 		}

@@ -445,7 +445,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if(!$obj->checkName($_POST['txtAName']))
 				{
 
+<<<<<<< HEAD
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
+=======
+					//$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
+>>>>>>> 74ce0e3cebe42c6f33158969a44047745bfd425b
 					$output_array = $obj->generateTimetable($start_date, $end_date);
 					if(isset($output_array['program_not_found'])){
 						$_SESSION['error_msg'] = $output_array['program_not_found'];
@@ -479,6 +483,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										$tt_id = $res;
 										$activity_id = $v['activity_id'];
 										$program_year_id = $v['program_year_id'];
+										$area_id = $v['area_id'];
 										$teacher_id = $v['teacher_id'];
 										$group_id = $v['group_id'];
 										$room_id = $v['room_id'];
@@ -517,7 +522,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 											$eventstart = mktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
 											$eventstartdate = gmdate ( 'Ymd', $eventstart );
 											$cal_time = gmdate('His', $eventstart);
-											$cal_id = $obj->addWebCalEntry($eventstartdate, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id);
+											$cal_id = $obj->addWebCalEntry($eventstartdate, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id,$cycle_id,$area_id);
 											if($cal_id){
 												$obj->addWebCalEntryUser($cal_id);
 
