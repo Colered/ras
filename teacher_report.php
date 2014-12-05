@@ -261,12 +261,12 @@ function submitFunction()
                 <tbody>
 				<?php	
 						if($result)
-						{
+						{	$i=1;
 							while($row = $result->fetch_assoc())
 							{
 								$cycle_id = $objTime->getCycleId($row['date'],$row['program_id']);?>
 							<tr>
-								<td class="align-center"><?php echo $row['id'];?></td>	
+								<td class="align-center"><?php echo $i;?></td>	
 								<td><?php echo $row['date'];?></td>
 								<td><?php echo $row['timeslot'];?></td>
 								<td><?php echo $row['name'];?></td>
@@ -282,7 +282,7 @@ function submitFunction()
 								<td><?php echo $row['case_number'];?></td>
 								<td><?php echo $row['technical_notes'];?></td>
 							</tr>
-						<?php } 
+						<?php $i++; } 
 						}?>			
 			   </tbody>				
             </table>

@@ -258,11 +258,11 @@ function submitFunction()
                 <tbody>
 				<?php	
 						if($result)
-						{
+						{	$i=1;
 							while($row = $result->fetch_assoc())
-							{?>
+							{  ?>
 							<tr>
-								<td class="align-center"><?php echo $row['id'];?></td>	
+								<td class="align-center"><?php echo $i;?></td>	
 								<td><?php echo $row['date'];?></td>
 								<td><?php echo $row['teacher_name'];?></td>
 								<td><?php echo $row['teacher_type'];?></td>
@@ -272,7 +272,7 @@ function submitFunction()
 								<td><?php echo $row['session_name'];?></td>
 								<td><?php echo $row['payrate'];?></td>
 							</tr>
-						<?php } 
+						<?php $i++; } 
 						}?>			
 			   </tbody>				
             </table>
