@@ -89,7 +89,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 							<li>&#8250; <a href="teacher_report.php">Timetable Activities</a></li>
 							</ul>
 						</li>
-						<li class="upp right"  style="float:right"><a href="help.php"><img src="images/help.jpg" class="help-img"/></a></li>
+						<li class="upp right"  style="float:right"><a href="help.php"><img src="images/help.png" class="help-img"/></a></li>
 						<li class="upp right"  style="float:right"><a href="logout.php">Logout</a></li>
 						<li class="upp right"  style="float:right"><a href="change_password.php">Change Password</a></li>
 						
