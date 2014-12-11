@@ -910,7 +910,8 @@ switch ($codeBlock) {
                     }
                 }
                 //Rule: a teacher can have maximum two saturdays per cycle
-                if ($valid == 1) {
+				if($_POST['force_var']==""){
+                	if ($valid == 1) {
 					$day = date('w', strtotime($_POST['subSessDate']));
 					$final_day = $day - 1;
 					if ($final_day == 5) {
@@ -934,9 +935,11 @@ switch ($codeBlock) {
 							exit;
 						}
 					}
-                }
+                  }
+				}
                 //Rule the sessions scheduled on Saturdays should be from the same academic area.
-                if ($valid == 1) {
+				if($_POST['force_var']==""){
+                  if ($valid == 1) {
                     $day = date('w', strtotime($_POST['subSessDate']));
                     $final_day = $day - 1;
                     if ($final_day == 5) {
@@ -954,8 +957,8 @@ switch ($codeBlock) {
                             }
                         }
                     }
-                }
-
+                  }
+				}
 
                 //check if room is free at given time and day
                 if ($valid == 1) {
@@ -1238,8 +1241,9 @@ switch ($codeBlock) {
                         }
                     }
                 }
+				if($_POST['check_avail_force_entry']==""){
                 //Rule: a teacher can have maximum two saturdays per cycle
-                if ($valid == 1) {
+                 if ($valid == 1) {
 					$day = date('w', strtotime($_POST['subSessDate']));
 					$final_day = $day - 1;
 					if ($final_day == 5) {
@@ -1263,9 +1267,11 @@ switch ($codeBlock) {
 							exit;
 						}
                     }
-                }
+                  }
+				}
                 //Rule the sessions scheduled on Saturdays should be from the same academic area.
-                if ($valid == 1) {
+				if($_POST['check_avail_force_entry']==""){
+               	 if ($valid == 1) {
                     $day = date('w', strtotime($_POST['subSessDate']));
                     $final_day = $day - 1;
                     if ($final_day == 5) {
@@ -1283,8 +1289,8 @@ switch ($codeBlock) {
                             }
                         }
                     }
-                }
-
+                  }
+				}
                 //check if room is free at given time and day
                 if ($valid == 1) {
                     //check if the selected date is not added as exception in classroom availability

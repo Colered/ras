@@ -271,9 +271,9 @@ while ($row = $rel_teacher->fetch_assoc()) {
                                         jQuery('#tslot_id').val("<?php echo $sess_starttime_edit; ?>");
                                     </script>
                                 </div>
-                                <div class="sessionboxSub" style="width:110px;">
+								<div class="sessionboxSub" style="width:110px;">
                                     <h3>Case No</h3>
-                                    <input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtCaseNo" maxlength="10" style="width:94px;" name="txtCaseNo" value="<?php echo $sess_caseno_edit; ?>">
+                                    <input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtCaseNo" style="width:94px;" name="txtCaseNo" value="<?php echo $sess_caseno_edit; ?>">
                                 </div>
                                 <div class="sessionboxSub"style="width:152px;">
                                     <h3>Technical Notes</h3>
@@ -382,6 +382,12 @@ while ($row = $rel_teacher->fetch_assoc()) {
                             <input type="button" name="btnCancel" class="buttonsub" value="<?php echo $buttonName = ($subjectName != "") ? "Done" : "Cancel" ?>" onclick="location.href = 'subject_view.php';">
                         </div>
                     </div>
+					<div class="sessionboxSub" id="dialog-confirm" title="Message">
+						<p>Teacher is already allocated to two saturdays of this cycle.</p>
+					</div>
+					<div class="sessionboxSub" id="dialog-confirm-area" title="Message">
+						<p>The sessions scheduled on Saturdays should be from the same academic area.</p>
+					</div>
                 </form>
             </div>
             <div class="clear"></div>

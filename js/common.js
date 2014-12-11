@@ -183,6 +183,8 @@ $(function() {
 });
 //validate form for area
 $(document).ready(function(){
+		$("#dialog-confirm").hide();
+		$("#dialog-confirm-area").hide();
 		$("#areaForm").validate();
 		$("#roomsForm").validate();
 		$("#buildings").validate();
@@ -511,6 +513,17 @@ $(document).ready(function() {
 $(document).ready(function() {
 	//function for check availability
 	$("#btnCheckAvail").on( "click", function() {
+		checkAvailability();									  
+	});
+
+	//add a new session function										  
+	$("#btnAddNewSess").on( "click", function() {
+		addSubjectSession();										  
+	});
+});
+
+function checkAvailability($forcing=''){
+	
 		var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
 		var subIdEncrypt = $('#subIdEncrypt').val()
   		//custom validation for all the fieelds on form
@@ -583,6 +596,7 @@ $(document).ready(function() {
 						'subSessDate': $('#subSessDate').val(),
 						'sess_hidden_id': $('#sess_hidden_id').val(),
 						'act_hidden_id': $('#act_hidden_id').val(),
+						'check_avail_force_entry':$forcing,
 						'codeBlock': 'checkAvailabilitySession',
 					},
 					success: function($succ){
@@ -632,11 +646,13 @@ $(document).ready(function() {
 						}else if($succ==12){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('Teacher is already allocated to two saturdays of this cycle.');
+							opendialogToComfirm();
+							//alert('Teacher is already allocated to two saturdays of this cycle.');
 						}else if($succ==13){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('The sessions scheduled on Saturdays should be from the same academic area.');
+							opendialogToComfirmArea();
+							//alert('The sessions scheduled on Saturdays should be from the same academic area.');
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -647,12 +663,9 @@ $(document).ready(function() {
 		}else{
 			return false;
 		}
-	});
-
-	
-	//add a new session function										  
-	$("#btnAddNewSess").on( "click", function() {
-		var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
+}
+function addSubjectSession($forcing=''){
+	    var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
 		var subIdEncrypt = $('#subIdEncrypt').val();
  		//validating the forms
  		var formValid = 0;
@@ -691,6 +704,7 @@ $(document).ready(function() {
 						'subSessDate': $('#subSessDate').val(),
 						'sess_hidden_id': $('#sess_hidden_id').val(),
 						'act_hidden_id': $('#act_hidden_id').val(),
+						'force_var':$forcing,
 						'codeBlock': 'add_sub_session',
 					},
 					success: function($succ){
@@ -717,10 +731,12 @@ $(document).ready(function() {
 							alert('Teacher already have 4 sessions allocated to him on selected day.');
 						}else if($succ==11){
 							alert('Teacher is already allocated to some different location the same day.');
-						}else if($succ==12){							
-							alert('Teacher is already allocated to two saturdays of this cycle.');
+						}else if($succ==12){
+							opendialogToComfirm();
+							//alert('Teacher is already allocated to two saturdays of this cycle.');
 						}else if($succ==13){							
-							alert('The sessions scheduled on Saturdays should be from the same academic area.');
+							opendialogToComfirmArea();
+							//alert('The sessions scheduled on Saturdays should be from the same academic area.');
 						}else{
 							alert("Cannot create the session.");
 						}
@@ -729,9 +745,8 @@ $(document).ready(function() {
 		}else{
 				return false;
 		}
-	});
-});
-
+	
+}
 function getSessionName(subjectId)
 {
 	var divSessionName = '#divSessionName'+subjectId;
@@ -2483,3 +2498,40 @@ if($('#slctCycle option:selected').val()!=""){
         });
 	}
 });
+
+function opendialogToComfirm(){
+	$("#dialog-confirm").show();
+	$( "#dialog-confirm" ).dialog({
+      resizable: false,
+      height:140,
+      modal: true,
+      buttons: {
+        "Force Entry": function() {
+		  var force_entry="Forcing";
+		  addSubjectSession(force_entry);	
+          $( this ).dialog( "close" );
+        },
+        "Edit": function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+}
+function opendialogToComfirmArea(){
+	$("#dialog-confirm-area").show();
+	$( "#dialog-confirm-area" ).dialog({
+      resizable: false,
+      height:140,
+      modal: true,
+      buttons: {
+        "Force Entry": function() {
+		  var force_entry="Forcing";
+		  addSubjectSession(force_entry);	
+          $( this ).dialog( "close" );
+        },
+        "Edit": function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+}
