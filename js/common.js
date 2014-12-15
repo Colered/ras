@@ -522,10 +522,12 @@ $(document).ready(function() {
 	});
 });
 
-function checkAvailability($forcing=''){
-	
-		var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
-		var subIdEncrypt = $('#subIdEncrypt').val()
+function checkAvailability($forcing) {
+	    if($forcing == undefined){
+			$forcing="";
+		}
+		var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";
+		var subIdEncrypt = $('#subIdEncrypt').val();
   		//custom validation for all the fieelds on form
 		var formValid = 0;
 		if($('#txtSessionName').val()==""){
@@ -664,7 +666,10 @@ function checkAvailability($forcing=''){
 			return false;
 		}
 }
-function addSubjectSession($forcing=''){
+function addSubjectSession($forcing){
+		if($forcing == undefined){
+		   $forcing="";
+		}
 	    var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
 		var subIdEncrypt = $('#subIdEncrypt').val();
  		//validating the forms
