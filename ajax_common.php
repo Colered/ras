@@ -685,7 +685,7 @@ switch ($codeBlock) {
 															reserved_flag = '0',
 															date_update = NOW() WHERE id = $act_hidden_id");
                         } else {
-                            //insert new activity
+							//insert new activity
                             $result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'] . "', '" . $group_id . "','', '', '', '' , '0', NOW(), NOW());");
                         }
                         if (mysqli_affected_rows($db) > 0) {
@@ -946,7 +946,7 @@ switch ($codeBlock) {
                         $sub_query = "select area_id from subject s where id = '" . $_POST['subjectId'] . "'";
                         $sub_res = mysqli_query($db, $sub_query);
                         $dataSub = mysqli_fetch_assoc($sub_res);
-                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "'";
+                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = 0";
                         $q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) > 0) {
                             $dataAll = mysqli_fetch_assoc($q_res);
@@ -1048,9 +1048,10 @@ switch ($codeBlock) {
 							                                       timeslot_id = '" . $tsIdsAll . "',
 							                                       act_date = '" . $_POST['subSessDate'] . "',
 							                                       reserved_flag = '" . $reserved_flag . "',
-							                                       date_update=  NOW() WHERE id= $act_hidden_id");
+							                                       date_update=  NOW(),
+																   forced_flag = '".$_POST['force_flag']."' WHERE id= $act_hidden_id");
                         } else {
-                            $result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'] . "', '" . $group_id . "','" . $_POST['room_id'] . "', '" . $_POST['tslot_id'] . "', '" . $tsIdsAll . "', '" . $_POST['subSessDate'] . "', '" . $reserved_flag . "', NOW(), NOW());");
+                            $result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'] . "', '" . $group_id . "','" . $_POST['room_id'] . "', '" . $_POST['tslot_id'] . "', '" . $tsIdsAll . "', '" . $_POST['subSessDate'] . "', '" . $reserved_flag . "', NOW(), NOW(), '".$_POST['force_flag']."');");
                         }
 
                         if (mysqli_affected_rows($db) > 0) {
@@ -1278,7 +1279,7 @@ switch ($codeBlock) {
                         $sub_query = "select area_id from subject s where id = '" . $_POST['subjectId'] . "'";
                         $sub_res = mysqli_query($db, $sub_query);
                         $dataSub = mysqli_fetch_assoc($sub_res);
-                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "'";
+                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = 0";
                         $q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) > 0) {
                             $dataAll = mysqli_fetch_assoc($q_res);
@@ -1458,4 +1459,3 @@ switch ($codeBlock) {
 		break;
 }
 ?>
-

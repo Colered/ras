@@ -263,89 +263,80 @@ class Timetable extends Base {
 									{
 										//Here will check a teacher can take maximum of 4 sessions per day
 										if((array_key_exists($date,$teachers_count) && array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]) && $teachers_count[$date][$result_reserv_act['teacher_id']] < 4) || !array_key_exists($date,$teachers_count) || !array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]))
-										{
-											//Here will check a teacher can have maximum of two saturdays working per cycle
-											if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_reserv_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)))				
+										{											
+											//Here will check a teacher cannot have classes in different locations on same day
+											if((array_key_exists($date,$locations) && array_key_exists($result_reserv_act['teacher_id'],$locations[$date]) && $locations[$date][$result_reserv_act['teacher_id']] == $result_reserv_act['location_id']) || !array_key_exists($date,$locations) || !array_key_exists($result_reserv_act['teacher_id'],$locations[$date]))
 											{
-												//Here will check a teacher cannot have classes in different locations on same day
-												if((array_key_exists($date,$locations) && array_key_exists($result_reserv_act['teacher_id'],$locations[$date]) && $locations[$date][$result_reserv_act['teacher_id']] == $result_reserv_act['location_id']) || !array_key_exists($date,$locations) || !array_key_exists($result_reserv_act['teacher_id'],$locations[$date]))
+												$order_no_array = $this->getSubjectsWithLessOrder($result_reserv_act['subject_id'],$result_reserv_act['order_number']);
+												$order_no_value = 0;
+												foreach($order_no_array as $order_no)
 												{
-													//Here will check sessions from same area will be scheduled on saturday 
-													if(($f_day == 5 && array_key_exists($date,$reserved_areas) && $reserved_areas[$date] == $result_reserv_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)))
+												   if($this->search_array($result_reserv_act['subject_id']."-".$order_no,$reserved_array))
 													{
-														$order_no_array = $this->getSubjectsWithLessOrder($result_reserv_act['subject_id'],$result_reserv_act['order_number']);
-														$order_no_value = 0;
-														foreach($order_no_array as $order_no)
-														{
-														   if($this->search_array($result_reserv_act['subject_id']."-".$order_no,$reserved_array))
-															{
-																$order_no_value++;
-															}else{
-																break;
-															}
-														}
-														if($order_no_value == count($order_no_array))
-														{														
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_reserv_act['activity_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_reserv_act['name'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_reserv_act['program_year_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['area_id'] = $result_reserv_act['area_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_reserv_act['program_name'];							
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_reserv_act['teacher_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_reserv_act['teacher_name'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_type'] = $result_reserv_act['teacher_type'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_reserv_act['group_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $result_reserv_act['room_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $result_reserv_act['room_name'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_reserv_act['session_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_reserv_act['session_name'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_reserv_act['subject_id'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_reserv_act['subject_name'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_reserv_act['order_number'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
-															$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id;
-															$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['room_id'];
-															$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['teacher_id'];
-															$ts_array = explode(",",$result_reserv_act['timeslot_id']);								
-															foreach($ts_array as $ts_id)
-															{
-																$reserved_timeslots[] = trim($ts_id);
-															}
-															
-															if(array_key_exists($date,$teachers_count) && array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]))
-															{
-																$teachers_count[$date][$result_reserv_act['teacher_id']] = $teachers_count[$date][$result_reserv_act['teacher_id']] + 1;
-															}else{
-																$teachers_count[$date][$result_reserv_act['teacher_id']] = 1;
-															}
-															if($f_day == 5 && $sat_flag == 0)
-															{
-																if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_reserv_act['teacher_id'],$teachers_sat[$cycle_id]))
-																{
-																$teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] = $teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] + 1;
-																}else{
-																	$teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] = 1;
-																}													
-																$sat_flag++;
-															}
-															if($f_day == 5)
-															{
-																$reserved_areas[$date] = $result_reserv_act['area_id'];
-															}
-															$locations[$date][$result_reserv_act['teacher_id']] = $result_reserv_act['location_id'];
-															break;													
-														}
+														$order_no_value++;
+													}else{
+														break;
 													}
 												}
-											}
+												if($order_no_value == count($order_no_array))
+												{														
+													$forced_flag = $this->getForcedFlagVal($result_reserv_act['activity_id']);
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_reserv_act['activity_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_reserv_act['name'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['program_year_id'] = $result_reserv_act['program_year_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['area_id'] = $result_reserv_act['area_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['program_name'] = $result_reserv_act['program_name'];	
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_id'] = $result_reserv_act['teacher_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_name'] = $result_reserv_act['teacher_name'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['teacher_type'] = $result_reserv_act['teacher_type'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['group_id'] = $result_reserv_act['group_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['room_id'] = $result_reserv_act['room_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['room_name'] = $result_reserv_act['room_name'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['session_id'] = $result_reserv_act['session_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['session_name'] = $result_reserv_act['session_name'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_id'] = $result_reserv_act['subject_id'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_name'] = $result_reserv_act['subject_name'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['order_no'] = $result_reserv_act['order_number'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['subject_order'] = $result_reserv_act['subject_id']."-".$result_reserv_act['order_number'];
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['date'] = $date;
+													$reserved_array[$date][$i][$start_time." - ".$end_time]['cycle_id'] = $cycle_id;
+													$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['room_id'];
+													$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $result_reserv_act['teacher_id'];
+													$ts_array = explode(",",$result_reserv_act['timeslot_id']);								
+													foreach($ts_array as $ts_id)
+													{
+														$reserved_timeslots[] = trim($ts_id);
+													}
+													
+													if(array_key_exists($date,$teachers_count) && array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]))
+													{
+														$teachers_count[$date][$result_reserv_act['teacher_id']] = $teachers_count[$date][$result_reserv_act['teacher_id']] + 1;
+													}else{
+														$teachers_count[$date][$result_reserv_act['teacher_id']] = 1;
+													}
+													if($f_day == 5 && $sat_flag == 0)
+													{
+														if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_reserv_act['teacher_id'],$teachers_sat[$cycle_id]))
+														{
+														$teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] = $teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] + 1;
+														}else{
+															$teachers_sat[$cycle_id][$result_reserv_act['teacher_id']] = 1;
+														}													
+														$sat_flag++;
+													}
+													if($f_day == 5 && $forced_flag != '1')
+													{
+														$reserved_areas[$date][$program_id] = $result_reserv_act['area_id'];
+													}
+													$locations[$date][$result_reserv_act['teacher_id']] = $result_reserv_act['location_id'];
+													break;													
+												}													
+											}											
 										}
 									}							
 								}
-							}
-							
-						}
-						
+							}							
+						}						
 						//search the free activities for the remaining timeslots for the same date
 						$total_timeslots = array();
 						foreach($v as $start_id)
@@ -407,7 +398,7 @@ class Timetable extends Base {
 																if((array_key_exists($date,$locations) && array_key_exists($result_free_act['teacher_id'],$locations[$date]) && $locations[$date][$result_free_act['teacher_id']] == $loc_id) || !array_key_exists($date,$locations) || !array_key_exists($result_free_act['teacher_id'],$locations[$date]))
 																{	
 																	//Here will check sessions from same area will be scheduled on saturday 
-																	if(($f_day == 5 && array_key_exists($date,$reserved_areas) && $reserved_areas[$date] == $result_free_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)))
+																	if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $result_free_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
 																	{																
 																		//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
 																		if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
@@ -469,7 +460,7 @@ class Timetable extends Base {
 																				}
 																				if($f_day == 5)
 																				{
-																					$reserved_areas[$date] = $result_free_act['area_id'];
+																					$reserved_areas[$date][$program_id] = $result_free_act['area_id'];
 																				}
 																				$locations[$date][$result_free_act['teacher_id']] = $loc_id;
 																				break;												
@@ -494,7 +485,7 @@ class Timetable extends Base {
 																{
 																	
 																	//Here will check sessions from same area will be scheduled on saturday 
-																	if(($f_day == 5 && array_key_exists($date,$reserved_areas) && $reserved_areas[$date] == $result_free_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)))
+																	if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $result_free_act['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
 																	{
 																		//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
 																		if(!$this->search_array($result_free_act['name'],$reserved_array) && !$this->search_array($result_free_act['subject_id']."-".$result_free_act['order_number'],$reserved_array))
@@ -553,7 +544,7 @@ class Timetable extends Base {
 																				}
 																				if($f_day == 5)
 																				{
-																					$reserved_areas[$date] = $result_free_act['area_id'];
+																					$reserved_areas[$date][$program_id] = $result_free_act['area_id'];
 																				}
 																				$unreserved_timeslots = array_diff($unreserved_timeslots,$time);
 																				$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
@@ -581,7 +572,7 @@ class Timetable extends Base {
 			}
 			
 			$i++;
-		}//print"<pre>";print_r($locations);die;
+		}//print"<pre>";print_r($reserved_array);die;
 		//If array is empty,means no activity has been allocated. We will shoe the message to user
 		if(empty($reserved_array))
 		{
@@ -589,6 +580,13 @@ class Timetable extends Base {
 			return $err;
 		}			
 		return $reserved_array;		
+	}
+
+	public function getForcedFlagVal($act_id)
+	{
+		$sql_select = $this->conn->query("select forced_flag from teacher_activity where id='".$act_id."'");
+		$result_select = mysqli_fetch_array($sql_select);
+		return $result_select['forced_flag'];
 	}
 
 	//function to check if the teacher is not allocated to any other activity at the same date and same time

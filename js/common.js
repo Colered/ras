@@ -666,10 +666,13 @@ function checkAvailability($forcing) {
 			return false;
 		}
 }
-function addSubjectSession($forcing){
+function addSubjectSession($forcing,$force_flag){
 		if($forcing == undefined){
 		   $forcing="";
 		}
+		if($force_flag == undefined){
+		   $force_flag="0";
+		}		
 	    var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
 		var subIdEncrypt = $('#subIdEncrypt').val();
  		//validating the forms
@@ -710,6 +713,7 @@ function addSubjectSession($forcing){
 						'sess_hidden_id': $('#sess_hidden_id').val(),
 						'act_hidden_id': $('#act_hidden_id').val(),
 						'force_var':$forcing,
+						'force_flag':$force_flag,
 						'codeBlock': 'add_sub_session',
 					},
 					success: function($succ){
@@ -2531,7 +2535,8 @@ function opendialogToComfirmArea(){
       buttons: {
         "Force Entry": function() {
 		  var force_entry="Forcing";
-		  addSubjectSession(force_entry);	
+		  var force_flag="1";
+		  addSubjectSession(force_entry,force_flag);	
           $( this ).dialog( "close" );
         },
         "Edit": function() {
