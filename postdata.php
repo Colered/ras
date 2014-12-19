@@ -433,8 +433,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}
 		break;
 		//Generate timetable
-		case 'generateTimetable':
-			if($_POST['txtAName'] != "" && $_POST['fromGenrtTmtbl'] != "" &&  $_POST['toGenrtTmtbl'] != "")
+		case 'generateTimetable':			
+			if($_POST['txtAName'] != "" && $_POST['fromGenrtTmtbl'] != "" &&  $_POST['toGenrtTmtbl'] != "" && $_POST['programs'] != "")
 			{
 				$obj = new Timetable();
 				$fromGenrtTmtbl = $_POST['fromGenrtTmtbl'];
@@ -442,10 +442,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$name = $_POST['txtAName'];
 				$start_date = date('Y-m-d', strtotime($_POST['fromGenrtTmtbl']));
 				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
+				$programs = $_POST['programs'];
 				if(!$obj->checkName($_POST['txtAName']))
 				{
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
-					$output_array = $obj->generateTimetable($start_date, $end_date);
+					$output_array = $obj->generateTimetable($start_date, $end_date,$programs);
 					if(isset($output_array['program_not_found'])){
 						$_SESSION['error_msg'] = $output_array['program_not_found'];
 					}elseif(isset($output_array['teacher_not_found'])){

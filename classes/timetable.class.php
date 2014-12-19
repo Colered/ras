@@ -191,11 +191,11 @@ class Timetable extends Base {
 		 return array($strArray1,$strArray2,$strArray3);
      }
 
-	public function generateTimetable($date, $end_date)
+	public function generateTimetable($date, $end_date,$programs)
 	{	
 		$start_date = $date;
 		//function call to search all programs with their dates and times, which occur in the timetable range
-		$programs = $this->search_programs($start_date,$end_date);
+		$programs = $this->search_programs($start_date,$end_date,$programs);
 		//sort the programs array by date
 		$new_programs = array();
 		foreach($programs as $pgm_id => $vals)
@@ -863,11 +863,18 @@ class Timetable extends Base {
 	}
 
 	//function to get all the programs, which lies in the duration of timetable generation period with their date and timeslot list
-	public function search_programs($start_date,$end_date)
+	public function search_programs($start_date,$end_date,$programs)
 	{
 		$final_pgms = array();
 		$last_day = 5;
-		$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE (start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."')");
+		$program_list = '';
+		foreach($programs as $pgm)
+		{
+			$program_list.= " program_year_id = '".$pgm."' ||";
+
+		}
+		$program_list = substr($program_list, 0, -2);
+		$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE ((start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."')) and (".$program_list.")");
 		$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
 		if($pgm_cycle_cnt > 0)
 		{

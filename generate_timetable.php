@@ -32,6 +32,21 @@ $toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';
                         To:<input type="text" required="true" id="toGenrtTmtbl" name="toGenrtTmtbl" size="12" value="<?php echo $toGenrtTmtbl; ?>">
                     </div>
                     <div class="clear"></div>
+					 <div class="custtd_left">
+                        <h2><strong>Choose Programs</strong><span class="redstar">*</span></h2>
+                    </div>
+					<div class="txtfield">
+						<select id="programs" name="programs[]" class="slctTs required" multiple="multiple">
+						<?php 
+						$objP = new Programs();
+						$result = $objP->getProgramWithCycle();
+						while($row = $result->fetch_assoc()){
+							?><option value="<?php echo $row['program_year_id'];?>"><?php echo $row['name'];?></option><?php
+						}						
+						?>                         
+                        </select>
+					</div>
+					<div class="clear"></div>
                     <div class="custtd_left">
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
