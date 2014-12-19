@@ -899,6 +899,9 @@ switch ($codeBlock) {
                     $dataLoc = mysqli_fetch_assoc($loc_res);
                     $teachAvail_query = "select location_id from teacher_activity ta inner join room r on r.id = ta.room_id
 						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher'] . "'";
+					if ($act_hidden_id <> "") {
+                        $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
+                    }
                     $q_res = mysqli_query($db, $teachAvail_query);
                     if (mysqli_affected_rows($db) > 0) {
                         $dataAll = mysqli_fetch_assoc($q_res);
@@ -1227,11 +1230,14 @@ switch ($codeBlock) {
                 }
                 //Rule: a teacher cannot have classes in different locations the same day
                 if ($valid == 1) {
-                    $loc_query = "select location_id from room r inner join building b on b.id = r.building_id where r.id = '" . $_POST['room_id'] . "'";
+					$loc_query = "select location_id from room r inner join building b on b.id = r.building_id where r.id = '" . $_POST['room_id'] . "'";
                     $loc_res = mysqli_query($db, $loc_query);
                     $dataLoc = mysqli_fetch_assoc($loc_res);
                     $teachAvail_query = "select location_id from teacher_activity ta inner join room r on r.id = ta.room_id
 						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher'] . "'";
+					if ($act_hidden_id <> "") {
+                        $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
+                    }
                     $q_res = mysqli_query($db, $teachAvail_query);
                     if (mysqli_affected_rows($db) > 0) {
                         $dataAll = mysqli_fetch_assoc($q_res);
