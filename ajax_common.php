@@ -949,7 +949,7 @@ switch ($codeBlock) {
                         $sub_query = "select area_id from subject s where id = '" . $_POST['subjectId'] . "'";
                         $sub_res = mysqli_query($db, $sub_query);
                         $dataSub = mysqli_fetch_assoc($sub_res);
-                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = 0";
+                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = '0'";
                         $q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) > 0) {
                             $dataAll = mysqli_fetch_assoc($q_res);
@@ -1285,7 +1285,7 @@ switch ($codeBlock) {
                         $sub_query = "select area_id from subject s where id = '" . $_POST['subjectId'] . "'";
                         $sub_res = mysqli_query($db, $sub_query);
                         $dataSub = mysqli_fetch_assoc($sub_res);
-                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = 0";
+                        $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = '0'";
                         $q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) > 0) {
                             $dataAll = mysqli_fetch_assoc($q_res);
