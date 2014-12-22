@@ -222,6 +222,10 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
     ' . background_css ( $GLOBALS['CELLBG'], 100 ) . '
     vertical-align:top;
   }
+  .main td.hasHolidays {
+    	background-color:#30C830;}
+  .main td.hasExceptionDays {
+  		background-color:#FB0808 ;}
   .main td.weekend {
     ' . background_css ( $GLOBALS['WEEKENDBG'], 100 ) . '
   }' . ( $GLOBALS['HASEVENTSBG'] != $GLOBALS['CELLBG'] ? '
@@ -1626,6 +1630,8 @@ color:white;}
   .legend-calender{
   	margin-left:20px;
   }
+  .minical td.hasholidays{background-color:#30C830;}
+  .minical td.hasExceptionDays{background-color:#FB0808 ;}
   .minical td.hasevents{background-color:#FFFF33;}
   #eventcomment {
    padding:.25em;

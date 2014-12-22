@@ -51,35 +51,6 @@ $printerStr = $unapprovedStr = '';
 $repeated_events = read_repeated_events ( empty ( $user )
   ? $login : $user, $startdate, $enddate, $cat_id );
 
-	/* Pre-load the non-repeating events for quicker access */
-	   /*$events = read_events ( empty ( $user )
-  		? $login : $user, $startdate, $enddate, $cat_id );
-  	*/	
-	/*if($teacher_id!=""){
-	$events = read_events_teacher (  empty ( $user )
-	  ? $user : $login, $startdate, $enddate,'',$teacher_id);
-	}else if($program_id!=""){
-	$events = read_events_program ( empty ( $user )
-	  ? $user : $login, $startdate, $enddate, '' ,$program_id);
-	}else if($subject_id!=""){
-	$events = read_events_subject (  empty ( $user )
-	  ? $user : $login, $startdate, $enddate, $cat_id ,$subject_id);
-	}else if($room_id!=""){
-	$events = read_events_room (  empty ( $user )
-	  ? $user : $login, $startdate, $enddate, $cat_id ,$room_id);
-	}else if($area_id!=""){
-	$events = read_events_area ( ( ! empty ( $user ) && strlen ( $user ) )
-  	? $user : $login, $startdate, $enddate, $cat_id ,$area_id);	
-	}else if($teacher_type_id){
-	$events = read_events_teacher_type ( ( ! empty ( $user ) && strlen ( $user ) )
-  	? $user : $login, $startdate, $enddate, $cat_id ,$teacher_type_id);
-	}else if($cycle_id!=""){
-	$events = read_events_cycle ( ( ! empty ( $user ) && strlen ( $user ) )
-  	? $user : $login, $startdate, $enddate, $cat_id ,$cycle_id);
-	}else{
-	 $events = read_events (empty ( $user ) 
-	  ? $user : $login,$startdate, $enddate, $cat_id );
-	} */
 	if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 		$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
 	}else{
@@ -117,6 +88,19 @@ echo <<<EOT
  				{$navStr}
 			</fieldset>
 		 </td>
+       </tr>
+    </table>
+EOT;
+
+echo <<<EOT
+    <table id="filters-table" border="0" width="70%" cellpadding="1" style="padding-top:10px;padding-left:92px;padding-bottom:30px;">
+      <tr>
+        <td id="filters-td" valign="top" width="70%" rowspan="2">
+		  		<p><strong>Legend:</strong><img src="images/yellow.png" style="height:10px;width:25px;" />
+				In Use<img src="images/green.png" style="height:10px;width:25px;padding-left:18px;"/>
+				Holiday<img src="images/red.png" style="height:10px;width:25px;padding-left:18px;" />
+				Exception</p>
+		</td>	
        </tr>
     </table>
 EOT;

@@ -140,14 +140,13 @@ for ( $r = 1; $r <= $yr_rows; $r++ ) {
   for( $c = 1; $c <= $yr_cols; $c++, $m++ ) {
   $COUNT=$COUNT+1;
     $gridOmonths .= '
-          <td>' . display_small_month ( $m, $year, false,'','','',$COUNT) . '</td>';
+          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT) . '</td>';
   }
   $gridOmonths .= '
         </tr>';
 }
 $trailerStr = print_trailer ();
 print_header ();
-
 echo <<<EOT
     <table id="filters-table" border="0" width="70%" cellpadding="1" style=" padding-left:98px">
       <tr>
@@ -157,6 +156,18 @@ echo <<<EOT
  				{$navStr}
 			</fieldset>
 		 </td>
+       </tr>
+    </table>
+EOT;
+echo <<<EOT
+    <table id="filters-table" border="0" width="70%" cellpadding="1" style="padding-top:10px;padding-left:92px;padding-bottom:30px;">
+      <tr>
+        <td id="filters-td" valign="top" width="70%" rowspan="2">
+		  		<p><strong>Legend:</strong><img src="images/yellow.png" style="height:10px;width:25px;" />
+				In Use<img src="images/green.png" style="height:10px;width:25px;padding-left:18px;"/>
+				Holiday<img src="images/red.png" style="height:10px;width:25px;padding-left:18px;" />
+				Exception</p>
+		</td>	
        </tr>
     </table>
 EOT;

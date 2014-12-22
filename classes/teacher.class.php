@@ -492,4 +492,12 @@ class Teacher extends Base {
 		$result =  $this->conn->query("select * from teacher_type where id = '".$id."'");
 		return $result;
 	}
+	public function getTeacherException()
+	{
+		$excep_query="select exception_date from teacher_availability_exception";
+		$q_excep = mysqli_query($this->conn, $excep_query);
+		return $q_excep;
+	
+	}
+
 }

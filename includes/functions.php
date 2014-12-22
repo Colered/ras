@@ -1036,19 +1036,20 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
       $is_weekend = is_weekend ( $date ) && ( ! empty ( $WEEKENDBG ) );
       $ret .= '
         <td';
-
+      //echo "monthstart=".$monthstart.'      '.'monthend='.$monthend;
+	  //echo '<br>';
+	  
       $currMonth = ( $dateYmd >= $monthstart && $dateYmd <= $monthend );
-	  if ( $currMonth ||
-        ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) && $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
-        $class = ( $currMonth
+	  if ( $currMonth || ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) && $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
+	    //echo "========".$todayYmd;echo '<br>';
+		
+		$class = ( $currMonth
           ? ( ! $demo && $dateYmd == $todayYmd ? 'today' : ( $is_weekend ? 'weekend' : '' ) )
           : 'othermonth' );
-
-        // Get events for this day.
+		// Get events for this day.
         $ret_events = '';
         if ( ! $demo )
-          $ret_events = print_date_entries ( $dateYmd,
-            ( empty ( $user ) ? $login : $user ), false );
+          $ret_events = print_date_entries ( $dateYmd,( empty ( $user ) ? $login : $user ), false );
         else {
           // Since we base this calendar on the current month,
           // the placement of the days always change so
@@ -1064,10 +1065,34 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
             $ret_events = translate ( 'My event text' );
           }
         }
+		//Holiday Dates
+		$objH =new Holidays();
+		$holiday_data=$objH->viewHoliday();
+		while($row_holiday = $holiday_data->fetch_assoc()){
+			$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
+		}
+		
+		//Teacher Exception Dates 
+		  $objTE =new Teacher();
+		  $teacher_exception=$objTE->getTeacherException();
+		  while($row_teacher_exception = $teacher_exception->fetch_assoc()){
+				$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
+		  }
+		  //end teacher date
+		  //Classrooom Exception Dates 
+		  $objCE =new Classroom();
+		  $clasroom_exception=$objCE->getClassroomException();
+		  while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
+				$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
+		  }
+  
+		
+		//echo $ret_events;
 		$class = trim ( $class );
-        $class .= ( ! empty ( $ret_events ) &&
-          strstr ( $ret_events, 'class="entry"' ) ? ' hasevents' : '' );
-
+        $class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents' : '' );
+		$class .= (in_array($dateYmd,$holiday_date, true) ? ' hasHolidays' : '');
+		$class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' hasExceptionDays' : '');
+		//echo "HD=".$class;
         $ret .= ( strlen ( $class ) ? ' class="' . $class . '"' : '' )
          . '>' . $ret_events . '</td>';
       } else
@@ -1181,13 +1206,36 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
   $SCRIPT, $SHOW_EMPTY_WEEKENDS,//Used by year.php
   $thisday, // Needed for day.php
   $today, $use_http_auth, $user, $WEEK_START;
+  //echo $month_link."DWARI";
   
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
   $u_url = ( $user != $login && ! empty ( $user )
     ? 'user=' . $user . '&amp;' : '' );
   $weekStr = translate ( 'Week' );
-
+  //holiday dates 
+  $objH =new Holidays();
+  $holiday_data=$objH->viewHoliday();
+  while($row_holiday = $holiday_data->fetch_assoc()){
+	 	$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
+  }
+  //end holiday dates
+  
+  //Teacher Exception Date 
+  $objTE =new Teacher();
+  $teacher_exception=$objTE->getTeacherException();
+  while($row_teacher_exception = $teacher_exception->fetch_assoc()){
+	 	$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
+  }
+  //end teacher date
+  //Classrooom Exception Date 
+  $objCE =new Classroom();
+  $clasroom_exception=$objCE->getClassroomException();
+  while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
+	 	$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
+  }
+  //End Classroom Excetion Date
+ 
   // Start the minical table for each month.
   $ret = '
     <table class="minical"'. ( $minical_id != '' ? ' id="' . $minical_id . '"' : '' ) . '>';
@@ -1229,7 +1277,7 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
         <tr class="monthnav">
           <th colspan="7">
             <a title="' . $prevStr . '" class="prev" href="minical.php?'
-     . $u_url . 'date=' . $month_ago
+      . $u_url . 'date=' . $month_ago
      . '"><img src="images/leftarrowsmall.gif" alt="' . $prevStr . '" /></a>
             <a title="' . $nextStr . '" class="next" href="minical.php?'
      . $u_url . 'date=' . $month_ahead
@@ -1240,8 +1288,7 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
         </tr>';
   } else // Not day or minical script. Print the month name.
     $ret .= '
-      <caption><a href="' . $month_link . $u_url . 'year=' . $thisyear
-     . '&amp;month=' . $thismonth . '">'
+      <caption><a href="' . $month_link . $u_url . 'year=' . $thisyear. '&amp;month=' . $thismonth . '">'
      . date_to_str ( sprintf ( "%04d%02d%02d", $thisyear, $thismonth, 1 ),
       ( $showyear != '' ? $DATE_FORMAT_MY : '__month__' ), false )
      . '</a></caption>
@@ -1277,11 +1324,20 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
       // Add 12 hours just so we don't have DST problems.
       $date = $i + ( $j * 86400 + 43200 );
       $dateYmd = date ( 'Ymd', $date );
-      $hasEvents = false;
+	  $hasException=false;
+	  $hasHoliday=false;
+	  $hasEvents = false;
       $title = '';
       $ret .= '
           <td';
       if ( $boldDays ) {
+	    if(in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)){
+		     $hasException=true;
+	  	}
+	    if(in_array($dateYmd,$holiday_date, true)){
+		     $hasHoliday=true;
+	  	}
+		
         $ev = get_entries ( $dateYmd, $get_unapproved, true, true );
         if ( count ( $ev ) > 0 ) {
           $hasEvents = true;
@@ -1304,8 +1360,11 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
         . ( $dateYmd == $thisyear . $thismonth . $thisday && $SCRIPT == 'day.php'
           ? ' selectedday' : '' )
         // Are there any events scheduled for this date?
-        . ( $hasEvents ? ' hasevents' : '' );
-
+        . ( $hasEvents ? ' hasevents' : '' )
+		//are there is any holiday scheduled for this days?
+		. ( $hasException ? ' hasExceptionDays' : '')
+		. ( $hasHoliday ? ' hasholidays' : '');
+		
         $ret .= ( $class != '' ? ' class="' . $class . '"' : '' )
          . ( $dateYmd == date ( 'Ymd', $today ) ? ' id="today"' : '' )
          . '><a href="';
@@ -4490,8 +4549,41 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 ) {
   global $CELLBG, $DISPLAY_TASKS_IN_GRID, $DISPLAY_UNAPPROVED, $first_slot,
   $hour_arr, $last_slot, $rowspan, $rowspan_arr, $TABLEBG, $THBG, $THFG,
   $TIME_SLOTS, $today, $TODAYCELLBG, $WORK_DAY_END_HOUR, $WORK_DAY_START_HOUR;
-
-  if ( empty ( $TIME_SLOTS ) )
+   //Holiday Dates
+   $objH =new Holidays();
+   $holiday_data=$objH->viewHoliday();
+	while($row_holiday = $holiday_data->fetch_assoc()){
+   		$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
+    }
+	//Teacher Exception Dates 
+   $objTE =new Teacher();
+   $teacher_exception=$objTE->getTeacherException();
+	while($row_teacher_exception = $teacher_exception->fetch_assoc()){
+     $teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
+   }
+	//end teacher date
+	//Classrooom Exception Dates 
+	$objCE =new Classroom();
+	$clasroom_exception=$objCE->getClassroomException();
+	 while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
+	   $classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
+	}
+	$hasException='';
+	$hasHoliday='';
+	if((in_array($date,$teacher_exception_date, true) || in_array($date,$classroom_exception_date, true)) && in_array($date,$holiday_date, true)){
+		$hasException = ' hasExceptionDays';
+	}elseif((in_array($date,$teacher_exception_date, true) || in_array($date,$classroom_exception_date, true))){
+		$hasException = ' hasExceptionDays';
+	}else if(in_array($date,$holiday_date, true)){
+		$hasHoliday = ' hasHolidays';
+	}
+	
+	
+	
+	
+	
+	
+ if ( empty ( $TIME_SLOTS ) )
     return translate ( 'Error TIME_SLOTS undefined!' ) . "<br />\n";
 
   $get_unapproved = ( $DISPLAY_UNAPPROVED == 'Y' );
@@ -4575,11 +4667,39 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 ) {
       // ends at 11:15 and another starts at 11:30.
       if ( ! empty ( $hour_arr[$i] ) )
         $ret .= '
-        <td class="hasevents">' . $addIcon . $hour_arr[$i] . '</td>';
+          <td class="hasevents">' . $addIcon . $hour_arr[$i] . '</td>';
 
       $rowspan--;
     } else {
+	
       $ret .= '
+        <td ';
+      if ( empty ( $hour_arr[$i] ) )
+        $ret .= ( $date == date ( 'Ymd', $today ) ? ' class="today"' : ' class="'.$hasException.''.$hasHoliday.'"' )
+         . '>' . ( $can_add ? $addIcon : '&nbsp;' );
+      else {
+        $rowspan = ( empty ( $rowspan_arr[$i] ) ? '' : $rowspan_arr[$i] );
+
+        $ret .= ( $rowspan > 1 ? 'rowspan="' . $rowspan . '"' : '' )
+         . 'class="hasevents">' . $addIcon . $hour_arr[$i];
+      }
+      $ret .= '</td>';
+    
+      /*$ret .= '
+	  <td ';
+		if ( empty ( $hour_arr[$i] ) ){
+		$class=( $date == date ( 'Ymd', $today ) ? ' today' : '')
+		.  (in_array($date,$holiday_date, true) ? " hasHolidays": "")
+		.  ((in_array($date,$teacher_exception_date, true) || in_array($date,$classroom_exception_date, true)) ? " hasExceptionDays": "").'>'. ( $can_add ? $addIcon : '&nbsp;'); 
+		$ret .=$class;
+		
+      }else {
+	    $rowspan = ( empty ( $rowspan_arr[$i] ) ? '' : $rowspan_arr[$i] );
+		$ret .= ( $rowspan > 1 ? 'rowspan="' . $rowspan . '"' : '' ). 'class=" hasevents">' . $addIcon . $hour_arr[$i];
+      }
+	 $ret .= '</td>';*/
+	 
+	 /* $ret .= '
         <td ';
       if ( empty ( $hour_arr[$i] ) )
         $ret .= ( $date == date ( 'Ymd', $today ) ? ' class="today"' : '' )
@@ -4590,7 +4710,8 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 ) {
         $ret .= ( $rowspan > 1 ? 'rowspan="' . $rowspan . '"' : '' )
          . 'class="hasevents">' . $addIcon . $hour_arr[$i];
       }
-      $ret .= '</td>';
+      $ret .= '</td>';*/
+	  
     }
     $ret .= '
       </tr>';

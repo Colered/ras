@@ -79,19 +79,40 @@ if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
 $eventsStr = $filler = $headerStr = $minical_tasks = $untimedStr = '';
 $navStr = display_navigation ( 'week' );
 $week_name_display=display_navigation_current_month( 'week' );
+   //Holiday Dates
+   $objH =new Holidays();
+   $holiday_data=$objH->viewHoliday();
+	while($row_holiday = $holiday_data->fetch_assoc()){
+   		$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
+    }
+	//Teacher Exception Dates 
+   $objTE =new Teacher();
+   $teacher_exception=$objTE->getTeacherException();
+	while($row_teacher_exception = $teacher_exception->fetch_assoc()){
+     $teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
+   }
+	//end teacher date
+	//Classrooom Exception Dates 
+	$objCE =new Classroom();
+	$clasroom_exception=$objCE->getClassroomException();
+	 while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
+	   $classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
+	}
+
+
 for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   $days[$i] = ( $wkstart + ( 86400 * $i ) ) + 43200;
   $weekdays[$i] = weekday_name ( ( $i + $WEEK_START ) % 7, $DISPLAY_LONG_DAYS );
   $dateYmd = date ( 'Ymd', $days[$i] );
-
+  /*echo '<br>';
+  echo $dateYmd;
+  echo '<br>';*/
   $header[$i] = $weekdays[$i] . '<br />'
    . date_to_str ( $dateYmd, $DATE_FORMAT_MD, false, true );
   // .
   // Generate header row.
-  $class = ( $dateYmd == date ( 'Ymd', $today )
-    ? ' class="today"'
-    : ( is_weekend ( $days[$i] ) ? ' class="weekend"' : '' ) );
-
+  $class = ( $dateYmd == date ( 'Ymd', $today )? " today" : ( is_weekend ( $days[$i] ) ? " weekend" : "" ) );
+  
   $headerStr .= '
               <th ' . $class . '>'
    . ( $can_add ? html_for_add_icon ( $dateYmd, '', '', $user ) : '' )
@@ -182,33 +203,38 @@ for ( $i = $first_slot; $i <= $last_slot; $i++ ) {
 
   for ( $d = $start_ind; $d <= $end_ind; $d++ ) {
     $dateYmd = date ( 'Ymd', $days[$d] );
+	/*echo '<br>';
+	echo $dateYmd;
+	echo '<br>';*/
     // Class "hasevents" overrides both "today" and "weekend".
     // And class "today" overrides "weekend".
     // So, no need to list them all.
-    $class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] )
-      ? ' class="hasevents"'
-      : ( $dateYmd == date ( 'Ymd', $today )
-        ? ' class="today"'
-        : ( is_weekend ( $days[$d] ) ? ' class="weekend"' : '' ) ) );
-
-    if ( $rowspan_day[$d] > 1 ) {
+   /*$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? ' class="hasevents"' : ( $dateYmd == date ( 'Ymd', $today ) ? ' class="today"' : ( is_weekend ( $days[$d] ) ? ' class="weekend"' : '' ) ) );
+   
+   $class .= (in_array($dateYmd,$holiday_date, true) ? ' class=" hasHolidays"': "");
+   
+   $class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' class=" hasExceptionDays"': "");*/
+     //echo "Before=".$class;
+	 //echo '<br>';
+     $class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents" : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
+   . (in_array($dateYmd,$holiday_date, true) ? " hasHolidays": "")
+   . ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? " hasExceptionDays": "");
+   if ( $rowspan_day[$d] > 1 ) {
       // This might mean there's an overlap,
       // or it could mean one event ends at 11:15 and another starts at 11:30.
       if ( ! empty ( $save_hour_arr[$d][$i] ) )
         $eventsStr .= '
-              <td' . $class . '>' . $save_hour_arr[$d][$i] . '</td>';
+              <td class=' . $class . '>' . $save_hour_arr[$d][$i] . '</td>';
 
       $rowspan_day[$d]--;
     } else {
-      $eventsStr .= '
-              <td' . $class;
-      if ( empty ( $save_hour_arr[$d][$i] ) ) {
-        $eventsStr .= '>'
+      $eventsStr .= '<td '.( $class != '' ? ' class="' . $class . '"' : '' ); if ( empty ( $save_hour_arr[$d][$i] ) ) {
+	  $eventsStr .= '>'
          . ( $can_add // If user can add events, then echo the add event icon.
           ? html_for_add_icon ( $dateYmd, $time_h, $time_m, $user ) : '' )
          . '&nbsp;';
       } else {
-        $rowspan_day[$d] = $save_rowspan_arr[$d][$i];
+	  	$rowspan_day[$d] = $save_rowspan_arr[$d][$i];
         $eventsStr .= ( $rowspan_day[$d] > 1
           ? ' rowspan="' . $rowspan_day[$d]  .'"': '' )
          . '>' . ( $can_add
@@ -263,6 +289,18 @@ echo <<<EOT
     </table>
 EOT;
 
+echo <<<EOT
+    <table id="filters-table" border="0" width="70%" cellpadding="1" style="padding-top:10px;padding-left:92px;padding-bottom:30px;">
+      <tr>
+        <td id="filters-td" valign="top" width="70%" rowspan="2">
+		  		<p><strong>Legend:</strong><img src="images/yellow.png" style="height:10px;width:25px;" />
+				In Use<img src="images/green.png" style="height:10px;width:25px;padding-left:18px;"/>
+				Holiday<img src="images/red.png" style="height:10px;width:25px;padding-left:18px;" />
+				Exception</p>
+		</td>	
+       </tr>
+    </table>
+EOT;
 
 
 echo <<<EOT
