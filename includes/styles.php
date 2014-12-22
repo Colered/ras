@@ -222,13 +222,14 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
     ' . background_css ( $GLOBALS['CELLBG'], 100 ) . '
     vertical-align:top;
   }
+  .main td.weekend {
+    ' . background_css ( $GLOBALS['WEEKENDBG'], 100 ) . '
+  }
   .main td.hasHolidays {
     	background-color:#30C830;}
   .main td.hasExceptionDays {
   		background-color:#FB0808 ;}
-  .main td.weekend {
-    ' . background_css ( $GLOBALS['WEEKENDBG'], 100 ) . '
-  }' . ( $GLOBALS['HASEVENTSBG'] != $GLOBALS['CELLBG'] ? '
+  ' . ( $GLOBALS['HASEVENTSBG'] != $GLOBALS['CELLBG'] ? '
   .main td.hasevents {
     ' . background_css ( $GLOBALS['HASEVENTSBG'], 100 ) . '
   }' : '' ) . '
