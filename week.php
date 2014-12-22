@@ -104,9 +104,6 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   $days[$i] = ( $wkstart + ( 86400 * $i ) ) + 43200;
   $weekdays[$i] = weekday_name ( ( $i + $WEEK_START ) % 7, $DISPLAY_LONG_DAYS );
   $dateYmd = date ( 'Ymd', $days[$i] );
-  /*echo '<br>';
-  echo $dateYmd;
-  echo '<br>';*/
   $header[$i] = $weekdays[$i] . '<br />'
    . date_to_str ( $dateYmd, $DATE_FORMAT_MD, false, true );
   // .
@@ -203,20 +200,7 @@ for ( $i = $first_slot; $i <= $last_slot; $i++ ) {
 
   for ( $d = $start_ind; $d <= $end_ind; $d++ ) {
     $dateYmd = date ( 'Ymd', $days[$d] );
-	/*echo '<br>';
-	echo $dateYmd;
-	echo '<br>';*/
-    // Class "hasevents" overrides both "today" and "weekend".
-    // And class "today" overrides "weekend".
-    // So, no need to list them all.
-   /*$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? ' class="hasevents"' : ( $dateYmd == date ( 'Ymd', $today ) ? ' class="today"' : ( is_weekend ( $days[$d] ) ? ' class="weekend"' : '' ) ) );
-   
-   $class .= (in_array($dateYmd,$holiday_date, true) ? ' class=" hasHolidays"': "");
-   
-   $class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' class=" hasExceptionDays"': "");*/
-     //echo "Before=".$class;
-	 //echo '<br>';
-     $class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents" : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
+	$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents" : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
    . (in_array($dateYmd,$holiday_date, true) ? " hasHolidays": "")
    . ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? " hasExceptionDays": "");
    if ( $rowspan_day[$d] > 1 ) {

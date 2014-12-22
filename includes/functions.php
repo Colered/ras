@@ -1036,14 +1036,11 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
       $is_weekend = is_weekend ( $date ) && ( ! empty ( $WEEKENDBG ) );
       $ret .= '
         <td';
-      //echo "monthstart=".$monthstart.'      '.'monthend='.$monthend;
-	  //echo '<br>';
-	  
+      
       $currMonth = ( $dateYmd >= $monthstart && $dateYmd <= $monthend );
 	  if ( $currMonth || ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) && $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
-	    //echo "========".$todayYmd;echo '<br>';
-		
-		$class = ( $currMonth
+	   
+	   $class = ( $currMonth
           ? ( ! $demo && $dateYmd == $todayYmd ? 'today' : ( $is_weekend ? 'weekend' : '' ) )
           : 'othermonth' );
 		// Get events for this day.
@@ -1085,15 +1082,11 @@ function display_month ( $thismonth, $thisyear, $demo = false ) {
 		  while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
 				$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
 		  }
-  
-		
-		//echo $ret_events;
-		$class = trim ( $class );
+  		$class = trim ( $class );
         $class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents' : '' );
 		$class .= (in_array($dateYmd,$holiday_date, true) ? ' hasHolidays' : '');
 		$class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' hasExceptionDays' : '');
-		//echo "HD=".$class;
-        $ret .= ( strlen ( $class ) ? ' class="' . $class . '"' : '' )
+		$ret .= ( strlen ( $class ) ? ' class="' . $class . '"' : '' )
          . '>' . $ret_events . '</td>';
       } else
         $ret .= ( $is_weekend ? ' class="weekend"' : '' ) . '>&nbsp;</td>';
@@ -1206,7 +1199,6 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
   $SCRIPT, $SHOW_EMPTY_WEEKENDS,//Used by year.php
   $thisday, // Needed for day.php
   $today, $use_http_auth, $user, $WEEK_START;
-  //echo $month_link."DWARI";
   
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
@@ -4561,7 +4553,6 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 ) {
 	while($row_teacher_exception = $teacher_exception->fetch_assoc()){
      $teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
    }
-	//end teacher date
 	//Classrooom Exception Dates 
 	$objCE =new Classroom();
 	$clasroom_exception=$objCE->getClassroomException();
@@ -4577,12 +4568,6 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 ) {
 	}else if(in_array($date,$holiday_date, true)){
 		$hasHoliday = ' hasHolidays';
 	}
-	
-	
-	
-	
-	
-	
  if ( empty ( $TIME_SLOTS ) )
     return translate ( 'Error TIME_SLOTS undefined!' ) . "<br />\n";
 
@@ -4602,8 +4587,6 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 ) {
 
   $first_slot = intval ( ( $WORK_DAY_START_HOUR * 60 ) / $interval );
   $last_slot = intval ( ( $WORK_DAY_END_HOUR * 60 ) / $interval );
-
-
 
   for ( $i = 0, $cnt = count ( $ev ); $i < $cnt; $i++ ) {
     if ( $get_unapproved || $ev[$i]->getStatus () == 'A' )
@@ -4684,34 +4667,6 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 ) {
          . 'class="hasevents">' . $addIcon . $hour_arr[$i];
       }
       $ret .= '</td>';
-    
-      /*$ret .= '
-	  <td ';
-		if ( empty ( $hour_arr[$i] ) ){
-		$class=( $date == date ( 'Ymd', $today ) ? ' today' : '')
-		.  (in_array($date,$holiday_date, true) ? " hasHolidays": "")
-		.  ((in_array($date,$teacher_exception_date, true) || in_array($date,$classroom_exception_date, true)) ? " hasExceptionDays": "").'>'. ( $can_add ? $addIcon : '&nbsp;'); 
-		$ret .=$class;
-		
-      }else {
-	    $rowspan = ( empty ( $rowspan_arr[$i] ) ? '' : $rowspan_arr[$i] );
-		$ret .= ( $rowspan > 1 ? 'rowspan="' . $rowspan . '"' : '' ). 'class=" hasevents">' . $addIcon . $hour_arr[$i];
-      }
-	 $ret .= '</td>';*/
-	 
-	 /* $ret .= '
-        <td ';
-      if ( empty ( $hour_arr[$i] ) )
-        $ret .= ( $date == date ( 'Ymd', $today ) ? ' class="today"' : '' )
-         . '>' . ( $can_add ? $addIcon : '&nbsp;' );
-      else {
-        $rowspan = ( empty ( $rowspan_arr[$i] ) ? '' : $rowspan_arr[$i] );
-
-        $ret .= ( $rowspan > 1 ? 'rowspan="' . $rowspan . '"' : '' )
-         . 'class="hasevents">' . $addIcon . $hour_arr[$i];
-      }
-      $ret .= '</td>';*/
-	  
     }
     $ret .= '
       </tr>';
