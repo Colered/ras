@@ -82,7 +82,7 @@ border:1px solid #8bcf54; font-size:12px;font-family:arial, helvetica, sans-seri
  cursor:pointer;
  min-width:70px;
 }
-
+.buttonsub:hover{ text-decoration:none;}
 .wrap{
 	margin: 0 auto;
 	width: 100%;

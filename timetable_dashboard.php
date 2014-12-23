@@ -10,14 +10,14 @@ $result=$obj->getTimetablesData();
             <form action="" method="post">
                 <div>
                     <div class="custtd_left1">
-                        <a href="generate_timetable.php"><input type="button" name="btnProgram" class="buttonsub" value="Generate Timetable"></a>
+                        <a href="generate_timetable.php" class="buttonsub" >Generate Timetable</a>
                     </div>
                     <div class="custtd_right">
                         <!--<a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>-->
-						<a href="month.php"><input type="button" name="btnSubject" class="buttonsub" value="Calendar View"></a>
+						<a href="month.php" class="buttonsub" >Calendar View</a>
                     </div>
                     <div class="custtd_right">
-                        <a href="timetable_view.php"><input type="button" name="btnSubject" class="buttonsub" value="Table View"></a>
+                        <a href="timetable_view.php" class="buttonsub" >Table View</a>
                     </div>
                     <div class="custtd_left1">
                         <!--<a href="#"> <input type="button" name="btnTeacher" class="buttonsub" value="Save"></a>-->
