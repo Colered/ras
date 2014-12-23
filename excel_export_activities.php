@@ -75,8 +75,24 @@ while($row = mysqli_fetch_array($q_res))
 		else
 			$cycle_id = 2;
 	}
-	$data[] = array("Date" => $row['date'], "Timeslot" => mb_convert_encoding($row['timeslot'],'UTF-16LE', 'UTF-8'), "Program" => mb_convert_encoding($row['name'],'UTF-16LE', 'UTF-8'), "Company" => mb_convert_encoding($row['company'],'UTF-16LE', 'UTF-8'), "Module" => mb_convert_encoding($row['unit'],'UTF-16LE', 'UTF-8'), "Cycle" => mb_convert_encoding($cycle_id,'UTF-16LE', 'UTF-8'), "Area" => mb_convert_encoding($row['area_name'],'UTF-16LE', 'UTF-8'), "Subject" => mb_convert_encoding($row['subject_name'],'UTF-16LE', 'UTF-8'), "Session" => mb_convert_encoding($row['session_name'],'UTF-16LE', 'UTF-8'),  "Teacher Name" => mb_convert_encoding($row['teacher_name'],'UTF-16LE', 'UTF-8'), "Teacher Type" => mb_convert_encoding($row['teacher_type_name'],'UTF-16LE', 'UTF-8'), "Classroom" => mb_convert_encoding($row['room_name'],'UTF-16LE', 'UTF-8'), "Case No" => mb_convert_encoding($row['case_number'],'UTF-16LE', 'UTF-8'), "Technical Notes" => mb_convert_encoding($row['technical_notes'],'UTF-16LE', 'UTF-8'));  
-}  
+	$data[] = array("Date" => $row['date'],
+					"Timeslot" => str_convert($row['timeslot']),
+					"Program" => str_convert($row['name']),
+					"Company" => str_convert($row['company']),
+					"Module" => str_convert($row['unit']),
+					"Cycle" => str_convert($cycle_id),
+					"Area" => str_convert($row['area_name']),
+					"Subject" => str_convert($row['subject_name']),
+					"Session" => str_convert($row['session_name']),
+					"Teacher Name" => str_convert($row['teacher_name']),
+					"Teacher Type" => str_convert($row['teacher_type_name']),
+					"Classroom" => str_convert($row['room_name']),
+					"Case No" => str_convert($row['case_number']),
+					"Technical Notes" => str_convert($row['technical_notes']));  
+} 
+function str_convert($str){
+	return iconv("UTF-8", "ISO-8859-1//IGNORE",$str);
+}
 
 $filename = "academic_report_" . date('Ymd') . ".xls";
 header("Content-Disposition: attachment; filename=\"$filename\"");
