@@ -1,4 +1,11 @@
-<?php include('header.php');
+<?php include('header.php'); ?>
+<script type="text/javascript" src="js/jquery.simple-color.js"></script>
+<script>
+	$(document).ready(function(){
+  		$('.simple_color').simpleColor();
+	});
+</script>
+<?php
 $areaName=""; $areaCode=""; $areaColor=""; $areaId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$areaId = base64_decode($_GET['edit']);
@@ -10,6 +17,7 @@ $areaName = isset($_GET['edit']) ? $row['area_name'] : (isset($_POST['txtAreaNam
 $areaCode = isset($_GET['edit']) ? $row['area_code'] : (isset($_POST['txtAreaCode'])? $_POST['txtAreaCode']:'');
 $areaColor = isset($_GET['edit']) ? $row['area_color'] : (isset($_POST['txtAColor'])? $_POST['txtAColor']:'');
 ?>
+
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -41,7 +49,7 @@ $areaColor = isset($_GET['edit']) ? $row['area_color'] : (isset($_POST['txtAColo
                         <h2>Area Color<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="color"  class="colorArea" id="txtAColor" name="txtAColor" value="<?php echo $areaColor; ?>">
+						<input class='simple_color' id="txtAColor" name="txtAColor" value="<?php echo $areaColor; ?>"/>
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">

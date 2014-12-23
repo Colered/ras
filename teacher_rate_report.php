@@ -58,7 +58,7 @@ function submitFunction()
 		</div>
 		<?php if(isset($_POST['btnGenrtReport'])){?>
 		<div>
-			<form action="excel_export_example.php" method="post" id="export-form">
+			<form action="excel_export_teacher_rate_report.php" method="post" id="export-form">
 					<?php
 					foreach($_POST as $value)
 					{

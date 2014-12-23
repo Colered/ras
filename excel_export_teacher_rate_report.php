@@ -1,11 +1,5 @@
  <?php
 include('config.php');
-
-// file name for download
-$filename = "teacher_report_" . date('Ymd') . ".xls";
-header("Content-Disposition: attachment; filename=\"$filename\"");
-header("Content-Type: application/vnd.ms-excel");
-
 $fromTmDuratn = $_POST['postdata'][1];
 $toTmDuratn = $_POST['postdata'][2];
 $teacher_id = isset($_POST['postdata'][3])?$_POST['postdata'][3]:'';
@@ -56,7 +50,7 @@ $q_res = mysqli_query($db,$teacher_sql);
 $data = array();
 while($row = mysqli_fetch_array($q_res))
 {
-	$data[] = array("Date" => $row['date'], "Teacher Name" => $row['teacher_name'], "Teacher Type" => $row['teacher_type_name'],"Program" => $row['name'], "Company" => $row['company'], "Module" => $row['unit'], "Sessions" => $row['session_name'], "Payrate" => $row['payrate']);  
+	$data[] = array("Date" => $row['date'], "Teacher Name" => mb_convert_encoding($row['teacher_name'],'UTF-16LE', 'UTF-8'), "Teacher Type" => mb_convert_encoding($row['teacher_type_name'],'UTF-16LE', 'UTF-8'),"Program" => mb_convert_encoding($row['name'],'UTF-16LE', 'UTF-8'), "Company" => mb_convert_encoding($row['company'],'UTF-16LE', 'UTF-8'), "Module" => mb_convert_encoding($row['unit'],'UTF-16LE', 'UTF-8'), "Sessions" => mb_convert_encoding($row['session_name'],'UTF-16LE', 'UTF-8'), "Payrate" => mb_convert_encoding($row['payrate'],'UTF-16LE', 'UTF-8'));  
 }  
 
 $total_sql = "select distinct teacher_id,count(session_id) as session_id,t.teacher_name,t.payrate from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
@@ -109,6 +103,10 @@ if($sum == '')
 	$sum = '0';
 
 $data[] = array("Date" => "Total", "Teacher Name" => "", "Teacher Type" => "","Program" => "", "Company" => "", "Module" => "", "Sessions" => $sum, "Payrate" => $total);
+
+$filename = "teacher_report_" . date('Ymd') . ".xls";
+header("Content-Disposition: attachment; filename=\"$filename\""); 
+header("Content-type: application/vnd.ms-excel; charset=utf-8");
 
 function cleanData(&$str)
   {

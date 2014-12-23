@@ -1,11 +1,5 @@
- <?php
+<?php
 include('config.php');
-
-// file name for download
-$filename = "academic_report_" . date('Ymd') . ".xls";
-header("Content-Disposition: attachment; filename=\"$filename\"");
-header("Content-Type: application/vnd.ms-excel");
-
 $fromTmDuratn = $_POST['postdata'][1];
 $toTmDuratn = $_POST['postdata'][2];
 $teacher_id = isset($_POST['postdata'][3])?$_POST['postdata'][3]:'';
@@ -81,8 +75,12 @@ while($row = mysqli_fetch_array($q_res))
 		else
 			$cycle_id = 2;
 	}
-	$data[] = array("Date" => $row['date'], "Timeslot" => $row['timeslot'], "Program" => $row['name'], "Company" => $row['company'], "Module" => $row['unit'], "Cycle" => $cycle_id, "Area" => $row['area_name'], "Subject" => $row['subject_name'], "Session" => $row['session_name'],  "Teacher Name" => $row['teacher_name'], "Teacher Type" => $row['teacher_type_name'], "Classroom" => $row['room_name'], "Case No" => $row['case_number'], "Technical Notes" => $row['technical_notes']);  
+	$data[] = array("Date" => $row['date'], "Timeslot" => mb_convert_encoding($row['timeslot'],'UTF-16LE', 'UTF-8'), "Program" => mb_convert_encoding($row['name'],'UTF-16LE', 'UTF-8'), "Company" => mb_convert_encoding($row['company'],'UTF-16LE', 'UTF-8'), "Module" => mb_convert_encoding($row['unit'],'UTF-16LE', 'UTF-8'), "Cycle" => mb_convert_encoding($cycle_id,'UTF-16LE', 'UTF-8'), "Area" => mb_convert_encoding($row['area_name'],'UTF-16LE', 'UTF-8'), "Subject" => mb_convert_encoding($row['subject_name'],'UTF-16LE', 'UTF-8'), "Session" => mb_convert_encoding($row['session_name'],'UTF-16LE', 'UTF-8'),  "Teacher Name" => mb_convert_encoding($row['teacher_name'],'UTF-16LE', 'UTF-8'), "Teacher Type" => mb_convert_encoding($row['teacher_type_name'],'UTF-16LE', 'UTF-8'), "Classroom" => mb_convert_encoding($row['room_name'],'UTF-16LE', 'UTF-8'), "Case No" => mb_convert_encoding($row['case_number'],'UTF-16LE', 'UTF-8'), "Technical Notes" => mb_convert_encoding($row['technical_notes'],'UTF-16LE', 'UTF-8'));  
 }  
+
+$filename = "academic_report_" . date('Ymd') . ".xls";
+header("Content-Disposition: attachment; filename=\"$filename\"");
+header("Content-Type: application/vnd.ms-excel");
 
 function cleanData(&$str)
   {
