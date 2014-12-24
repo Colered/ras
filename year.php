@@ -163,10 +163,15 @@ echo <<<EOT
     <table id="filters-table" border="0" width="70%" cellpadding="1" style="padding-top:10px;padding-left:92px;padding-bottom:30px;">
       <tr>
         <td id="filters-td" valign="top" width="70%" rowspan="2">
-		  		<p><strong>Legend:</strong><img src="images/yellow.png" style="height:10px;width:25px;" />
-				In Use<img src="images/green.png" style="height:10px;width:25px;padding-left:18px;"/>
-				Holiday<img src="images/red.png" style="height:10px;width:25px;padding-left:18px;" />
-				Exception</p>
+		  		<p>
+					<div>
+					   <div class="legend-only" ><strong >Legend:</strong></div>
+					   <div class="legend-color-avail" > </div><label class="legend-label">Available</label>
+					   <div class="legend-color-use" > </div><label class="legend-label">In Use</label>
+					   <div class="legend-color-holiday" > </div><label class="legend-label">Holiday</label>
+					   <div class="legend-color-excp" > </div><label >Exception</label>
+				   </div>
+				</p>
 		</td>	
        </tr>
     </table>

@@ -226,9 +226,9 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
     ' . background_css ( $GLOBALS['WEEKENDBG'], 100 ) . '
   }
   .main td.hasHolidays {
-    	background-color:#30C830;}
+    	background-color:#00FF00;}
   .main td.hasExceptionDays {
-  		background-color:#FB0808 ;}
+  		background-color:#7F6000;}
   ' . ( $GLOBALS['HASEVENTSBG'] != $GLOBALS['CELLBG'] ? '
   .main td.hasevents {
     ' . background_css ( $GLOBALS['HASEVENTSBG'], 100 ) . '
@@ -1631,9 +1631,27 @@ color:white;}
   .legend-calender{
   	margin-left:20px;
   }
-  .minical td.hasholidays{background-color:#30C830;}
-  .minical td.hasExceptionDays{background-color:#FB0808 ;}
+  .minical td.hasholidays{background-color:#00FF00;}
+  .minical td.hasExceptionDays{background-color:#7F6000 ;}
   .minical td.hasevents{background-color:#FFFF33;}
+  .legend-color-avail{
+  	height:14px;width:25px; background-color:#FFD966;float:left;
+   }
+   .legend-color-use{
+  	height:14px;width:25px; background-color:#FFFF33;float:left;
+   }
+   .legend-color-holiday{
+  	height:14px;width:25px; background-color:#00FF00;float:left;
+   }
+   .legend-color-excp{
+  	height:14px;width:25px; background-color:#7F6000;float:left;
+   }
+  .legend-only{
+    float:left;padding-right:20px;
+  }
+  .legend-label{
+    float:left;padding-right:20px;
+  }
   #eventcomment {
    padding:.25em;
    border:1px solid ' . $GLOBALS['TABLEBG'] . ';
