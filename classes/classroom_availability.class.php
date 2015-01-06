@@ -151,4 +151,12 @@ class Classroom_Availability extends Base {
 		}
 		return $timeslotIds;
 	}
+	public function getClsrmRuleStartEndDate($id){
+		$classromm_start_end_date="select rule_name,start_date,end_date from classroom_availability_rule where id ='".$id."'"; 
+		$q_res = mysqli_query($this->conn, $classromm_start_end_date);
+		$data=$q_res->fetch_assoc();
+	    $data['start_date']= date('Y-m-d', strtotime($data['start_date']));
+		$data['end_date']=date('Y-m-d', strtotime($data['end_date']));
+		return $data;
+	}
 }

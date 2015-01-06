@@ -21,6 +21,7 @@ spl_autoload_register('classAutoLoader');
 // instantiate database object
 $database = new Database();
 $db = $database->getConnection();
+date_default_timezone_set("America/New_York");
 
 
 ?>

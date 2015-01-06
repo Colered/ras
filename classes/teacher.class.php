@@ -278,8 +278,10 @@ class Teacher extends Base {
 	//get all rule ids from teacher
 	public function getRuleIdsForTeacher($ids)
 	{
-		$area_query="select teacher_availability_rule_id from teacher_availability_rule_teacher_map where teacher_id =".$ids;
-		$q_res = mysqli_query($this->conn, $area_query);
+		//echo $ids;
+		//echo '<br>';
+		$teacher_avail_query="select teacher_availability_rule_id from teacher_availability_rule_teacher_map where teacher_id =".$ids;
+		$q_res = mysqli_query($this->conn, $teacher_avail_query);
 		$allIds = array();
 		while($data = $q_res->fetch_assoc()){
 			$allIds[] =  $data['teacher_availability_rule_id'];
@@ -499,5 +501,18 @@ class Teacher extends Base {
 		return $q_excep;
 	
 	}
-
+	public function getTeacherAvailDayFilter($id)
+	{
+		$area_query="select id, timeslot_id, day from teacher_availability_rule_day_map where teacher_availability_rule_id ='".$id."'";
+		$q_res = mysqli_query($this->conn, $area_query);
+		return $q_res;
+	}
+	public function getTeacherRuleStartEndDate($id){
+		$classromm_start_end_date="select rule_name,start_date,end_date from teacher_availability_rule where id ='".$id."'"; 
+		$q_res = mysqli_query($this->conn, $classromm_start_end_date);
+		$data=$q_res->fetch_assoc();
+	    $data['start_date']= date('Y-m-d', strtotime($data['start_date']));
+		$data['end_date']=date('Y-m-d', strtotime($data['end_date']));
+		return $data;
+	}
 }

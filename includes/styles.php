@@ -233,6 +233,8 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
   .main td.hasevents {
     ' . background_css ( $GLOBALS['HASEVENTSBG'], 100 ) . '
   }' : '' ) . '
+  .main td.hasAvailability {
+    	background-color:#ffd966;}
   .main td.othermonth {
     ' . background_css ( $GLOBALS['OTHERMONTHBG'], 100 ) . '
   }
@@ -1634,6 +1636,7 @@ color:white;}
   .minical td.hasholidays{background-color:#00FF00;}
   .minical td.hasExceptionDays{background-color:#7F6000 ;}
   .minical td.hasevents{background-color:#FFFF33;}
+  .minical td.hasAvailability{background-color:#ffd966;}
   .legend-color-avail{
   	height:14px;width:25px; background-color:#FFD966;float:left;
    }
@@ -1651,6 +1654,18 @@ color:white;}
   }
   .legend-label{
     float:left;padding-right:20px;
+  }
+  .chek-avali-txt{
+    color:#909090;
+  }
+  .chek-avali-form{
+  	float:left;padding-left:12px;padding-top:12px;padding-bottom:6px;
+  }
+  .teacher-avail-form{
+  	float:left;padding-left:34px;padding-top:12px;padding-bottom:6px;
+  }
+  .slct-filter{
+  	width:88px;
   }
   #eventcomment {
    padding:.25em;

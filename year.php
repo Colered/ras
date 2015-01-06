@@ -12,6 +12,8 @@ $room_id=(isset($_REQUEST['room_id'])) ? ($_REQUEST['room_id']) : '';
 $area_id=(isset($_REQUEST['area_id'])) ? ($_REQUEST['area_id']) : '';
 $teacher_type_id=(isset($_REQUEST['teacher_type_id'])) ? ($_REQUEST['teacher_type_id']) : '';
 $cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
+$room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
+$teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
 
 //check UAC
 if ( ! access_can_access_function ( ACCESS_YEAR ) || 
@@ -56,38 +58,11 @@ if ( ! empty ( $BOLD_DAYS_IN_YEAR ) && $BOLD_DAYS_IN_YEAR == 'Y' ) {
   
   	if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 		$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
+	}elseif($room_filter_id!='' || $teacher_filter_id!=""){
+	$events = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id);
 	}else{
  		$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login ),$startdate, $enddate, $cat_id);
 	}
-
- 	/*if($teacher_id!=""){
-	$events = read_events_teacher ( ( ! empty ( $user ) && strlen ( $user ) )
-	  ? $user : $login, $startdate, $enddate,'',$teacher_id);
-	}else if($program_id!=""){
-	$events = read_events_program ( ( ! empty ( $user ) && strlen ( $user ) )
-	  ? $user : $login, $startdate, $enddate, '' ,$program_id);
-	}else if($subject_id!=""){
-	$events = read_events_subject ( ( ! empty ( $user ) && strlen ( $user ) )
-	  ? $user : $login, $startdate, $enddate, $cat_id ,$subject_id);
-	}else if($room_id!=""){
-	$events = read_events_room ( ( ! empty ( $user ) && strlen ( $user ) )
-	  ? $user : $login, $startdate, $enddate, $cat_id ,$room_id);
-	}else if($area_id!=""){
-		$events = read_events_area ( ( ! empty ( $user ) && strlen ( $user ) )
-  	  ? $user : $login, $startdate, $enddate, $cat_id ,$area_id);
-	}else if($teacher_type_id){
-		$events = read_events_teacher_type ( ( ! empty ( $user ) && strlen ( $user ) )
-  	  ? $user : $login, $startdate, $enddate, $cat_id ,$teacher_type_id);
-
-	}else if($cycle_id!=""){
-		$events = read_events_cycle ( ( ! empty ( $user ) && strlen ( $user ) )
-  	  ? $user : $login, $startdate, $enddate, $cat_id ,$cycle_id);
-	}else{
-	 $events = read_events (( ! empty ( $user ) && strlen ( $user ) 
-	  ? $user : $login ),$startdate, $enddate, $cat_id );
-	 
-	}*/
-	
   $boldDays = true;
   $catSelectStr = print_category_menu ( 'year', $thisyear, $cat_id );
   $navStr = display_navigation ( 'year' );
@@ -140,7 +115,7 @@ for ( $r = 1; $r <= $yr_rows; $r++ ) {
   for( $c = 1; $c <= $yr_cols; $c++, $m++ ) {
   $COUNT=$COUNT+1;
     $gridOmonths .= '
-          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT) . '</td>';
+          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT,$room_filter_id,$teacher_filter_id) . '</td>';
   }
   $gridOmonths .= '
         </tr>';
