@@ -92,4 +92,10 @@ class Classroom extends Base {
 		return $q_excep;
 	
 	}
+	public function getClassroomAvailExceptionById($room_id='')
+	{
+		$excep_query="select exception_date from  classroom_availability_exception where room_id='".$room_id."'";
+		$q_excep = mysqli_query($this->conn, $excep_query);
+		return $q_excep;
+	}
 }

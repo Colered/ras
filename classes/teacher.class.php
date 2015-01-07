@@ -515,4 +515,11 @@ class Teacher extends Base {
 		$data['end_date']=date('Y-m-d', strtotime($data['end_date']));
 		return $data;
 	}
+	public function getTeacherAvailExceptionById($teacher_id='')
+	{
+		$excep_query="select exception_date from teacher_availability_exception where teacher_id='".$teacher_id."'";
+		$q_excep = mysqli_query($this->conn, $excep_query);
+		return $q_excep;
+	
+	}
 }

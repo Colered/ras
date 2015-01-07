@@ -6610,16 +6610,19 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		while($row_holiday = $holiday_data->fetch_assoc()){
 			$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
 	}
+	
 	$objCE =new Classroom();
-	$clasroom_exception=$objCE->getClassroomException();
+	$clasroom_exception=$objCE->getClassroomAvailExceptionById($class_room_id);
 		while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
 				$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
 	}
+	
 	$objTE =new Teacher();
-	$teacher_exception=$objTE->getTeacherException();
+	$teacher_exception=$objTE->getTeacherAvailExceptionById($teacher_available_id);
 		while($row_teacher_exception = $teacher_exception->fetch_assoc()){
 				$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
 	}
+	
 	if ($rows) {
     $i = 0;
 	$splitTimeslot=$start_timeslot=$end_timeslot=$evt_descr=$cal_time=$duration='';
@@ -6659,7 +6662,6 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		 $month = (isset($date_array['1'])) ? ($date_array['1']):'';
 		 $day = (isset($date_array['2'])) ? ($date_array['2']):'';
 		 $eventstart = mktime ( $entry_hour_st, $entry_minute_st, 0, $month, $day, $year );
-		 // echo "Eventstart=".$eventstart.'=============='.$row[3].'entry_hour_st='.$entry_hour_st.'entry_minute_st='.$entry_minute_st.'month='.$month.'day='.$day.'year='.$year;
 		 $cal_time = gmdate('His', $eventstart);
 		 if(($class_room_id!='' && in_array($row[3],$classroom_exception_date, true)) || ($class_room_id!='' && in_array($row[3],$holiday_date, true)) ){
 		   		$row[3]='';$cal_time=''; 	
