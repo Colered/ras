@@ -6748,7 +6748,7 @@ function print_classroom_availability_menu( $form, $date = '', $room_filter_id =
       <select name="room_avail_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectRoomAvail.submit()">';
   // loading all classroom list
   if ( is_array ( $room ) ) {
-  $ret .= ' <option value="">All</option>';
+  $ret .= ' <option value="">--Select--</option>';
     foreach ( $room as $K => $V ) {
       if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
 	  	$ret .= '
@@ -6788,7 +6788,7 @@ function print_teacher_availability_menu( $form, $date = '', $teacher_filter_id 
       <select name="teacher_avail_id" class="select-filter-dropdown slct-filter slct-filter"  onchange="document.SelectTeacherAvail.submit()">';
   // loading all teacher list
   if ( is_array ( $teacher ) ) {
-  $ret .= ' <option value="">All</option>';
+  $ret .= ' <option value="">--Select--</option>';
     foreach ( $teacher as $K => $V ) {
 	  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
 	    
