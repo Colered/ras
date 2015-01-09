@@ -14,6 +14,7 @@ $teacher_type_id=(isset($_REQUEST['teacher_type_id'])) ? ($_REQUEST['teacher_typ
 $cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
 $room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
 $teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
+$program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:'';
 
 if ( ! access_can_access_function ( ACCESS_DAY ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )
@@ -55,8 +56,8 @@ $repeated_events = read_repeated_events ( empty ( $user )
 
 	if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 		$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
-	}elseif($room_filter_id!='' || $teacher_filter_id!=""){
-	$events = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id	);
+	}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
+	$events = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id	);
 		 }else{
  		$events = read_events (empty ( $user ) ? $user : $login,$startdate, $enddate, $cat_id);
 	}
@@ -69,9 +70,9 @@ if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
 $smallTasks = ( $DISPLAY_TASKS == 'Y' ? '<div id="minitask">
            ' . display_small_tasks ( $cat_id ) . '
           </div>' : '' );
-$dayStr = print_day_at_a_glance ( $nowYmd, ( empty ( $user ) ? $login : $user ), $can_add, $room_filter_id, $teacher_filter_id );
+$dayStr = print_day_at_a_glance ( $nowYmd, ( empty ( $user ) ? $login : $user ), $can_add, $room_filter_id, $teacher_filter_id, $program_filter_id);
 $navStr = display_navigation ( 'day' );
-$smallMonthStr = display_small_month ( $thismonth, $thisyear, true ,false,'','','',$room_filter_id,$teacher_filter_id);
+$smallMonthStr = display_small_month ( $thismonth, $thisyear, true ,false,'','','',$room_filter_id,$teacher_filter_id,$program_filter_id);
 if ( empty ( $friendly ) ) {
   $unapprovedStr = display_unapproved_events (
     $is_assistant || $is_nonuser_admin ? $user : $login );

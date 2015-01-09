@@ -703,5 +703,114 @@ class Programs extends Base {
 		 $strArray3=implode(",",$array3);
 		 return array($strArray1,$strArray2,$strArray3);
 	}
+	//This function use for program availability to show value in the calander menu
+	public function getCyclesInfoforAvailability($prog_id=''){
+		$SQL = "select start_week, end_week, week1, week2, occurrence from cycle where program_year_id ='".$prog_id."'";
+		$result = $this->conn->query($SQL);
+		$row_cnt = $result->num_rows;
+		$mk_event_arr = $mk_event_new_arr = array();
+		$mk_event_arr['cycle_num']=$mk_event_arr['particular_date']= $mk_event_arr['day']=$mk_event_arr['timeslot']=$mk_event_arr['blank']='';
+		$numSufArr = array('0'=>'1st cycle','1'=>'2nd cycle','2'=>'3rd cycle');
+		$z=0;
+		$last_day = 5;
+		$tsobj = new Timeslot();
+		$ttobj=new Timetable();
+		if($row_cnt > 0)
+		{
+			while($row = $result->fetch_assoc())
+			{
+				$end_week=$row['end_week'];
+				if($row['occurrence'] == '1w')
+				{	
+					$week1 = unserialize($row['week1']);
+					foreach($week1 as $key=> $value)
+					{
+						$day = $key + 1;
+						$dateArr = $ttobj->getDateForSpecificDayBetweenDates($row['start_week'],$end_week,$day,'',$prog_id);
+						$timeslotVal = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$value).')');
+						for($j=0;$j<count($dateArr);$j++){
+							$mk_event_arr['blank']='';
+							$mk_event_arr['timeslot']=$timeslotVal;
+							$mk_event_arr['day']=$key;
+							$mk_event_arr['particular_date']=$datesArr[$j];
+							$mk_event_arr['cycle_num']=$numSufArr[$z];
+							$mk_event_new_arr[]= $mk_event_arr;
+						}
+					}											
+				}else if($row['occurrence'] == '2w'){
+				    $weeks = $ttobj->countWeeksBetweenDates($row['start_week'],$end_week);
+					$start_week = $row['start_week'];
+					for($i=0; $i < $weeks; $i++)
+					{
+						if($i%2 == 0)
+						{
+							$day = date("w", strtotime($start_week));
+							$day = $day-1;
+							$rem_days = $last_day-$day;
+							$date = new DateTime($start_week);
+							$date->modify('+'.$rem_days.' day');
+							$end_week = $date->format('Y-m-d');
+							$week1 = unserialize($row['week1']);
+							foreach($week1 as $key=> $value)
+							{
+								$day = $key + 1;
+								$dateArr = $ttobj->getDateForSpecificDayBetweenDates($start_week,$end_week,$day,'',$prog_id);
+								$timeslotVal = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$value).')');
+								for($j=0;$j<count($dateArr);$j++){
+									$mk_event_arr['blank']='';
+									$mk_event_arr['timeslot']=$timeslotVal;
+									$mk_event_arr['day']=$key;
+									$mk_event_arr['particular_date']=$dateArr[$j];
+									$mk_event_arr['cycle_num']=$numSufArr[$z];
+									$mk_event_new_arr[]= $mk_event_arr;
+								}
+							}
+							$date = new DateTime($end_week);
+							$date->modify('+2 day');
+							$start_week = $date->format('Y-m-d');
+						}else{	
+							$day = date("w", strtotime($start_week));
+							$day = $day-1;
+							$rem_days = $last_day-$day;
+							$date = new DateTime($start_week);
+							$date->modify('+'.$rem_days.' day');
+							$end_week = $date->format('Y-m-d');	
+							if(count(unserialize($row['week2'])) > 0)
+							{
+								$week2 = unserialize($row['week2']);
+								foreach($week2 as $key=> $value)
+								{
+									$day = $key + 1;
+									$dateArr = $ttobj->getDateForSpecificDayBetweenDates($start_week,$end_week,$day,'',$prog_id);
+									$timeslotVal = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$value).')');
+									for($j=0;$j<count($dateArr);$j++){
+									$mk_event_arr['blank']='';
+									$mk_event_arr['timeslot']=$timeslotVal;
+									$mk_event_arr['day']=$key;
+									$mk_event_arr['particular_date']=$dateArr[$j];
+									$mk_event_arr['cycle_num']=$numSufArr[$z];
+									$mk_event_new_arr[]= $mk_event_arr;
+								}
+							  }
+							}
+							$date = new DateTime($end_week);
+							$date->modify('+2 day');
+							$start_week = $date->format('Y-m-d');
+						}
+					}								
+				}
+				$z++;
+			}					
+		}
+		return $mk_event_new_arr;
+	}
+	public function getProgramAvailExceptionById($program_id='')
+	{
+	    $excep_query="select exception_date from program_cycle_exception where program_year_id='".$program_id."'";
+		$q_excep = mysqli_query($this->conn, $excep_query);
+		return $q_excep;
 	
+	}
+	   
 }
+

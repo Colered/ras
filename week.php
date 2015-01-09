@@ -13,6 +13,7 @@ $teacher_type_id=(isset($_REQUEST['teacher_type_id'])) ? ($_REQUEST['teacher_typ
 $cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
 $room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
 $teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
+$program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:'';
 
 if ( ! access_can_access_function ( ACCESS_WEEK ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )
@@ -69,8 +70,8 @@ $repeated_events = read_repeated_events ( ( strlen ( $user )
 
 if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 	$events = read_events_filters ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
-}elseif($room_filter_id!='' || $teacher_filter_id!=""){
-     $events = read_events_clsrm_teacher_availability (( strlen ( $user )? $user : $login ), $evStart - 604800, $evEnd,$cat_id ,$room_filter_id,$teacher_filter_id);
+}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
+     $events = read_events_clsrm_teacher_availability (( strlen ( $user )? $user : $login ), $evStart - 604800, $evEnd,$cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
 }else{
  	$events = read_events ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, $cat_id );
 }
@@ -205,7 +206,7 @@ for ( $i = $first_slot; $i <= $last_slot; $i++ ) {
 
   for ( $d = $start_ind; $d <= $end_ind; $d++ ) {
     $dateYmd = date ( 'Ymd', $days[$d] );
-	$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents".((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') ? " hasAvailability" : "") : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
+	$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents".((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='') ? " hasAvailability" : "") : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
    . (in_array($dateYmd,$holiday_date, true) ? " hasHolidays": "")
    . ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? " hasExceptionDays": "");
    if ( $rowspan_day[$d] > 1 ) {

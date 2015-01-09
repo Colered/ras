@@ -1023,7 +1023,7 @@ class Timetable extends Base {
 	}
 
 	//function will get all the dates of a specific day in the given timerange
-	public function getDateForSpecificDayBetweenDates($startDate, $endDate, $weekdayNumber,$class_room_id='',$teacher_availablity_id='')
+	public function getDateForSpecificDayBetweenDates($startDate, $endDate, $weekdayNumber,$class_room_id='',$teacher_availablity_id='',$program_id='')
 	{
 		$startDate = strtotime($startDate);
 		$endDate = strtotime($endDate);
@@ -1038,7 +1038,7 @@ class Timetable extends Base {
 		while($startDate <= $endDate)
 		{   
 		
-		    if($class_room_id!='' || $teacher_availablity_id!=''){
+		    if($class_room_id!='' || $teacher_availablity_id!='' || $program_id!=''){
 				$dateArr[] = date('Ymd', $startDate);
 			}else{
 				$dateArr[] = date('Y-m-d', $startDate);

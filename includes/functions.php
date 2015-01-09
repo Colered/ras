@@ -978,13 +978,11 @@ function display_admin_link ( $break = true ) {
 
 /* Generate HTML to create a month display.
  */
-function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id='', $teacher_avail_id='') {
+function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id='', $teacher_avail_id='',$program_avail_id='') {
   global $DISPLAY_ALL_DAYS_IN_MONTH, $DISPLAY_LONG_DAYS, $DISPLAY_WEEKNUMBER,
   $login, $today, $user, $WEEK_START, $WEEKENDBG;
 
-  /*echo "clsrm_avail_id=".$clsrm_avail_id.'<br>';
-  echo "teacher_avail_id=".$teacher_avail_id.'<br>';*/
-	echo 
+   echo 
   $ret = '
     <table class="main" cellspacing="0" cellpadding="0" id="month_main" style="padding-top:20px">
       <tr>' . ( $DISPLAY_WEEKNUMBER == 'Y' ? '
@@ -1087,7 +1085,7 @@ function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id=
 				$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
 		  }
   		$class = trim ( $class );
-        $class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents'.((isset($clsrm_avail_id) && $clsrm_avail_id!='') || (isset($teacher_avail_id) && $teacher_avail_id!='') ? ' hasAvailability' : ''): '' );
+        $class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents'.((isset($clsrm_avail_id) && $clsrm_avail_id!='') || (isset($teacher_avail_id) && $teacher_avail_id!='') || (isset($program_avail_id) && $program_avail_id!='')? ' hasAvailability' : ''): '' );
 		$class .= (in_array($dateYmd,$holiday_date, true) ? ' hasHolidays' : '');
 		$class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' hasExceptionDays' : '');
 		$ret .= ( strlen ( $class ) ? ' class="' . $class . '"' : '' )
@@ -1153,7 +1151,7 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
   $DISPLAY_SM_MONTH, $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $is_admin,
   $is_assistant, $is_nonuser_admin, $login, $nextYmd, $nowYmd, $prevYmd,
   $single_user, $spacer, $thisday, $thismonth, $thisyear, $user, $user_fullname,
-  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id,$area_id,$teacher_type_id,$cycle_id,$room_filter_id,$teacher_filter_id;
+  $wkend, $wkstart,$teacher_id,$subject_id,$room_id,$program_id,$area_id,$teacher_type_id,$cycle_id,$room_filter_id,$teacher_filter_id,$program_filter_id;
   if ( empty ( $name ) )
     return;
 
@@ -1179,6 +1177,7 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
    . ( $is_assistant
     ? '<br />-- ' . translate ( 'Assistant mode' ) . ' --' : '' ) . '</span>'
    .( $CATEGORIES_ENABLED == 'Y'? print_filter_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id) : '' )
+   .( $CATEGORIES_ENABLED == 'Y'? print_program_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_filter_id ) : '' )
    .( $CATEGORIES_ENABLED == 'Y'? print_classroom_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$room_filter_id ) : '' )
    .( $CATEGORIES_ENABLED == 'Y'? print_teacher_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$teacher_filter_id ) : '' ).'
 	  </div>
@@ -1198,13 +1197,15 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
  *                               month.php?  or  view_l.php?id=7&amp;)
  */
 function display_small_month ( $thismonth, $thisyear, $showyear,
-  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='',$room_filter_id='',$teacher_filter_id='') {
+  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='',$room_filter_id='',$teacher_filter_id='',$program_filter_id='') {
   global $boldDays, $caturl, $DATE_FORMAT_MY, $DISPLAY_ALL_DAYS_IN_MONTH,
   $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $get_unapproved, $login,
   $MINI_TARGET, // Used by minical.php
   $SCRIPT, $SHOW_EMPTY_WEEKENDS,//Used by year.php
   $thisday, // Needed for day.php
   $today, $use_http_auth, $user, $WEEK_START;
+  
+ // echo "yes=".$program_filter_id;
   
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
@@ -1360,7 +1361,7 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
         . ( $dateYmd == $thisyear . $thismonth . $thisday && $SCRIPT == 'day.php'
           ? ' selectedday' : '' )
         // Are there any events scheduled for this date?
-        . ( $hasEvents ? ' hasevents'.((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') ? ' hasAvailability' : '') : '' )
+        . ( $hasEvents ? ' hasevents'.((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='')? ' hasAvailability' : '') : '' )
 		//are there is any holiday scheduled for this days?
 		. ( $hasException ? ' hasExceptionDays' : '')
 		. ( $hasHoliday ? ' hasholidays' : '');
@@ -4545,7 +4546,7 @@ function print_date_entries ( $date, $user, $ssi = false ) {
  * @param string $date  Date in YYYYMMDD format
  * @param string $user  Username of calendar
  */
-function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id='', $teacher_filter_id='') {
+function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id='', $teacher_filter_id='',$program_filter_id='') {
   global $CELLBG, $DISPLAY_TASKS_IN_GRID, $DISPLAY_UNAPPROVED, $first_slot,
   $hour_arr, $last_slot, $rowspan, $rowspan_arr, $TABLEBG, $THBG, $THFG,
   $TIME_SLOTS, $today, $TODAYCELLBG, $WORK_DAY_END_HOUR, $WORK_DAY_START_HOUR;
@@ -4674,7 +4675,7 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id=''
         $rowspan = ( empty ( $rowspan_arr[$i] ) ? '' : $rowspan_arr[$i] );
 
         $ret .= ( $rowspan > 1 ? 'rowspan="' . $rowspan . '"' : '' )
-         . 'class="hasevents'.((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') ? " hasAvailability" : "").'" >' . $addIcon . $hour_arr[$i];
+         . 'class="hasevents'.((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='') ? " hasAvailability" : "").'" >' . $addIcon . $hour_arr[$i];
       }
       $ret .= '</td>';
     }
@@ -6260,8 +6261,8 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
   
 	 global $db, $login, $user, $CATEGORIES_ENABLED;
 	 $query_val='';
-	 $objP=new Programs();
 	 //Program loading list array
+	 $objP=new Programs();
 	 $programs_result = $objP->getProgramListYearWise();
 	 while($row_program = $programs_result->fetch_assoc()){
 	 	$programs[] = $row_program;
@@ -6311,7 +6312,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
    . ( ! empty ( $user ) && $user != $login ? '<input type="hidden" name="user" value="' . $user . '" />' : '' )
    .'<lable style="padding-left:12px;"></lable>'
    . "Program". ':<select name="program_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-   	  // loading all teacher list
+   	  // loading all program list
 	if ( is_array ( $programs ) ) {
 	  $ret .= ' <option value="">All</option>';
 		foreach ( $programs as $K => $V ) {
@@ -6350,7 +6351,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  $ret .= ' </select>';
 	  $ret.='<lable style="padding-left:35px;"></lable>';
 	  $ret.=''."Subject".': <select name="subject_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all teacher list
+	  // loading all subject list
 	 if ( is_array ( $subject ) ) {
 	  $ret .= ' <option value="">All</option>';
 		foreach ( $subject as $K => $V ) {
@@ -6369,7 +6370,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  $ret .= ' </select>';
 	  $ret.='<lable style="padding-left:35px; "></lable>';
 	  $ret.=''."Room".': <select name="room_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all teacher list
+	  // loading all room list
 	  if ( is_array ( $room ) ) {
 	  $ret .= ' <option value="">All</option>';
 		foreach ( $room as $K => $V ) {
@@ -6388,7 +6389,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  $ret.='<br><br>';
 	  $ret.='<lable style="margin-left:-165px;"></lable>';
 	  $ret.=''."Area".': <select name="area_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all teacher list
+	  // loading all area list
 	 if ( is_array ( $area ) ) {
 	  $ret .= ' <option value="">All</option>';
 		foreach ( $area as $K => $V ) {
@@ -6407,7 +6408,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  $ret .= ' </select>';
 	  $ret.='<lable style="padding-left:35px;"></lable>';
 	  $ret.=''."Teacher Type".': <select name="teacher_type_id" class="select-filter-dropdown slct-filter" onchange="document.SelectFilterForm.submit()">';
-	  // loading all teacher list
+	  // loading all teacher type list
 	  if ( is_array ( $teacher_type ) ) {
 	   $ret .= ' <option value="">All</option>';
 		foreach ( $teacher_type as $K => $V ) {
@@ -6427,7 +6428,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  $ret .= ' </select>';
 	  $ret.='<lable style="padding-left:35px;"></lable>';
 	  $ret.=''."Cycle".': <select name="cycle_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all teacher list
+	  // loading all cycle list
 	  $cycleArr=isset($cycle_id)?(explode("#",$cycle_id)):'';
 	  $cycle_val=(isset($cycleArr['1']))?(explode(",",$cycleArr['1'])):'';
 	  if ( is_array ( $cycle_result ) ) {
@@ -6533,7 +6534,7 @@ function query_events_filters ( $user, $want_repeated, $date_filter,$is_task = f
 return $result;
 }
 //get classroom and teacher availaility event 
-function read_events_clsrm_teacher_availability ( $user, $startdate, $enddate, $cat_id = '',$class_room_id='',$teacher_available_id='') {
+function read_events_clsrm_teacher_availability ( $user, $startdate, $enddate, $cat_id = '',$class_room_id='',$teacher_available_id='',$program_filter_id='') {
   global $layers, $login;
   // Shift date/times to UTC.
   $start_date = gmdate ( 'Ymd', $startdate );
@@ -6544,10 +6545,10 @@ function read_events_clsrm_teacher_availability ( $user, $startdate, $enddate, $
      . ' AND we.cal_date < ' . $end_date . ' ) OR ( we.cal_date = ' . $start_date
      . ' AND we.cal_time >= ' . gmdate ( 'His', $startdate )
      . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
-     . gmdate ( 'His', $enddate ) . ' ) )','', $class_room_id,$teacher_available_id);
+     . gmdate ( 'His', $enddate ) . ' ) )','', $class_room_id,$teacher_available_id,$program_filter_id);
 }
 //getting events which are with in the given range of classroom
-function query_events_clsrm_teacher_availability($user, $want_repeated, $date_filter,$is_task = false,$class_room_id='',$teacher_available_id=''){
+function query_events_clsrm_teacher_availability($user, $want_repeated, $date_filter,$is_task = false,$class_room_id='',$teacher_available_id='',$program_filter_id=''){
   global $db_connection_info, $jumpdate, $layers, $login, $max_until,
   $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
   global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
@@ -6555,13 +6556,22 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
   $splitTimeslot=$cloneRepeats = $layers_byuser = $result = array ();
   $row=array();
   $evt_name='';
+  
+  if($program_filter_id!=''){
+    // echo "program_filter_id=".$program_filter_id;
+     $objP=new Programs();
+	 $row = $objP->getCyclesInfoforAvailability($program_filter_id);
+  }
   if($teacher_available_id!=''){
-   $evt_name = "Teacher Availability";
-  	$obj=new Teacher();
-  	$teacher_avail_rule_allIds=$obj->getRuleIdsForTeacher($teacher_available_id);
-	 for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
+    $obj=new Teacher();
+	$teacher_data=$obj->getTeacherByID($teacher_available_id);
+	$teacher_name=explode('(',$teacher_data);
+	$evt_name =$teacher_name['0']."-Availability";
+	$teacher_avail_rule_allIds=$obj->getRuleIdsForTeacher($teacher_available_id);
+		 for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
 	    $avail_day_detail=$obj->getTeacherAvailDayFilter($teacher_avail_rule_allIds[$i]);
 		$date_range=$obj->getTeacherRuleStartEndDate($teacher_avail_rule_allIds[$i]);
+		//echo $date_range['start_date'];	
 		$objTs=new Timetable();
 		while($data = $avail_day_detail->fetch_assoc()){
 		$day=$data['day']+1;
@@ -6574,8 +6584,14 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
      }
   }
+  
   if($class_room_id!=''){
-    $evt_name = "Classroom Availability";
+    $obj_clr=new Classroom();
+	$room_data=$obj_clr->getDataByRoomID($class_room_id);
+	$dataAll_room = mysqli_fetch_assoc($room_data);
+	$room_name=$dataAll_room['room_name'];
+	$evt_name =$room_name."-Availability";
+	
   	$obj=new Classroom_Availability();
   	$clsrm_avail_rule_allIds=$obj->getRuleIdsForRoom($class_room_id);
 	for($i=0;$i<count($clsrm_avail_rule_allIds);$i++){
@@ -6604,7 +6620,11 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
 	}
 	$rows=$rowNewArr;
-	$teacher_exception_date=$holiday_date=$classroom_exception_date=array();
+	/*echo '<pre>';
+	echo "yeshjhhs".'<br>';
+	print_r($rows);
+	die;*/
+	$teacher_exception_date=$holiday_date=$classroom_exception_date=$program_exception_date=array();
 	$objH =new Holidays();
 		$holiday_data=$objH->viewHoliday();
 		while($row_holiday = $holiday_data->fetch_assoc()){
@@ -6621,6 +6641,12 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	$teacher_exception=$objTE->getTeacherAvailExceptionById($teacher_available_id);
 		while($row_teacher_exception = $teacher_exception->fetch_assoc()){
 				$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
+	}
+	
+	$objPgm=new Programs();
+	$program_exception=$objPgm->getProgramAvailExceptionById($program_filter_id);
+		while($row_program_exception = $program_exception->fetch_assoc()){
+				$program_exception_date[] = date("Ymd", strtotime($row_program_exception['exception_date']));
 	}
 	
 	if ($rows) {
@@ -6669,11 +6695,15 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		 if($teacher_available_id!='' && in_array($row[3],$teacher_exception_date, true) || ($teacher_available_id!='' && in_array($row[3],$holiday_date, true))){
 		   		$row[3]='';$cal_time='';
 		 }
+		 if($program_filter_id!='' && in_array($row[3],$program_exception_date, true) || ($program_filter_id!='' && in_array($row[3],$holiday_date, true))){
+		   		$row[3]='';$cal_time='';
+		 }
 		 $str='';
 		 for($k=0;$k<count($splitTimeslot);$k++){
 		 	$str.=$splitTimeslot[$k].'<br>';
 		 }
-		 $evt_descr = $str.'---------------------------'.'<br>'.'<strong>Date:-</strong>'.date('d-m-Y',strtotime($row[3])).'<br>'.'<strong>Rule</strong>:-'.$row[4];
+		 $str_name=((isset($program_filter_id)) && ($program_filter_id!=''))?'Cycle':'Rule';
+		 $evt_descr = $str.'---------------------------'.'<br>'.'<strong>Date:-</strong>'.date('d-m-Y',strtotime($row[3])).'<br>'.'<strong>'.$str_name.'</strong>:-'.$row[4];
 		}
 	}
 	if ( $want_repeated && ! empty ( $row[20] ) ) {// row[20] = cal_type
@@ -6725,10 +6755,11 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
     }
   }
   /*echo '<pre>';
-	print_r($result);*/
+	print_r($result);
+	die;*/
 return $result;
 }
-//Classroom availability form
+//Classroom availability filter form
 function print_classroom_availability_menu( $form, $date = '', $room_filter_id = '' ) {
 	 global $db, $login, $user, $CATEGORIES_ENABLED;
 	 $obj=new Classroom();
@@ -6738,8 +6769,8 @@ function print_classroom_availability_menu( $form, $date = '', $room_filter_id =
 	 }
 	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
     return false;
-
-  $catStr = translate ( '<span class="chek-avali-txt">Check Availability</span>:- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Classroom' );
+	
+  $catStr = translate ( 'Classroom' );
   $printerStr = '';
   $ret = '
     <form action="' . $form . '.php" method="post" name="SelectRoomAvail" '. 'class="categories chek-avali-form" >' . ( empty ( $date ) ? '' : '<input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' ). '" value="' .( $form != 'year' ?  $date: strtok(date('Y-m-d',strtotime($date)), "-")). '" />' )
@@ -6767,7 +6798,7 @@ function print_classroom_availability_menu( $form, $date = '', $room_filter_id =
   // This is used for Printer Friendly view.
   . $printerStr;
 }
-//teacher availabiliy form
+//teacher availabiliy fiilter form
 function print_teacher_availability_menu( $form, $date = '', $teacher_filter_id = '' ) {
 	 global $db, $login, $user, $CATEGORIES_ENABLED;
 	 $obj=new Teacher();
@@ -6807,5 +6838,45 @@ function print_teacher_availability_menu( $form, $date = '', $teacher_filter_id 
     </form>'
   . $printerStr;
 }
-
+//program availabiliy filter form
+function print_program_availability_menu( $form, $date = '', $program_filter_id = '' ) {
+	 global $db, $login, $user, $CATEGORIES_ENABLED;
+	 $objP=new Programs();
+	 $programs_result = $objP->getProgramListYearWise();
+	 while($row_program = $programs_result->fetch_assoc()){
+	 	$programs[] = $row_program;
+	 }
+	 
+	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
+    return false;
+	
+  $catStr = translate ( '<span class="chek-avali-txt">Check Availability</span>:- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Program' );
+  $printerStr = '';
+  $ret = '
+    <form action="' . $form . '.php" method="post" name="SelectProgramAvail" '. 'class="categories chek-avali-form" >' . ( empty ( $date ) ? '' : '<input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' ). '" value="' .( $form != 'year' ?  $date: strtok(date('Y-m-d',strtotime($date)), "-")). '" />' )
+   . ( ! empty ( $user ) && $user != $login ? ' <input type="hidden" name="user" value="' . $user . '" />' : '' )
+   . $catStr . ':
+      <select name="program_avail_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectProgramAvail.submit()">';
+  // loading all program list
+  if ( is_array ( $programs ) ) {
+	  $ret .= ' <option value="">--Select--</option>';
+		foreach ( $programs as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			$ret .= '
+			<option value="' . $programs[$K]['id'] . '"';
+			if ( $program_filter_id == $programs[$K]['id'] ) {
+			  $printerStr .= '<span id="cat">' . $catStr . ': ' . $programs[$K]['name'] . '</span>';
+			  $ret .= ' selected="selected"';
+			 }
+			$ret .= ">{$V['name']}</option>";
+		  }
+		}
+  }
+  
+  return $ret . '
+      </select>
+    </form>'
+  // This is used for Printer Friendly view.
+  . $printerStr;
+}
 ?>

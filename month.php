@@ -27,6 +27,7 @@ if ( empty ( $user ) )
  $cycle_id=(isset($_POST['cycle_id']))?$_POST['cycle_id']:'';
  $room_filter_id = (isset($_POST['room_avail_id']))?$_POST['room_avail_id']:'';
  $teacher_filter_id = (isset($_POST['teacher_avail_id']))?$_POST['teacher_avail_id']:'';
+ $program_filter_id = (isset($_POST['program_avail_id']))?$_POST['program_avail_id']:''; 
 
  //echo "hello".$teacher_filter_id;
 load_user_categories ();
@@ -51,8 +52,8 @@ if ( $BOLD_DAYS_IN_YEAR == 'Y' ) {
 
 if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 	$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
-}elseif($room_filter_id!='' || $teacher_filter_id!=""){
-	$events = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id);
+}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
+	$events = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
 }else{
 	$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, $cat_id);
 }
@@ -70,8 +71,8 @@ $nextMonth1 = $nextMonth2 = $prevMonth1 = $prevMonth2 = '';
 $printerStr = $smallTasks = $unapprovedStr = '';
 if ( empty ( $DISPLAY_TASKS ) || $DISPLAY_TASKS == 'N' &&
   $DISPLAY_SM_MONTH != 'N' ) {
-     $nextMonth1 = display_small_month ( $nextmonth, $nextyear, true, true,'nextmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id);
-     $prevMonth1 = display_small_month ( $prevmonth, $prevyear, true, true,'prevmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id);
+     $nextMonth1 = display_small_month ( $nextmonth, $nextyear, true, true,'nextmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id,$program_filter_id);
+     $prevMonth1 = display_small_month ( $prevmonth, $prevyear, true, true,'prevmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id,$program_filter_id);
 }
 if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
   if (  $DISPLAY_SM_MONTH != 'N' ) {
@@ -84,7 +85,7 @@ if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
   $tableWidth = '80%';
 }
 $eventinfo = ( ! empty ( $eventinfo ) ? $eventinfo : '' );
-$monthStr = display_month ( $thismonth, $thisyear, false, $room_filter_id, $teacher_filter_id );
+$monthStr = display_month ( $thismonth, $thisyear, false, $room_filter_id, $teacher_filter_id, $program_filter_id);
 $navStr = display_navigation ( 'month' );
 $month_name_display=display_navigation_current_month( 'month' );
 if ( empty ( $friendly ) ) {
