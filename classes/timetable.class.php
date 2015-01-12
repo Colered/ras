@@ -210,7 +210,7 @@ class Timetable extends Base {
 			});
 			$new_programs[$pgm_id][$newkey] =  $values;		
 			}
-		}	
+		}
 		$reserved_array = array();
 		$reserved_teachers = array();
 		$reserved_rooms = array();
@@ -882,27 +882,32 @@ class Timetable extends Base {
 		{
 			$program_list.= ")";
 		}
-		
-		$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE ((start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."')) ".$program_list."");
+		$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE ((start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."') OR ('".$start_date."' >=  start_week AND '".$start_date."' <=  end_week) OR  ('".$end_date."' >=  start_week AND '".$end_date."' <=  end_week))".$program_list."");
 		$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
 		if($pgm_cycle_cnt > 0)
 		{
 			while($result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle))
 			{
+				//if end date and start date are beyond the cycle date range
 				if($result_pgm_cycle['end_week'] > $end_date)
 				{
 					$end_week = $end_date;
 				}else{
 					$end_week = $result_pgm_cycle['end_week'];
 					}
+				if($result_pgm_cycle['start_week'] < $start_date)
+				{
+					$start_week = $start_date;
+				}else{
+					$start_week = $result_pgm_cycle['start_week'];
+					}
 				if($result_pgm_cycle['occurrence'] == '1w')
 				{	
-					$week1 = unserialize($result_pgm_cycle['week1']);
+					$week1 = unserialize($result_pgm_cycle['week1']);					
 					foreach($week1 as $key=> $value)
 					{
 						$day = $key + 1;
-						$dateArr = $this->getDateForSpecificDayBetweenDates($result_pgm_cycle['start_week'],$end_week,$day);
-						
+						$dateArr = $this->getDateForSpecificDayBetweenDates($start_week,$end_week,$day);
 						foreach($dateArr as $val)
 						{
 							$sql_pgm_exp = $this->conn->query("select id from program_cycle_exception where exception_date = '".$val."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
@@ -911,10 +916,9 @@ class Timetable extends Base {
 								$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$val] = $value;
 							}
 						}								
-					}											
+					}
 				}else if($result_pgm_cycle['occurrence'] == '2w'){
-					$weeks = $this->countWeeksBetweenDates($result_pgm_cycle['start_week'],$end_week);
-					$start_week = $result_pgm_cycle['start_week'];
+					$weeks = $this->countWeeksBetweenDates($start_week,$end_week);
 					for($i=0; $i < $weeks; $i++)
 					{
 						if($i%2 == 0)
@@ -975,8 +979,8 @@ class Timetable extends Base {
 						}
 					}								
 				}
-				//print"<pre>";print_r($final_pgms);die;
-				$sql_pgm_add_date = $this->conn->query("select additional_date,actual_timeslot_id from program_cycle_additional_day_time where additional_date between  '".$result_pgm_cycle['start_week']."' and '".$result_pgm_cycle['end_week']."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
+				
+				$sql_pgm_add_date = $this->conn->query("select additional_date,actual_timeslot_id from program_cycle_additional_day_time where additional_date >= '".$start_week."' and additional_date <= '".$end_week."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
 				while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
 				{
 					$ts_array = explode(",",$result_pgm_add_date['actual_timeslot_id']);
@@ -996,7 +1000,6 @@ class Timetable extends Base {
 				}	
 			}					
 		}
-		
 		return $final_pgms;
 	}
 
