@@ -6547,6 +6547,17 @@ function read_events_clsrm_teacher_availability ( $user, $startdate, $enddate, $
      . ' ) OR ( we.cal_date = ' . $end_date . ' AND we.cal_time <= '
      . gmdate ( 'His', $enddate ) . ' ) )','', $class_room_id,$teacher_available_id,$program_filter_id);
 }
+function search_array($needle, $haystack)
+{
+	 if(in_array($needle, $haystack)) {
+		  return true;
+	 }
+	 foreach($haystack as $element) {
+		  if(is_array($element) && search_array($needle, $element))
+			   return true;
+	 }
+   return false;
+}
 //getting events which are with in the given range of classroom
 function query_events_clsrm_teacher_availability($user, $want_repeated, $date_filter,$is_task = false,$class_room_id='',$teacher_available_id='',$program_filter_id=''){
   global $db_connection_info, $jumpdate, $layers, $login, $max_until,
@@ -6568,8 +6579,10 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	$teacher_name=explode('(',$teacher_data);
 	$evt_name =$teacher_name['0']."-Availability";
 	$teacher_avail_rule_allIds=$obj->getRuleIdsForTeacher($teacher_available_id);
-		 for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
+	$resDates=$obj->getResDatesForTeacher($teacher_available_id);
+	 for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
 	    $avail_day_detail=$obj->getTeacherAvailDayFilter($teacher_avail_rule_allIds[$i]);
+		$resDates=$obj->getResDatesForTeacher($teacher_available_id);
 		$date_range=$obj->getTeacherRuleStartEndDate($teacher_avail_rule_allIds[$i]);
 		//echo $date_range['start_date'];	
 		$objTs=new Timetable();
@@ -6584,7 +6597,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
      }
   }
-  
+
   if($class_room_id!=''){
     $obj_clr=new Classroom();
 	$room_data=$obj_clr->getDataByRoomID($class_room_id);
@@ -6594,6 +6607,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	
   	$obj=new Classroom_Availability();
   	$clsrm_avail_rule_allIds=$obj->getRuleIdsForRoom($class_room_id);
+	$resDates=$obj->getResDatesForClass($class_room_id);
 	for($i=0;$i<count($clsrm_avail_rule_allIds);$i++){
    		$avail_day_detail=$obj->getClassroomAvailDay($clsrm_avail_rule_allIds[$i]);
 		$date_range=$obj->getClsrmRuleStartEndDate($clsrm_avail_rule_allIds[$i]);
@@ -6607,8 +6621,35 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 				$row[]=$data;
 			 }
 		}
-   }
+   }   
   }
+   $m=0;
+	foreach($row as $result_date)
+	{
+		if(search_array($result_date['particular_date'],$resDates))
+		{
+			$ts_array = explode(",",$result_date['timeslot_id']);
+			$str = "";
+			foreach($ts_array as $timeslot)
+			{
+				$objTE =new Teacher();
+				$all_ts = $objTE -> getTimeslotId($timeslot);
+				$time = explode(",",$all_ts);
+				$time1 = explode(",",$resDates[$result_date['particular_date']]['ts_id']);
+				$time_difference = array_values(array_diff($time,$time1));
+				if(isset($time_difference['0']) && count($time_difference)> 0)
+				{
+					$valid_ts = $objTE->getTimeslotById($time_difference['0'],$time_difference[count($time_difference)-1]);
+					$str = $str.",".$valid_ts;
+					$str = ltrim ($str, ',');
+				}
+			}
+			$row[$m]['timeslot_id'] = $str;
+		}else{
+			$row[$m]['timeslot_id'] = $result_date['timeslot_id'];
+		}
+		$m++;
+	}
    $rowNewArr=array(array());
    if(count($row)>0){
 	    for($i=0;$i<count($row);$i++){
@@ -6620,10 +6661,6 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
 	}
 	$rows=$rowNewArr;
-	/*echo '<pre>';
-	echo "yeshjhhs".'<br>';
-	print_r($rows);
-	die;*/
 	$teacher_exception_date=$holiday_date=$classroom_exception_date=$program_exception_date=array();
 	$objH =new Holidays();
 		$holiday_data=$objH->viewHoliday();
@@ -6754,9 +6791,6 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
       }
     }
   }
-  /*echo '<pre>';
-	print_r($result);
-	die;*/
 return $result;
 }
 //Classroom availability filter form

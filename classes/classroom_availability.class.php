@@ -127,8 +127,7 @@ class Classroom_Availability extends Base {
 	{
 		$timeslotIds = array();
 		for($i=0;$i<count($timeSoltArr);$i++)
-		{
-			
+		{			
 			$ts_array = array();
 			$ts_array = explode(",",$timeSoltArr[$i]);
 			$timeslots = array();
@@ -158,5 +157,17 @@ class Classroom_Availability extends Base {
 	    $data['start_date']= date('Y-m-d', strtotime($data['start_date']));
 		$data['end_date']=date('Y-m-d', strtotime($data['end_date']));
 		return $data;
+	}
+	public function getResDatesForClass($class_id='')
+	{
+		$resDates = array();
+		$res_sql = "select act_date,group_concat(timeslot_id) as timeslot_id from teacher_activity ta where room_id = '".$class_id."' group by act_date";
+		$res_query = mysqli_query($this->conn, $res_sql);
+		while($data = $res_query->fetch_assoc()){
+			$activity_date = date("Ymd",strtotime($data['act_date']));
+			$resDates[$activity_date]['act_date'] =  $activity_date;
+			$resDates[$activity_date]['ts_id'] =  $data['timeslot_id'];
+		}
+		return $resDates;		
 	}
 }
