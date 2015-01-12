@@ -885,6 +885,9 @@ switch ($codeBlock) {
                 //Rule: A teacher cannot have more than 4 sessions per day
                 if ($valid == 1) {
                     $teachAvail_query = "select id from teacher_activity where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher'] . "'";
+					if ($act_hidden_id <> "") {
+                        $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
+                    }
                     $q_res = mysqli_query($db, $teachAvail_query);
                     if (mysqli_affected_rows($db) >= 4) {
                         echo 10;
@@ -950,7 +953,7 @@ switch ($codeBlock) {
                         $sub_res = mysqli_query($db, $sub_query);
                         $dataSub = mysqli_fetch_assoc($sub_res);
                         $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = '0'";
-                        $q_res = mysqli_query($db, $teachAvail_query);
+						$q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) > 0) {
                             $dataAll = mysqli_fetch_assoc($q_res);
                             if ($dataAll['area_id'] != $dataSub['area_id']) {
@@ -1286,7 +1289,7 @@ switch ($codeBlock) {
                         $sub_res = mysqli_query($db, $sub_query);
                         $dataSub = mysqli_fetch_assoc($sub_res);
                         $teachAvail_query = "select s.area_id from teacher_activity ta inner join subject s on s.id = ta.subject_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = '0'";
-                        $q_res = mysqli_query($db, $teachAvail_query);
+						$q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) > 0) {
                             $dataAll = mysqli_fetch_assoc($q_res);
                             if ($dataAll['area_id'] != $dataSub['area_id']) {
