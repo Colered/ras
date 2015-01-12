@@ -43,7 +43,7 @@ $prevYear = $year - ( $year > '1903' ? 1 : 0 );
 
 $startdate = mktime ( 0, 0, 0, 1, 1, $year );
 $enddate = mktime ( 23, 59, 59, 12, 31, $year );
-
+$exception_dates=array();
 if ( $ALLOW_VIEW_OTHER != 'Y' && ! $is_admin )
   $user = '';
 
@@ -60,7 +60,9 @@ if ( ! empty ( $BOLD_DAYS_IN_YEAR ) && $BOLD_DAYS_IN_YEAR == 'Y' ) {
   	if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 		$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
 	}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
-	$events = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
+		$events_detail = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
+		$events=$events_detail[0];
+		$exception_dates=(isset($events_detail[1]) && $events_detail[1]!='')? $events_detail[1] : '';
 	}else{
  		$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login ),$startdate, $enddate, $cat_id);
 	}
@@ -116,7 +118,7 @@ for ( $r = 1; $r <= $yr_rows; $r++ ) {
   for( $c = 1; $c <= $yr_cols; $c++, $m++ ) {
   $COUNT=$COUNT+1;
     $gridOmonths .= '
-          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT,$room_filter_id,$teacher_filter_id,$program_filter_id) . '</td>';
+          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT,$room_filter_id,$teacher_filter_id,$program_filter_id,$exception_dates) . '</td>';
   }
   $gridOmonths .= '
         </tr>';

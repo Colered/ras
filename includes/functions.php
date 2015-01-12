@@ -978,7 +978,7 @@ function display_admin_link ( $break = true ) {
 
 /* Generate HTML to create a month display.
  */
-function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id='', $teacher_avail_id='',$program_avail_id='') {
+function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id='', $teacher_avail_id='',$program_avail_id='',$exception_dates=array()) {
   global $DISPLAY_ALL_DAYS_IN_MONTH, $DISPLAY_LONG_DAYS, $DISPLAY_WEEKNUMBER,
   $login, $today, $user, $WEEK_START, $WEEKENDBG;
 
@@ -1072,22 +1072,29 @@ function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id=
 		}
 		
 		//Teacher Exception Dates 
-		  $objTE =new Teacher();
+		  /*$objTE =new sTeacher();
 		  $teacher_exception=$objTE->getTeacherException();
 		  while($row_teacher_exception = $teacher_exception->fetch_assoc()){
 				$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
-		  }
+		  }*/
 		  //end teacher date
 		  //Classrooom Exception Dates 
-		  $objCE =new Classroom();
+		  /*$objCE =new Classroom();
 		  $clasroom_exception=$objCE->getClassroomException();
 		  while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
 				$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
-		  }
+		  }*/
+		  /*$objP =new Programs();
+		  $program_exception=$objP->getProgramException();
+		  while($row_program_exception = $program_exception->fetch_assoc()){
+				$classroom_exception_date[] = date("Ymd", strtotime($row_program_exception['exception_date']));
+		  }*/
+		  
   		$class = trim ( $class );
         $class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents'.((isset($clsrm_avail_id) && $clsrm_avail_id!='') || (isset($teacher_avail_id) && $teacher_avail_id!='') || (isset($program_avail_id) && $program_avail_id!='')? ' hasAvailability' : ''): '' );
 		$class .= (in_array($dateYmd,$holiday_date, true) ? ' hasHolidays' : '');
-		$class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' hasExceptionDays' : '');
+		//$class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' hasExceptionDays' : '');
+		$class .= (in_array($dateYmd,$exception_dates, true) ? ' hasExceptionDays' : '');
 		$ret .= ( strlen ( $class ) ? ' class="' . $class . '"' : '' )
          . '>' . $ret_events . '</td>';
       } else
@@ -1197,7 +1204,7 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
  *                               month.php?  or  view_l.php?id=7&amp;)
  */
 function display_small_month ( $thismonth, $thisyear, $showyear,
-  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='',$room_filter_id='',$teacher_filter_id='',$program_filter_id='') {
+  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='',$room_filter_id='',$teacher_filter_id='',$program_filter_id='',$exception_dates=array()) {
   global $boldDays, $caturl, $DATE_FORMAT_MY, $DISPLAY_ALL_DAYS_IN_MONTH,
   $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $get_unapproved, $login,
   $MINI_TARGET, // Used by minical.php
@@ -1205,35 +1212,30 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
   $thisday, // Needed for day.php
   $today, $use_http_auth, $user, $WEEK_START;
   
- // echo "yes=".$program_filter_id;
-  
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
   $u_url = ( $user != $login && ! empty ( $user )
     ? 'user=' . $user . '&amp;' : '' );
   $weekStr = translate ( 'Week' );
-  $teacher_exception_date=$holiday_date=$classroom_exception_date=array();
-  //holiday dates 
+  $teacher_exception_date=$holiday_date=array();
   $objH =new Holidays();
   $holiday_data=$objH->viewHoliday();
   while($row_holiday = $holiday_data->fetch_assoc()){
 	 	$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
   }
-  //end holiday dates
-  
   //Teacher Exception Date 
-  $objTE =new Teacher();
+  /*$objTE =new Teacher();
   $teacher_exception=$objTE->getTeacherException();
   while($row_teacher_exception = $teacher_exception->fetch_assoc()){
 	 	$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
-  }
+  }*/
   //end teacher date
   //Classrooom Exception Date 
-  $objCE =new Classroom();
+  /*$objCE =new Classroom();
   $clasroom_exception=$objCE->getClassroomException();
   while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
 	 	$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
-  }
+  }*/
   //End Classroom Excetion Date
  
   // Start the minical table for each month.
@@ -1332,7 +1334,10 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
       $ret .= '
           <td';
       if ( $boldDays ) {
-	    if(in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)){
+	   /* if(in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)){
+		     $hasException=true;
+	  	}*/
+		 if(in_array($dateYmd,$exception_dates, true)){
 		     $hasException=true;
 	  	}
 	    if(in_array($dateYmd,$holiday_date, true)){
@@ -4546,7 +4551,7 @@ function print_date_entries ( $date, $user, $ssi = false ) {
  * @param string $date  Date in YYYYMMDD format
  * @param string $user  Username of calendar
  */
-function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id='', $teacher_filter_id='',$program_filter_id='') {
+function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id='', $teacher_filter_id='',$program_filter_id='',$exception_dates=array()) {
   global $CELLBG, $DISPLAY_TASKS_IN_GRID, $DISPLAY_UNAPPROVED, $first_slot,
   $hour_arr, $last_slot, $rowspan, $rowspan_arr, $TABLEBG, $THBG, $THFG,
   $TIME_SLOTS, $today, $TODAYCELLBG, $WORK_DAY_END_HOUR, $WORK_DAY_START_HOUR;
@@ -4559,26 +4564,28 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id=''
    		$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
     }
 	//Teacher Exception Dates 
-   $objTE =new Teacher();
+  /* $objTE =new Teacher();
    $teacher_exception=$objTE->getTeacherException();
 	while($row_teacher_exception = $teacher_exception->fetch_assoc()){
      $teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
-   }
+   }*/
 	//Classrooom Exception Dates 
-	$objCE =new Classroom();
+	/*$objCE =new Classroom();
 	$clasroom_exception=$objCE->getClassroomException();
 	 while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
 	   $classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
-	}
+	}*/
 	$hasException='';
 	$hasHoliday='';
-	if((in_array($date,$teacher_exception_date, true) || in_array($date,$classroom_exception_date, true)) && in_array($date,$holiday_date, true)){
+	if((in_array($date,$exception_dates, true)) && in_array($date,$holiday_date, true)){
 		$hasException = ' hasExceptionDays';
-	}elseif((in_array($date,$teacher_exception_date, true) || in_array($date,$classroom_exception_date, true))){
+	}elseif(in_array($date,$exception_dates, true)){
 		$hasException = ' hasExceptionDays';
-	}else if(in_array($date,$holiday_date, true)){
+	}
+	if(in_array($date,$holiday_date, true)){
 		$hasHoliday = ' hasHolidays';
 	}
+	
  if ( empty ( $TIME_SLOTS ) )
     return translate ( 'Error TIME_SLOTS undefined!' ) . "<br />\n";
 
@@ -6565,26 +6572,35 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
   global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
 
   $splitTimeslot=$cloneRepeats = $layers_byuser = $result = array ();
+  $exceptions_dates=$holiday_date=array();
   $row=array();
   $evt_name='';
-  
   if($program_filter_id!=''){
-    // echo "program_filter_id=".$program_filter_id;
-     $objP=new Programs();
+    $objP=new Programs();
+	$program_exception=$objP->getProgramAvailExceptionById($program_filter_id);
+		while($row_program_exception = $program_exception->fetch_assoc()){
+				$exceptions_dates[] = date("Ymd", strtotime($row_program_exception['exception_date']));
+	}
+	 $program_dataa=$objP->getProgramDataByPrgmYrID($program_filter_id);
+	 $data_program = mysqli_fetch_assoc($program_dataa);
+	 $program_year_name=$data_program['name'];
+	 $evt_name =$program_year_name."-Availability";
 	 $row = $objP->getCyclesInfoforAvailability($program_filter_id);
   }
   if($teacher_available_id!=''){
-    $obj=new Teacher();
-	$teacher_data=$obj->getTeacherByID($teacher_available_id);
+    $objT =new Teacher();
+	$teacher_exception=$objT->getTeacherAvailExceptionById($teacher_available_id);
+		while($row_teacher_exception = $teacher_exception->fetch_assoc()){
+				$exceptions_dates[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
+	}
+	$teacher_data=$objT->getTeacherByID($teacher_available_id);
 	$teacher_name=explode('(',$teacher_data);
 	$evt_name =$teacher_name['0']."-Availability";
-	$teacher_avail_rule_allIds=$obj->getRuleIdsForTeacher($teacher_available_id);
-	$resDates=$obj->getResDatesForTeacher($teacher_available_id);
-	 for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
-	    $avail_day_detail=$obj->getTeacherAvailDayFilter($teacher_avail_rule_allIds[$i]);
-		$resDates=$obj->getResDatesForTeacher($teacher_available_id);
-		$date_range=$obj->getTeacherRuleStartEndDate($teacher_avail_rule_allIds[$i]);
-		//echo $date_range['start_date'];	
+	$teacher_avail_rule_allIds=$objT->getRuleIdsForTeacher($teacher_available_id);
+	$resDates=$objT->getResDatesForTeacher($teacher_available_id);
+	for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
+	    $avail_day_detail=$objT->getTeacherAvailDayFilter($teacher_avail_rule_allIds[$i]);
+		$date_range=$objT->getTeacherRuleStartEndDate($teacher_avail_rule_allIds[$i]);
 		$objTs=new Timetable();
 		while($data = $avail_day_detail->fetch_assoc()){
 		$day=$data['day']+1;
@@ -6600,12 +6616,15 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 
   if($class_room_id!=''){
     $obj_clr=new Classroom();
+	$clasroom_exception=$obj_clr->getClassroomAvailExceptionById($class_room_id);
+		while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
+				$exceptions_dates[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
+	}
 	$room_data=$obj_clr->getDataByRoomID($class_room_id);
 	$dataAll_room = mysqli_fetch_assoc($room_data);
 	$room_name=$dataAll_room['room_name'];
 	$evt_name =$room_name."-Availability";
-	
-  	$obj=new Classroom_Availability();
+	$obj=new Classroom_Availability();
   	$clsrm_avail_rule_allIds=$obj->getRuleIdsForRoom($class_room_id);
 	$resDates=$obj->getResDatesForClass($class_room_id);
 	for($i=0;$i<count($clsrm_avail_rule_allIds);$i++){
@@ -6661,29 +6680,10 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
 	}
 	$rows=$rowNewArr;
-	$teacher_exception_date=$holiday_date=$classroom_exception_date=$program_exception_date=array();
 	$objH =new Holidays();
 		$holiday_data=$objH->viewHoliday();
 		while($row_holiday = $holiday_data->fetch_assoc()){
 			$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
-	}
-	
-	$objCE =new Classroom();
-	$clasroom_exception=$objCE->getClassroomAvailExceptionById($class_room_id);
-		while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
-				$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
-	}
-	
-	$objTE =new Teacher();
-	$teacher_exception=$objTE->getTeacherAvailExceptionById($teacher_available_id);
-		while($row_teacher_exception = $teacher_exception->fetch_assoc()){
-				$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
-	}
-	
-	$objPgm=new Programs();
-	$program_exception=$objPgm->getProgramAvailExceptionById($program_filter_id);
-		while($row_program_exception = $program_exception->fetch_assoc()){
-				$program_exception_date[] = date("Ymd", strtotime($row_program_exception['exception_date']));
 	}
 	
 	if ($rows) {
@@ -6726,13 +6726,13 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		 $day = (isset($date_array['2'])) ? ($date_array['2']):'';
 		 $eventstart = mktime ( $entry_hour_st, $entry_minute_st, 0, $month, $day, $year );
 		 $cal_time = gmdate('His', $eventstart);
-		 if(($class_room_id!='' && in_array($row[3],$classroom_exception_date, true)) || ($class_room_id!='' && in_array($row[3],$holiday_date, true)) ){
+		 if(($class_room_id!='' && in_array($row[3],$exceptions_dates, true)) || ($class_room_id!='' && in_array($row[3],$holiday_date, true)) ){
 		   		$row[3]='';$cal_time=''; 	
 		 }
-		 if($teacher_available_id!='' && in_array($row[3],$teacher_exception_date, true) || ($teacher_available_id!='' && in_array($row[3],$holiday_date, true))){
+		 if($teacher_available_id!='' && in_array($row[3],$exceptions_dates, true) || ($teacher_available_id!='' && in_array($row[3],$holiday_date, true))){
 		   		$row[3]='';$cal_time='';
 		 }
-		 if($program_filter_id!='' && in_array($row[3],$program_exception_date, true) || ($program_filter_id!='' && in_array($row[3],$holiday_date, true))){
+		 if($program_filter_id!='' && in_array($row[3],$exceptions_dates, true) || ($program_filter_id!='' && in_array($row[3],$holiday_date, true))){
 		   		$row[3]='';$cal_time='';
 		 }
 		 $str='';
@@ -6791,7 +6791,8 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
       }
     }
   }
-return $result;
+
+  return array($result,$exceptions_dates);
 }
 //Classroom availability filter form
 function print_classroom_availability_menu( $form, $date = '', $room_filter_id = '' ) {

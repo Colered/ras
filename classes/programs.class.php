@@ -732,7 +732,7 @@ class Programs extends Base {
 							$mk_event_arr['blank']='';
 							$mk_event_arr['timeslot']=$timeslotVal;
 							$mk_event_arr['day']=$key;
-							$mk_event_arr['particular_date']=$datesArr[$j];
+							$mk_event_arr['particular_date']=$dateArr[$j];
 							$mk_event_arr['cycle_num']=$numSufArr[$z];
 							$mk_event_new_arr[]= $mk_event_arr;
 						}
@@ -810,6 +810,11 @@ class Programs extends Base {
 		$q_excep = mysqli_query($this->conn, $excep_query);
 		return $q_excep;
 	
+	}
+	public function getProgramDataByPrgmYrID($id) {
+			$prgm_query="select * from program_years where id='".$id."' limit 1";
+			$q_res = mysqli_query($this->conn, $prgm_query);
+			return $q_res;
 	}
 	   
 }

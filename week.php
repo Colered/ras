@@ -62,7 +62,7 @@ if ( $DISPLAY_SM_MONTH == 'Y' && $BOLD_DAYS_IN_YEAR == 'Y' ) {
   $evStart = $wkstart;
   $evEnd = $wkend;
 }
-
+$exception_dates=array();
 /* Pre-Load the repeated events for quickier access. */
 $repeated_events = read_repeated_events ( ( strlen ( $user )
     ? $user : $login ), $evStart, $evEnd, $cat_id );
@@ -71,7 +71,9 @@ $repeated_events = read_repeated_events ( ( strlen ( $user )
 if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 	$events = read_events_filters ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
 }elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
-     $events = read_events_clsrm_teacher_availability (( strlen ( $user )? $user : $login ), $evStart - 604800, $evEnd,$cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
+     $events_detail = read_events_clsrm_teacher_availability (( strlen ( $user )? $user : $login ), $evStart - 604800, $evEnd,$cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
+	$events=$events_detail[0];
+	$exception_dates=(isset($events_detail[1]) && $events_detail[1]!='')? $events_detail[1] : '';
 }else{
  	$events = read_events ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, $cat_id );
 }
@@ -84,27 +86,13 @@ if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
 $eventsStr = $filler = $headerStr = $minical_tasks = $untimedStr = '';
 $navStr = display_navigation ( 'week' );
 $week_name_display=display_navigation_current_month( 'week' );
-$teacher_exception_date=$holiday_date=$classroom_exception_date=array();
+$holiday_date=array();
    //Holiday Dates
    $objH =new Holidays();
    $holiday_data=$objH->viewHoliday();
 	while($row_holiday = $holiday_data->fetch_assoc()){
    		$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
     }
-	//Teacher Exception Dates 
-   $objTE =new Teacher();
-   $teacher_exception=$objTE->getTeacherException();
-	while($row_teacher_exception = $teacher_exception->fetch_assoc()){
-     $teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
-   }
-	//end teacher date
-	//Classrooom Exception Dates 
-	$objCE =new Classroom();
-	$clasroom_exception=$objCE->getClassroomException();
-	 while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
-	   $classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
-	}
-
 
 for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   $days[$i] = ( $wkstart + ( 86400 * $i ) ) + 43200;
@@ -208,7 +196,8 @@ for ( $i = $first_slot; $i <= $last_slot; $i++ ) {
     $dateYmd = date ( 'Ymd', $days[$d] );
 	$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents".((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='') ? " hasAvailability" : "") : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
    . (in_array($dateYmd,$holiday_date, true) ? " hasHolidays": "")
-   . ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? " hasExceptionDays": "");
+   //. ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? " hasExceptionDays": "");
+   . (in_array($dateYmd,$exception_dates, true) ? " hasExceptionDays": "");
    if ( $rowspan_day[$d] > 1 ) {
       // This might mean there's an overlap,
       // or it could mean one event ends at 11:15 and another starts at 11:30.
