@@ -6571,7 +6571,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
   $PUBLIC_ACCESS_DEFAULT_VISIBLE, $result, $thismonth, $thisyear;
   global $OVERRIDE_PUBLIC, $OVERRIDE_PUBLIC_TEXT;
 
-  $splitTimeslot=$cloneRepeats = $layers_byuser = $result = array ();
+  $splitTimeslot=$cloneRepeats = $layers_byuser = $result = $resDates = array ();
   $exceptions_dates=$holiday_date=array();
   $row=array();
   $evt_name='';
@@ -6642,6 +6642,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
    }   
   }
+  if($teacher_available_id!='' || $class_room_id!=''){
    $m=0;
 	foreach($row as $result_date)
 	{
@@ -6669,6 +6670,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
 		$m++;
 	}
+   }
    $rowNewArr=array(array());
    if(count($row)>0){
 	    for($i=0;$i<count($row);$i++){
