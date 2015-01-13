@@ -225,6 +225,9 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
   .main td.weekend {
     ' . background_css ( $GLOBALS['WEEKENDBG'], 100 ) . '
   }
+  .main td.today {
+  	background-color:#c0c0c0;
+  }
   .main td.hasHolidays {
     	background-color:#00FF00;}
   .main td.hasExceptionDays {
@@ -237,9 +240,6 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
     	background-color:#ffd966;}
   .main td.othermonth {
     ' . background_css ( $GLOBALS['OTHERMONTHBG'], 100 ) . '
-  }
-  .main td.today {
-    ' . background_css ( $GLOBALS['TODAYCELLBG'], 100 ) . '
   }
   .underline {
    text-decoration:underline;
@@ -699,9 +699,6 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
   .minical td.weekend,
   #editentry th.weekend {
     background:' . $GLOBALS['WEEKENDBG'] . ';
-  }
-  .minical td#today {
-    background:' . $GLOBALS['TODAYCELLBG'] . ';
   }
   .minical td.hasevents {
     font-weight:bold;

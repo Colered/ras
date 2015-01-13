@@ -103,11 +103,9 @@ echo <<<EOT
     <table id="filters-table" border="0" width="70%" cellpadding="1" style="padding-left:92px;">
       <tr>
         <td id="filters-td" valign="top" width="70%" rowspan="2">
-			<fieldset>
-  				<legend class="legend-calender">Filters:</legend>
- 				{$navStr}
-			</fieldset>
-		 </td>
+				{$navStr}
+		</td>
+		 
        </tr>
     </table>
 EOT;

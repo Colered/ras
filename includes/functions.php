@@ -147,7 +147,7 @@ function add_duration ( $time, $duration ) {
  * @return string  The HTML for the event label
  */
 function build_entry_label ( $event, $popupid,
-  $can_access, $timestr, $time_only = 'N' ) {
+  $can_access, $timestr, $time_only = 'N') {
   global $eventinfo, $login, $SUMMARY_LENGTH, $UAC_ENABLED, $user;
   $ret = '';
   // Get reminders display string.
@@ -175,7 +175,7 @@ function build_entry_label ( $event, $popupid,
     // translate ( 'This event is private' )
     $eventinfo .= build_entry_popup ( $popupid, $tmpLogin,
       str_replace ( 'XXX', translate ( 'private' ),
-        translate ( 'This event is XXX.' ) ), '' );
+        translate ( 'This event is XXX.' ) ), '');
   } else
   if ( $not_my_entry && $tmpAccess == 'C' && !
     ( $can_access &CONF_WT ) ) {
@@ -184,21 +184,21 @@ function build_entry_label ( $event, $popupid,
 
     $eventinfo .= build_entry_popup ( $popupid, $tmpLogin,
       str_replace ( 'XXX', translate ( 'confidential' ),
-        translate ( 'This event is XXX.' ) ), '' );
+        translate ( 'This event is XXX.' ) ), '');
   } else
   if ( $can_access == 0 && $UAC_ENABLED == 'Y' ) {
     if ( $time_only != 'Y' )
       $ret = $tmp_ret;
 
     $eventinfo .= build_entry_popup ( $popupid, $tmpLogin, '',
-      $timestr, '', '', $tmpName, '' );
+      $timestr, '', '', $tmpName, '');
   } else {
     if ( $time_only != 'Y' )
       $ret = $tmp_ret;
 
     $eventinfo .= build_entry_popup ( $popupid, $tmpLogin,
       $event->getDescription (), $timestr, site_extras_for_popup ( $tmpId ),
-      $event->getLocation (), $tmpName, $tmpId, $reminder );
+      $event->getLocation (), $tmpName, $tmpId, $reminder);
   }
   return $ret;
 }
@@ -1047,7 +1047,7 @@ function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id=
 		// Get events for this day.
         $ret_events = '';
         if ( ! $demo )
-          $ret_events = print_date_entries ( $dateYmd,( empty ( $user ) ? $login : $user ), false );
+          $ret_events = print_date_entries ( $dateYmd,( empty ( $user ) ? $login : $user ), false);
         else {
           // Since we base this calendar on the current month,
           // the placement of the days always change so
@@ -1171,7 +1171,7 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
   // Hack to prevent giant space between minicals and navigation in IE.
   . ( get_web_browser () == 'MSIE' ? ' style="zoom:1"' : '' )
    . '>
-        <div class="title">
+        <div class="">
           <span class="date">';
 
   return $ret . '</span>
@@ -1183,10 +1183,10 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
     ? '<br />-- ' . translate ( 'Admin mode' ) . ' --' : '' )
    . ( $is_assistant
     ? '<br />-- ' . translate ( 'Assistant mode' ) . ' --' : '' ) . '</span>'
-   .( $CATEGORIES_ENABLED == 'Y'? print_filter_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id) : '' )
-   .( $CATEGORIES_ENABLED == 'Y'? print_program_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_filter_id ) : '' )
+   .'<fieldset><legend class="legend-calender"><span>Timetable Allocated Timeslots</span></legend>'.( $CATEGORIES_ENABLED == 'Y'? print_filter_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id) : '' ).'</fieldset>'
+   .'<fieldset><legend class="legend-calender"><span>Available Timeslots</span></legend>'.( $CATEGORIES_ENABLED == 'Y'? print_program_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$program_filter_id ) : '' )
    .( $CATEGORIES_ENABLED == 'Y'? print_classroom_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$room_filter_id ) : '' )
-   .( $CATEGORIES_ENABLED == 'Y'? print_teacher_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$teacher_filter_id ) : '' ).'
+   .( $CATEGORIES_ENABLED == 'Y'? print_teacher_availability_menu ( $name,sprintf ( "%04d%02d%02d", $thisyear, $thismonth, $thisday ),$teacher_filter_id ) : '' ).'</fieldset>'.'
 	  </div>
       </div><br />';
 }
@@ -1203,6 +1203,7 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
  *                               come before the date specification (e.g.
  *                               month.php?  or  view_l.php?id=7&amp;)
  */
+ 
 function display_small_month ( $thismonth, $thisyear, $showyear,
   $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='',$room_filter_id='',$teacher_filter_id='',$program_filter_id='',$exception_dates=array()) {
   global $boldDays, $caturl, $DATE_FORMAT_MY, $DISPLAY_ALL_DAYS_IN_MONTH,
@@ -4474,7 +4475,7 @@ function print_color_input_html ( $varname, $title, $varval = '' ) {
  * @param string $user  Username
  * @param bool   $ssi   Is this being called from week_ssi.php?
  */
-function print_date_entries ( $date, $user, $ssi = false ) {
+function print_date_entries ( $date, $user, $ssi = false) {
   global $cat_id, $DISPLAY_TASKS_IN_GRID, $DISPLAY_UNAPPROVED, $events,
   $is_admin, $is_nonuser, $login, $PUBLIC_ACCESS, $PUBLIC_ACCESS_CAN_ADD,
   $readonly, $tasks, $WEEK_START;
@@ -4831,7 +4832,7 @@ function print_entry ( $event, $date ) {
        . ( $time_only == 'Y' ? '' : $TIME_SPACER );
   }
   return $ret . build_entry_label ( $event, 'eventinfo-' . $linkid, $can_access,
-    $popup_timestr, $time_only )
+    $popup_timestr, $time_only)
 
   // Added to allow a small location to be displayed if wanted.
   . ( ! empty ( $location ) && !
@@ -6007,10 +6008,15 @@ function user_has_boss ( $assistant ) {
  * @return string  The HTML for the event popup.
  */
 function build_entry_popup ( $popupid, $user, $description = '', $time,
-  $site_extras = '', $location = '', $name = '', $id = '', $reminder = '' ) {
+  $site_extras = '', $location = '', $name = '', $id = '', $reminder = '') {
   global $ALLOW_HTML_DESCRIPTION, $DISABLE_POPUPS, $login,
   $PARTICIPANTS_IN_POPUP, $popup_fullnames, $popuptemp_fullname,
   $PUBLIC_ACCESS_VIEW_PART, $SUMMARY_LENGTH, $tempfullname;
+  
+  $description_event='Description';
+  if((isset($_POST['room_avail_id']) && $_POST['room_avail_id']!='') || (isset($_POST['program_avail_id']) && $_POST['program_avail_id']!='') || (isset($_POST['teacher_avail_id']) && $_POST['teacher_avail_id']!='')){
+     $description_event="Non-Allocated Timeslots";
+  }
 
   if ( ! empty ( $DISABLE_POPUPS ) && $DISABLE_POPUPS == 'Y' )
     return;
@@ -6082,7 +6088,7 @@ function build_entry_popup ( $popupid, $user, $description = '', $time,
   }
 
   if ( ! empty ( $description ) && $details ) {
-    $ret .= '<dt>' . translate ( 'Description' ) . ":</dt>\n<dd>";
+    $ret .= '<dt>' . $description_event . ":</dt>\n<dd>";
     if ( ! empty ( $ALLOW_HTML_DESCRIPTION ) && $ALLOW_HTML_DESCRIPTION == 'Y' ) {
       // Replace &s and decode special characters.
       $str = unhtmlentities (
@@ -6584,7 +6590,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	 $program_dataa=$objP->getProgramDataByPrgmYrID($program_filter_id);
 	 $data_program = mysqli_fetch_assoc($program_dataa);
 	 $program_year_name=$data_program['name'];
-	 $evt_name =$program_year_name."-Availability";
+	 $evt_name =$program_year_name;
 	 $row = $objP->getCyclesInfoforAvailability($program_filter_id);
   }
   if($teacher_available_id!=''){
@@ -6595,7 +6601,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	}
 	$teacher_data=$objT->getTeacherByID($teacher_available_id);
 	$teacher_name=explode('(',$teacher_data);
-	$evt_name =$teacher_name['0']."-Availability";
+	$evt_name =$teacher_name['0'];
 	$teacher_avail_rule_allIds=$objT->getRuleIdsForTeacher($teacher_available_id);
 	$resDates=$objT->getResDatesForTeacher($teacher_available_id);
 	for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
@@ -6623,7 +6629,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	$room_data=$obj_clr->getDataByRoomID($class_room_id);
 	$dataAll_room = mysqli_fetch_assoc($room_data);
 	$room_name=$dataAll_room['room_name'];
-	$evt_name =$room_name."-Availability";
+	$evt_name =$room_name;
 	$obj=new Classroom_Availability();
   	$clsrm_avail_rule_allIds=$obj->getRuleIdsForRoom($class_room_id);
 	$resDates=$obj->getResDatesForClass($class_room_id);
@@ -6743,6 +6749,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		 }
 		 $str_name=((isset($program_filter_id)) && ($program_filter_id!=''))?'Cycle':'Rule';
 		 $evt_descr = $str.'---------------------------'.'<br>'.'<strong>Date:-</strong>'.date('d-m-Y',strtotime($row[3])).'<br>'.'<strong>'.$str_name.'</strong>:-'.$row[4];
+		 
 		}
 	}
 	if ( $want_repeated && ! empty ( $row[20] ) ) {// row[20] = cal_type
@@ -6887,7 +6894,7 @@ function print_program_availability_menu( $form, $date = '', $program_filter_id 
 	if ( empty ( $CATEGORIES_ENABLED  ) || $CATEGORIES_ENABLED == 'N' )
     return false;
 	
-  $catStr = translate ( '<span class="chek-avali-txt">Check Availability</span>:- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Program' );
+  $catStr = translate ( 'Program' );
   $printerStr = '';
   $ret = '
     <form action="' . $form . '.php" method="post" name="SelectProgramAvail" '. 'class="categories chek-avali-form" >' . ( empty ( $date ) ? '' : '<input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' ). '" value="' .( $form != 'year' ?  $date: strtok(date('Y-m-d',strtotime($date)), "-")). '" />' )
