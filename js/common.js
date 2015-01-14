@@ -1591,7 +1591,9 @@ $(function() {
 			$('#exceptnProgAval1').val('');
 		}
 	});
-	$("#exceptnProgAval1").datepicker({
+	$("#exceptnProgAval1, #additionalDayCal1").datepicker({
+		maxDate: $('#endweek1').datepicker('getDate'),
+		minDate: $('#startweek1').datepicker('getDate'),
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1599,17 +1601,17 @@ $(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	  $("#exceptnProgAval1, #additionalDayCal1, #additionalDayCal2, #additionalDayCal3").datepicker({
+	 /* $("#exceptnProgAval1, #additionalDayCal1, #additionalDayCal2, #additionalDayCal3").datepicker({
 	  dateFormat: 'dd-mm-yy',
 	  defaultDate: "+1w",
 	  changeMonth: true,
 	  numberOfMonths: 1,
 	  changeMonth: true, 
 	  changeYear: true,
-	 });
+	 });*/
 	//for cycle 2
 	$("#startweek2").datepicker({
-	    minDate: cycle1_endweekdate,
+	   	minDate: $('#endweek1').datepicker('getDate'),
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1642,7 +1644,9 @@ $(function() {
 			$('#exceptnProgAval2').val('');
 		}
 	});
-	$("#exceptnProgAval2").datepicker({
+	$("#exceptnProgAval2, #additionalDayCal2").datepicker({
+		maxDate: $('#endweek2').datepicker('getDate'),
+		minDate: $('#startweek2').datepicker('getDate'),
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1652,7 +1656,7 @@ $(function() {
 	});
 	//for cycle 3
 	$("#startweek3").datepicker({
-	    minDate: cycle2_endweekdate,
+	    minDate: $('#endweek2').datepicker('getDate'),
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -1682,7 +1686,9 @@ $(function() {
 			$('#exceptnProgAval3').val('');
 		}
 	});
-	$("#exceptnProgAval3").datepicker({
+	$("#exceptnProgAval3, #additionalDayCal3").datepicker({
+		maxDate: $('#endweek3').datepicker('getDate'),
+		minDate: $('#startweek3').datepicker('getDate'),
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
 		changeMonth: true,
