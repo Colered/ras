@@ -211,6 +211,7 @@ class Timetable extends Base {
 			$new_programs[$pgm_id][$newkey] =  $values;		
 			}
 		}
+		//print"<pre>";print_r($new_programs);die;
 		$reserved_array = array();
 		$reserved_teachers = array();
 		$reserved_rooms = array();
@@ -868,6 +869,7 @@ class Timetable extends Base {
 		$final_pgms = array();
 		$last_day = 5;
 		$program_list = '';
+		$i = '';
 		if(count($programs)>0)
 		{
 			$program_list.= " and(";
@@ -892,14 +894,18 @@ class Timetable extends Base {
 				if($result_pgm_cycle['end_week'] > $end_date)
 				{
 					$end_week = $end_date;
+					$end_week1 = $end_date;
 				}else{
 					$end_week = $result_pgm_cycle['end_week'];
+					$end_week1 = $result_pgm_cycle['end_week'];
 					}
 				if($result_pgm_cycle['start_week'] < $start_date)
 				{
 					$start_week = $start_date;
+					$start_week1 = $start_date;
 				}else{
 					$start_week = $result_pgm_cycle['start_week'];
+					$start_week1 = $result_pgm_cycle['start_week'];
 					}
 				if($result_pgm_cycle['occurrence'] == '1w')
 				{	
@@ -919,6 +925,11 @@ class Timetable extends Base {
 					}
 				}else if($result_pgm_cycle['occurrence'] == '2w'){
 					$weeks = $this->countWeeksBetweenDates($start_week,$end_week);
+					$week_cycles = $this->countWeeksBetweenDates($result_pgm_cycle['start_week'],$start_week);
+					if($week_cycles%2 == 0)
+					{
+						$i++;
+					}
 					for($i=0; $i < $weeks; $i++)
 					{
 						if($i%2 == 0)
@@ -979,21 +990,25 @@ class Timetable extends Base {
 						}
 					}								
 				}
-				
-				$sql_pgm_add_date = $this->conn->query("select additional_date,actual_timeslot_id from program_cycle_additional_day_time where additional_date >= '".$start_week."' and additional_date <= '".$end_week."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
+				$sql_pgm_add_date = $this->conn->query("select additional_date,actual_timeslot_id from program_cycle_additional_day_time where additional_date >= '".$start_week1."' and additional_date <= '".$end_week1."' and program_year_id = '".$result_pgm_cycle['program_year_id']."'");
 				while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
 				{
 					$ts_array = explode(",",$result_pgm_add_date['actual_timeslot_id']);
-					if(array_key_exists($result_pgm_add_date['additional_date'],$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']]))
+					if(!empty($final_pgms))
 					{
-						$new_arr = array_unique(array_merge($final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']],$ts_array));
-						$sorted_array = array();
-						foreach($new_arr as $new_key => $arr1)
+						if(array_key_exists($result_pgm_add_date['additional_date'],$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']]))
 						{
-							$sorted_array[$new_key] = $arr1;							
+							$new_arr = array_unique(array_merge($final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']],$ts_array));
+							$sorted_array = array();
+							foreach($new_arr as $new_key => $arr1)
+							{
+								$sorted_array[$new_key] = $arr1;							
+							}
+							array_multisort($sorted_array, SORT_ASC, $new_arr);	
+							$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $new_arr;											
+						}else{
+							$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $ts_array;
 						}
-						array_multisort($sorted_array, SORT_ASC, $new_arr);	
-						$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $new_arr;											
 					}else{
 						$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']][$result_pgm_add_date['additional_date']] = $ts_array;
 					}
@@ -1006,23 +1021,32 @@ class Timetable extends Base {
 	//function will check the number of weeks between two dates
 	public function countWeeksBetweenDates($start_week, $end_week)
 	{
-		$start_date = strtotime($start_week);
-		$end_date = strtotime($end_week);
-		$start_week = date('W', $start_date);
-		$end_week = date('W', $end_date); 
-		$start_year = date('Y', $start_date);
-		$end_year = date('Y', $end_date);
-		$years = $end_year-$start_year;
-		if($years == 0){
-			$weeks_past = $end_week-$start_week+1;
+		$weeks=$this->weeks($start_week,$end_week);
+		$diff_weeks=count($weeks);
+		return $diff_weeks;
+	}
+	public function weeks($ladate2,$ladate3) 
+	{
+		$start_week= date("W",strtotime($ladate2));
+		$end_week= date("W",strtotime($ladate3));
+		$number_of_weeks= $end_week - $start_week;
+		$weeks=array();
+		$weeks[]=$start_week;
+		$increment_date=$ladate2;
+		$i="1";
+		if ($number_of_weeks<0){
+			$start_year=date("Y",strtotime($ladate2));
+			$last_week_of_year= date("W",strtotime("$start_year-12-28"));
+			$number_of_weeks=($last_week_of_year-$start_week)+$end_week;
 		}
-		if($years == 1){
-			$weeks_past = (52-$start_week+1)+$end_week;
+		while ($i<=$number_of_weeks)
+		{
+			$increment_date=date("Y-m-d", strtotime($ladate2. " +$i week"));
+			$weeks[]=date("W",strtotime($increment_date));
+
+			$i=$i+1;
 		}
-		if($years > 1){
-			$weeks_past = (52-$start_week+1)+$end_week+($years*52);
-		}
-		return $weeks_past;
+		return $weeks;
 	}
 
 	//function will get all the dates of a specific day in the given timerange
