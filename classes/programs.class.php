@@ -182,19 +182,44 @@ class Programs extends Base {
 			$cycle = $numSufArr[$i];
 			$start_date = $this->formatDateByDate($row['start_week']);
 			$end_date = $this->formatDateByDate($row['end_week']);
-			$data .= '<tr><td>'.$cycle.' cycle:'.$start_date.' - '.$end_date.' </td></tr>';
+			$data .= '<tr><td style="font-size: 13px;"><strong>'.$cycle.' cycle : '.$start_date.' - '.$end_date.'</strong> </td></tr>';
 			$data .= '<tr><td> <b>Week1</b><br/> '.$week1.'</td></tr>';
 			if($row['occurrence'] == '2w'){
 			$data .= '<tr><td> <b>Week2</b><br/> '.$week2.' </td></tr>';
 			}
 			$i++;
 			$data .= $this->getProgCycExceptions($prog_id,$i);
+			$data .= $this->getProgCycAdditionalDayTS($prog_id,$i);
 		}
 		$data .= '</table>';
 		}
 		return $data;
 	}
-    //function to get program cycle exceptions
+    //function to get program cycle Additional Days
+    public function getProgCycAdditionalDayTS($py_id,$cycle_num)
+    {
+        $query="select * from program_cycle_additional_day_time where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
+		$result= $this->conn->query($query);
+	  	$num_rows = $result->num_rows;
+		$tsobj = new Timeslot();
+		
+	  	$dt = '';
+	  	$i=0;
+	  	if($num_rows > 0){
+			$dt .= '<tr><td><div style="float:left;"><strong>Additional Days And Timeslots:</strong></div><br/>';
+			while($row = $result->fetch_assoc()){
+			   $timeslotVal = $tsobj->getTSbyIDs('('.$row['actual_timeslot_id'].')');
+			   $i++;
+               $dt .= '<div><span style="text-decoration: underline;">'.date('d-m-Y',strtotime($row['additional_date'])).'</span>: '.implode(',',$timeslotVal).'</div>';
+               if(!($i%4))
+               $dt .= '<div style="width:90px;float:left;">&nbsp;</div>';
+
+			}
+			$dt .= '</td></tr>';
+			return $dt;
+		}
+    }
+	//function to get program cycle exceptions
     public function getProgCycExceptions($py_id,$cycle_num)
     {
         $query = "select exception_date from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";

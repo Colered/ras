@@ -611,6 +611,7 @@ div.divSession{
 #sesssionTable th, td {
  border: 1px solid #E3E3E3;
 } 
+#divSessionName1 tr td{ border: 1px solid brown!important;} 
 #sesssionTable th{
  color: #383838;
 }
