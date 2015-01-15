@@ -71,6 +71,10 @@ $(document).ready(function(){
 						while($row = $result->fetch_assoc())
 						{
 							//echo $row['session_id']."---"; print"<pre>";print_r($session_array);print"</pre>";
+							//print"<pre>";print_r($row);print"</pre>";die;
+							$ts_array = explode(",",$row['timeslot_id']);
+							$min_ts_id = $ts_array[0];
+							$max_ts_id = $ts_array[count($ts_array)-1];
 							if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
 							{
 								$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
@@ -97,7 +101,7 @@ $(document).ready(function(){
 							<td<?php echo $tdColor;?>><?php echo $teacher_name;?></td>
 							<td<?php echo $tdColor;?>><?php echo $objB->getRoomFullName($row['room_id']);?></td>
 							<td<?php echo $tdColor;?>><?php echo $objT->formatDate($row['act_date']);?></td>
-							<td<?php echo $tdColor;?>><?php echo $objT->getFielldVal("timeslot","timeslot_range",'id',$row['timeslot_id']);?></td>
+							<td<?php echo $tdColor;?>><?php echo $objT->getTimeslotById($min_ts_id,$max_ts_id);?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
