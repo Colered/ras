@@ -744,7 +744,7 @@ class Programs extends Base {
 		{
 			while($row = $result->fetch_assoc())
 			{
-				
+				//print"<pre>";print_r($row);die;
 				$end_week=$row['end_week'];
 				if($row['occurrence'] == '1w')
 				{	
@@ -757,6 +757,7 @@ class Programs extends Base {
 						for($j=0;$j<count($dateArr);$j++){
 							$mk_event_arr['blank']='';
 							$mk_event_arr['timeslot']=$timeslotVal;
+							$mk_event_arr['actual_timeslot_id']=implode(',',$value);
 							$mk_event_arr['day']=$key;
 							$mk_event_arr['particular_date']=$dateArr[$j];
 							$mk_event_arr['cycle_num']=$numSufArr[$z];
@@ -788,6 +789,7 @@ class Programs extends Base {
 								for($j=0;$j<count($dateArr);$j++){
 									$mk_event_arr['blank']='';
 									$mk_event_arr['timeslot']=$timeslotVal;
+									$mk_event_arr['actual_timeslot_id']=implode(',',$value);
 									$mk_event_arr['day']=$key;
 									$mk_event_arr['particular_date']=$dateArr[$j];
 									$mk_event_arr['cycle_num']=$numSufArr[$z];
@@ -818,6 +820,7 @@ class Programs extends Base {
 									for($j=0;$j<count($dateArr);$j++){
 									$mk_event_arr['blank']='';
 									$mk_event_arr['timeslot']=$timeslotVal;
+									$mk_event_arr['actual_timeslot_id']=implode(',',$value);
 									$mk_event_arr['day']=$key;
 									$mk_event_arr['particular_date']=$dateArr[$j];
 									$mk_event_arr['cycle_num']=$numSufArr[$z];
@@ -831,9 +834,57 @@ class Programs extends Base {
 						}
 					}								
 				}
+				foreach($mk_event_new_arr as $mk_events_dates)
+				{
+					$final_dates[$mk_events_dates['particular_date']]['particular_date'] = $mk_events_dates['particular_date'];
+					$final_dates[$mk_events_dates['particular_date']]['blank'] = $mk_events_dates['blank'];
+					$final_dates[$mk_events_dates['particular_date']]['timeslot'] = $mk_events_dates['timeslot'];
+					$final_dates[$mk_events_dates['particular_date']]['day'] = $mk_events_dates['day'];
+					$final_dates[$mk_events_dates['particular_date']]['actual_timeslot_id'] = $mk_events_dates['actual_timeslot_id'];
+					$final_dates[$mk_events_dates['particular_date']]['cycle_num'] = $mk_events_dates['cycle_num'];											
+				}
+				$sql_pgm_add_date = $this->conn->query("select DATE_FORMAT(additional_date,'%Y%m%d') as additional_date,actual_timeslot_id,timeslot_id,cycle_id from program_cycle_additional_day_time where additional_date >= '".$row['start_week']."' and additional_date <= '".$row['end_week']."' and program_year_id = '".$prog_id."'");
+				while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
+				{
+					if(array_key_exists($result_pgm_add_date['additional_date'],$final_dates))
+					{
+						$time = explode(",",$final_dates[$result_pgm_add_date['additional_date']]['actual_timeslot_id']);
+						$time1 = explode(",",$result_pgm_add_date['actual_timeslot_id']);
+						$total_time = array_unique(array_merge($time,$time1));
+						$sorted_array = array();
+						foreach($total_time as $new_key => $arr1)
+						{
+							$sorted_array[$new_key] = $arr1;							
+						}
+						array_multisort($sorted_array, SORT_ASC, $total_time);
+						$total_time_val = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$total_time).')');
+						$final_dates[$result_pgm_add_date['additional_date']]['timeslot'] = $total_time_val;
+						$final_dates[$result_pgm_add_date['additional_date']]['actual_timeslot_id'] = implode(',',$total_time);
+					}else{
+						$day = date("w", strtotime($result_pgm_add_date['additional_date']));
+						$day = $day-1;
+						$final_dates[$result_pgm_add_date['additional_date']]['particular_date'] = $result_pgm_add_date['additional_date'];
+						$final_dates[$result_pgm_add_date['additional_date']]['blank'] = '';
+						$final_dates[$result_pgm_add_date['additional_date']]['timeslot'] = $result_pgm_add_date['timeslot_id'];
+						$final_dates[$result_pgm_add_date['additional_date']]['day'] = $day;
+						$final_dates[$result_pgm_add_date['additional_date']]['actual_timeslot_id'] = $result_pgm_add_date['actual_timeslot_id'];
+						$final_dates[$result_pgm_add_date['additional_date']]['cycle_num'] = $numSufArr[$result_pgm_add_date['cycle_id'] - 1];
+					}						
+				}
+				$j=0;
+				foreach($final_dates as $final_pgms)
+				{
+					$mk_event_new_arr[$j]['blank'] = $final_pgms['blank'];
+					$mk_event_new_arr[$j]['timeslot'] = $final_pgms['timeslot'];					
+					$mk_event_new_arr[$j]['day'] = $final_pgms['day'];
+					$mk_event_new_arr[$j]['particular_date'] = $final_pgms['particular_date'];
+					$mk_event_new_arr[$j]['cycle_num'] = $final_pgms['cycle_num'];
+					$mk_event_new_arr[$j]['actual_timeslot_id'] = $final_pgms['actual_timeslot_id'];					
+					$j++;
+				}	
 				$z++;
 			}					
-		}
+		}	
 	  return $mk_event_new_arr;
 	}
 	public function getProgramAvailExceptionById($program_id='')
@@ -847,7 +898,6 @@ class Programs extends Base {
 			$prgm_query="select * from program_years where id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $prgm_query);
 			return $q_res;
-	}
-	   
+	}   
 }
 
