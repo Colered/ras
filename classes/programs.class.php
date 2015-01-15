@@ -744,6 +744,7 @@ class Programs extends Base {
 		{
 			while($row = $result->fetch_assoc())
 			{
+				
 				$end_week=$row['end_week'];
 				if($row['occurrence'] == '1w')
 				{	
@@ -769,12 +770,15 @@ class Programs extends Base {
 					{
 						if($i%2 == 0)
 						{
-							$day = date("w", strtotime($start_week));
+						    $day = date("w", strtotime($start_week));
 							$day = $day-1;
 							$rem_days = $last_day-$day;
 							$date = new DateTime($start_week);
 							$date->modify('+'.$rem_days.' day');
 							$end_week = $date->format('Y-m-d');
+							if($end_week > $row['end_week']){
+						 		$end_week=$row['end_week'];
+							}
 							$week1 = unserialize($row['week1']);
 							foreach($week1 as $key=> $value)
 							{
@@ -800,6 +804,9 @@ class Programs extends Base {
 							$date = new DateTime($start_week);
 							$date->modify('+'.$rem_days.' day');
 							$end_week = $date->format('Y-m-d');	
+							if($end_week > $row['end_week']){
+						 		$end_week=$row['end_week'];
+							}
 							if(count(unserialize($row['week2'])) > 0)
 							{
 								$week2 = unserialize($row['week2']);
@@ -827,7 +834,7 @@ class Programs extends Base {
 				$z++;
 			}					
 		}
-		return $mk_event_new_arr;
+	  return $mk_event_new_arr;
 	}
 	public function getProgramAvailExceptionById($program_id='')
 	{

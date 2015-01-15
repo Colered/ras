@@ -1017,7 +1017,6 @@ class Timetable extends Base {
 		}
 		return $final_pgms;
 	}
-
 	//function will check the number of weeks between two dates
 	public function countWeeksBetweenDates($start_week, $end_week)
 	{
