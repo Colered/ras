@@ -6693,6 +6693,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		while($row_holiday = $holiday_data->fetch_assoc()){
 			$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
 	}
+	//print"<pre>";print_r($rows);die;
 	
 	if ($rows) {
     $i = 0;
@@ -6706,6 +6707,8 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	  }else {
 	    $row[1] = (isset($row[1])) ? ($row[1]) : '';
 		$row[3] = (isset($row[3])) ? ($row[3]) : '';
+		$eventstartdate = '';
+		//echo $row[3];
 		if($row[1]!=''){
 		 $splitTimeslot = (isset($row[1])) ? (explode(',', $row[1])) : '';
 		 $start_timeslot=(isset($splitTimeslot['0'])) ? ($splitTimeslot['0']) : '';
@@ -6734,14 +6737,17 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		 $day = (isset($date_array['2'])) ? ($date_array['2']):'';
 		 $eventstart = mktime ( $entry_hour_st, $entry_minute_st, 0, $month, $day, $year );
 		 $cal_time = gmdate('His', $eventstart);
+		 $eventstartdate = gmdate ( 'Ymd', $eventstart );
+
+		 //print"<pre>";print_r($row);print_r($exceptions_dates);echo $eventstartdate;die;
 		 if(($class_room_id!='' && in_array($row[3],$exceptions_dates, true)) || ($class_room_id!='' && in_array($row[3],$holiday_date, true)) ){
-		   		$row[3]='';$cal_time=''; 	
+		   		$eventstartdate='';$cal_time=''; 	
 		 }
 		 if($teacher_available_id!='' && in_array($row[3],$exceptions_dates, true) || ($teacher_available_id!='' && in_array($row[3],$holiday_date, true))){
-		   		$row[3]='';$cal_time='';
+		   		$eventstartdate='';$cal_time='';
 		 }
 		 if($program_filter_id!='' && in_array($row[3],$exceptions_dates, true) || ($program_filter_id!='' && in_array($row[3],$holiday_date, true))){
-		   		$row[3]='';$cal_time='';
+		   		$eventstartdate='';$cal_time='';
 		 }
 		 $str='';
 		 for($k=0;$k<count($splitTimeslot);$k++){
@@ -6760,7 +6766,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
           $row[23], $row[24], $row[25], $row[26], $row[27], $row[28], $row[29],
           $row[30], $row[31], $row[32], array (), array (), array () );
 	}else{// row[20] = cal_type
-	    	$item = new Event ($evt_name, $evt_descr, $row[3], $cal_time, "","", "", "", $duration, "", "", "","admin", "E", "", "", $row[3],"", "",$row[3] ,"");
+	    	$item = new Event ($evt_name, $evt_descr, $eventstartdate, $cal_time, "","", "", "", $duration, "", "", "","admin", "E", "", "", $eventstartdate,"", "",$eventstartdate ,"");
 		}
 	if ( $item->getID () != $checkdup_id ) {
 	    $checkdup_id = $item->getID ();
