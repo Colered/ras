@@ -870,7 +870,7 @@ class Timetable extends Base {
 		$final_pgms = array();
 		$last_day = 5;
 		$program_list = '';
-		$i = '';
+		$i=0;
 		if(count($programs)>0)
 		{
 			$program_list.= " and(";
@@ -931,8 +931,8 @@ class Timetable extends Base {
 					{
 						$i++;
 					}
-					for($i=0; $i < $weeks; $i++)
-					{
+					for($j=0; $j < $weeks; $j++)
+					{						
 						if($i%2 == 0)
 						{
 							$day = date("w", strtotime($start_week));
@@ -941,9 +941,6 @@ class Timetable extends Base {
 							$date = new DateTime($start_week);
 							$date->modify('+'.$rem_days.' day');
 							$end_week = $date->format('Y-m-d');
-							if($end_week > $end_date){
-								$end_week = $end_date;
-							}
 							$week1 = unserialize($result_pgm_cycle['week1']);
 							foreach($week1 as $key=> $value)
 							{
@@ -961,7 +958,8 @@ class Timetable extends Base {
 							$date = new DateTime($end_week);
 							$date->modify('+2 day');
 							$start_week = $date->format('Y-m-d');
-						}else{	
+							$i++;
+						}else{
 							$day = date("w", strtotime($start_week));
 							$day = $day-1;
 							$rem_days = $last_day-$day;
@@ -988,6 +986,7 @@ class Timetable extends Base {
 							$date = new DateTime($end_week);
 							$date->modify('+2 day');
 							$start_week = $date->format('Y-m-d');
+							$i++;
 						}
 					}								
 				}
