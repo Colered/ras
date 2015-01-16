@@ -1096,7 +1096,7 @@ switch ($codeBlock) {
 	}
     break;
     case "checkAvailabilitySession":
-        //check if same session name already created
+        //check if same session name already created	
         $sess_hidden_id = trim($_POST['sess_hidden_id']);
         $act_hidden_id = trim($_POST['act_hidden_id']);
         $rule_query = "select id, session_name from subject_session where subject_id='" . $_POST['subjectId'] . "' and session_name = '" . $_POST['txtSessionName'] . "'";
@@ -1134,10 +1134,12 @@ switch ($codeBlock) {
                 if ($valid == 1) {
 					$final_programs = array(); $availTSIdsonSelDay = array();
                     $ttObj = new Timetable();
-					$final_programs = $ttObj->search_programs($_POST['subSessDate'],$_POST['subSessDate']);
+					$new_pgms['0'] = $_POST['programId'];
+					$final_programs = $ttObj->search_programs($_POST['subSessDate'],$_POST['subSessDate'],$new_pgms);
 					if(isset($final_programs[$_POST['programId']][$_POST['cycleId']][$_POST['subSessDate']])){
 						$availTSIdsonSelDay = $final_programs[$_POST['programId']][$_POST['cycleId']][$_POST['subSessDate']];
 					}
+					//print"<pre>";print_r($availTSIdsonSelDay);die;
 					if(count($timeslotIdsArray)>0 && count($availTSIdsonSelDay)>0 && (count(array_intersect($timeslotIdsArray, $availTSIdsonSelDay)) == count($timeslotIdsArray))){
 						//program is available
 					}else{
