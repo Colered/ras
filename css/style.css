@@ -482,6 +482,7 @@ table .chb{
 .table-icon { padding: 1px 8px; margin-right: 5px; }
 .edit.table-icon { background: url(../images/i_edit.png) no-repeat; }
 .delete.table-icon { background: url(../images/i_delete.png) no-repeat; }
+.clone.table-icon { background: url(../images/clone.png) no-repeat; }
 .rightmark.table-icon { background: url(../images/i_right.png) no-repeat; }
 
 .pagination{

@@ -30,11 +30,18 @@ $room_dropDwn = $objB->getRoomsDropDwn();
 //timeslot dropdown
 $tslot_dropDwn = $objTS->getTimeSlotStartDateDropDwn();
 
-if (isset($_GET['edit']) && $_GET['edit'] != "") {
-    $disTest = "disabled";
-    $disFDivCss = "style='opacity:.5; pointer-event:none'";
-    $subIdEncrypt = $_GET['edit'];
-    $subjectId = base64_decode($_GET['edit']);
+if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $_GET['clone'] != "")) {
+    if(isset($_GET['edit']) && $_GET['edit'] != ""){
+		$disTest = "disabled";
+    	$disFDivCss = "style='opacity:.5; pointer-event:none'";
+		$subIdEncrypt = $_GET['edit'];
+    	$subjectId = base64_decode($_GET['edit']);
+	}else if(isset($_GET['clone']) && $_GET['clone'] != ""){
+		$disSession = "disabled";
+   		$disDivCss = "style='opacity:.5; pointer-event:none'";
+		$subIdEncrypt = $_GET['clone'];
+    	$subjectId = base64_decode($_GET['clone']);
+	}
     $obj = new Subjects();
     $result = $obj->getDataBySubjectID($subjectId);
     $row = $result->fetch_assoc();
@@ -58,10 +65,19 @@ if (isset($_GET['edit']) && $_GET['edit'] != "") {
 }
 $objT = new Teacher();
 $rel_teacher = $objT->getTeachers();
-$subjectName = isset($_GET['edit']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');
-$subjectCode = isset($_GET['edit']) ? $row['subject_code'] : (isset($_POST['txtSubjCode']) ? $_POST['txtSubjCode'] : '');
-$areaId = isset($_GET['edit']) ? $row['area_id'] : (isset($_POST['slctArea']) ? $_POST['slctArea'] : '');
-$progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctProgram']) ? $_POST['slctProgram'] : '');
+if(isset($_GET['edit']) && $_GET['edit'] != ""){
+	//code for edit mode
+	$subjectName = isset($_GET['edit']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');
+	$subjectCode = isset($_GET['edit']) ? $row['subject_code'] : (isset($_POST['txtSubjCode']) ? $_POST['txtSubjCode'] : '');
+	$areaId = isset($_GET['edit']) ? $row['area_id'] : (isset($_POST['slctArea']) ? $_POST['slctArea'] : '');
+	$progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctProgram']) ? $_POST['slctProgram'] : '');
+}else if(isset($_GET['clone']) && $_GET['clone'] != ""){
+	//code while creating the clone
+	$subjectName = isset($_GET['clone']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');
+	$subjectCode = isset($_GET['clone']) ? $row['subject_code'] : (isset($_POST['txtSubjCode']) ? $_POST['txtSubjCode'] : '');
+	$areaId = isset($_GET['clone']) ? $row['area_id'] : (isset($_POST['slctArea']) ? $_POST['slctArea'] : '');
+	$progId = isset($_GET['clone']) ? $row['program_year_id'] : (isset($_POST['slctProgram']) ? $_POST['slctProgram'] : '');
+}
 //edit values for  edit activity / session
 if (isset($_GET['edit_actid']) && isset($_GET['edit_sessid'])) {
     $act_hidden_id = $_GET['edit_actid'];
@@ -98,13 +114,18 @@ $sess_description_edit = isset($_GET['edit_actid']) ? $dataSessArr['description'
         </div>
         <div id="addSubAndSess" class="addSubAndSess" <?php /* ?>style="opacity:.5; pointer-event:none;"<?php */ ?>>
             <div class="full_w">
-                <div class="h_title">Subject</div>
+				<?php if(isset($_GET['clone']) && $_GET['clone'] != ""){ ?>
+						<div class="h_title">Clone of Subject "<?php echo $subjectName; ?>"</div>
+				 <?php }else{ ?>
+				 		<div class="h_title">Subject</div>
+				 <?php } ?>
                 <form name="subjectForm" id="subjectForm" action="postdata.php" method="post">
                     <input type="hidden" name="form_action" value="addEditSubject" />
                     <input type="hidden" id="subjectId" name="subjectId" value="<?php echo $subjectId; ?>" />
                     <input type="hidden" id="subIdEncrypt" name="subIdEncrypt" value="<?php echo $subIdEncrypt; ?>" />
                     <input type="hidden" id="act_hidden_id" name="act_hidden_id" value="<?php echo $act_hidden_id; ?>" />
                     <input type="hidden" id="sess_hidden_id" name="sess_hidden_id" value="<?php echo $sess_hidden_id; ?>" />
+					<input type="hidden" id="cloneId" name="cloneId" value="<?php echo $subIdEncrypt; ?>" />
                     <div class="custtable_left">
                         <div class="addSubDiv" <?php echo $disFDivCss; ?>>
                             <div class="custtd_left">
@@ -170,12 +191,13 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 <h2>Subject Code <span class="redstar">*</span></h2>
                             </div>
                             <div class="txtfield">
-                                <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>" <?php if ($subjectId != "") {
+                                <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>" <?php if (($subjectId != "") && (isset($_GET['clone']) && $_GET['clone'] == "")) {
     echo "readonly";
 } ?> <?php echo $disTest; ?>>
                             </div>
                             <div class="sessionboxSub btnSessiondiv">
-                                <input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
+                                <div style="float:left; width:175px;"><input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
+								<input type="button" name="btnCancel" class="buttonsub" <?php echo $disTest; ?> value="Cancel" onclick="location.href = 'subject_view.php';"></div>
                             </div>
                             <div class="clear"></div>
                         </div>
@@ -295,7 +317,7 @@ while ($row = $rel_teacher->fetch_assoc()) {
                                 </div></div>
                             <div class="clear"></div>
                         </div>
-                        <div class="divSession" style="text-align:left">
+                        <div class="divSession" style="text-align:left; <?php if(isset($_GET['clone']) && $_GET['clone'] != ""){ echo 'display:none'; } ?>">
                             <?php
                             if ($subjectId != "") {
                                 $x = 0;
@@ -379,7 +401,7 @@ while ($row = $rel_teacher->fetch_assoc()) {
 <?php //}  ?>
                         </div>
                         <div class="txtfield">
-                            <input type="button" name="btnCancel" class="buttonsub" value="<?php echo $buttonName = ($subjectName != "") ? "Done" : "Cancel" ?>" onclick="location.href = 'subject_view.php';">
+                            <input style=" <?php if(isset($_GET['clone']) && $_GET['clone'] != ""){ echo 'display:none'; } ?>" type="button" name="btnCancel" class="buttonsub" value="<?php echo $buttonName = ($subjectName != "") ? "Done" : "Cancel" ?>" onclick="location.href = 'subject_view.php';">
                         </div>
                     </div>
 					<div class="sessionboxSub" id="dialog-confirm" title="Message">

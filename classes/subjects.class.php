@@ -16,21 +16,43 @@ class Subjects extends Base {
 			}else{
 				//add the new subject
 				$currentDateTime = date("Y-m-d H:i:s");
-				//fectching area id
-				//$area_id=$this->getAreaId();
 				$area_id=$_POST['slctArea'];
-				//fectching program id
-				//$program_id=$this->getProgramId();
-				//$program_name=$_POST['slctProgram'];
-				//$program_Val=explode('#',$program_name);
 				$program_year_id = $_POST['slctProgram'];
 				$cycle_no=$_POST['slctCycle'];
-				//$program_id=$program_Val[1];
-				//inserting values
+				//inserting subjects
 				$SQL = "INSERT INTO subject VALUES ('', '".$area_id."', '".$program_year_id."', '".$cycle_no."', '".$_POST['txtSubjName']."','".$_POST['txtSubjCode']."','".$currentDateTime."', '".$currentDateTime."')";
 				$result = $this->conn->query($SQL);
 				$last_ins_id = $this->conn->insert_id;
 				if($last_ins_id) {
+					//if new subject is being added through clone then copy new session and activities:
+					if(isset($_POST['cloneId']) && $_POST['cloneId']!=''){
+						$oldSubID = $_POST['subjectId'];
+						$newSubID = $last_ins_id;
+						//add the sessions
+						$session_data_query="select * from subject_session where subject_id =".$oldSubID;
+						$q_res = mysqli_query($this->conn, $session_data_query);
+						while($data = $q_res->fetch_assoc()){
+							$lastInsertedId = ""; 
+							$SQLSess ="INSERT INTO subject_session(subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update ) VALUES ('".$newSubID."', '".$data['cycle_no']."', '".$data['session_name']."','".$data['order_number']."','".$data['description']."','".$data['case_number']."','".$data['technical_notes']."','".$data['duration']."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')";
+							$result = $this->conn->query($SQLSess);
+							$lastInsertedId = $this->conn->insert_id;
+							if($lastInsertedId)
+							{
+								//check in activity table if any activity exist for above session
+								$activity_data_query="select * from teacher_activity where subject_id ='".$oldSubID."' and session_id = '".$data['id']."'";
+								$q_resAct = mysqli_query($this->conn, $activity_data_query);
+								//check if data found then add activity
+								while($dataAct = $q_resAct->fetch_assoc()){ 
+									//fetch latest ativity name
+									$result = $this->conn->query("SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+									$dRow = $result->fetch_assoc();
+									$actCnt = substr($dRow['name'],1);
+									$actName = 'A'.($actCnt+1);
+									$SQLact = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, session_id, teacher_id, reserved_flag, date_add, forced_flag) VALUES ('".$actName."', '".$dataAct['program_year_id']."', '".$dataAct['cycle_id']."', '".$newSubID."', '".$lastInsertedId."', '".$dataAct['teacher_id']."', 0, '".date("Y-m-d H:i:s")."', 1)");
+								}
+							}
+						}
+					}
 					$message="Subject has been added successfully, You can manage sessions for this subject now.";
 					$_SESSION['succ_msg'] = $message;
 					//return back data to the form

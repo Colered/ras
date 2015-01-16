@@ -242,7 +242,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		//adding new subject
 			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" && $_POST['slctProgram']!="" && $_POST['slctCycle']!="" && $_POST['slctArea']!="" ){
 				$obj = new Subjects();
-				if(isset($_POST['subjectId']) && $_POST['subjectId']!=''){
+				
+				if(isset($_POST['cloneId']) && $_POST['cloneId']!=''){
+					//update subject
+					$resp = $obj->addSubject();
+				}else if(isset($_POST['subjectId']) && $_POST['subjectId']!='' && !isset($_POST['cloneId']) && $_POST['cloneId']==''){
 					//update subject
 					$resp = $obj->updateSubject();
 				}else{
@@ -252,7 +256,13 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if($resp==0){
 					//return back data to the form
 					echo "<html><head></head><body>";
-					echo "<form name='formsubject' method='post' action='subjects.php'>";
+					if(isset($_POST['cloneId']) && $_POST['cloneId']!=''){
+						$urlPath = "subjects.php?clone=".$_POST['cloneId'];
+						echo "<form name='formsubject' method='post' action='$urlPath'>";
+					}else{
+						echo "<form name='formsubject' method='post' action='subjects.php'>";
+					}
+					
 					reset($_POST);
 					while(list($iname,$ival) = each($_REQUEST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";

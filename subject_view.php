@@ -36,7 +36,7 @@ $(document).ready(function(){
 -->                     <th width="350">Session</th>
 						<th >Add Date</th>
 						<th >Update Date</th>
-                        <th >Action</th>
+                        <th width="75" >Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,7 +93,8 @@ $(document).ready(function(){
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
                         <td class="align-center" id="<?php echo $data['id'] ?>">
                             <a href="subjects.php?edit=<?php echo base64_encode($data['id'])?>" class="table-icon edit" title="Edit"></a>
-							<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)"></a>
+							<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)" title="Delete"></a>
+							<a href="subjects.php?clone=<?php echo base64_encode($data['id'])?>" class="table-icon clone" title="Clone"></a>
                         </td>
                     </tr>
 					<?php }?>
