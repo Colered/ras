@@ -1,6 +1,7 @@
 <?php
 include('header.php');
 $obj=new Timetable();
+$objP=new Programs();
 $result=$obj->getTimetablesData();
 ?>
 <div id="content">
@@ -35,6 +36,8 @@ $result=$obj->getTimetablesData();
                                 <tr>
                                     <th >Published</th>
                                     <th >Timetable</th>
+									<th >Programs</th>
+									<th >Date Range</th>
                                     <th >Created On</th>
                                     <th >Last Edit</th>
                                     <th >Action</th>
@@ -44,10 +47,22 @@ $result=$obj->getTimetablesData();
 								<?php 
 								$count = 0;
 								while ($data = $result->fetch_assoc()){
+									$program_names = array();
+									$program_array = explode(",",$data['programs']);
+									foreach($program_array as $program_id)
+									{
+										$programs = $objP->getProgramDataByPrgmYrID($program_id);
+										$pgm_names = $programs->fetch_assoc();	
+										$program_names[] = $pgm_names['name'];
+									}
+									$program_list = implode(" , ",$program_names);
+									
 								?>
                                 <tr>
                                     <td class="align-center"><input checked="checked" type="radio" id="radio" name="radio"  /></td>
                                     <td class="align-center"><?php echo $data['timetable_name']; ?></td>
+									<td class="align-center"><?php echo $program_list; ?></td>
+									<td class="align-center"><?php echo $data['start_date']." to ".$data['end_date']; ?></td>
                                     <td class="align-center"><?php echo $data['date_add']; ?></td>
                                     <td class="align-center"><?php echo $data['date_update']; ?></td>
 									 <td class="align-center" id="<?php echo $data['id'] ?>">

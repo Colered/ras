@@ -672,12 +672,13 @@ class Timetable extends Base {
 	}
 
 	//function to add the timetable basic details in database
-	public function addTimetable($name, $start_date, $end_date)
+	public function addTimetable($name, $start_date, $end_date,$program_list)
 	{
 		$sql_insert = "insert into timetable set
 						   timetable_name = '".$name."',
 						   start_date = '".$start_date."',
 						   end_date = '".$end_date."',
+						   programs = '".$program_list."',
 						   date_add = '".date("Y-m-d H:i:s")."',
 						   date_update = '".date("Y-m-d H:i:s")."'";
 		if($this->conn->query($sql_insert))

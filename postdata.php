@@ -453,6 +453,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$start_date = date('Y-m-d', strtotime($_POST['fromGenrtTmtbl']));
 				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
 				$programs = $_POST['programs'];
+				$program_list = implode(",",$programs);
 				if(!$obj->checkName($_POST['txtAName']))
 				{
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
@@ -474,7 +475,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					if($output_array)
 					{
 						$obj->deleteData();
-						$res = $obj->addTimetable($_POST['txtAName'], $start_date, $end_date);
+						$res = $obj->addTimetable($_POST['txtAName'], $start_date, $end_date,$program_list);
 						if($res)
 						{
 							foreach($output_array as $key=>$value)
