@@ -79,28 +79,33 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					$timeTemp = explode(':', $cell_value);
 					$duration = ($timeTemp[0]*60) + $timeTemp[1];
 					//check if teacher exist
-					$teachkey = array_search($values[7], $teacNameArr);
+					//$teachkey = array_search($values[7], $teacNameArr);
+					$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
 					if ($teachkey) {
 						$teacher_id = $teacIdsArr[$teachkey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Teacher name does not exist in the system";
 					}
 					//check if subject name 
-					$subNamekey = array_search($values[2], $subjNameArr);
+					//$subNamekey = array_search($values[2], $subjNameArr);
+					$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
 					if ($subNamekey) {
 						$subject_id = $subjIdsArr[$subNamekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Name does not exist in the system";
 					}
 					//check if subject code exist
-					$subCodekey = array_search($values[3], $subjCodeArr);
+					//$subCodekey = array_search($values[3], $subjCodeArr);
+					$subCodekey =array_search(trim(strtolower($values[3])), array_map('strtolower', $subjCodeArr));
 					if ($subCodekey) {
 						$subject_id = $subjIdsArr[$subCodekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Code does not exist in the system";
 					}
 					//check if program  name exist
-					$progNamekey = array_search($values[0], $progNameArr); $no_of_cycle="";
+					//$progNamekey = array_search($values[0], $progNameArr);
+					$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr)); 
+					$no_of_cycle="";
 					if ($progNamekey) {
 						$program_year_id = $progYrIdsArr[$progNamekey];
 						$no_of_cycle  = $noOfCycleArr[$progNamekey];
@@ -126,21 +131,25 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
 						$timeTemp = explode(':', $cell_value);
 						$duration = ($timeTemp[0]*60) + $timeTemp[1];
-						$teachkey = array_search($values[7], $teacNameArr);
+						//$teachkey = array_search($values[7], $teacNameArr);
+						$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
 						if ($teachkey) {
 							$teacher_id = $teacIdsArr[$teachkey];
 						}
-						$subNamekey = array_search($values[2], $subjNameArr);
+						//$subNamekey = array_search($values[2], $subjNameArr);
+						$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
 						if ($subNamekey) {
 							$subject_id = $subjIdsArr[$subNamekey];
 						}
-						$progNamekey = array_search($values[0], $progNameArr); $noOfCycle="";
+						//$progNamekey = array_search($values[0], $progNameArr); 
+						$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr));
+						$noOfCycle="";
 						if ($progNamekey) {
 							$program_year_id = $progYrIdsArr[$progNamekey];
 							$cycle_id   = $cycleIdArr[$progNamekey];
 						}
 						//insert the session
-						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .$values[1]. "', '" .$values[4]. "', '" .$values[5]. "', '" .$values[13]. "', '" .$values[11]. "', '" .$values[12]. "', '" .$duration. "', NOW(), NOW());");
+						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .trim($values[1]). "', '" .trim($values[4]). "', '" .trim($values[5]). "', '" .trim($values[13]). "', '" .trim($values[11]). "', '" .trim($values[12]). "', '" .$duration. "', NOW(), NOW());");
 						$sessionId = mysqli_insert_id($db);
 						if (mysqli_affected_rows($db) > 0) {
 							//get last created activity name
