@@ -12,6 +12,8 @@ $locName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtLname'])? $ob
 ?>
 <div id="content">
     <div id="main">
+		<?php 
+		if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
         <div class="full_w">
             <div class="h_title">Session Upload</div>
             <form name="session_upload" id="session_upload" action="postdata_import.php" method="post" enctype="multipart/form-data">

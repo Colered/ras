@@ -80,8 +80,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					$duration = ($timeTemp[0]*60) + $timeTemp[1];
 					//check if teacher exist
 					//$teachkey = array_search($values[7], $teacNameArr);
-					$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
-					if ($teachkey) {
+					$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr)); 
+					if ($teachkey >= 0) {
 						$teacher_id = $teacIdsArr[$teachkey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Teacher name does not exist in the system";
@@ -89,7 +89,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					//check if subject name 
 					//$subNamekey = array_search($values[2], $subjNameArr);
 					$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
-					if ($subNamekey) {
+					if ($subNamekey>= 0) {
 						$subject_id = $subjIdsArr[$subNamekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Name does not exist in the system";
@@ -97,7 +97,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					//check if subject code exist
 					//$subCodekey = array_search($values[3], $subjCodeArr);
 					$subCodekey =array_search(trim(strtolower($values[3])), array_map('strtolower', $subjCodeArr));
-					if ($subCodekey) {
+					if ($subCodekey>= 0) {
 						$subject_id = $subjIdsArr[$subCodekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Code does not exist in the system";
@@ -106,7 +106,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					//$progNamekey = array_search($values[0], $progNameArr);
 					$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr)); 
 					$no_of_cycle="";
-					if ($progNamekey) {
+					if ($progNamekey>= 0) {
 						$program_year_id = $progYrIdsArr[$progNamekey];
 						$no_of_cycle  = $noOfCycleArr[$progNamekey];
 					}else{
@@ -126,55 +126,57 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}
 			//if file have no errors create activity and sessions else return error messages array
 			if(count($errorArr)==0){
+				$total = 0;
 				foreach($dataArr as $values){
-						//convert duration into minutes
-						$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
-						$timeTemp = explode(':', $cell_value);
-						$duration = ($timeTemp[0]*60) + $timeTemp[1];
-						//$teachkey = array_search($values[7], $teacNameArr);
-						$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
-						if ($teachkey) {
-							$teacher_id = $teacIdsArr[$teachkey];
-						}
-						//$subNamekey = array_search($values[2], $subjNameArr);
-						$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
-						if ($subNamekey) {
-							$subject_id = $subjIdsArr[$subNamekey];
-						}
-						//$progNamekey = array_search($values[0], $progNameArr); 
-						$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr));
-						$noOfCycle="";
-						if ($progNamekey) {
-							$program_year_id = $progYrIdsArr[$progNamekey];
-							$cycle_id   = $cycleIdArr[$progNamekey];
-						}
-						//insert the session
-						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .trim($values[1]). "', '" .trim($values[4]). "', '" .trim($values[5]). "', '" .trim($values[13]). "', '" .trim($values[11]). "', '" .trim($values[12]). "', '" .$duration. "', NOW(), NOW());");
-						$sessionId = mysqli_insert_id($db);
-						if (mysqli_affected_rows($db) > 0) {
-							//get last created activity name
-							$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
-							$dRow = mysqli_fetch_assoc($result3);
-							$actCnt = substr($dRow['name'], 1);
-							$actName = 'A' . ($actCnt + 1);
-							//insert new activity
-							$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" .$program_year_id. "', '" .$cycle_id. "', '" .$subject_id. "', '" . $sessionId . "', '" . $teacher_id . "', '','', '', '', '', 0, NOW(), NOW(), 0);");
-						}
+						if($total > 0 && strtolower(trim($values[0]))!="" && strtolower(trim($values[1]))!="" && strtolower(trim($values[2]))!="" && strtolower(trim($values[3]))!="" && strtolower(trim($values[4]))!="" && strtolower(trim($values[5]))!="" && strtolower(trim($values[6]))!="" && strtolower(trim($values[7]))!=""){
+								//convert duration into minutes
+								$timeTempArr = array();
+								$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
+								$timeTempArr = explode(':', $cell_value);
+								$duration = ($timeTempArr[0]*60) + ($timeTempArr[1]); 
+								//$teachkey = array_search($values[7], $teacNameArr);
+								$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
+								if ($teachkey>= 0) {
+									$teacher_id = $teacIdsArr[$teachkey];
+								}
+								//$subNamekey = array_search($values[2], $subjNameArr);
+								$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
+								if ($subNamekey>= 0) {
+									$subject_id = $subjIdsArr[$subNamekey];
+								}
+								//$progNamekey = array_search($values[0], $progNameArr); 
+								$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr));
+								$noOfCycle="";
+								if ($progNamekey>= 0) {
+									$program_year_id = $progYrIdsArr[$progNamekey];
+									$cycle_id   = $cycleIdArr[$progNamekey];
+								}
+								//insert the session
+								$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .trim($values[1]). "', '" .trim($values[4]). "', '" .trim($values[5]). "', '" .trim($values[13]). "', '" .trim($values[11]). "', '" .trim($values[12]). "', '" .$duration. "', NOW(), NOW());");
+								$sessionId = mysqli_insert_id($db);
+								if (mysqli_affected_rows($db) > 0) {
+									//get last created activity name
+									$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+									$dRow = mysqli_fetch_assoc($result3);
+									$actCnt = substr($dRow['name'], 1);
+									$actName = 'A' . ($actCnt + 1);
+									//insert new activity
+									$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" .$program_year_id. "', '" .$cycle_id. "', '" .$subject_id. "', '" . $sessionId . "', '" . $teacher_id . "', '','', '', '', '', 0, NOW(), NOW(), 0);");
+								}
+						} $total++ ; 
 				}
-				$_SESSION['succ_msg'] = $message;
+				
+				$_SESSION['succ_msg'] = "Data has been uploaded successfully.";
 				header('Location: session_upload.php');
-				exit;
 			}else{
 				$_SESSION['error_msgArr'] = $errorArr;
 				header('Location: session_upload.php');
-				exit;
 			}
 		}else{
 				session_start();
-				$errorArr[] = "File do not have any data to import";
+				$errorArr[] = "File do not have any data to import.";
 				$_SESSION['error_msgArr'] = $errorArr;
 				header('Location: session_upload.php');
-				exit;
 		}
 		break;
 		}
