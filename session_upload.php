@@ -1,0 +1,51 @@
+<?php include('header.php');
+$locName=""; $locId="";
+$obj = new locations();
+if(isset($_GET['edit']) && $_GET['edit']!=""){
+	$locId = base64_decode($_GET['edit']);
+	$result = $obj->getDataByLocID($locId);
+	$row = $result->fetch_assoc();
+}
+$locName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtLname'])? $obj->cleanText($_POST['txtLname']):'');
+//echo "<pre>";
+///print_r($_SESSION['error_msg']); //die;
+?>
+<div id="content">
+    <div id="main">
+        <div class="full_w">
+            <div class="h_title">Session Upload</div>
+            <form name="session_upload" id="session_upload" action="postdata_import.php" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="form_action" value="uploadSession" />
+				<!--<input type="hidden" name="locId" value="<?php echo $locId; ?>" />-->
+                <div class="custtable_left">
+					<div class="custtd_left">
+                        <h2>File Path<span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+						 <input type="file" name="uploadSess" class="buttonsub" value="Upload"><input style="margin-left:20px;" type="submit" name="Upload" value="Upload" class="buttonsub" />
+                    </div>
+                    <div class="clear"></div>					                    
+                    <div class="custtd_left">
+                        <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
+                    </div>
+					
+                </div>
+            </form>
+			<div class="clear"></div>
+			<div class="red" style="text-align:left; margin-left:305px;">
+					<?php
+					if((isset($_SESSION['error_msgArr'])) && (count($_SESSION['error_msgArr'])>0)){
+						foreach($_SESSION['error_msgArr'] as $errorData){
+							echo $errorData.'</br>';
+						}
+						unset($_SESSION['error_msgArr']);
+					}
+					?>
+			</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<?php include('footer.php'); ?>
+

@@ -898,6 +898,11 @@ class Programs extends Base {
 			$prgm_query="select * from program_years where id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $prgm_query);
 			return $q_res;
+	} 
+	public function getProgramWithNoOfCycle() {
+			$prgm_query="select pg.name, cl.id, cl.program_year_id, cl.no_of_cycle from program_years as pg LEFT JOIN cycle as cl ON pg.id = cl.program_year_id";
+			$q_res = mysqli_query($this->conn, $prgm_query);
+			return $q_res;
 	}   
 }
 

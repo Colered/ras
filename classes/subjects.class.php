@@ -202,7 +202,7 @@ class Subjects extends Base {
 
  /*function for all subjects for add form*/
  	public function getSubjects(){
-		$sql="SELECT id,subject_name FROM subject ORDER BY subject_name";
+		$sql="SELECT id,subject_name, subject_code FROM subject ORDER BY subject_name";
 		$result = $this->conn->query($sql);
 		return $result;
    }

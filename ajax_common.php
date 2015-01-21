@@ -627,7 +627,7 @@ switch ($codeBlock) {
         $act_hidden_id = trim($_POST['act_hidden_id']);
         //check if same session name already created
         $rule_query = "select id, session_name from subject_session where subject_id='" . $_POST['subjectId'] . "' and session_name = '" . $_POST['txtSessionName'] . "'";
-        if ($sess_hidden_id <> "") {
+        if ($sess_hidden_id <> ""){
             $rule_query .= " AND id != " . $sess_hidden_id . "";
         }
         $q_res = mysqli_query($db, $rule_query);
