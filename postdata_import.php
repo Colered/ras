@@ -63,7 +63,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			foreach($dataArr as $values){
 				//check if file headers are in expected format
 				if($count == 1){
-					if(strtolower(trim($values[0]))=="subject name" && strtolower(trim($values[1]))=="subject code" && strtolower(trim($values[2]))=="program" && strtolower(trim($values[3]))=="cycle" && strtolower(trim($values[4]))=="session name" && strtolower(trim($values[5]))=="order no" && strtolower(trim($values[6]))=="duration" && strtolower(trim($values[7]))=="teacher" && strtolower(trim($values[8]))=="room" && strtolower(trim($values[9]))=="date" && strtolower(trim($values[10]))=="start time" && strtolower(trim($values[11]))=="case no" && strtolower(trim($values[12]))=="technical notes" && strtolower(trim($values[13]))=="description"){
+					if(strtolower(trim($values[0]))=="program" && strtolower(trim($values[1]))=="cycle" && strtolower(trim($values[2]))=="subject name" && strtolower(trim($values[3]))=="subject code" && strtolower(trim($values[4]))=="session name" && strtolower(trim($values[5]))=="order no" && strtolower(trim($values[6]))=="duration" && strtolower(trim($values[7]))=="teacher" && strtolower(trim($values[8]))=="room" && strtolower(trim($values[9]))=="date" && strtolower(trim($values[10]))=="start time" && strtolower(trim($values[11]))=="case no" && strtolower(trim($values[12]))=="technical notes" && strtolower(trim($values[13]))=="description"){
 						//File format is correct
 					}else{
 						$errorArr[] = "File format is not same, one or more header names are not matching";
@@ -73,7 +73,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						exit;
 					}
 					$count++;
-				}else{
+				}elseif(strtolower(trim($values[0]))!="" && strtolower(trim($values[1]))!="" && strtolower(trim($values[2]))!="" && strtolower(trim($values[3]))!="" && strtolower(trim($values[4]))!="" && strtolower(trim($values[5]))!="" && strtolower(trim($values[6]))!="" && strtolower(trim($values[7]))!=""){
+					$timeTemp = array();
 					$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
 					$timeTemp = explode(':', $cell_value);
 					$duration = ($timeTemp[0]*60) + $timeTemp[1];
@@ -85,28 +86,28 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$errorArr[] = "Error in Row no:" .$count." Teacher name does not exist in the system";
 					}
 					//check if subject name 
-					$subNamekey = array_search($values[0], $subjNameArr);
+					$subNamekey = array_search($values[2], $subjNameArr);
 					if ($subNamekey) {
 						$subject_id = $subjIdsArr[$subNamekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Name does not exist in the system";
 					}
 					//check if subject code exist
-					$subCodekey = array_search($values[1], $subjCodeArr);
+					$subCodekey = array_search($values[3], $subjCodeArr);
 					if ($subCodekey) {
 						$subject_id = $subjIdsArr[$subCodekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Code does not exist in the system";
 					}
 					//check if program  name exist
-					$progNamekey = array_search($values[2], $progNameArr); $no_of_cycle="";
+					$progNamekey = array_search($values[0], $progNameArr); $no_of_cycle="";
 					if ($progNamekey) {
 						$program_year_id = $progYrIdsArr[$progNamekey];
 						$no_of_cycle  = $noOfCycleArr[$progNamekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Program name does not exist in the system";
 					}
-					if(($values[3] <= 0) || ($values[3] > $no_of_cycle) || ($values[3] = ''))
+					if(($values[1] <= 0) || ($values[1] > $no_of_cycle) || ($values[1] = ''))
 					{
 						$errorArr[] = "Error in Row no:" .$count." Program cycle does not exist in the system";
 					}
@@ -122,24 +123,24 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			if(count($errorArr)==0){
 				foreach($dataArr as $values){
 						//convert duration into minutes
-						echo $values[6];
-						$timeTemp = explode(':', $values[6]);
+						$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
+						$timeTemp = explode(':', $cell_value);
 						$duration = ($timeTemp[0]*60) + $timeTemp[1];
 						$teachkey = array_search($values[7], $teacNameArr);
 						if ($teachkey) {
 							$teacher_id = $teacIdsArr[$teachkey];
 						}
-						$subNamekey = array_search($values[0], $subjNameArr);
+						$subNamekey = array_search($values[2], $subjNameArr);
 						if ($subNamekey) {
 							$subject_id = $subjIdsArr[$subNamekey];
 						}
-						$progNamekey = array_search($values[2], $progNameArr); $noOfCycle="";
+						$progNamekey = array_search($values[0], $progNameArr); $noOfCycle="";
 						if ($progNamekey) {
 							$program_year_id = $progYrIdsArr[$progNamekey];
 							$cycle_id   = $cycleIdArr[$progNamekey];
 						}
 						//insert the session
-						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .$values[3]. "', '" .$values[4]. "', '" .$values[5]. "', '" .$values[13]. "', '" .$values[11]. "', '" .$values[12]. "', '" .$duration. "', NOW(), NOW());");
+						$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .$values[1]. "', '" .$values[4]. "', '" .$values[5]. "', '" .$values[13]. "', '" .$values[11]. "', '" .$values[12]. "', '" .$duration. "', NOW(), NOW());");
 						$sessionId = mysqli_insert_id($db);
 						if (mysqli_affected_rows($db) > 0) {
 							//get last created activity name
