@@ -57,7 +57,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$progNameArr[] = $row['name'];
 				$progYrIdsArr[] = $row['program_year_id'];
 				$noOfCycleArr[] = $row['no_of_cycle'];
-				$cycleIdArr[] = $row['id'];
+				$cycleIdArr[] = $row['cycleId'];
 			}
 			foreach($dataArr as $values){
 				//check if file headers are in expected format
@@ -83,10 +83,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Teacher name does not exist in the system";
 					}
-					//check if subject name 
+					//check if subject name exist 
 					$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
 					if(($subNamekey === 0) || ($subNamekey > 0)){
-						$subject_id = $subjIdsArr[$subNamekey];
+						//$subject_id = $subjIdsArr[$subNamekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Name does not exist in the system";
 					}
@@ -136,9 +136,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									$teacher_id = $teacIdsArr[$teachkey];
 								}
 								//$subNamekey = array_search($values[2], $subjNameArr);
-								$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
-								if(($subNamekey === 0) || ($subNamekey > 0)){
-									$subject_id = $subjIdsArr[$subNamekey];
+								$subCodekey =array_search(trim(strtolower($values[3])), array_map('strtolower', $subjCodeArr));
+								if(($subCodekey === 0) || ($subCodekey > 0)){
+									$subject_id = $subjIdsArr[$subCodekey];
 								}
 								//$progNamekey = array_search($values[0], $progNameArr); 
 								$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr));
