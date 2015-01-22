@@ -43,7 +43,7 @@ $locName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtLname'])? $ob
 						unset($_SESSION['error_msgArr']);
 					}
 					?>
-			</div>
+			</div><br /><br />
         </div>
         <div class="clear"></div>
     </div>
