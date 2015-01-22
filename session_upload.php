@@ -26,6 +26,10 @@ $locName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtLname'])? $ob
                     <div class="txtfield">
 						 <input type="file" name="uploadSess" class="buttonsub" value="Upload"><input style="margin-left:20px;" type="submit" name="Upload" value="Upload" class="buttonsub" />
                     </div>
+					<div class="clear"></div>
+					<div style="float:left; margin-left:292px;">	
+					Click <a href="sample/upload.xlsx" target="_blank">here</a> to download a sample file.
+					</div>
                     <div class="clear"></div>					                    
                     <div class="custtd_left">
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>

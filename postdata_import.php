@@ -28,7 +28,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			$errorArr = array();
 			if(count($dataArr)>1){
 			$count = 1;
-			//get the list of all available subject name, subject codes, areas, Program name and program cycle, teacher. room
 			require_once('config.php');
 			//get all Teacher in the array
 			$objT = new Teacher();								
@@ -52,7 +51,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			//get all program and cycle
 			$objP = new Programs();								
 			$respP = $objP->getProgramWithNoOfCycle();
-			$progNameArr = array(); $progYrIdsArr = array(); $noOfCycleArr = array();	
+			$progNameArr = array(); $progYrIdsArr = array(); $noOfCycleArr = array(); $cycleIdArr = array();	
 			while($row = mysqli_fetch_array($respP))
 			{
 				$progNameArr[] = $row['name'];
@@ -67,7 +66,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						//File format is correct
 					}else{
 						$errorArr[] = "File format is not same, one or more header names are not matching";
-						$_SESSION['error_msg'] = $errorArr;
+						$_SESSION['error_msgArr'] = $errorArr;
 						header('Location: session_upload.php');
 						exit;
 					}
@@ -105,6 +104,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					if(($progNamekey === 0) || ($progNamekey > 0)){
 						$program_year_id = $progYrIdsArr[$progNamekey];
 						$no_of_cycle  = $noOfCycleArr[$progNamekey];
+						$cycle_id   = $cycleIdArr[$progNamekey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Program name does not exist in the system";
 					}
