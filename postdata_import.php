@@ -148,7 +148,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									$cycle_id   = $cycleIdArr[$progNamekey];
 								}
 								//insert the session
-								$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .trim($values[1]). "', '" .trim($values[4]). "', '" .trim($values[5]). "', '" .trim($values[13]). "', '" .trim($values[11]). "', '" .trim($values[12]). "', '" .$duration. "', NOW(), NOW());");
+								$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .mysql_real_escape_string(trim($values[1])). "', '" .mysql_real_escape_string(trim($values[4])). "', '" .mysql_real_escape_string(trim($values[5])). "', '" .mysql_real_escape_string(trim($values[13])). "', '" .mysql_real_escape_string(trim($values[11])). "', '" .mysql_real_escape_string(trim($values[12])). "', '" .$duration. "', NOW(), NOW());");
 								$sessionId = mysqli_insert_id($db);
 								if ($sessionId!="") {
 									//get last created activity name
@@ -158,8 +158,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									$actName = 'A' . ($actCnt + 1);
 									//insert new activity
 									$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" .$program_year_id. "', '" .$cycle_id. "', '" .$subject_id. "', '" . $sessionId . "', '" . $teacher_id . "', '','', '', '', '', 0, NOW(), NOW(), 0);");
-								}else{
-									echo $total."not inserted"; die;
 								}
 						} $total++ ; 
 				}
