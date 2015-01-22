@@ -147,18 +147,30 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									$program_year_id = $progYrIdsArr[$progNamekey];
 									$cycle_id   = $cycleIdArr[$progNamekey];
 								}
-								//insert the session
-								$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .mysql_real_escape_string(trim($values[1])). "', '" .mysql_real_escape_string(trim($values[4])). "', '" .mysql_real_escape_string(trim($values[5])). "', '" .mysql_real_escape_string(trim($values[13])). "', '" .mysql_real_escape_string(trim($values[11])). "', '" .mysql_real_escape_string(trim($values[12])). "', '" .$duration. "', NOW(), NOW());");
-								$sessionId = mysqli_insert_id($db);
-								if ($sessionId!="") {
-									//get last created activity name
-									$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
-									$dRow = mysqli_fetch_assoc($result3);
-									$actCnt = substr($dRow['name'], 1);
-									$actName = 'A' . ($actCnt + 1);
-									//insert new activity
-									$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" .$program_year_id. "', '" .$cycle_id. "', '" .$subject_id. "', '" . $sessionId . "', '" . $teacher_id . "', '','', '', '', '', 0, NOW(), NOW(), 0);");
+								//check if session already exist
+								$resultQRY = mysqli_query($db, "SELECT id FROM subject_session WHERE subject_id='$subject_id' and cycle_no='$values[1]' and session_name='$values[4]' LIMIT 1");
+								$dRowQ = mysqli_fetch_assoc($resultQRY);
+								if (count($dRowQ) > 0) {
+									$sessionId = $dRowQ['id'];
+								}else{
+									$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .mysql_real_escape_string(trim($values[1])). "', '" .mysql_real_escape_string(trim($values[4])). "', '" .mysql_real_escape_string(trim($values[5])). "', '" .mysql_real_escape_string(trim($values[13])). "', '" .mysql_real_escape_string(trim($values[11])). "', '" .mysql_real_escape_string(trim($values[12])). "', '" .$duration. "', NOW(), NOW());");
+									$sessionId = mysqli_insert_id($db);
 								}
+								if ($sessionId!="") {
+									//check if activity already exists with same combination
+									$resultAct = mysqli_query($db, "SELECT id FROM teacher_activity WHERE program_year_id='$program_year_id' and subject_id='$subject_id' and cycle_id='$cycle_id' and session_id='$sessionId ' and teacher_id='$teacher_id' LIMIT 1");
+									$dRowAct = mysqli_fetch_row($resultAct); 
+									if (count($dRowAct) == 0) {
+										//get last created activity name
+										$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+										$dRow = mysqli_fetch_assoc($result3);
+										$actCnt = substr($dRow['name'], 1);
+										$actName = 'A' . ($actCnt + 1);
+										//insert new activity
+										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" .$program_year_id. "', '" .$cycle_id. "', '" .$subject_id. "', '" . $sessionId . "', '" . $teacher_id . "', '','', '', '', '', 0, NOW(), NOW(), 0);");
+									}
+								}
+								
 						} $total++ ; 
 				}
 				

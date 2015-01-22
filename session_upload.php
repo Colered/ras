@@ -7,8 +7,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$row = $result->fetch_assoc();
 }
 $locName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtLname'])? $obj->cleanText($_POST['txtLname']):'');
-//echo "<pre>";
-///print_r($_SESSION['error_msg']); //die;
 ?>
 <div id="content">
     <div id="main">
