@@ -5,6 +5,8 @@ $objB = new Buildings();
 $objTime = new Timetable();
 $result_time = $objTime->checkTimetable();
 $row_time = $result_time->fetch_assoc();
+$result_table = $objTime->getTimetablesData();
+$row_table = $result_table->fetch_assoc();
 $result_id = $objTime->getLowestActDetail();
 $row_id = $result_id->fetch_assoc();
 $result_act_id = $objTime->getLowestTeachAct($row_id['activity_id']);
@@ -17,10 +19,10 @@ $(document).ready(function(){
 	$('#datatables').dataTable({
 		"sPaginationType":"full_numbers",
 		"aaSorting":[[0, "asc"]],
-		"bJQueryUI":true
+		"bJQueryUI":true,
+		"sType": "date-uk"
 	});
 })
-
 </script>
 <style type="text/css">
 	@import "css/demo_table_jui.css";
@@ -70,20 +72,28 @@ $(document).ready(function(){
 					if($result->num_rows){
 						while($row = $result->fetch_assoc())
 						{
-							//echo $row['session_id']."---"; print"<pre>";print_r($session_array);print"</pre>";
+							//echo $row['session_id']."---"; print"<pre>";print_r($row);print"</pre>";die;
 							//print"<pre>";print_r($row);print"</pre>";die;
 							$ts_array = explode(",",$row['timeslot_id']);
 							$min_ts_id = $ts_array[0];
 							$max_ts_id = $ts_array[count($ts_array)-1];
-							if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
+							if(($row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date']) && $row['reserved_flag'] != 0)
 							{
-								$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
+								$trBColor1 = ' style="background-color:#66CCFF; color:#FFFFFF;"';
 								$tdColor = ' style="color:#FFFFFF;"';
-								$session_array[] = $row['session_id'];
 							}else{
-								$trBColor1 = '';
-								$tdColor = '';
+								if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
+								{
+									$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
+									$tdColor = ' style="color:#FFFFFF;"';
+									$session_array[] = $row['session_id'];
+								}else{
+									$trBColor1 = '';
+									$tdColor = '';
+								}
 							}
+							
+							
 							$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
 							$teacher_name = $row['teacher_name'].$email;
 							if($row['reserved_flag']==1)
@@ -100,7 +110,16 @@ $(document).ready(function(){
 							<td<?php echo $tdColor;?>><?php echo $row['session_name'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $teacher_name;?></td>
 							<td<?php echo $tdColor;?>><?php echo $objB->getRoomFullName($row['room_id']);?></td>
-							<td<?php echo $tdColor;?>><?php echo $objT->formatDate($row['act_date']);?></td>
+							<td<?php echo $tdColor;?>>
+								<?php if($row['act_date'] != "0000-00-00" && $row['act_date'] != null)
+								{
+									$date = date("Y-m-d",strtotime($row['act_date']));
+								}else{
+									$date = "";
+								}	
+								echo $date;
+								?>
+							</td>
 							<td<?php echo $tdColor;?>><?php echo $objT->getTimeslotById($min_ts_id,$max_ts_id);?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
