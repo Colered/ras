@@ -6369,13 +6369,14 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  $ret .= ' <option value="">All</option>';
 		foreach ( $subject as $K => $V ) {
 		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+		    $subj_name=$V['subject_name'].' ('.$V['subject_code'].')';
 			$ret .= '
 			<option value="' . $subject[$K]['id'] . '"';
 			if ( $subject_id == $subject[$K]['id'] ) {
 			$printerStr .= '<span id="cat">' . $catStr . ': ' . $subject[$K]['subject_name'] . '</span>';
 			$ret .= ' selected="selected"';
 			}
-			$ret .= ">{$V['subject_name']}</option>";
+			$ret .= ">{$subj_name}</option>";
 		  }
 		}
 	  }
