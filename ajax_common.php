@@ -728,7 +728,7 @@ switch ($codeBlock) {
                 if ($valid == 1) {
                     //start
                     $final_programs = array();
-                    $sql_pgm_cycle = mysqli_query($db, "select * from cycle where program_year_id = '" . $_POST['programId'] . "' and '" . $_POST['subSessDate'] . "' between start_week and end_week");
+					$sql_pgm_cycle = mysqli_query($db, "select * from cycle where program_year_id = '" . $_POST['programId'] . "' and '" . $_POST['subSessDate'] . "' >= start_week and '" . $_POST['subSessDate'] . "' <= end_week");
                     $dayFromDate = date('w', strtotime($_POST['subSessDate']));
                     $day = $dayFromDate - 1;
                     //$pgm_cycle_data = mysqli_fetch_assoc($sql_pgm_cycle);
@@ -764,7 +764,7 @@ switch ($codeBlock) {
                                         $sql_pgm_cycle_exp = mysqli_query($db, "SELECT exception_date from program_cycle_exception where program_year_id='" . $result_pgm_cycle['program_year_id'] . "' and exception_date='" . $_POST['subSessDate'] . "'");
                                         $sql_pgm_cycle_exp_cnt = mysqli_num_rows($sql_pgm_cycle_exp);
                                         if ($sql_pgm_cycle_exp_cnt <= 0) {
-                                            $final_programs[$i] = $result_pgm_cycle['program_year_id'];
+                                            $final_programs[] = $result_pgm_cycle['program_year_id'];
                                             //$i++;
                                         } else {
                                             echo 9;
@@ -822,7 +822,7 @@ switch ($codeBlock) {
                     $timestamp = strtotime($_POST['subSessDate']);
                     $startDateOfWeek = (date("D", $timestamp) == 'Mon') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Last Monday', $timestamp));
                     $endDateOfWeek = (date("D", $timestamp) == 'Sun') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Next Sunday', $timestamp));
-                    $query = "select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='" . $_POST['subjectId'] . "' and ta.reserved_flag=1 and ta.act_date > $startDateOfWeek and ta.act_date < $endDateOfWeek";
+                    $query = "select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='" . $_POST['subjectId'] . "' and ta.reserved_flag=1 and ta.act_date > '".$startDateOfWeek."' and ta.act_date < '".$endDateOfWeek."'";
                     if ($sess_hidden_id <> "") {
                         $query .= " AND ss.id != " . $sess_hidden_id . "";
                     }
@@ -1154,7 +1154,7 @@ switch ($codeBlock) {
                     $timestamp = strtotime($_POST['subSessDate']);
                     $startDateOfWeek = (date("D", $timestamp) == 'Mon') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Last Monday', $timestamp));
                     $endDateOfWeek = (date("D", $timestamp) == 'Sun') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Next Sunday', $timestamp));
-                    $query = "select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='" . $_POST['subjectId'] . "' and ta.reserved_flag=1 and ta.act_date > $startDateOfWeek and ta.act_date < $endDateOfWeek";
+                    $query = "select ss.*, ta.room_id, ta.act_date, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ss.subject_id='" . $_POST['subjectId'] . "' and ta.reserved_flag=1 and ta.act_date > '".$startDateOfWeek."' and ta.act_date < '".$endDateOfWeek."'";
                     if ($sess_hidden_id <> "") {
                         $query .= " AND ss.id != " . $sess_hidden_id . "";
                     }

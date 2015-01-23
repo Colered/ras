@@ -870,7 +870,6 @@ class Timetable extends Base {
 		$final_pgms = array();
 		$last_day = 5;
 		$program_list = '';
-		$i=0;
 		if(count($programs)>0)
 		{
 			$program_list.= " and(";
@@ -891,6 +890,7 @@ class Timetable extends Base {
 		{
 			while($result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle))
 			{
+				$i=0;
 				//if end date and start date are beyond the cycle date range
 				if($result_pgm_cycle['end_week'] > $end_date)
 				{

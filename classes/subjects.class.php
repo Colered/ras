@@ -268,8 +268,8 @@ class Subjects extends Base {
   //get weeks from date
   public function getWeekFromDate($date,$start_week,$end_week)
   {
-		$myweek = date("W",strtotime($date)) % 2 ;
-		if($myweek == '0')
+		$myweek = date("W",strtotime($date)) % 2;
+		if($myweek == '1')
 		{
 			return 1;
 		}else{
