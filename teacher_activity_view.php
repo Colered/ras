@@ -19,8 +19,7 @@ $(document).ready(function(){
 	$('#datatables').dataTable({
 		"sPaginationType":"full_numbers",
 		"aaSorting":[[0, "asc"]],
-		"bJQueryUI":true,
-		"sType": "date-uk"
+		"bJQueryUI":true
 	});
 })
 </script>
