@@ -9,9 +9,8 @@ $toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';
             <div class="h_title">Generate Timetable</div>
             <form action="postdata.php" method="post" name="timetable" id="timetable">
 			<input type="hidden" value="generateTimetable" name="form_action">
-			
-                <div class="custtable_left">
-					<div class="custtd_left red">
+				<div class="custtable_left">
+					<div class="red" style="padding-bottom:10px;">
 							<?php if(isset($_SESSION['error_msg']))
 								echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?>
 					</div>
@@ -46,12 +45,13 @@ $toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';
 						?>                         
                         </select>
 					</div>
+					<div class="txtfield" id="wait" style="display:none;width:450px;height:44px;position:initial;top:40%;left:50%;"><img src='images/bar-circle.gif' style="float:left" /><br><span style="float:left" ><strong>Grab a cup of coffee! ... this will take several minutes!...</strong></span></div>
 					<div class="clear"></div>
                     <div class="custtd_left">
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield" style="padding-left:41px; padding-top:10px;">
-                        <input type="submit" name="btnGenrtTimetbl" class="buttonsub" value="Generate Timetable">
+                        <input type="button" name="btnGenrtTimetbl" class="buttonsub btnGenertTimetbl" value="Generate Timetable">
                     </div>
                     <div class="txtfield" style="padding-top:10px;">
                         <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'timetable_dashboard.php';">

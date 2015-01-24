@@ -2551,3 +2551,57 @@ function opendialogToComfirmArea(){
       }
     });
 }
+//Generate the timetable 
+$(document).ready(function() {
+	$(".btnGenertTimetbl").click(function () {
+		$("#timetable").valid();
+		var schdTime=$("#txtAName").val();
+		var fromDate=$("#fromGenrtTmtbl").val();
+	    var toDate=$("#toGenrtTmtbl").val();
+		var programVal = new Array();
+		$("#programs option:selected").each(function(){
+			programVal.push($(this).val());
+  		});
+		if(schdTime!="" && fromDate!="" && toDate!="" && programVal.length!=0){
+		   $("#wait").show();
+		   if($("input.btnGenertTimetbl").attr("disabled", true)){
+			  $('.btnGenertTimetbl').addClass('clsbtnGenrtTimtblDisable'); 
+			}
+			  $.ajax({
+			   type: "POST",
+			   url: "ajax_common.php",
+			   data: {
+						'txtAName': schdTime,
+						'fromGenrtTmtbl': fromDate,
+						'toGenrtTmtbl': toDate,
+						'programs': programVal,
+						'codeBlock': 'generateTimetable',
+					 },
+					success: function($succ){
+						//alert($succ);
+						if($succ==1){
+							if($("input.btnGenertTimetbl").attr("disabled", false)){
+								 $('.btnGenertTimetbl').removeClass("clsbtnGenrtTimtblDisable");
+							 }
+							$("#wait").hide();
+							window.location.href = 'timetable_view.php';
+							//header('Location: timetable_view.php');
+						}else if($succ=="Session-Error" || $succ=="Name-Exist"){
+							if($("input.btnGenertTimetbl").attr("disabled", false)){
+								 $('.btnGenertTimetbl').removeClass("clsbtnGenrtTimtblDisable");
+							 }
+							$("#wait").hide();
+							window.location.href = 'generate_timetable.php?fromGenrtTmtbl='+fromDate+'&toGenrtTmtbl='+toDate;
+						}else if($succ=="Enter-Rquired-Feild"){
+							if($("input.btnGenertTimetbl").attr("disabled", false)){
+								 $('.btnGenertTimetbl').removeClass("clsbtnGenrtTimtblDisable");
+							 }
+							$("#wait").hide();
+							window.location.href = 'generate_timetable.php';
+						}
+					}
+			});
+		}
+		
+	});
+});

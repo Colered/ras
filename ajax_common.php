@@ -1468,5 +1468,115 @@ switch ($codeBlock) {
 			echo $dateRange;
 		}
 		break;
+		//Generate timetable
+		case 'generateTimetable':			
+			if($_POST['txtAName'] != "" && $_POST['fromGenrtTmtbl'] != "" &&  $_POST['toGenrtTmtbl'] != "" && $_POST['programs'] != "")
+			{
+				$obj = new Timetable();
+				$_SESSION['error_msg']='';
+				$fromGenrtTmtbl = $_POST['fromGenrtTmtbl'];
+				$toGenrtTmtbl = $_POST['toGenrtTmtbl'];
+				$name = $_POST['txtAName'];
+				$start_date = date('Y-m-d', strtotime($_POST['fromGenrtTmtbl']));
+				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
+				$programs = $_POST['programs'];
+				$program_list = implode(",",$programs);
+				if(!$obj->checkName($_POST['txtAName']))
+				{
+					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
+					$output_array = $obj->generateTimetable($start_date, $end_date,$programs);
+					if(isset($output_array['program_not_found'])){
+						$_SESSION['error_msg'] = $output_array['program_not_found'];
+					}elseif(isset($output_array['teacher_not_found'])){
+						$_SESSION['error_msg'] = $output_array['teacher_not_found'];
+					}elseif(isset($output_array['timeslot_not_found'])){
+						$_SESSION['error_msg'] = $output_array['timeslot_not_found'];
+					}elseif(isset($output_array['system_error'])){
+						$_SESSION['error_msg'] = $output_array['system_error'];
+					}
+					if(isset($_SESSION['error_msg']) && $_SESSION['error_msg']!='')
+					{
+					    echo "Session-Error";
+						exit;
+					}
+					if($output_array)
+					{
+						$obj->deleteData();
+						$res = $obj->addTimetable($_POST['txtAName'], $start_date, $end_date,$program_list);
+						if($res)
+						{
+							foreach($output_array as $key=>$value)
+							{
+								foreach($value as $newkey=>$val)
+								{
+									foreach($val as $k=>$v)
+									{
+										$timeslot = $k;
+										$tt_id = $res;
+										$activity_id = $v['activity_id'];
+										$program_year_id = $v['program_year_id'];
+										$area_id = $v['area_id'];
+										$teacher_id = $v['teacher_id'];
+										$group_id = $v['group_id'];
+										$room_id = $v['room_id'];
+										$session_id = $v['session_id'];
+										$room_name = $v['room_name'];
+										$name = $v['name'];
+										$program_name = $v['program_name'];
+										$subject_name = $v['subject_name'];
+										$session_name = $v['session_name'];
+										$teacher_name = $v['teacher_name'];
+										$teacher_type = $v['teacher_type'];
+										$cycle_id = $v['cycle_id'];
+										$subject_id = $v['subject_id'];
+										$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
+										$date = $v['date'];
+										$date_add = date("Y-m-d H:i:s");
+										$date_upd = date("Y-m-d H:i:s");
+
+										$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd,$cycle_id);
+										if($resp)
+										{
+											$ts_array = explode("-", $timeslot);
+											$entry_time = date("H:i",strtotime(trim($ts_array['0'])));
+											$st = strtotime($entry_time);
+											$et = strtotime(date("H:i",strtotime(trim($ts_array['1']))));
+											$duration = abs($et - $st) / 60;
+											$entry_array = explode(":", $entry_time);
+											$entry_hour = $entry_array['0'];
+											$entry_minute = $entry_array['1'];
+
+											$date_array = explode("-", $date);
+											$year = $date_array['0'];
+											$month = $date_array['1'];
+											$day = $date_array['2'];
+											//$zone=3600*+5;//India
+											date_default_timezone_set("America/New_York");
+											$eventstart = mktime ( $entry_hour, $entry_minute, 0, $month, $day, $year );
+											$eventstartdate = gmdate ( 'Ymd', $eventstart );
+											$cal_time = gmdate('His', $eventstart);
+											$cal_id = $obj->addWebCalEntry($eventstartdate, $cal_time, $name, $room_name, $description,$duration, $teacher_id, $subject_id, $room_id, $program_year_id,$cycle_id,$area_id,$teacher_type);
+											if($cal_id){
+												$obj->addWebCalEntryUser($cal_id);
+
+											}
+										}
+									}
+								}
+							}
+							echo 1;
+						}
+					}
+				}else{
+					$message="Timetable with this name already exist in database. Please choose a new one.";
+					$_SESSION['error_msg'] = $message;
+					echo "Name-Exist";
+			    }
+			}else{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+				echo "Enter-Rquired-Feild";
+			}
+			break;
 }
 ?>
