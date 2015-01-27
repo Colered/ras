@@ -42,7 +42,7 @@ $(document).ready(function(){
 			<div style="float:right">
 				<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
 				<input type="hidden" value="acceptAllocation" name="form_action">
-				<input  type="submit" class="buttonsub"  disabled="disabled" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
+				<input  type="button" class="buttonsub"  disabled="disabled" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
 				</form>
 			</div>
             <table id="datatables" class="display">
