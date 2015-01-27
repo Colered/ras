@@ -262,25 +262,8 @@ class Timetable extends Base {
 									//Here will check if the activity is not already allocated and all the sessions with lesser order number are allocated, we will proceed with this activity
 									if(!$this->search_array($result_reserv_act['name'],$reserved_array)) 
 									{
-										//Here will check a teacher can take maximum of 4 sessions per day
-										if((array_key_exists($date,$teachers_count) && array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]) && $teachers_count[$date][$result_reserv_act['teacher_id']] < 4) || !array_key_exists($date,$teachers_count) || !array_key_exists($result_reserv_act['teacher_id'],$teachers_count[$date]))
-										{											
-											//Here will check a teacher cannot have classes in different locations on same day
-											if((array_key_exists($date,$locations) && array_key_exists($result_reserv_act['teacher_id'],$locations[$date]) && $locations[$date][$result_reserv_act['teacher_id']] == $result_reserv_act['location_id']) || !array_key_exists($date,$locations) || !array_key_exists($result_reserv_act['teacher_id'],$locations[$date]))
-											{
-												$order_no_array = $this->getSubjectsWithLessOrder($result_reserv_act['subject_id'],$result_reserv_act['order_number']);
-												$order_no_value = 0;
-												foreach($order_no_array as $order_no)
-												{
-												   if($this->search_array($result_reserv_act['subject_id']."-".$order_no,$reserved_array))
-													{
-														$order_no_value++;
-													}else{
-														break;
-													}
-												}
-												if($order_no_value == count($order_no_array))
-												{														
+										
+																										
 													$forced_flag = $this->getForcedFlagVal($result_reserv_act['activity_id']);
 													$reserved_array[$date][$i][$start_time." - ".$end_time]['activity_id'] =  $result_reserv_act['activity_id'];
 													$reserved_array[$date][$i][$start_time." - ".$end_time]['name'] =  $result_reserv_act['name'];
@@ -331,9 +314,9 @@ class Timetable extends Base {
 													}
 													$locations[$date][$result_reserv_act['teacher_id']] = $result_reserv_act['location_id'];
 													break;													
-												}													
-											}											
-										}
+																									
+																						
+										
 									}							
 								}
 							}							
@@ -377,7 +360,7 @@ class Timetable extends Base {
 											if((array_key_exists($date,$teachers_count) && array_key_exists($result_free_act['teacher_id'],$teachers_count[$date]) && $teachers_count[$date][$result_free_act['teacher_id']] < 4) || !array_key_exists($date,$teachers_count) || !array_key_exists($result_free_act['teacher_id'],$teachers_count[$date]))
 											{												
 												//Here will check a teacher can have maximum of two saturdays working per cycle
-												if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_free_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)))
+												if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$result_free_act['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)) || ($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && !array_key_exists($result_free_act['teacher_id'],$teachers_sat[$cycle_id])))
 												{																			
 													//Here we will get the room of a subject that lies with in that week range
 													$room_id_res = $this->getRoomBySubject($result_free_act['subject_id'],$date);
@@ -1161,7 +1144,7 @@ class Timetable extends Base {
 	public function getSubjectsWithLessOrder($subject_id, $order_no)
 	{
 		//$order_no = array();
-		$sql_select = $this->conn->query("select order_number FROM `subject_session` WHERE subject_id = '".$subject_id."' and order_number < '".$order_no."'");
+		$sql_select = $this->conn->query("select order_number FROM `subject_session` WHERE subject_id = '".$subject_id."' and order_number < '".$order_no."' order by order_number desc limit 1");
 		$row_cnt = mysqli_num_rows($sql_select);
 		$order_no_arr = array();
 		if($row_cnt > 0)
