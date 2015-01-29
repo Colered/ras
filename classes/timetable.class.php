@@ -977,7 +977,7 @@ class Timetable extends Base {
 				while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
 				{
 					$ts_array = explode(",",$result_pgm_add_date['actual_timeslot_id']);
-					if(!empty($final_pgms))
+					if(isset($final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']]))
 					{
 						if(array_key_exists($result_pgm_add_date['additional_date'],$final_pgms[$result_pgm_cycle['program_year_id']][$result_pgm_cycle['id']]))
 						{
