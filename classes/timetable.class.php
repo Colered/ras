@@ -245,7 +245,7 @@ class Timetable extends Base {
 							$start_time = $this->getTimeSlots($timeslots);
 							$start_time = $start_time['0'];
 							$start_time =  date('h:i A',strtotime($start_time));
-							if($start_time >= $end_time)
+							if(strtotime($start_time) >= strtotime($end_time))
 							{								
 								$end_time = date("h:i A", strtotime($start_time." + 15 minutes"));
 								$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id,su.subject_name,su.area_id,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,ta.group_id,ta.room_id,r.room_name,s.order_number,ta.start_time, s.duration, ta.timeslot_id, b.location_id from teacher_activity ta 
