@@ -6324,7 +6324,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	' . ( empty ( $date ) ? '' : '<input type="hidden" name="' . ( $form != 'year' ? 'date' : 'year' ). '" value="' .( $form != 'year' ?  $date: strtok(date('Y-m-d',strtotime($date)), "-")). '" />' )
    . ( ! empty ( $user ) && $user != $login ? '<input type="hidden" name="user" value="' . $user . '" />' : '' )
    .'<lable style="padding-left:12px;"></lable>'
-   . "Program". ':<select name="program_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
+   . "Program". ': <select name="program_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
    	  // loading all program list
 	if ( is_array ( $programs ) ) {
 	  $ret .= ' <option value="">All</option>';
@@ -6343,6 +6343,29 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  }
 	  $ret .= ' </select>';
 	  $ret.='<lable style="padding-left:35px;"></lable>';
+	  $ret.=''."Cycle".': <select name="cycle_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
+	  // loading all cycle list
+	  $cycleArr=isset($cycle_id)?(explode("#",$cycle_id)):'';
+	  $cycle_val=(isset($cycleArr['1']))?(explode(",",$cycleArr['1'])):'';
+	  if ( is_array ( $cycle_result ) ) {
+	    $ret .= ' <option value="">All</option>';
+		foreach ( $cycle_result as $K => $V ) {
+			$option_text_val=$K+1;
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			
+			$ret .= '
+			<option value="' . $V .'#'.$option_text_val. '"';
+			if (((isset($cycle_val['0']))?($cycle_val['0']):'') == $option_text_val) {
+				$printerStr .= '<span id="cat">' . $catStr . ': ' .$option_text_val . '</span>';
+				$ret .= ' selected="selected"';
+			 }
+			$ret .= ">$option_text_val</option>";
+		  }
+		}
+	  }
+	  
+	  $ret .= ' </select>';
+	  $ret.='<lable style="padding-left:35px;"></lable>';
 	  $ret.=''."Teacher".': <select name="teacher_id" class="select-filter-dropdown slct-filter" onchange="document.SelectFilterForm.submit()">';
 	  // loading all teacher list
 	  if ( is_array ( $teacher ) ) {
@@ -6357,64 +6380,6 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 			$ret .= ' selected="selected"';
 			 }
 			$ret .= ">{$V['teacher_name']}</option>";
-		  }
-		}
-	  }
-	  
-	  $ret .= ' </select>';
-	  $ret.='<lable style="padding-left:35px;"></lable>';
-	  $ret.=''."Subject".': <select name="subject_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all subject list
-	 if ( is_array ( $subject ) ) {
-	  $ret .= ' <option value="">All</option>';
-		foreach ( $subject as $K => $V ) {
-		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-		    $subj_name=$V['subject_name'].' ('.$V['subject_code'].')';
-			$ret .= '
-			<option value="' . $subject[$K]['id'] . '"';
-			if ( $subject_id == $subject[$K]['id'] ) {
-			$printerStr .= '<span id="cat">' . $catStr . ': ' . $subject[$K]['subject_name'] . '</span>';
-			$ret .= ' selected="selected"';
-			}
-			$ret .= ">{$subj_name}</option>";
-		  }
-		}
-	  }
-	  
-	  $ret .= ' </select>';
-	  $ret.='<lable style="padding-left:35px; "></lable>';
-	  $ret.=''."Room".': <select name="room_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all room list
-	  if ( is_array ( $room ) ) {
-	  $ret .= ' <option value="">All</option>';
-		foreach ( $room as $K => $V ) {
-		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-			$ret .= '
-			<option value="' . $room[$K]['id'] . '"';
-			if ( $room_id == $room[$K]['id'] ) {
-				$printerStr .= '<span id="cat">' . $catStr . ': ' . $room[$K]['room_name'] . '</span>';
-				$ret .= ' selected="selected"';
-			}
-			$ret .= ">{$V['room_name']}</option>";
-		  }
-		}
-	  }
-	  $ret .= ' </select>';
-	  $ret.='<br><br>';
-	  $ret.='<lable style="margin-left:-165px;"></lable>';
-	  $ret.=''."Area".': <select name="area_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all area list
-	 if ( is_array ( $area ) ) {
-	  $ret .= ' <option value="">All</option>';
-		foreach ( $area as $K => $V ) {
-		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-			$ret .= '
-			<option value="' . $area[$K]['id'] . '"';
-			if ( $area_id == $area[$K]['id'] ) {
-				$printerStr .= '<span id="cat">' . $catStr . ': ' . $area[$K]['area_name'] . '</span>';
-				$ret .= ' selected="selected"';
-			}
-			$ret .= ">{$V['area_name']}</option>";
 		  }
 		}
 	  }
@@ -6440,28 +6405,63 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  }
 	  
 	  $ret .= ' </select>';
-	  $ret.='<lable style="padding-left:35px;"></lable>';
-	  $ret.=''."Cycle".': <select name="cycle_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
-	  // loading all cycle list
-	  $cycleArr=isset($cycle_id)?(explode("#",$cycle_id)):'';
-	  $cycle_val=(isset($cycleArr['1']))?(explode(",",$cycleArr['1'])):'';
-	  if ( is_array ( $cycle_result ) ) {
-	    $ret .= ' <option value="">All</option>';
-		foreach ( $cycle_result as $K => $V ) {
-			$option_text_val=$K+1;
+	  $ret.='<br><br>';
+	  $ret.='<lable style="margin-left:-220px;"></lable>';
+	  $ret.=''."Area".': <select name="area_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
+	  // loading all area list
+	 if ( is_array ( $area ) ) {
+	  $ret .= ' <option value="">All</option>';
+		foreach ( $area as $K => $V ) {
 		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
-			
 			$ret .= '
-			<option value="' . $V .'#'.$option_text_val. '"';
-			if (((isset($cycle_val['0']))?($cycle_val['0']):'') == $option_text_val) {
-				$printerStr .= '<span id="cat">' . $catStr . ': ' .$option_text_val . '</span>';
+			<option value="' . $area[$K]['id'] . '"';
+			if ( $area_id == $area[$K]['id'] ) {
+				$printerStr .= '<span id="cat">' . $catStr . ': ' . $area[$K]['area_name'] . '</span>';
 				$ret .= ' selected="selected"';
-			 }
-			$ret .= ">$option_text_val</option>";
+			}
+			$ret .= ">{$V['area_name']}</option>";
 		  }
 		}
 	  }
 	  
+	  $ret .= ' </select>';
+	  $ret.='<lable style="padding-left:35px;"></lable>';
+	  $ret.=''."Subject".': <select name="subject_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
+	  // loading all subject list
+	 if ( is_array ( $subject ) ) {
+	  $ret .= ' <option value="">All</option>';
+		foreach ( $subject as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+		    $subj_name=$V['subject_name'].' ('.$V['subject_code'].')';
+			$ret .= '
+			<option value="' . $subject[$K]['id'] . '"';
+			if ( $subject_id == $subject[$K]['id'] ) {
+			$printerStr .= '<span id="cat">' . $catStr . ': ' . $subject[$K]['subject_name'] . '</span>';
+			$ret .= ' selected="selected"';
+			}
+			$ret .= ">{$subj_name}</option>";
+		  }
+		}
+	  }
+	  
+	  $ret .= ' </select>';
+	   $ret.='<lable style="padding-left:35px; "></lable>';
+	  $ret.=''."Classroom".': <select name="room_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
+	  // loading all room list
+	  if ( is_array ( $room ) ) {
+	  $ret .= ' <option value="">All</option>';
+		foreach ( $room as $K => $V ) {
+		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
+			$ret .= '
+			<option value="' . $room[$K]['id'] . '"';
+			if ( $room_id == $room[$K]['id'] ) {
+				$printerStr .= '<span id="cat">' . $catStr . ': ' . $room[$K]['room_name'] . '</span>';
+				$ret .= ' selected="selected"';
+			}
+			$ret .= ">{$V['room_name']}</option>";
+		  }
+		}
+	  }
 	  $ret .= ' </select>';
 	  return $ret . ' 
     </form>'
