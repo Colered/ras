@@ -6,7 +6,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $result = $objP->getProgramById($programId);
     $row = $result->fetch_assoc();
     $unitArr[]= explode(',',$row['unit']);
-
     // set the value
     $button_save = 'Edit Program';
     $form_action = 'edit_program';
@@ -19,13 +18,8 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 $program_name = isset($_GET['edit']) ? $row['program_name'] : (isset($_POST['txtPrgmName'])? $_POST['txtPrgmName']:'');
 $company_name = isset($_GET['edit']) ? $row['company'] : (isset($_POST['txtCompanyName'])? $_POST['txtCompanyName']:'');
 $program_type = isset($_GET['edit']) ? $row['program_type'] : (isset($_POST['slctPrgmType'])? $_POST['slctPrgmType']:'');
-//$program_from_date = isset($_GET['edit']) ? $row['start_date'] : (isset($_POST['prog_from_date'])? $_POST['prog_from_date']:'');
-//$program_to_date = isset($_GET['edit']) ? $row['end_date'] : (isset($_POST['prog_to_date'])? $_POST['prog_to_date']:'');
-
+$max_session_no = isset($_GET['edit']) ? $row['max_no_session'] : (isset($_POST['maxSessNo'])? $_POST['maxSessNo']:'');
 $unitArr1 = isset($_GET['edit']) ? (isset($unitArr[0])? $unitArr[0]: array()) : (!empty($_POST['slctUnit']) ? $_POST['slctUnit'] : array());
-
-
-
 ?>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -35,6 +29,9 @@ $(document).ready(function() {
 	});
 });
 </script>
+<style>
+.custtd_left{ width:320px;}
+</style>
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -66,6 +63,48 @@ $(document).ready(function() {
 							<option value="3" <?php echo in_array(3,$unitArr1) ? 'selected' : ''?>>Tailored Programs</option>
 							<option value="4" <?php echo in_array(4,$unitArr1) ? 'selected' : ''?>>Activity</option>
                         </select>
+                    </div>
+					 <div class="clear"></div>
+                    <div class="custtd_left">
+                        <h2>Max No Sessions of Same Area during a Class day <span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+					<?php 
+						$maxsess = array();
+						if(count($max_session_no)>0){
+							$maxsess = explode('-', $max_session_no);
+						}
+					 ?>
+						<span>MON:</span> <select id="slctMon" name="maxSessNo[]" class="required">
+							<?php for($i=0; $i<=10; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxsess[0]) && $i == $maxsess[0]) || ((isset($maxsess[0]) && $maxsess[0]=='') && ($i==2))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>TUE:</span> <select id="slctTue" name="maxSessNo[]" class="required">
+							<?php for($i=0; $i<=10; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxsess[1]) && $i == $maxsess[1]) || ((!isset($maxsess[1]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>WED:</span> <select id="slctWed" name="maxSessNo[]" class="required">
+							<?php for($i=0; $i<=10; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxsess[2]) && $i == $maxsess[2]) || ((!isset($maxsess[2]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>THU:</span> <select id="slctThu" name="maxSessNo[]" class="required">
+							<?php for($i=0; $i<=10; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxsess[3]) && $i == $maxsess[3]) || ((!isset($maxsess[3]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>FRI:</span> <select id="slctFri" name="maxSessNo[]" class="required">
+							<?php for($i=0; $i<=10; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxsess[4]) && $i == $maxsess[4]) || ((!isset($maxsess[4]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>SAT:</span> <select id="slctSat" name="maxSessNo[]" class="required">
+							<?php for($i=0; $i<=10; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxsess[5]) && $i == $maxsess[5]) || ((!isset($maxsess[5]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
                     </div>
                     <div class="clear"></div>
 					<div class="custtd_left">
