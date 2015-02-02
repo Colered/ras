@@ -1517,7 +1517,6 @@ switch ($codeBlock) {
 										$program_year_id = $v['program_year_id'];
 										$area_id = $v['area_id'];
 										$teacher_id = $v['teacher_id'];
-										$group_id = $v['group_id'];
 										$room_id = $v['room_id'];
 										$session_id = $v['session_id'];
 										$room_name = $v['room_name'];
@@ -1534,7 +1533,7 @@ switch ($codeBlock) {
 										$date_add = date("Y-m-d H:i:s");
 										$date_upd = date("Y-m-d H:i:s");
 
-										$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $group_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd,$cycle_id);
+										$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd,$cycle_id);
 										if($resp)
 										{
 											$ts_array = explode("-", $timeslot);
