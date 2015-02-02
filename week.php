@@ -107,7 +107,17 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   $headerStr .= '
               <th ' . $class . '>'
    . ( $can_add ? html_for_add_icon ( $dateYmd, '', '', $user ) : '' )
-   . '<p style="margin:.75em 0 0 0"><a href="day.php?' . $u_url . 'date=' . $dateYmd . $caturl . '">'
+   . '<p style="margin:.75em 0 0 0"><a href="day.php?' . $u_url . 'date=' . $dateYmd . $caturl 
+	   . ( empty ( $_REQUEST['program_id'] ) ? '' : '&amp;program_id=' .$_REQUEST['program_id'] )
+	   . ( empty ( $_REQUEST['teacher_id'] ) ? '' : '&amp;teacher_id=' .$_REQUEST['teacher_id'] )
+	   . ( empty ( $_REQUEST['subject_id'] ) ? '' : '&amp;subject_id=' .$_REQUEST['subject_id'] )
+	   . ( empty ( $_REQUEST['room_id'] ) ? '' : '&amp;room_id=' .$_REQUEST['room_id'] )
+	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
+	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
+	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] ). '">'
    . $header[$i] . '</a></p></th>';
 
   $date = date ( 'Ymd', $days[$i] );

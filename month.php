@@ -18,16 +18,16 @@ if ( empty ( $user ) )
 }
  
  $cat_id = getValue ( 'cat_id', '-?[0-9,\-]*', true );
- $program_id=(isset($_POST['program_id']))?$_POST['program_id']:'';
- $teacher_id=(isset($_POST['teacher_id']))?$_POST['teacher_id']:'';
- $subject_id=(isset($_POST['subject_id']))?$_POST['subject_id']:'';
- $room_id=(isset($_POST['room_id']))?$_POST['room_id']:'';
- $area_id=(isset($_POST['area_id']))?$_POST['area_id']:'';
- $teacher_type_id=(isset($_POST['teacher_type_id']))?$_POST['teacher_type_id']:'';
- $cycle_id=(isset($_POST['cycle_id']))?$_POST['cycle_id']:'';
- $room_filter_id = (isset($_POST['room_avail_id']))?$_POST['room_avail_id']:'';
- $teacher_filter_id = (isset($_POST['teacher_avail_id']))?$_POST['teacher_avail_id']:'';
- $program_filter_id = (isset($_POST['program_avail_id']))?$_POST['program_avail_id']:''; 
+ $program_id=(isset($_REQUEST['program_id']))?$_REQUEST['program_id']:'';
+ $teacher_id=(isset($_REQUEST['teacher_id']))?$_REQUEST['teacher_id']:'';
+ $subject_id=(isset($_REQUEST['subject_id']))?$_REQUEST['subject_id']:'';
+ $room_id=(isset($_REQUEST['room_id']))?$_REQUEST['room_id']:'';
+ $area_id=(isset($_REQUEST['area_id']))?$_REQUEST['area_id']:'';
+ $teacher_type_id=(isset($_REQUEST['teacher_type_id']))?$_REQUEST['teacher_type_id']:'';
+ $cycle_id=(isset($_REQUEST['cycle_id']))?$_REQUEST['cycle_id']:'';
+ $room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
+ $teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
+ $program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:''; 
 
 load_user_categories ();
 $next = mktime ( 0, 0, 0, $thismonth + 1, 1, $thisyear );

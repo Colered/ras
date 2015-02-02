@@ -82,7 +82,17 @@ $get_unapproved = ( $DISPLAY_UNAPPROVED == 'Y' );
 
 $nextStr = translate ( 'Next' );
 $prevStr = translate ( 'Previous' );
-$userStr = ( empty ( $user ) ? '' : '&amp;user=' . $user );
+$userStr = ( empty ( $user ) ? '' : '&amp;user=' . $user )
+	   . ( empty ( $_REQUEST['program_id'] ) ? '' : '&amp;program_id=' .$_REQUEST['program_id'] )
+	   . ( empty ( $_REQUEST['teacher_id'] ) ? '' : '&amp;teacher_id=' .$_REQUEST['teacher_id'] )
+	   . ( empty ( $_REQUEST['subject_id'] ) ? '' : '&amp;subject_id=' .$_REQUEST['subject_id'] )
+	   . ( empty ( $_REQUEST['room_id'] ) ? '' : '&amp;room_id=' .$_REQUEST['room_id'] )
+	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
+	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
+	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] );
 
 $fullnameStr='';
 if ( $single_user == 'N' ) {

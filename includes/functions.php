@@ -1015,7 +1015,17 @@ function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id=
         <td class="weekcell"><a title="' . $weekStr . ' ' . $tmp . '" href="'
        . ( $demo ? '' : 'week.php?date=' . date ( 'Ymd', $i + 86400 ) )
        . ( ! empty ( $user ) && $user != $login ? '&amp;user=' . $user : '' )
-       . ( empty ( $cat_id ) ? '' : '&amp;cat_id=' . $cat_id ) . '"' . '>';
+       . ( empty ( $cat_id ) ? '' : '&amp;cat_id=' . $cat_id )
+	   . ( empty ( $_REQUEST['program_id'] ) ? '' : '&amp;program_id=' .$_REQUEST['program_id'] )
+	   . ( empty ( $_REQUEST['teacher_id'] ) ? '' : '&amp;teacher_id=' .$_REQUEST['teacher_id'] )
+	   . ( empty ( $_REQUEST['subject_id'] ) ? '' : '&amp;subject_id=' .$_REQUEST['subject_id'] )
+	   . ( empty ( $_REQUEST['room_id'] ) ? '' : '&amp;room_id=' .$_REQUEST['room_id'] )
+	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
+	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
+	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] ). '"' . '>';
 	
 	  $wkStr = $WKStr . $tmp;
       $wkStr2 = '';
@@ -1118,7 +1128,17 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
   $u_url = ( ! empty ( $user ) && $user != $login
-    ? 'user=' . $user . '&amp;' : '' );
+    ? 'user=' . $user . '&amp;' : '' )
+	   . ( empty ( $_REQUEST['program_id'] ) ? '' : '&amp;program_id=' .$_REQUEST['program_id'] )
+	   . ( empty ( $_REQUEST['teacher_id'] ) ? '' : '&amp;teacher_id=' .$_REQUEST['teacher_id'] )
+	   . ( empty ( $_REQUEST['subject_id'] ) ? '' : '&amp;subject_id=' .$_REQUEST['subject_id'] )
+	   . ( empty ( $_REQUEST['room_id'] ) ? '' : '&amp;room_id=' .$_REQUEST['room_id'] )
+	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
+	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
+	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] ).'&amp;';
   $ret = '
       <div class="top-view-name"'
   // Hack to prevent giant space between minicals and navigation in IE.
@@ -1216,7 +1236,17 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
   $u_url = ( $user != $login && ! empty ( $user )
-    ? 'user=' . $user . '&amp;' : '' );
+    ? 'user=' . $user . '&amp;' : '' )
+	   . ( empty ( $_REQUEST['program_id'] ) ? '' : '&amp;program_id=' .$_REQUEST['program_id'] )
+	   . ( empty ( $_REQUEST['teacher_id'] ) ? '' : '&amp;teacher_id=' .$_REQUEST['teacher_id'] )
+	   . ( empty ( $_REQUEST['subject_id'] ) ? '' : '&amp;subject_id=' .$_REQUEST['subject_id'] )
+	   . ( empty ( $_REQUEST['room_id'] ) ? '' : '&amp;room_id=' .$_REQUEST['room_id'] )
+	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
+	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
+	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] ).'&amp;';
   $weekStr = translate ( 'Week' );
   $teacher_exception_date=$holiday_date=array();
   $objH =new Holidays();
@@ -4510,9 +4540,19 @@ function print_date_entries ( $date, $user, $ssi = false) {
     $moon_title = ( empty ( $tmp ) ? '' : translate ( ucfirst ( $tmp )
      . ( strpos ( 'fullnew', $tmp ) !== false ? '' : ' Quarter' ) . ' Moon' ) );
     $ret ='<a class="dayofmonth" href="day.php?' . $userCatStr . 'date=' . $date
-     . '">' . substr ( $date, 6, 2 ) . '</a>' . ( empty ( $tmp )
+       . ( empty ( $_REQUEST['program_id'] ) ? '' : '&amp;program_id=' .$_REQUEST['program_id'] )
+	   . ( empty ( $_REQUEST['teacher_id'] ) ? '' : '&amp;teacher_id=' .$_REQUEST['teacher_id'] )
+	   . ( empty ( $_REQUEST['subject_id'] ) ? '' : '&amp;subject_id=' .$_REQUEST['subject_id'] )
+	   . ( empty ( $_REQUEST['room_id'] ) ? '' : '&amp;room_id=' .$_REQUEST['room_id'] )
+	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
+	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
+	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] ). '">' . substr ( $date, 6, 2 ) . '</a>' . ( empty ( $tmp )
       ? '' : '<img src="images/' . $tmp . 'moon.gif" title="' . $moon_title
       . '" alt="' . $moon_title . '" />' ) . "<br />\n";
+
     $cnt++;
   }
   // Get, combime and sort the events for this date.
@@ -6341,7 +6381,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 	  $ret.='<lable style="padding-left:35px;"></lable>';
 	  $ret.=''."Cycle".': <select name="cycle_id" class="select-filter-dropdown slct-filter"  onchange="document.SelectFilterForm.submit()">';
 	  // loading all cycle list
-	  $cycleArr=isset($cycle_id)?(explode("#",$cycle_id)):'';
+	  $cycleArr=isset($cycle_id)?(explode("-",$cycle_id)):'';
 	  $cycle_val=(isset($cycleArr['1']))?(explode(",",$cycleArr['1'])):'';
 	  if ( is_array ( $cycle_result ) ) {
 	    $ret .= ' <option value="">All</option>';
@@ -6350,7 +6390,7 @@ function print_filter_menu ( $form, $date = '', $program_id='',$teacher_id='',$s
 		  if ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login )) {
 			
 			$ret .= '
-			<option value="' . $V .'#'.$option_text_val. '"';
+			<option value="' . $V .'-'.$option_text_val. '"';
 			if (((isset($cycle_val['0']))?($cycle_val['0']):'') == $option_text_val) {
 				$printerStr .= '<span id="cat">' . $catStr . ': ' .$option_text_val . '</span>';
 				$ret .= ' selected="selected"';

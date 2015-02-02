@@ -330,26 +330,26 @@ function print_menu_dates ( $menu = false ) {
       ( ! $user || $user == $login ) ? '
               <input type="hidden" name="cat_id" value="'
        . $cat_id . '" />' : '' ) 
-	 . ( !empty ( $_POST['program_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['program_id'].'" name="program_id">' : '' )
-	 . ( !empty ( $_POST['teacher_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_id'].'" name="teacher_id">' : '' )
-	 . ( !empty ( $_POST['subject_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['subject_id'].'" name="subject_id">' : '' )
-	 . ( !empty ( $_POST['room_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['room_id'].'" name="room_id">' : '' )
-	 . ( !empty ( $_POST['area_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['area_id'].'" name="area_id">' : '' )
-	 . ( !empty ( $_POST['teacher_type_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_type_id'].'" name="teacher_type_id">' : '' )
-	 . ( !empty ( $_POST['cycle_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['cycle_id'].'" name="cycle_id">' : '' )
-	 . ( !empty ( $_POST['program_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['program_avail_id'].'" name="program_avail_id">' : '' )
-	 . ( !empty ( $_POST['room_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['room_avail_id'].'" name="room_avail_id">' : '' )
-	 . ( !empty ( $_POST['teacher_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ).'
+	 . ( !empty ( $_REQUEST['program_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['program_id'].'" name="program_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_id'].'" name="teacher_id">' : '' )
+	 . ( !empty ( $_REQUEST['subject_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['subject_id'].'" name="subject_id">' : '' )
+	 . ( !empty ( $_REQUEST['room_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['room_id'].'" name="room_id">' : '' )
+	 . ( !empty ( $_REQUEST['area_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['area_id'].'" name="area_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_type_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_type_id'].'" name="teacher_type_id">' : '' )
+	 . ( !empty ( $_REQUEST['cycle_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['cycle_id'].'" name="cycle_id">' : '' )
+	 . ( !empty ( $_REQUEST['program_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['program_avail_id'].'" name="program_avail_id">' : '' )
+	 . ( !empty ( $_REQUEST['room_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['room_avail_id'].'" name="room_avail_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ).'
 	               
               <select name="date" id="monthselect" '
      . 'onchange="document.SelectMonth.submit()" class="menu-select-filter">';
@@ -418,26 +418,26 @@ function print_menu_dates ( $menu = false ) {
       ( ! $user || $user == $login ) ? '
               <input type="hidden" name="cat_id" value="'
        . $cat_id . '" />' : '' )
-	 . ( !empty ( $_POST['program_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['program_id'].'" name="program_id">' : '' )
-	 . ( !empty ( $_POST['teacher_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_id'].'" name="teacher_id">' : '' )
-	 . ( !empty ( $_POST['subject_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['subject_id'].'" name="subject_id">' : '' )
-	 . ( !empty ( $_POST['room_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['room_id'].'" name="room_id">' : '' )
-	 . ( !empty ( $_POST['area_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['area_id'].'" name="area_id">' : '' )
-	 . ( !empty ( $_POST['teacher_type_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_type_id'].'" name="teacher_type_id">' : '' )
-	 . ( !empty ( $_POST['cycle_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['cycle_id'].'" name="cycle_id">' : '' )
-	 . ( !empty ( $_POST['program_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['program_avail_id'].'" name="program_avail_id">' : '' )
-	 . ( !empty ( $_POST['room_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['room_avail_id'].'" name="room_avail_id">' : '' )
-	 . ( !empty ( $_POST['teacher_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ). '
+	 . ( !empty ( $_REQUEST['program_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['program_id'].'" name="program_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_id'].'" name="teacher_id">' : '' )
+	 . ( !empty ( $_REQUEST['subject_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['subject_id'].'" name="subject_id">' : '' )
+	 . ( !empty ( $_REQUEST['room_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['room_id'].'" name="room_id">' : '' )
+	 . ( !empty ( $_REQUEST['area_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['area_id'].'" name="area_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_type_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_type_id'].'" name="teacher_type_id">' : '' )
+	 . ( !empty ( $_REQUEST['cycle_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['cycle_id'].'" name="cycle_id">' : '' )
+	 . ( !empty ( $_REQUEST['program_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['program_avail_id'].'" name="program_avail_id">' : '' )
+	 . ( !empty ( $_REQUEST['room_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['room_avail_id'].'" name="room_avail_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ). '
 
               <select name="date" id="weekselect" '
      . 'onchange="document.SelectWeek.submit()">';
@@ -508,26 +508,26 @@ function print_menu_dates ( $menu = false ) {
       ( ! $user || $user == $login ) ? '
               <input type="hidden" name="cat_id" value="'
        . $cat_id . '" />' : '' )
-	 . ( !empty ( $_POST['program_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['program_id'].'" name="program_id">' : '' )
-	 . ( !empty ( $_POST['teacher_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_id'].'" name="teacher_id">' : '' )
-	 . ( !empty ( $_POST['subject_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['subject_id'].'" name="subject_id">' : '' )
-	 . ( !empty ( $_POST['room_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['room_id'].'" name="room_id">' : '' )
-	 . ( !empty ( $_POST['area_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['area_id'].'" name="area_id">' : '' )
-	 . ( !empty ( $_POST['teacher_type_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_type_id'].'" name="teacher_type_id">' : '' )
-	 . ( !empty ( $_POST['cycle_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['cycle_id'].'" name="cycle_id">' : '' ) 
-	 . ( !empty ( $_POST['program_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['program_avail_id'].'" name="program_avail_id">' : '' )
-	 . ( !empty ( $_POST['room_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['room_avail_id'].'" name="room_avail_id">' : '' )
-	 . ( !empty ( $_POST['teacher_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_POST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ). '
+	 . ( !empty ( $_REQUEST['program_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['program_id'].'" name="program_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_id'].'" name="teacher_id">' : '' )
+	 . ( !empty ( $_REQUEST['subject_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['subject_id'].'" name="subject_id">' : '' )
+	 . ( !empty ( $_REQUEST['room_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['room_id'].'" name="room_id">' : '' )
+	 . ( !empty ( $_REQUEST['area_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['area_id'].'" name="area_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_type_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_type_id'].'" name="teacher_type_id">' : '' )
+	 . ( !empty ( $_REQUEST['cycle_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['cycle_id'].'" name="cycle_id">' : '' ) 
+	 . ( !empty ( $_REQUEST['program_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['program_avail_id'].'" name="program_avail_id">' : '' )
+	 . ( !empty ( $_REQUEST['room_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['room_avail_id'].'" name="room_avail_id">' : '' )
+	 . ( !empty ( $_REQUEST['teacher_avail_id'] ) ? '
+			  <input type="hidden" value="'.$_REQUEST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ). '
               <select name="year" id="yearselect" '
      . 'onchange="document.SelectYear.submit()">';
   
