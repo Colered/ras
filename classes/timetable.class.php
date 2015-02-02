@@ -55,6 +55,7 @@ class Timetable extends Base {
    	}
 	public function getCycleId($date,$program_id)
 	{
+		$cycle_id="";
 		$cyc_sql = "SELECT * FROM cycle WHERE program_year_id ='".$program_id."' and start_week <= '".$date."' and end_week >= '".$date."'";
 		$q_res = mysqli_query($this->conn, $cyc_sql);
 		$data = mysqli_fetch_array($q_res);
