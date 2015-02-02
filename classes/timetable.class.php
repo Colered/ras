@@ -237,12 +237,12 @@ class Timetable extends Base {
 					//check if the date is a holiday. If not proceed further
 					if(!in_array($date,$holidays))
 					{
-						$sat_flag = 0;							
+						$end_time = '';	
+						$sat_flag = 0;
+						$reserved_timeslots = array();								
 						$f_day = $this->getDayFromDate($date);
 						if(array_key_exists($date,$reserved_activities))
 						{
-							$end_time = '';	
-							$reserved_timeslots = array();
 							foreach($v as $start_id)
 							{
 								$timeslots = array();
