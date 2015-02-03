@@ -1481,8 +1481,8 @@ switch ($codeBlock) {
 				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
 				$programs = $_POST['programs'];
 				$program_list = implode(",",$programs);
-				if(!$obj->checkName($_POST['txtAName']))
-				{
+				/*if(!$obj->checkName($_POST['txtAName']))
+				{*/
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
 					$output_array = $obj->generateTimetable($start_date, $end_date,$programs);
 					if(isset($output_array['program_not_found'])){
@@ -1566,11 +1566,11 @@ switch ($codeBlock) {
 							echo 1;
 						}
 					}
-				}else{
+				/*}else{
 					$message="Timetable with this name already exist in database. Please choose a new one.";
 					$_SESSION['error_msg'] = $message;
 					echo "Name-Exist";
-			    }
+			    }*/
 			}else{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
