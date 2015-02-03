@@ -322,12 +322,7 @@ class Timetable extends Base {
 						{
 							$total_timeslots[] = $start_id;
 						}
-						if(isset($reserved_timeslots))
-						{
-							$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);	
-						}else{
-							$unreserved_timeslots = $total_timeslots;
-						}
+						$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);	
 						$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 						
 						$free_activities = $this->searchFreeActivities($program_id, $cycle_id);
@@ -570,7 +565,7 @@ class Timetable extends Base {
 		left join teacher t on t.id = ta.teacher_id
 		left join room r on r.id = ta.room_id
 		left join building b on r.building_id = b.id
-		where reserved_flag = 1 order by ta.act_date");
+		where reserved_flag = 1");
 		while($result_reserv_act = mysqli_fetch_array($sql_reserv_act))
 		{
 			$reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['activity_id'] = $result_reserv_act['activity_id'];
