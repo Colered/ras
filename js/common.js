@@ -655,6 +655,10 @@ function checkAvailability($forcing) {
 							$('#showstatusNoAvail').show();
 							opendialogToComfirmArea();
 							//alert('The sessions scheduled on Saturdays should be from the same academic area.');
+						}else if($succ==14){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Maximum number of sessions for the selected area and date has been exceeded.');
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -746,6 +750,10 @@ function addSubjectSession($forcing,$force_flag){
 						}else if($succ==13){							
 							opendialogToComfirmArea();
 							//alert('The sessions scheduled on Saturdays should be from the same academic area.');
+						}else if($succ==14){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Maximum number of sessions for the selected area and date has been exceeded.');
 						}else{
 							alert("Cannot create the session.");
 						}
