@@ -134,7 +134,9 @@ echo <<<EOT
 		  		<p>
 					<div>
 					   <div class="legend-only" ><strong >Legend:</strong></div>
-					   <div class="legend-color-avail" > </div><label class="legend-label">Available</label>
+					   <div class="legend-color-free-ts" > </div><label class="legend-label">Completely Free</label>
+					   <div class="legend-color-partial-free-ts" > </div><label class="legend-label">Partially Free</label>
+					   <div class="legend-color-not-free-ts" > </div><label class="legend-label">Completely Allocated</label>
 					   <div class="legend-color-use" > </div><label class="legend-label">In Use</label>
 					   <div class="legend-color-holiday" > </div><label class="legend-label">Holiday</label>
 					   <div class="legend-color-excp" > </div><label >Exception</label>
