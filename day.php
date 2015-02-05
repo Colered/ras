@@ -49,7 +49,7 @@ $startdate = mktime ( 0, 0, 0, $thismonth, 0, $thisyear );
 $enddate = mktime ( 23, 59, 59, $thismonth + 1, 0, $thisyear );
 
 $printerStr = $unapprovedStr = '';
-
+$new_event_Arr=array();
 /* Pre-Load the repeated events for quckier access */
 $repeated_events = read_repeated_events ( empty ( $user )
   ? $login : $user, $startdate, $enddate, $cat_id );
@@ -59,6 +59,16 @@ $repeated_events = read_repeated_events ( empty ( $user )
 	}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
 	$events_detail = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id	);
 	$events=$events_detail[0];
+	$rows_detail=isset($events_detail[2])?$events_detail[2]:'';
+	$date_var='';
+	foreach ($rows_detail as $key => $val){
+		foreach ($val as $key_new=>$val_new){
+				if($key_new=='3'){
+					$date_var=$val_new;
+				}
+		}
+		$new_event_Arr[$date_var]=$val;
+	}
 	$exception_dates=(isset($events_detail[1]) && $events_detail[1]!='')? $events_detail[1] : '';
   }else{
  		$events = read_events (empty ( $user ) ? $user : $login,$startdate, $enddate, $cat_id);
@@ -72,9 +82,9 @@ if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
 $smallTasks = ( $DISPLAY_TASKS == 'Y' ? '<div id="minitask">
            ' . display_small_tasks ( $cat_id ) . '
           </div>' : '' );
-$dayStr = print_day_at_a_glance ( $nowYmd, ( empty ( $user ) ? $login : $user ), $can_add, $room_filter_id, $teacher_filter_id, $program_filter_id,$exception_dates);
+$dayStr = print_day_at_a_glance ( $nowYmd, ( empty ( $user ) ? $login : $user ), $can_add, $room_filter_id, $teacher_filter_id, $program_filter_id,$exception_dates,$new_event_Arr);
 $navStr = display_navigation ( 'day' );
-$smallMonthStr = display_small_month ( $thismonth, $thisyear, true ,false,'','','',$room_filter_id,$teacher_filter_id,$program_filter_id,$exception_dates);
+$smallMonthStr = display_small_month ( $thismonth, $thisyear, true ,false,'','','',$room_filter_id,$teacher_filter_id,$program_filter_id,$exception_dates,$new_event_Arr);
 if ( empty ( $friendly ) ) {
   $unapprovedStr = display_unapproved_events (
     $is_assistant || $is_nonuser_admin ? $user : $login );

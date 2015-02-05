@@ -125,5 +125,88 @@ class Timeslot extends Base {
 			$ts_val=implode(',',$allTSVal);
 			return $ts_val;
 	}
+	//get the allocated activities dates with timeslots
+	public function getAllocatedDates($class_id='',$teacher_id='',$program_year_id='')
+	{
+		$allocatedDates = array();
+		$objT = new Teacher();
+		if(isset($class_id) && $class_id!=""){
+			 $res_sql = "select date,group_concat(timeslot) as timeslot  from  timetable_detail td where room_id = '".$class_id."'  group by date";
+		}else if(isset($teacher_id) && $teacher_id!=""){
+			 $res_sql = "select date,group_concat(timeslot) as timeslot from  timetable_detail td where teacher_id = '".$teacher_id."'  group by date";
+		}else{
+			 $res_sql = "select date,group_concat(timeslot) as timeslot from  timetable_detail td where program_year_id = '".$program_year_id."'  group by date";
+		}
+		
+		$res_query = mysqli_query($this->conn, $res_sql);
+		while($data = $res_query->fetch_assoc()){
+			$all_ts = $this -> getTimeslotIds($data['timeslot']);
+			$activity_date = date("Ymd",strtotime($data['date']));
+			$allocatedDates[$activity_date]['act_date'] =  $activity_date;
+			$allocatedDates[$activity_date]['ts_id'] =  $all_ts;
+		}
+		/*echo '<pre>';
+		print_r($allocatedDates);die;*/
+		return $allocatedDates;		
+	}
+	//get the timetable ids
+	public function getTimeslotIds($dateRange)
+	{		
+			//echo '<pre>';
+	        //print_r($dateRange);
+			$timeRangeArr=explode(',',$dateRange);
+			foreach($timeRangeArr as $value){
+				$time = explode("-",$value);
+				$start_time  = trim($time['0']);
+				$end_time = trim($time['1']);
+				$sql_time_slct = "select id from timeslot where start_time = '".$start_time."' OR end_time = '".$end_time."'";
+				//get all the ids between two nos
+				$q_res= mysqli_query($this->conn, $sql_time_slct);
+				$tempIdRange= array();
+				while($data = $q_res->fetch_assoc()){
+					$tempIdRange[] =  $data['id'];
+				}
+				for($i=min($tempIdRange); $i<=max($tempIdRange); $i++){
+					$timeslots[] = $i;
+				}				
+				$timeslotIds = implode(',',$timeslots);	
+		   }	
+		   //echo '<br>'.'===========================';
+		   //print_r($timeslotIds);
+		   return $timeslotIds;
+	}
+	//getting timeslote date range to show the allocated timeslot on view calender
+	public function getAllocatedTSRangeForView($teacher_id,$class_room_id,$program_year_id,$date)
+	{
+		$ts_rangeArr=array();
+	    $allocated_date=date("Y-m-d", strtotime($date));
+		if(isset($class_room_id) && $class_room_id!=""){
+			$res_sql = "select date,group_concat(timeslot) as timeslot from  timetable_detail td where room_id = '".$class_room_id."' and date='".$allocated_date."' group by date";
+		}else if(isset($teacher_id) && $teacher_id!=""){
+			$res_sql = "select date,group_concat(timeslot) as timeslot from  timetable_detail td where teacher_id = '".$teacher_id."' and date='".$allocated_date."' group by date";
+		}else{
+			$res_sql = "select date,group_concat(timeslot) as timeslot from  timetable_detail td where program_year_id = '".$program_year_id."' and date='".$allocated_date."' group by date";
+		}
+		$res_query = mysqli_query($this->conn, $res_sql);
+		$data = $res_query->fetch_assoc();
+		$ts_rangeArr=explode(',',$data['timeslot']);
+		return $ts_rangeArr;		
+	}
+	//getting all allocated date
+	public function getAllAllocatedDate($teacher_id,$class_id,$program_year_id){
+		$allocated_date_Arr=array();
+		if($program_year_id!=""){
+			$sql_query="SELECT date FROM timetable_detail WHERE program_year_id ='".$program_year_id."' GROUP BY date";
+		}elseif($teacher_id!=""){
+			$sql_query="SELECT date FROM timetable_detail WHERE teacher_id ='".$teacher_id."' GROUP BY date";
+		}else{
+			$sql_query="SELECT date FROM timetable_detail WHERE room_id  ='".$class_id."' GROUP BY date";
+		}
+		$res_query = mysqli_query($this->conn, $sql_query);
+		while($data = mysqli_fetch_array($res_query)){
+				$allocated_date_Arr[]=date("Ymd", strtotime($data['date']));
+		}
+		return $allocated_date_Arr;
+	}
 
 }

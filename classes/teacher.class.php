@@ -544,4 +544,54 @@ class Teacher extends Base {
 		$res_et_ts=$q_et_ts->fetch_assoc();
 		return $res_st_ts['start_time']."-".$res_et_ts['end_time'];
 	}
+	
+	
+	
+	/*public function getAllocatedDates($class_id='',$teacher_id='')
+	{
+		$allocatedDates = array();
+		$objT = new Teacher();
+		if(isset($class_id) && $class_id!=""){
+			 echo $res_sql = "select date,group_concat(timeslot) as timeslot  from  timetable_detail td where room_id = '".$class_id."'  group by date";
+		}else{
+			echo $res_sql = "select date,group_concat(timeslot) as timeslot from  timetable_detail td where teacher_id = '".$teacher_id."'  group by date";
+		}
+		
+		$res_query = mysqli_query($this->conn, $res_sql);
+		while($data = $res_query->fetch_assoc()){
+			$all_ts = $this -> getTimeslotIds($data['timeslot']);
+			$activity_date = date("Ymd",strtotime($data['date']));
+			$allocatedDates[$activity_date]['act_date'] =  $activity_date;
+			$allocatedDates[$activity_date]['ts_id'] =  $all_ts;
+		}
+		return $allocatedDates;		
+	}
+	
+	public function getTimeslotIds($dateRange)
+	{		
+			//echo '<pre>';
+	        //print_r($dateRange);
+			$timeRangeArr=explode(',',$dateRange);
+			foreach($timeRangeArr as $value){
+				$time = explode("-",$value);
+				$start_time  = trim($time['0']);
+				$end_time = trim($time['1']);
+				$sql_time_slct = "select id from timeslot where start_time = '".$start_time."' OR end_time = '".$end_time."'";
+				//get all the ids between two nos
+				$q_res= mysqli_query($this->conn, $sql_time_slct);
+				$tempIdRange= array();
+				while($data = $q_res->fetch_assoc()){
+					$tempIdRange[] =  $data['id'];
+				}
+				for($i=min($tempIdRange); $i<=max($tempIdRange); $i++){
+					$timeslots[] = $i;
+				}				
+				$timeslotIds = implode(',',$timeslots);	
+		   }	
+		   //echo '<br>'.'===========================';
+		   //print_r($timeslotIds);
+		   return $timeslotIds;
+	}*/
+
+	
 }

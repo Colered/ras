@@ -62,7 +62,7 @@ if ( $DISPLAY_SM_MONTH == 'Y' && $BOLD_DAYS_IN_YEAR == 'Y' ) {
   $evStart = $wkstart;
   $evEnd = $wkend;
 }
-$exception_dates=array();
+$exception_dates=$new_event_Arr=array();
 /* Pre-Load the repeated events for quickier access. */
 $repeated_events = read_repeated_events ( ( strlen ( $user )
     ? $user : $login ), $evStart, $evEnd, $cat_id );
@@ -73,6 +73,17 @@ if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $are
 }elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
      $events_detail = read_events_clsrm_teacher_availability (( strlen ( $user )? $user : $login ), $evStart - 604800, $evEnd,$cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
 	$events=$events_detail[0];
+	
+	$rows_detail=isset($events_detail[2])?$events_detail[2]:'';
+	$date_var='';
+	foreach ($rows_detail as $key => $val){
+		foreach ($val as $key_new=>$val_new){
+				if($key_new=='3'){
+					$date_var=$val_new;
+				}
+		}
+		$new_event_Arr[$date_var]=$val;
+	}
 	$exception_dates=(isset($events_detail[1]) && $events_detail[1]!='')? $events_detail[1] : '';
 }else{
  	$events = read_events ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, $cat_id );
@@ -86,6 +97,9 @@ if ( empty ( $DISPLAY_TASKS_IN_GRID ) || $DISPLAY_TASKS_IN_GRID == 'Y' )
 $eventsStr = $filler = $headerStr = $minical_tasks = $untimedStr = '';
 $navStr = display_navigation ( 'week' );
 $week_name_display=display_navigation_current_month( 'week' );
+$objTS =new Timeslot();
+$allocated_data=$objTS->getAllAllocatedDate($teacher_filter_id,$room_filter_id,$program_filter_id);
+$allocate_nonAllocated_TS_str=$allocate_nonAllocated_TS = $hasTimeslot = '';$allocated_ts_str_Arr=array();
 $holiday_date=array();
    //Holiday Dates
    $objH =new Holidays();
@@ -122,6 +136,7 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
 
   $date = date ( 'Ymd', $days[$i] );
   $hour_arr = $rowspan_arr = $tk = array ();
+  
   // .
   // Get, combine and sort, static and repeating events for this date.
   $ev = combine_and_sort_events ( get_entries ( $date, $get_unapproved ),
@@ -131,7 +146,7 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   $ev = combine_and_sort_events ( $ev,
     ( $date >= date ( 'Ymd' )
       ? get_tasks ( $date, $get_unapproved ) : $tk ) );
-
+//print_r($hour_arr);
   for ( $j = 0, $cnt = count ( $ev ); $j < $cnt; $j++ ) {
     if ( $get_unapproved || $ev[$j]->getStatus () == 'A' )
       html_for_event_week_at_a_glance ( $ev[$j], $date );
@@ -140,7 +155,9 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   // Squish events that use the same cell into the same cell.
   // For example, an event from 8:00-9:15 and another from 9:30-9:45
   // both want to show up in the 8:00-9:59 cell.
-  $last_row = -1;
+  //echo $last_row;
+// print_r($hour_arr);
+   $last_row = -1;
   $rowspan = 0;
   for ( $j = 0; $j < $TIME_SLOTS; $j++ ) {
     if ( $rowspan > 1 ) {
@@ -184,7 +201,7 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
    ? ' class="hasevents"' : $class )
    . '>' . ( ! empty ( $untimed[$i] ) && strlen ( $untimed[$i] )
     ? $untimed[$i] : '&nbsp;' ) . '</td>';
-
+//print_r($hour_arr);
   $save_hour_arr[$i] = $hour_arr;
   $save_rowspan_arr[$i] = $rowspan_arr;
   $rowspan_day[$i] = 0;
@@ -204,8 +221,30 @@ for ( $i = $first_slot; $i <= $last_slot; $i++ ) {
 
   for ( $d = $start_ind; $d <= $end_ind; $d++ ) {
     $dateYmd = date ( 'Ymd', $days[$d] );
-	$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents".((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='') ? " hasAvailability" : "") : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
-   . (in_array($dateYmd,$holiday_date, true) ? " hasHolidays": "")
+	
+	//check the timeslot allocated or not for color change
+		if((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true)))){
+		$allocate_nonAllocated_TS='';
+		   foreach($new_event_Arr as $key=>$val){
+		   		if($dateYmd==$key ){
+					//echo $dateYmd.'<br>';
+					$allocate_nonAllocated_TS_str = isset($new_event_Arr[$key]['1'])?$new_event_Arr[$key]['1']:'';
+					break;
+				}
+		   }
+		   $allocated_ts_str_Arr=explode(',',$allocate_nonAllocated_TS_str);
+		   $str_alloacted_text=(isset($allocated_ts_str_Arr['1']) && $allocated_ts_str_Arr['1']!="") ? $allocated_ts_str_Arr['1']:'';
+		   if($str_alloacted_text == "<B>Allocated</B>"){
+		   		$hasTimeslot = ' hasAllAllocatedTimeslot';
+		   }else{
+		   		$hasTimeslot = ' hasAllocatedTimeslot';
+		   }
+		  }
+	
+	
+	$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents".(((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? $hasTimeslot : (((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? $hasTimeslot : (isset($program_filter_id) && $program_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($room_filter_id) && $room_filter_id!='')?' hasUnAllocatedAvailability':' ')) : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
+	
+	. (in_array($dateYmd,$holiday_date, true) ? " hasHolidays": "")
    //. ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? " hasExceptionDays": "");
    . (in_array($dateYmd,$exception_dates, true) ? " hasExceptionDays": "");
    if ( $rowspan_day[$d] > 1 ) {

@@ -231,13 +231,17 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
   .main td.hasHolidays {
     	background-color:#00FF00;}
   .main td.hasExceptionDays {
-  		background-color:#7F6000;}
+  		background-color:#A64D79;}
   ' . ( $GLOBALS['HASEVENTSBG'] != $GLOBALS['CELLBG'] ? '
   .main td.hasevents {
     ' . background_css ( $GLOBALS['HASEVENTSBG'], 100 ) . '
   }' : '' ) . '
-  .main td.hasAvailability {
-    	background-color:#ffd966;}
+  .main td.hasAllocatedTimeslot {
+    	background-color:#FFE599;}
+  .main td.hasAllAllocatedTimeslot {
+    	background-color:#55FFFF;}
+  .main td.hasUnAllocatedAvailability {
+    	background-color:#F1C232;}
   .main td.othermonth {
     ' . background_css ( $GLOBALS['OTHERMONTHBG'], 100 ) . '
   }
@@ -1631,20 +1635,22 @@ color:white;}
   	margin-left:20px;
   }
   .minical td.hasholidays{background-color:#00FF00;}
-  .minical td.hasExceptionDays{background-color:#7F6000 ;}
+  .minical td.hasExceptionDays{background-color:#A64D79 ;}
   .minical td.hasevents{background-color:#FFFF33;}
-  .minical td.hasAvailability{background-color:#ffd966;}
+  .minical td.hasAllocatedTimeslot{background-color:#FFE599;}
+  .minical td.hasAllAllocatedTimeslot{background-color:#55FFFF;}
+  .minical td.hasUnAllocatedAvailability{background-color:#F1C232;}
   .legend-color-avail{
   	height:14px;width:25px; background-color:#FFD966;float:left;
    }
    .legend-color-use{
-  	height:14px;width:25px; background-color:#FFFF33;float:left;
+  	height:14px;width:25px; background-color:#FFFF00;float:left;
    }
    .legend-color-holiday{
   	height:14px;width:25px; background-color:#00FF00;float:left;
    }
    .legend-color-excp{
-  	height:14px;width:25px; background-color:#7F6000;float:left;
+  	height:14px;width:25px; background-color:#A64D79;float:left;
    }
   .legend-only{
     float:left;padding-right:20px;

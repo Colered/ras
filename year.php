@@ -15,7 +15,7 @@ $cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
 $room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
 $teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
 $program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:'';
-
+$new_event_Arr=array();
 //check UAC
 if ( ! access_can_access_function ( ACCESS_YEAR ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )
@@ -62,6 +62,16 @@ if ( ! empty ( $BOLD_DAYS_IN_YEAR ) && $BOLD_DAYS_IN_YEAR == 'Y' ) {
 	}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
 		$events_detail = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
 		$events=$events_detail[0];
+		$rows_detail=isset($events_detail[2])?$events_detail[2]:'';
+		$date_var='';
+		foreach ($rows_detail as $key => $val){
+			foreach ($val as $key_new=>$val_new){
+				if($key_new=='3'){
+					$date_var=$val_new;
+				}
+			}
+			$new_event_Arr[$date_var]=$val;
+		}
 		$exception_dates=(isset($events_detail[1]) && $events_detail[1]!='')? $events_detail[1] : '';
 	}else{
  		$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) ? $user : $login ),$startdate, $enddate, $cat_id);
@@ -128,7 +138,7 @@ for ( $r = 1; $r <= $yr_rows; $r++ ) {
   for( $c = 1; $c <= $yr_cols; $c++, $m++ ) {
   $COUNT=$COUNT+1;
     $gridOmonths .= '
-          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT,$room_filter_id,$teacher_filter_id,$program_filter_id,$exception_dates) . '</td>';
+          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT,$room_filter_id,$teacher_filter_id,$program_filter_id,$exception_dates,$new_event_Arr) . '</td>';
   }
   $gridOmonths .= '
         </tr>';

@@ -170,4 +170,6 @@ class Classroom_Availability extends Base {
 		}
 		return $resDates;		
 	}
+	
+	
 }

@@ -340,6 +340,9 @@ function check_for_conflicts ( $dates, $duration, $eventstart,
                . ( $row[0] != $login ? '&amp;user=' . $row[0] : '' )
                . '">' . $row[3] . '</a>' ) )
            . ( $duration2 == 1440 && $time2 == 0
+
+
+
             ? ' (' . $allDayStr . ')'
             : ' (' . display_time ( $row[7] . $time2 )
              . ( $duration2 > 0
@@ -789,6 +792,7 @@ function date_to_epoch ( $d , $gmt=true) {
   if ( strlen ( $d ) == 14 ) {
     $dH = substr ( $d, 8, 2 );
     $di = substr ( $d, 10, 2 );
+
     $ds = substr ( $d, 12, 2 );
   }
 
@@ -978,11 +982,11 @@ function display_admin_link ( $break = true ) {
 
 /* Generate HTML to create a month display.
  */
-function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id='', $teacher_avail_id='',$program_avail_id='',$exception_dates=array()) {
+function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id='', $teacher_avail_id='',$program_avail_id='',$exception_dates=array(),$rows_detail_event=array()) {
   global $DISPLAY_ALL_DAYS_IN_MONTH, $DISPLAY_LONG_DAYS, $DISPLAY_WEEKNUMBER,
   $login, $today, $user, $WEEK_START, $WEEKENDBG;
 
-   echo 
+  echo 
   $ret = '
     <table class="main" cellspacing="0" cellpadding="0" id="month_main" style="padding-top:20px">
       <tr>' . ( $DISPLAY_WEEKNUMBER == 'Y' ? '
@@ -1050,7 +1054,7 @@ function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id=
       
       $currMonth = ( $dateYmd >= $monthstart && $dateYmd <= $monthend );
 	  if ( $currMonth || ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) && $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
-	   
+	   //$resDates=$objTSview->getAllocatedDates($clsrm_avail_id, $teacher_avail_id,$program_avail_id);
 	   $class = ( $currMonth
           ? ( ! $demo && $dateYmd == $todayYmd ? 'today' : ( $is_weekend ? 'weekend' : '' ) )
           : 'othermonth' );
@@ -1073,35 +1077,39 @@ function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id=
             $ret_events = translate ( 'My event text' );
           }
         }
-		$teacher_exception_date=$holiday_date=$classroom_exception_date=array();
-		//Holiday Dates
+		$teacher_exception_date=$holiday_date=$classroom_exception_date=$allocated_date=array();
+		
+		//Allocated Dates
+		$objTS =new Timeslot();
+		$allocated_data=$objTS->getAllAllocatedDate($teacher_avail_id,$clsrm_avail_id,$program_avail_id);
+		$allocate_nonAllocated_TS = $hasTimeslot = '';
+		//check the timeslot allocated or not for color change
+		if((isset($program_avail_id) && $program_avail_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_avail_id) && $teacher_avail_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($clsrm_avail_id) && $clsrm_avail_id!='' && (in_array($dateYmd,$allocated_data, true)))){
+		$allocate_nonAllocated_TS='';
+		   foreach($rows_detail_event as $key=>$val){
+		   		if($dateYmd==$key){
+					$allocate_nonAllocated_TS_str = $rows_detail_event[$key]['1'];
+					break;
+				}
+		   }
+		   $allocated_ts_str_Arr=explode(',',$allocate_nonAllocated_TS_str);
+		   if($allocated_ts_str_Arr['1'] == "<B>Allocated</B>"){
+		   		$hasTimeslot = ' hasAllAllocatedTimeslot';
+		   }else{
+		   		$hasTimeslot = ' hasAllocatedTimeslot';
+		   }
+		  }
 		$objH =new Holidays();
 		$holiday_data=$objH->viewHoliday();
 		while($row_holiday = $holiday_data->fetch_assoc()){
 			$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
 		}
-		
-		//Teacher Exception Dates 
-		  /*$objTE =new sTeacher();
-		  $teacher_exception=$objTE->getTeacherException();
-		  while($row_teacher_exception = $teacher_exception->fetch_assoc()){
-				$teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
-		  }*/
-		  //end teacher date
-		  //Classrooom Exception Dates 
-		  /*$objCE =new Classroom();
-		  $clasroom_exception=$objCE->getClassroomException();
-		  while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
-				$classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
-		  }*/
-		  /*$objP =new Programs();
-		  $program_exception=$objP->getProgramException();
-		  while($row_program_exception = $program_exception->fetch_assoc()){
-				$classroom_exception_date[] = date("Ymd", strtotime($row_program_exception['exception_date']));
-		  }*/
 		  
   		$class = trim ( $class );
-        $class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents'.((isset($clsrm_avail_id) && $clsrm_avail_id!='') || (isset($teacher_avail_id) && $teacher_avail_id!='') || (isset($program_avail_id) && $program_avail_id!='')? ' hasAvailability' : ''): '' );
+        //$class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents'.((isset($clsrm_avail_id) && $clsrm_avail_id!='') || (isset($teacher_avail_id) && $teacher_avail_id!='') || (isset($program_avail_id) && $program_avail_id!='')? ' hasAvailability' : ''): '' );
+		
+		$class .= ( ! empty ( $ret_events ) && strstr ( $ret_events, 'class="entry"' ) ? ' hasevents'.(((isset($program_avail_id) && $program_avail_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_avail_id) && $teacher_avail_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($clsrm_avail_id) && $clsrm_avail_id!='' && (in_array($dateYmd,$allocated_data, true))))? $hasTimeslot : (((isset($program_avail_id) && $program_avail_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_avail_id) && $teacher_avail_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($clsrm_avail_id) && $clsrm_avail_id!='' && (in_array($dateYmd,$allocated_data, true))))? ' hasAllocatedAvailability' : (isset($program_avail_id) && $program_avail_id!='') || (isset($teacher_avail_id) && $teacher_avail_id!='') || (isset($clsrm_avail_id) && $clsrm_avail_id!='')?' hasUnAllocatedAvailability':' ')): '' );
+		
 		$class .= (in_array($dateYmd,$holiday_date, true) ? ' hasHolidays' : '');
 		//$class .= ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? ' hasExceptionDays' : '');
 		$class .= (in_array($dateYmd,$exception_dates, true) ? ' hasExceptionDays' : '');
@@ -1116,6 +1124,7 @@ function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id=
   return $ret . '
     </table>';
 }
+		
 function display_navigation_current_month ( $name, $show_arrows = true, $show_cats = true ) {
  global $cat_id, $CATEGORIES_ENABLED, $caturl, $DATE_FORMAT_MY,
   $DISPLAY_SM_MONTH, $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $is_admin,
@@ -1225,7 +1234,7 @@ function display_navigation_current_month ( $name, $show_arrows = true, $show_ca
  */
  
 function display_small_month ( $thismonth, $thisyear, $showyear,
-  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='',$room_filter_id='',$teacher_filter_id='',$program_filter_id='',$exception_dates=array()) {
+  $show_weeknums = false, $minical_id = '', $month_link = 'month.php?' ,$count='',$room_filter_id='',$teacher_filter_id='',$program_filter_id='',$exception_dates=array(),$rows_detail_event=array()) {
   global $boldDays, $caturl, $DATE_FORMAT_MY, $DISPLAY_ALL_DAYS_IN_MONTH,
   $DISPLAY_TASKS, $DISPLAY_WEEKNUMBER, $get_unapproved, $login,
   $MINI_TARGET, // Used by minical.php
@@ -1235,6 +1244,7 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
   
   $nextStr = translate ( 'Next' );
   $prevStr = translate ( 'Previous' );
+
   $u_url = ( $user != $login && ! empty ( $user )
     ? 'user=' . $user . '&amp;' : '' )
 	   . ( empty ( $_REQUEST['program_id'] ) ? '' : '&amp;program_id=' .$_REQUEST['program_id'] )
@@ -1360,7 +1370,9 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
 	  $hasException=false;
 	  $hasHoliday=false;
 	  $hasEvents = false;
-	  $hasAvailability = false;
+	  //$hasAvailability = false;
+	  $hasAllocatedAvailability = false;
+	  $hasNonAllocatedAvailability = false;
       $title = '';
       $ret .= '
           <td';
@@ -1390,6 +1402,29 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
 	  if ( ( $dateYmd >= $monthstart && $dateYmd <= $monthend ) ||
           ( ! empty ( $DISPLAY_ALL_DAYS_IN_MONTH ) &&
             $DISPLAY_ALL_DAYS_IN_MONTH == 'Y' ) ) {
+		
+		$objTS =new Timeslot();
+		$allocated_data=$objTS->getAllAllocatedDate($teacher_filter_id,$room_filter_id,$program_filter_id);
+		$allocate_nonAllocated_TS_str=$allocate_nonAllocated_TS = $hasTimeslot = '';$allocated_ts_str_Arr=array();
+		//check the timeslot allocated or not for color change
+		if((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true)))){
+		$allocate_nonAllocated_TS='';
+		   foreach($rows_detail_event as $key=>$val){
+		   		if($dateYmd==$key){
+					$allocate_nonAllocated_TS_str = isset($rows_detail_event[$key]['1'])?$rows_detail_event[$key]['1']:'';
+					break;
+				}
+		   }
+		   $allocated_ts_str_Arr=explode(',',$allocate_nonAllocated_TS_str);
+		   $str_alloacted_text=(isset($allocated_ts_str_Arr['1']) && $allocated_ts_str_Arr['1']!="")?$allocated_ts_str_Arr['1']:'';
+		   if($str_alloacted_text == "<B>Allocated</B>"){
+		   		$hasTimeslot = ' hasAllAllocatedTimeslot';
+		   }else{
+		   		$hasTimeslot = ' hasAllocatedTimeslot';
+		   }
+		  }
+			
+			
         $class =
         // If it's a weekend.
         ( is_weekend ( $date ) ? 'weekend' : '' )
@@ -1397,7 +1432,12 @@ function display_small_month ( $thismonth, $thisyear, $showyear,
         . ( $dateYmd == $thisyear . $thismonth . $thisday && $SCRIPT == 'day.php'
           ? ' selectedday' : '' )
         // Are there any events scheduled for this date?
-        . ( $hasEvents ? ' hasevents'.((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='')? ' hasAvailability' : '') : '' )
+        /*. ( $hasEvents ? ' hasevents'.((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='')? ' hasAvailability' : '') : '' )*/
+		. ( $hasEvents ? ' hasevents'.(((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? $hasTimeslot : (((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? $hasTimeslot : (isset($program_filter_id) && $program_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($room_filter_id) && $room_filter_id!='')?' hasUnAllocatedAvailability':' ')) : '' )
+		
+		//(((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? ' hasAllocatedAvailability' : (((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? ' hasAllocatedAvailability' : (isset($program_filter_id) && $program_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($room_filter_id) && $room_filter_id!='')?' hasUnAllocatedAvailability':' '))
+		
+		
 		//are there is any holiday scheduled for this days?
 		. ( $hasException ? ' hasExceptionDays' : '')
 		. ( $hasHoliday ? ' hasholidays' : '');
@@ -1545,6 +1585,7 @@ function display_small_tasks ( $cat_id ) {
     $task_html .= '<tr><td colspan="8" class="filler">&nbsp;</td></tr>' . "\n";
   }
   $task_html .= "</table>\n";
+ // echo $task_html;
   return $task_html;
 }
 
@@ -3479,7 +3520,7 @@ function html_for_event_day_at_a_glance ( $event, $date ) {
   $name = $event->getName ();
   $time = $event->getTime ();
   $time_only = 'N';
-  $view_text = translate ( 'View this event' );
+  $view_text = '';
 
   $catIcon = 'icons/cat-' . $getCat . '.gif';
   $key++;
@@ -3565,7 +3606,7 @@ function html_for_event_day_at_a_glance ( $event, $date ) {
     $end_timestr = '-' . display_time ( $event->getEndDateTime () );
     $popup_timestr = display_time ( $event->getDatetime () );
 
-    $hour_arr[$ind] .= '[' . $popup_timestr;
+    $hour_arr[$ind] .= (empty($_REQUEST['program_avail_id']) && empty($_REQUEST['room_avail_id']) && empty($_REQUEST['teacher_avail_id'])) ? '[' . $popup_timestr :''; 
     if ( $event->getDuration () > 0 ) {
       $popup_timestr .= $end_timestr;
       if ( $DISPLAY_END_TIMES == 'Y' )
@@ -3586,7 +3627,7 @@ function html_for_event_day_at_a_glance ( $event, $date ) {
       if ( $rowspan > $rowspan_arr[$ind] && $rowspan > 1 )
         $rowspan_arr[$ind] = $rowspan;
     }
-  $hour_arr[$ind] .= '] ';
+  $hour_arr[$ind] .=(empty($_REQUEST['program_avail_id']) && empty($_REQUEST['room_avail_id']) && empty($_REQUEST['teacher_avail_id']))? '] ':'';
   }
   $hour_arr[$ind] .= build_entry_label ( $event, 'eventinfo-' . $linkid,
     $can_access, $popup_timestr, $time_only )
@@ -3699,7 +3740,7 @@ function html_for_event_week_at_a_glance ( $event, $date,
     }*/
 	$href='';
   }
-
+//echo $hour_arr[$ind];
   $hour_arr[$ind] .= $title . '" class="' . $class . '" id="' . $linkid . '" '
    . $href . ( strlen ( $GLOBALS['user'] ) > 0
     ? '&amp;user=' . $GLOBALS['user']
@@ -3724,6 +3765,7 @@ function html_for_event_week_at_a_glance ( $event, $date,
       $in_span = true;
     }
   }
+ // echo $getDatetime;
   if ( $isAllDay ) {
     $timestr = translate ( 'All day event' );
     // Set start cell of all-day event to beginning of work hours.
@@ -3733,8 +3775,8 @@ function html_for_event_week_at_a_glance ( $event, $date,
   } else
   if ( $event->getTime () >= 0 && $getCalTypeName != 'task' ) {
     if ( $show_time )
-      $hour_arr[$ind] .= display_time ( $getDatetime )
-       . ( $time_only == 'Y' ? '' : $TIME_SPACER );
+      $hour_arr[$ind] .= (empty($_REQUEST['program_avail_id']) && empty($_REQUEST['room_avail_id']) && empty($_REQUEST['teacher_avail_id'])) ? display_time ( $getDatetime ):''. ( $time_only == 'Y' ? '' : $TIME_SPACER );
+//$hour_arr[$ind] .= display_time ( $getDatetime ). ( $time_only == 'Y' ? '' : $TIME_SPACER );
 
     $timestr = display_time ( $getDatetime );
     if ( $event->getDuration () > 0 ) {
@@ -3745,7 +3787,7 @@ function html_for_event_week_at_a_glance ( $event, $date,
         $end_time += 240000;
     } else
       $end_time = 0;
-
+	//print_r($hour_arr[$ind]);
     if ( empty ( $rowspan_arr[$ind] ) )
       $rowspan_arr[$ind] = 0; // Avoid warning below.
 
@@ -3757,13 +3799,13 @@ function html_for_event_week_at_a_glance ( $event, $date,
     if ( $rowspan > $rowspan_arr[$ind] && $rowspan > 1 )
       $rowspan_arr[$ind] = $rowspan;
   }
-
   $hour_arr[$ind] .= build_entry_label ( $event, 'eventinfo-' . $linkid,
     $can_access, $timestr, $time_only )
    . ( empty ( $in_span ) ? '' : '</span>' )// End color span.
    . ( $getPri == 3 ? '</strong>' : '' ) . '</a>'
   // . ( $DISPLAY_ICONS == 'Y' ? icon_text ( $id, true, true ) : '' )
   . "<br />\n";
+  //echo $hour_arr[$ind];
 }
 
 /* Converts HTML entities in 8bit.
@@ -4160,6 +4202,7 @@ function load_user_preferences ( $guest = '' ) {
     'TEXTCOLOR' => 1,
     'THBG' => 1,
     'THFG' => 1,
+
     'TODAYCELLBG' => 1,
     'WEEKENDBG' => 1,
     'WEEKNUMBER' => 1,
@@ -4588,30 +4631,22 @@ function print_date_entries ( $date, $user, $ssi = false) {
  * @param string $date  Date in YYYYMMDD format
  * @param string $user  Username of calendar
  */
-function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id='', $teacher_filter_id='',$program_filter_id='',$exception_dates=array()) {
+function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id='', $teacher_filter_id='',$program_filter_id='',$exception_dates=array(),$rows_detail_event=array()) {
   global $CELLBG, $DISPLAY_TASKS_IN_GRID, $DISPLAY_UNAPPROVED, $first_slot,
   $hour_arr, $last_slot, $rowspan, $rowspan_arr, $TABLEBG, $THBG, $THFG,
   $TIME_SLOTS, $today, $TODAYCELLBG, $WORK_DAY_END_HOUR, $WORK_DAY_START_HOUR;
   
   $teacher_exception_date=$holiday_date=$classroom_exception_date=array();
+  
+   $objTS =new Timeslot();
+   $allocated_data=$objTS->getAllAllocatedDate($teacher_filter_id,$room_filter_id,$program_filter_id);
    //Holiday Dates
    $objH =new Holidays();
    $holiday_data=$objH->viewHoliday();
 	while($row_holiday = $holiday_data->fetch_assoc()){
    		$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
     }
-	//Teacher Exception Dates 
-  /* $objTE =new Teacher();
-   $teacher_exception=$objTE->getTeacherException();
-	while($row_teacher_exception = $teacher_exception->fetch_assoc()){
-     $teacher_exception_date[] = date("Ymd", strtotime($row_teacher_exception['exception_date']));
-   }*/
-	//Classrooom Exception Dates 
-	/*$objCE =new Classroom();
-	$clasroom_exception=$objCE->getClassroomException();
-	 while($row_clasroom_exception = $clasroom_exception->fetch_assoc()){
-	   $classroom_exception_date[] = date("Ymd", strtotime($row_clasroom_exception['exception_date']));
-	}*/
+	
 	$hasException='';
 	$hasHoliday='';
 	if((in_array($date,$exception_dates, true)) && in_array($date,$holiday_date, true)){
@@ -4717,10 +4752,28 @@ function print_day_at_a_glance ( $date, $user, $can_add = 0 , $room_filter_id=''
          . '>' . ( $can_add ? $addIcon : '&nbsp;' );
       else {
         $rowspan = ( empty ( $rowspan_arr[$i] ) ? '' : $rowspan_arr[$i] );
-
+		
+		if((isset($program_filter_id) && $program_filter_id!='' && (in_array($date,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($date,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($date,$allocated_data, true)))){
+		$allocate_nonAllocated_TS='';
+		   foreach($rows_detail_event as $key=>$val){
+		   		if($date==$key ){
+					//echo $dateYmd.'<br>';
+					$allocate_nonAllocated_TS_str = isset($rows_detail_event[$key]['1'])?$rows_detail_event[$key]['1']:'';
+					break;
+				}
+		   }
+		   $allocated_ts_str_Arr=explode(',',$allocate_nonAllocated_TS_str);
+		   $str_alloacted_text=(isset($allocated_ts_str_Arr['1']) && $allocated_ts_str_Arr['1']!="") ? $allocated_ts_str_Arr['1']:'';
+		   if($str_alloacted_text == "<B>Allocated</B>"){
+		   		$hasTimeslot = ' hasAllAllocatedTimeslot';
+		   }else{
+		   		$hasTimeslot = ' hasAllocatedTimeslot';
+		   }
+		  }
+		
         $ret .= ( $rowspan > 1 ? 'rowspan="' . $rowspan . '"' : '' )
-         . 'class="hasevents'.((isset($room_filter_id) && $room_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($program_filter_id) && $program_filter_id!='') ? " hasAvailability" : "").'" >' . $addIcon . $hour_arr[$i];
-      }
+         . 'class="hasevents'.(((isset($program_filter_id) && $program_filter_id!='' && (in_array($date,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($date,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($date,$allocated_data, true))))? $hasTimeslot : (((isset($program_filter_id) && $program_filter_id!='' && (in_array($date,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($date,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($date,$allocated_data, true))))? $hasTimeslot : (isset($program_filter_id) && $program_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($room_filter_id) && $room_filter_id!='')?' hasUnAllocatedAvailability':' ')).'" >' . $addIcon . $hour_arr[$i];
+	}
       $ret .= '</td>';
     }
     $ret .= '
@@ -4748,7 +4801,7 @@ function print_entry ( $event, $date ) {
   static $viewEventStr, $viewTaskStr;
 
   if ( empty ( $viewEventStr ) ) {
-    $viewEventStr = translate ( 'View this event' );
+    $viewEventStr = '';
     $viewTaskStr = translate ( 'View this task' );
   }
 
@@ -4856,7 +4909,7 @@ function print_entry ( $event, $date ) {
     $timestr = $popup_timestr = translate ( 'All day event' );
   else
   if ( ! $event->isUntimed () ) {
-    $timestr = $popup_timestr = display_time ( $event->getDateTime () );
+    $timestr = $popup_timestr = (empty($_REQUEST['program_avail_id']) && empty($_REQUEST['room_avail_id']) && empty($_REQUEST['teacher_avail_id'])) ? display_time ( $event->getDateTime () ):'';
     if ( $event->getDuration () > 0 )
       $popup_timestr .= ' - ' . display_time ( $event->getEndDateTime () );
 
@@ -5682,6 +5735,7 @@ function sort_users ( $a, $b ) {
  *
  * @param string $time  Input time in HHMMSS format
  *
+
  * @return int  The number of minutes since midnight.
  */
 function time_to_minutes ( $time ) {
@@ -6051,7 +6105,7 @@ function build_entry_popup ( $popupid, $user, $description = '', $time,
   
   $description_event='Description';
   if((isset($_POST['room_avail_id']) && $_POST['room_avail_id']!='') || (isset($_POST['program_avail_id']) && $_POST['program_avail_id']!='') || (isset($_POST['teacher_avail_id']) && $_POST['teacher_avail_id']!='')){
-     $description_event="Non-Allocated Timeslots";
+  	$description_event="Timeslots";
   }
 
   if ( ! empty ( $DISABLE_POPUPS ) && $DISABLE_POPUPS == 'Y' )
@@ -6109,8 +6163,7 @@ function build_entry_popup ( $popupid, $user, $description = '', $time,
   }
   $ret .= ( $SUMMARY_LENGTH < 80 && strlen ( $name ) && $details
     ? '<dt>' . htmlspecialchars ( substr ( $name, 0, 40 ) ) . "</dt>\n" : '' )
-   . ( strlen ( $time )
-    ? '<dt>' . translate ( 'Time' ) . ":</dt>\n<dd>$time</dd>\n" : '' )
+   . ( strlen ( $time ) && ((empty($_REQUEST['program_avail_id'])) && (empty($_REQUEST['room_avail_id'])) && (empty($_REQUEST['teacher_avail_id']) )) ? '<dt>' . translate ( 'Time' ) . ":</dt>\n<dd>$time</dd>\n" : '' )
    . ( ! empty ( $location ) && $details
     ? '<dt>' . translate ( 'Location' ) . ":</dt>\n<dd> $location</dd>\n" : '' )
    . ( ! empty ( $reminder ) && $details
@@ -6616,6 +6669,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 
   $splitTimeslot=$cloneRepeats = $layers_byuser = $result = $resDates = array ();
   $exceptions_dates=$holiday_date=array();
+  $objTSview=new Timeslot();
   $row=array();
   $evt_name='';
   if($program_filter_id!=''){
@@ -6628,8 +6682,10 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	 $data_program = mysqli_fetch_assoc($program_dataa);
 	 $program_year_name=$data_program['name'];
 	 $evt_name =$program_year_name;
+	 $resDates=$objTSview->getAllocatedDates('','',$program_filter_id);
 	 $row = $objP->getCyclesInfoforAvailability($program_filter_id);
   }
+  
   if($teacher_available_id!=''){
     $objT =new Teacher();
 	$teacher_exception=$objT->getTeacherAvailExceptionById($teacher_available_id);
@@ -6640,7 +6696,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	$teacher_name=explode('(',$teacher_data);
 	$evt_name =$teacher_name['0'];
 	$teacher_avail_rule_allIds=$objT->getRuleIdsForTeacher($teacher_available_id);
-	$resDates=$objT->getResDatesForTeacher($teacher_available_id);
+	$resDates=$objTSview->getAllocatedDates('',$teacher_available_id);
 	for($i=0;$i<count($teacher_avail_rule_allIds);$i++){
 	    $avail_day_detail=$objT->getTeacherAvailDayFilter($teacher_avail_rule_allIds[$i]);
 		$date_range=$objT->getTeacherRuleStartEndDate($teacher_avail_rule_allIds[$i]);
@@ -6656,7 +6712,6 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
      }
   }
-
   if($class_room_id!=''){
     $obj_clr=new Classroom();
 	$clasroom_exception=$obj_clr->getClassroomAvailExceptionById($class_room_id);
@@ -6669,7 +6724,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	$evt_name =$room_name;
 	$obj=new Classroom_Availability();
   	$clsrm_avail_rule_allIds=$obj->getRuleIdsForRoom($class_room_id);
-	$resDates=$obj->getResDatesForClass($class_room_id);
+	$resDates=$objTSview->getAllocatedDates($class_room_id,'');
 	for($i=0;$i<count($clsrm_avail_rule_allIds);$i++){
    		$avail_day_detail=$obj->getClassroomAvailDay($clsrm_avail_rule_allIds[$i]);
 		$date_range=$obj->getClsrmRuleStartEndDate($clsrm_avail_rule_allIds[$i]);
@@ -6685,14 +6740,16 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		}
    }   
   }
-  if($teacher_available_id!='' || $class_room_id!=''){
+   if($teacher_available_id!='' || $class_room_id!='' || $program_filter_id!=''){
    $m=0;
+    $timeslot_var=((isset($teacher_available_id) && $teacher_available_id!='')  || (isset($class_room_id) &&  $class_room_id!=''))?'timeslot_id':'timeslot';
 	foreach($row as $result_date)
 	{
 		if(search_array($result_date['particular_date'],$resDates))
 		{
-			$ts_array = explode(",",$result_date['timeslot_id']);
+			$ts_array = explode(",",$result_date[$timeslot_var]);
 			$str = "";
+			$str .= "<B>Non-Allocated</B>";
 			foreach($ts_array as $timeslot)
 			{
 				$objTE =new Teacher();
@@ -6707,13 +6764,24 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 					$str = ltrim ($str, ',');
 				}
 			}
-			$row[$m]['timeslot_id'] = $str;
+			$strnew="";
+			$allocated_ts = $objTSview->getAllocatedTSRangeForView($teacher_available_id,$class_room_id,$program_filter_id,$result_date['particular_date']);
+			foreach($allocated_ts as $values_ts){
+				$strnew.=$values_ts.'<br>';
+			}
+			//$str.="<br>"."<strong>Allocated</strong><br>".$strnew;
+			$str.=",<B>Allocated</B>";
+			$str.=",".$strnew;
+			$row[$m][$timeslot_var] = $str;
 		}else{
-			$row[$m]['timeslot_id'] = $result_date['timeslot_id'];
+		    $str = "";
+		    $str .= "<B>Non-Allocated</B>";
+			$row[$m][$timeslot_var] = $str.",".$result_date[$timeslot_var];
 		}
 		$m++;
 	}
    }
+   
    $rowNewArr=array(array());
    if(count($row)>0){
 	    for($i=0;$i<count($row);$i++){
@@ -6730,8 +6798,6 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		while($row_holiday = $holiday_data->fetch_assoc()){
 			$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
 	}
-	//print"<pre>";print_r($rows);die;
-	
 	if ($rows) {
     $i = 0;
 	$splitTimeslot=$start_timeslot=$end_timeslot=$evt_descr=$cal_time=$duration='';
@@ -6745,22 +6811,33 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 	    $row[1] = (isset($row[1])) ? ($row[1]) : '';
 		$row[3] = (isset($row[3])) ? ($row[3]) : '';
 		$eventstartdate = '';
-		//echo $row[3];
 		if($row[1]!=''){
 		 $splitTimeslot = (isset($row[1])) ? (explode(',', $row[1])) : '';
-		 $start_timeslot=(isset($splitTimeslot['0'])) ? ($splitTimeslot['0']) : '';
-		 $end_timeslot_index=(isset($splitTimeslot)) ? (count($splitTimeslot)-1) : '';
-		 $end_timeslot=(isset($splitTimeslot[$end_timeslot_index])) ? ($splitTimeslot[$end_timeslot_index]) : '';
+		 $start_timeslot=(isset($splitTimeslot['1']) && $splitTimeslot['1']!="<B>Allocated</B>") ? ($splitTimeslot['1']) : '';
+		 $allocate_text_index = array_search('<B>Allocated</B>',$splitTimeslot);
+		 if(isset($allocate_text_index) && $allocate_text_index!=""){
+		 	$end_timeslot_index=(isset($splitTimeslot)) ? ($allocate_text_index-1) : '';
+		 }else{
+		 	$end_timeslot_index=(isset($splitTimeslot)) ? (count($splitTimeslot)-1) : '';
+		 }
+		 //$end_timeslot_index=(isset($splitTimeslot)) ? (count($splitTimeslot)-1) : '';
+		
+		 $end_timeslot=(isset($splitTimeslot[$end_timeslot_index]) && $splitTimeslot[$end_timeslot_index]!="<B>Non-Allocated</B>") ? ($splitTimeslot[$end_timeslot_index]) : '';
 		 $ts_array1 = (isset($start_timeslot))? (explode("-", $start_timeslot)) : '';
-	 	 $entry_time_st = date("H:i",strtotime(trim($ts_array1['0'])));
-		 $st = (isset($entry_time_st)) ? (strtotime($entry_time_st)) : '';
-		 $entry_st_array = (isset($entry_time_st)) ? (explode(":", $entry_time_st)) : '';
-		 $entry_hour_st = (isset($entry_st_array['0'])) ? ($entry_st_array['0']) : '';
-		 $entry_minute_am_pm_st = (isset($entry_st_array['1'])) ? ($entry_st_array['1']) : '';
-		 $entry_minute_am_pm_arr=(isset($entry_minute_am_pm_st)) ? (explode(" ",$entry_minute_am_pm_st)) : '';
-		 $entry_minute_st=(isset($entry_minute_am_pm_arr['0'])) ? ($entry_minute_am_pm_arr['0']) : '';
-		 $ts_array2 = (isset($end_timeslot)) ? (explode("-", $end_timeslot)) : '';
-		 $entry_time_et = (isset($ts_array2['1']))? (date("H:i",strtotime(trim($ts_array2['1'])))) : ''; 
+		 //$entry_time_st = date("H:i",strtotime(trim($ts_array1['0'])));
+		 $entry_time_st = (isset($ts_array1['0']) && $ts_array1['0']!="") ? date("H:i",strtotime(trim($ts_array1['0']))):'';
+		 
+		 $st = (isset($entry_time_st) && $entry_time_st!='') ? (strtotime($entry_time_st)) : '';
+		 $entry_st_array = (isset($entry_time_st) && $entry_time_st!='') ? (explode(":", $entry_time_st)) : '';
+		 $entry_hour_st = (isset($entry_st_array['0']) && $entry_st_array['0']!="") ? ($entry_st_array['0']) : '';
+		 
+		 $entry_minute_am_pm_st = (isset($entry_st_array['1']) && $entry_st_array['1']!="") ? ($entry_st_array['1']) : '';
+		 $entry_minute_am_pm_arr=(isset($entry_minute_am_pm_st) && $entry_minute_am_pm_st!="") ? (explode(" ",$entry_minute_am_pm_st)) : '';
+		 $entry_minute_st=(isset($entry_minute_am_pm_arr['0']) && $entry_minute_am_pm_arr['0']!="") ? ($entry_minute_am_pm_arr['0']) : '';
+		 $ts_array2 = (isset($end_timeslot) && $end_timeslot!="") ? (explode("-", $end_timeslot)) : '';
+		 
+		 $entry_time_et = (isset($ts_array2['1']) && $ts_array2['1']!='')? (date("H:i",strtotime(trim($ts_array2['1'])))) : ''; 
+		 
 		 $et = (isset($entry_time_et)) ? (strtotime($entry_time_et)) : '';
 		 $entry_et_array = (isset($entry_time_et)) ? (explode(":", $entry_time_et)) : '';
 		 $entry_hour_et = (isset($entry_et_array['0'])) ? ($entry_et_array['0']) : '';
@@ -6772,10 +6849,14 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		 $year = (isset($date_array['0'])) ? ($date_array['0']):'';
 		 $month = (isset($date_array['1'])) ? ($date_array['1']):'';
 		 $day = (isset($date_array['2'])) ? ($date_array['2']):'';
+		
+		 if($entry_hour_st=="" && $entry_minute_st==""){
+		  	$entry_hour_st=0; 
+			$entry_minute_st=0; 
+		 }
 		 $eventstart = mktime ( $entry_hour_st, $entry_minute_st, 0, $month, $day, $year );
 		 $cal_time = gmdate('His', $eventstart);
 		 $eventstartdate = gmdate ( 'Ymd', $eventstart );
-
 		 //print"<pre>";print_r($row);print_r($exceptions_dates);echo $eventstartdate;die;
 		 if(($class_room_id!='' && in_array($row[3],$exceptions_dates, true)) || ($class_room_id!='' && in_array($row[3],$holiday_date, true)) ){
 		   		$eventstartdate='';$cal_time=''; 	
@@ -6795,6 +6876,7 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
 		 
 		}
 	}
+	//echo $evt_name;
 	if ( $want_repeated && ! empty ( $row[20] ) ) {// row[20] = cal_type
 	     $item = new RepeatingEvent ( $evt_name, $evt_descr, $row[3], "",
           "", "", "", "", "", "", "",
@@ -6843,8 +6925,8 @@ function query_events_clsrm_teacher_availability($user, $want_repeated, $date_fi
       }
     }
   }
-
-  return array($result,$exceptions_dates);
+//print"<pre>";print_r($result);die;
+  return array($result,$exceptions_dates,$rows);
 }
 //Classroom availability filter form
 function print_classroom_availability_menu( $form, $date = '', $room_filter_id = '' ) {

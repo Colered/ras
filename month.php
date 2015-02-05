@@ -28,7 +28,7 @@ if ( empty ( $user ) )
  $room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
  $teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
  $program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:''; 
-
+ $new_event_Arr=array();
 load_user_categories ();
 $next = mktime ( 0, 0, 0, $thismonth + 1, 1, $thisyear );
 $nextYmd = date ( 'Ymd', $next );
@@ -48,16 +48,31 @@ if ( $BOLD_DAYS_IN_YEAR == 'Y' ) {
   $enddate = mktime ( 23, 59, 59, $thismonth + 1, 0, $thisyear );
 }
 //filteration for the classroom availability
-$exception_dates=array();
+
+$new_event_Arr=$exception_dates=array();
 if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 	$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
 }elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
 	$events_detail = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
 	$events=$events_detail[0];
+	$rows_detail=isset($events_detail[2])?$events_detail[2]:'';
+	$date_var='';
+	foreach ($rows_detail as $key => $val){
+		foreach ($val as $key_new=>$val_new){
+				if($key_new=='3'){
+					$date_var=$val_new;
+				}
+		}
+		$new_event_Arr[$date_var]=$val;
+	}
+	
 	$exception_dates=(isset($events_detail[1]) && $events_detail[1]!='')? $events_detail[1] : '';
 }else{
 	$events = read_events ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, $cat_id);
 }
+
+
+
 
 if ( $DISPLAY_TASKS_IN_GRID == 'Y' ){
   /* Pre-load tasks for quicker access */
@@ -72,8 +87,8 @@ $nextMonth1 = $nextMonth2 = $prevMonth1 = $prevMonth2 = '';
 $printerStr = $smallTasks = $unapprovedStr = '';
 if ( empty ( $DISPLAY_TASKS ) || $DISPLAY_TASKS == 'N' &&
   $DISPLAY_SM_MONTH != 'N' ) {
-     $nextMonth1 = display_small_month ( $nextmonth, $nextyear, true, true,'nextmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id,$program_filter_id,$exception_dates);
-     $prevMonth1 = display_small_month ( $prevmonth, $prevyear, true, true,'prevmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id,$program_filter_id,$exception_dates);
+     $nextMonth1 = display_small_month ( $nextmonth, $nextyear, true, true,'nextmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id,$program_filter_id,$exception_dates,$new_event_Arr);
+     $prevMonth1 = display_small_month ( $prevmonth, $prevyear, true, true,'prevmonth', $monthURL ,'', $room_filter_id, $teacher_filter_id,$program_filter_id,$exception_dates,$new_event_Arr);
 }
 if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
   if (  $DISPLAY_SM_MONTH != 'N' ) {
@@ -86,7 +101,10 @@ if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
   $tableWidth = '80%';
 }
 $eventinfo = ( ! empty ( $eventinfo ) ? $eventinfo : '' );
-$monthStr = display_month ( $thismonth, $thisyear, false, $room_filter_id, $teacher_filter_id, $program_filter_id,$exception_dates);
+/*echo '<pre>';
+print_r($new_event_Arr);*/
+
+$monthStr = display_month ( $thismonth, $thisyear, false, $room_filter_id, $teacher_filter_id, $program_filter_id,$exception_dates,$new_event_Arr);
 $navStr = display_navigation ( 'month' );
 $month_name_display=display_navigation_current_month( 'month' );
 if ( empty ( $friendly ) ) {
