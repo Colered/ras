@@ -642,7 +642,7 @@ class Timetable extends Base {
 							left join program_years py on py.id = ta.program_year_id 
 							left join subject su on su.id = ta.subject_id 
 							left join teacher t on t.id = ta.teacher_id 
-							where reserved_flag = 0 and ta.program_year_id = '".$program_id."' and ta.cycle_id = '".$cycle_id."' order by ta.id");
+							where reserved_flag = 0 and ta.program_year_id = '".$program_id."' and ta.cycle_id = '".$cycle_id."' order by s.order_number");
 		while($result_free_act = mysqli_fetch_array($sql_free_act))
 		{
 			$free_activities[$result_free_act['activity_id']]['activity_id'] = $result_free_act['activity_id'];
