@@ -670,3 +670,9 @@ width:40px;
 }
 .minical td.hasevents{background-color:#FFFF33;}
 .clsbtnGenrtTimtblDisable{background-color:#CCCCCC; background-image:none;}
+.showDragHandle {
+	background-image: url(images/updown2.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	cursor: move;
+}

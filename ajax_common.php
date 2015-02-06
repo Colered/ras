@@ -668,32 +668,89 @@ switch ($codeBlock) {
                         else
                             $sessionId = mysqli_insert_id($db);
                         $group_id = "";
-                        //get last created activity name
-                        $result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
-                        $dRow = mysqli_fetch_assoc($result3);
-                        $actCnt = substr($dRow['name'], 1);
-                        $actName = 'A' . ($actCnt + 1);
+						//print"<pre>";print_r($_POST['slctTeacher']);print"</pre>";print_r($_POST);die;
+						
+						$sql_count_act = mysqli_query($db, "SELECT ta.id,teacher_id FROM teacher_activity as ta WHERE session_id='".$sessionId."'");
+						$act_count = mysqli_num_rows($sql_count_act);
+						while($row_act = mysqli_fetch_array($sql_count_act))
+						{
+							$act_ids[] = $row_act['id'];
+						}						
+						if(count($_POST['slctTeacher']) == $act_count)
+						{
+							$j=0;
+							foreach($_POST['slctTeacher'] as $teacher_id)
+							{							
+								//update activity
+								$result2 = mysqli_query($db, "UPDATE teacher_activity SET
+																teacher_id = '" . $teacher_id . "',
+																room_id = '',
+																start_time = '',
+																timeslot_id = '',
+																act_date = '',
+																reserved_flag = '0',
+																date_update = NOW() WHERE id = '".$act_ids[$j]."'");
+							$j++;
+							}													
+						}elseif(count($_POST['slctTeacher']) > $act_count){
+							//die("me");							
+							if(!empty($act_hidden_id)) {
+								for($j=0;$j<count($_POST['slctTeacher']);$j++)
+								{
+									if($j<$act_count)
+									{
+										$result2 = mysqli_query($db, "UPDATE teacher_activity SET
+																teacher_id = '" . $_POST['slctTeacher'][$j] . "',
+																room_id = '',
+																start_time = '',
+																timeslot_id = '',
+																act_date = '',
+																reserved_flag = '0',
+																date_update = NOW() WHERE id = '".$act_ids[$j]."'");
+									}else{
+										//get last created activity name
+										$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+										$dRow = mysqli_fetch_assoc($result3);
+										$actCnt = substr($dRow['name'], 1);
+										$actName = 'A' . ($actCnt + 1);	
+										//insert new activity
+										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'][$j] . "', '" . $group_id . "','', '', '', '' , '0', NOW(), NOW());");	
+									}
 
-                        if (!empty($act_hidden_id)) {
-                            //update activity
-                            $result2 = mysqli_query($db, "UPDATE teacher_activity SET
-															teacher_id = '" . $_POST['slctTeacher'] . "',
+								}
+							}else{
+								foreach($_POST['slctTeacher'] as $teacher_id)
+								{	
+									//get last created activity name
+									$result3 = mysqli_query($db, "SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+									$dRow = mysqli_fetch_assoc($result3);
+									$actCnt = substr($dRow['name'], 1);
+									$actName = 'A' . ($actCnt + 1);	
+									//insert new activity
+									$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $teacher_id . "', '" . $group_id . "','', '', '', '' , '0', NOW(), NOW());");									
+								}
+							}							
+						}elseif(count($_POST['slctTeacher']) < $act_count){
+							//die("we");
+							for($j=0;$j<$act_count;$j++)
+							{
+								if($j<count($_POST['slctTeacher']))
+								{
+									$result2 = mysqli_query($db, "UPDATE teacher_activity SET
+															teacher_id = '" . $_POST['slctTeacher'][$j] . "',
 															room_id = '',
 															start_time = '',
 															timeslot_id = '',
 															act_date = '',
 															reserved_flag = '0',
-															date_update = NOW() WHERE id = $act_hidden_id");
-                        } else {
-							//insert new activity
-                            $result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'] . "', '" . $group_id . "','', '', '', '' , '0', NOW(), NOW());");
-                        }
-                        if (mysqli_affected_rows($db) > 0) {
-                            echo 1;
-                        } else {
-                            echo 0;
-                        }
-                        exit;
+															date_update = NOW() WHERE id = '".$act_ids[$j]."'");
+								}else{
+									//delete extra activity
+									$del_act_query = "delete from teacher_activity where id='" . $act_ids[$j] . "'";
+									$qry = mysqli_query($db, $del_act_query);									
+								}
+							}
+						}                       
                     } else {
                         $del_act_query = "delete from teacher_activity where id='" . $act_hidden_id . "'";
                         $qry = mysqli_query($db, $del_act_query);
@@ -706,7 +763,7 @@ switch ($codeBlock) {
             }
 
             //if all fields are present then first add session and then create activities after checking the availability
-            if ((isset($_POST['txtSessionName']) && $_POST['txtSessionName'] != "") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher'] != "") && (isset($_POST['tslot_id']) && $_POST['tslot_id'] != "") && (isset($_POST['duration']) && $_POST['duration'] != "") && (isset($_POST['room_id']) && $_POST['room_id'] != "") && (isset($_POST['subSessDate']) && $_POST['subSessDate'] != "")) {
+			 if ((isset($_POST['txtSessionName']) && $_POST['txtSessionName'] != "") && (isset($_POST['slctTeacher']['0']) && $_POST['slctTeacher']['0'] != "") && (isset($_POST['tslot_id']) && $_POST['tslot_id'] != "") && (isset($_POST['duration']) && $_POST['duration'] != "") && (isset($_POST['room_id']) && $_POST['room_id'] != "") && (isset($_POST['subSessDate']) && $_POST['subSessDate'] != "")) {
                 //calculate all TS ids for the activity
                 $tsIdsAll = "";
                 $timeslotIdsArray = array();
@@ -724,6 +781,16 @@ switch ($codeBlock) {
                 $group_id = "";
                 //check the availability of activity with different restrictions
                 $valid = 1;
+				//check number of teachers for reserved activity
+				if ($valid == 1) 
+				{
+					if(count($_POST['slctTeacher']) > 1)
+					{
+						 echo 15;
+						 $valid = 0;
+						 exit;
+					}
+				}
                 //Rule: check if program can have class on selected date and time.
                 if ($valid == 1) {
                     //start
@@ -867,7 +934,7 @@ switch ($codeBlock) {
                 //check if teacher is available on the given time and day
                 if ($valid == 1) {
                     //check if the selected date is not added as exception by the teacher while providing availability
-                    $query = "select id from teacher_availability_exception where teacher_id = '" . $_POST['slctTeacher'] . "' and exception_date = '" . $_POST['subSessDate'] . "'";
+                    $query = "select id from teacher_availability_exception where teacher_id = '" . $_POST['slctTeacher']['0'] . "' and exception_date = '" . $_POST['subSessDate'] . "'";
                     $q_res = mysqli_query($db, $query);
                     if (mysqli_affected_rows($db) == 0) {
                         //find the day using date
@@ -878,7 +945,7 @@ switch ($codeBlock) {
 												from teacher_availability_rule_teacher_map tm
 												inner join teacher_availability_rule_day_map td on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
 												inner join teacher_availability_rule ta on ta.id = td.teacher_availability_rule_id
-												where start_date <= '" . $_POST['subSessDate'] . "' and end_date >= '" . $_POST['subSessDate'] . "' and day= '" . $final_day . "' and tm.teacher_id='" . $_POST['slctTeacher'] . "' and td.actual_timeslot_id like '%" . $tsIdsAll . "%'";
+												where start_date <= '" . $_POST['subSessDate'] . "' and end_date >= '" . $_POST['subSessDate'] . "' and day= '" . $final_day . "' and tm.teacher_id='" . $_POST['slctTeacher']['0'] . "' and td.actual_timeslot_id like '%" . $tsIdsAll . "%'";
                         $q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) <= 0) {
                             echo 5;
@@ -893,7 +960,7 @@ switch ($codeBlock) {
                 }
                 //check if teacher is not engaged in some other reserved activity
                 if ($valid == 1) {
-                    $teachAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.teacher_id='" . $_POST['slctTeacher'] . "'";
+                    $teachAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.teacher_id='" . $_POST['slctTeacher']['0'] . "'";
                     if ($sess_hidden_id <> "") {
                         $teachAvail_query .= " AND ss.id != " . $sess_hidden_id . "";
                     }
@@ -909,7 +976,7 @@ switch ($codeBlock) {
                 }
                 //Rule: A teacher cannot have more than 4 sessions per day
                 if ($valid == 1) {
-                    $teachAvail_query = "select id from teacher_activity where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher'] . "'";
+                    $teachAvail_query = "select id from teacher_activity where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher']['0'] . "'";
 					if ($act_hidden_id <> "") {
                         $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
                     }
@@ -926,7 +993,7 @@ switch ($codeBlock) {
                     $loc_res = mysqli_query($db, $loc_query);
                     $dataLoc = mysqli_fetch_assoc($loc_res);
                     $teachAvail_query = "select location_id from teacher_activity ta inner join room r on r.id = ta.room_id
-						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher'] . "'";
+						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher']['0'] . "'";
 					if ($act_hidden_id <> "") {
                         $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
                     }
@@ -950,7 +1017,7 @@ switch ($codeBlock) {
 						$cycle_res = mysqli_query($db, $cycle_query);
 						$dataCycle = mysqli_fetch_assoc($cycle_res);
 
-						$teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
+						$teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher']['0'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
 						$q_res = mysqli_query($db, $teachAvail_query);
 						$count = 0;
 						while ($dataAll = mysqli_fetch_assoc($q_res)) {
@@ -1072,7 +1139,7 @@ switch ($codeBlock) {
 							                                       program_year_id = '" . $_POST['programId'] . "',
 							                                       cycle_id = '" . $_POST['cycleId'] . "',
 							                                       subject_id = '" . $_POST['subjectId'] . "',
-							                                       teacher_id = '" . $_POST['slctTeacher'] . "',
+							                                       teacher_id = '" . $_POST['slctTeacher']['0'] . "',
 							                                       group_id = '" . $group_id . "',
 							                                       room_id = '" . $_POST['room_id'] . "',
 							                                       start_time = '" . $_POST['tslot_id'] . "',
@@ -1082,7 +1149,7 @@ switch ($codeBlock) {
 							                                       date_update=  NOW(),
 																   forced_flag = '".$_POST['force_flag']."' WHERE id= $act_hidden_id");
                         } else {
-                            $result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'] . "', '" . $group_id . "','" . $_POST['room_id'] . "', '" . $_POST['tslot_id'] . "', '" . $tsIdsAll . "', '" . $_POST['subSessDate'] . "', '" . $reserved_flag . "', NOW(), NOW(), '".$_POST['force_flag']."');");
+                            $result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher']['0'] . "', '" . $group_id . "','" . $_POST['room_id'] . "', '" . $_POST['tslot_id'] . "', '" . $tsIdsAll . "', '" . $_POST['subSessDate'] . "', '" . $reserved_flag . "', NOW(), NOW(), '".$_POST['force_flag']."');");
                         }
 
                         if (mysqli_affected_rows($db) > 0) {
@@ -1137,7 +1204,7 @@ switch ($codeBlock) {
         } else {
             $currentDateTime = date("Y-m-d H:i:s");
             //if all fields are present CHECK ALL THE VALIDATIONS
-            if ((isset($_POST['txtSessionName']) && $_POST['txtSessionName'] != "") && (isset($_POST['slctTeacher']) && $_POST['slctTeacher'] != "") && (isset($_POST['tslot_id']) && $_POST['tslot_id'] != "") && (isset($_POST['duration']) && $_POST['duration'] != "") && (isset($_POST['room_id']) && $_POST['room_id'] != "") && (isset($_POST['subSessDate']) && $_POST['subSessDate'] != "")) {
+            if ((isset($_POST['txtSessionName']) && $_POST['txtSessionName'] != "") && (isset($_POST['slctTeacher']['0']) && $_POST['slctTeacher']['0'] != "") && (isset($_POST['tslot_id']) && $_POST['tslot_id'] != "") && (isset($_POST['duration']) && $_POST['duration'] != "") && (isset($_POST['room_id']) && $_POST['room_id'] != "") && (isset($_POST['subSessDate']) && $_POST['subSessDate'] != "")) {
                 //calculate all TS ids for the activity
                 $tsIdsAll = "";
                 $timeslotIdsArray = array();
@@ -1155,6 +1222,15 @@ switch ($codeBlock) {
                 $group_id = "";
                 //check the availability of activity with different restrictions
                 $valid = 1;
+				//check number of teachers
+				if ($valid == 1) {
+					if(count($_POST['slctTeacher']) > 1)
+					{
+						 echo 15;
+						 $valid = 0;
+						 exit;
+					}
+				}
                 //Rule: check if program can have class on selected date and time.
                 if ($valid == 1) {
 					$final_programs = array(); $availTSIdsonSelDay = array();
@@ -1227,7 +1303,7 @@ switch ($codeBlock) {
                 //check if teacher is available on the given time and day
                 if ($valid == 1) {
                     //check if the selected date is not added as exception by the teacher while providing availability
-                    $query = "select id from teacher_availability_exception where teacher_id = '" . $_POST['slctTeacher'] . "' and exception_date = '" . $_POST['subSessDate'] . "'";
+                    $query = "select id from teacher_availability_exception where teacher_id = '" . $_POST['slctTeacher']['0'] . "' and exception_date = '" . $_POST['subSessDate'] . "'";
                     $q_res = mysqli_query($db, $query);
                     if (mysqli_affected_rows($db) == 0) {
                         //find the day using date
@@ -1240,7 +1316,7 @@ switch ($codeBlock) {
 												on td.teacher_availability_rule_id = tm.teacher_availability_rule_id
 												inner join teacher_availability_rule ta
 												on ta.id = td.teacher_availability_rule_id
-												where start_date <= '" . $_POST['subSessDate'] . "' and end_date >= '" . $_POST['subSessDate'] . "' and day= '" . $final_day . "' and tm.teacher_id='" . $_POST['slctTeacher'] . "' and td.actual_timeslot_id like '%" . $tsIdsAll . "%'";
+												where start_date <= '" . $_POST['subSessDate'] . "' and end_date >= '" . $_POST['subSessDate'] . "' and day= '" . $final_day . "' and tm.teacher_id='" . $_POST['slctTeacher']['0'] . "' and td.actual_timeslot_id like '%" . $tsIdsAll . "%'";
                         $q_res = mysqli_query($db, $teachAvail_query);
                         if (mysqli_affected_rows($db) <= 0) {
                             echo 5;
@@ -1255,7 +1331,7 @@ switch ($codeBlock) {
                 }
                 //check if teacher is not engaged in some other reserved activity
                 if ($valid == 1) {
-                    $teachAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.teacher_id='" . $_POST['slctTeacher'] . "'";
+                    $teachAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.teacher_id='" . $_POST['slctTeacher']['0'] . "'";
                     if ($sess_hidden_id <> "") {
                         $teachAvail_query .= " AND ss.id != " . $sess_hidden_id . "";
                     }
@@ -1274,7 +1350,7 @@ switch ($codeBlock) {
                 }
                 //Rule: a teacher cannot have more than 4 sessions per day
                 if ($valid == 1) {
-                    $teachAvail_query = "select id from teacher_activity where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher'] . "'";
+                    $teachAvail_query = "select id from teacher_activity where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher']['0'] . "'";
                     if ($act_hidden_id <> "") {
                         $teachAvail_query .= " AND id != " . $act_hidden_id . "";
                     }
@@ -1292,7 +1368,7 @@ switch ($codeBlock) {
                     $loc_res = mysqli_query($db, $loc_query);
                     $dataLoc = mysqli_fetch_assoc($loc_res);
                     $teachAvail_query = "select location_id from teacher_activity ta inner join room r on r.id = ta.room_id
-						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher'] . "'";
+						inner join building b on b.id = r.building_id where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and teacher_id='" . $_POST['slctTeacher']['0'] . "'";
 					if ($act_hidden_id <> "") {
                         $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
                     }
@@ -1316,7 +1392,7 @@ switch ($codeBlock) {
 						$cycle_res = mysqli_query($db, $cycle_query);
 						$dataCycle = mysqli_fetch_assoc($cycle_res);
 
-						$teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
+						$teachAvail_query = "select distinct act_date from teacher_activity where reserved_flag=1 and cycle_id='" . $dataCycle['id'] . "' and teacher_id='" . $_POST['slctTeacher']['0'] . "' and act_date != '" . $_POST['subSessDate'] . "'";
 						$q_res = mysqli_query($db, $teachAvail_query);
 						$count = 0;
 						while ($dataAll = mysqli_fetch_assoc($q_res)) {

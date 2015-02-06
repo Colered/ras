@@ -25,6 +25,8 @@ $rel_teacher = $objT->getTeachers();
 $objS = new Subjects();
 $objB = new Buildings();
 $objTS = new Timeslot();
+$activities = array();
+$teachers = array();
 //room dropdown
 $room_dropDwn = $objB->getRoomsDropDwn();
 //timeslot dropdown
@@ -84,6 +86,11 @@ if (isset($_GET['edit_actid']) && isset($_GET['edit_sessid'])) {
     $sess_hidden_id = $_GET['edit_sessid'];
     $dataSessArr = $objS->getSessionRow($sess_hidden_id);
     $dataActArr = $objS->getActRow($act_hidden_id);
+	$result_act = $objS->getAllActivities($sess_hidden_id);
+	while($dataTeachArr = $result_act->fetch_assoc()) {
+		$teachers[] = $dataTeachArr['teacher_id'];
+		$activities[] = $dataTeachArr['id'];
+	}
     $sess_btn_lbl = "Update Session";
 } else {
     $sess_btn_lbl = "Add Session";
@@ -205,7 +212,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                             <div class="custtd_left">
                                 <h2><strong>Manage Sessions:-</strong></h2>
                             </div>
-                            <div class="txtfield ">
+                            <div class="txtfield" style="padding:0px;">
                                 <div class="sessionboxSub" style="width:110px;">
                                     <h3>Session Name<span class="redstar">*</span></h3>
                                     <input type="text" class="inp_txt_session required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="<?php echo $sess_name_edit; ?>">
@@ -255,19 +262,29 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                         jQuery('#duration').val("<?php echo $sess_duration_edit; ?>");
                                     </script>
                                 </div>
-                                <div class="sessionboxSub" style="width:110px;">
-                                    <h3>Teacher</h3>
-                                    <select id="slctTeacher" name="slctTeacher" class="required" <?php echo $disSession; ?> style="width:106px; height:27px;">
-                                        <option value="">--Select--</option>
-<?php
-while ($row = $rel_teacher->fetch_assoc()) {
-    echo '<option value="' . $row['id'] . '">' . $row['teacher_name'] . ' (' . $row['email'] . ')</option>';
-}
-?>
-                                    </select>
-                                    <script type="text/javascript">
-                                        jQuery('#slctTeacher').val("<?php echo $sess_teacherid_edit; ?>");
-                                    </script>
+                                 <div class="sessionboxSub" style="width:150px;">
+                                    <h3>Teacher</h3>									
+										<select id="slctTeacher" name="slctTeacher[]" class="required" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
+										<option value="">--Select--</option>
+										<?php
+										while ($row = $rel_teacher->fetch_assoc()) {
+											if(in_array($row['id'],$teachers))
+											{
+												$selected = 'selected="selected"';
+											}else{
+												$selected = '';
+											}
+											echo '<option '.$selected.' value="' . $row['id'] . '">' . $row['teacher_name'] . ' (' . $row['email'] . ')</option>';
+										}
+										?>                       
+									   </select>
+									   <?php
+										foreach($activities as $value)
+										{
+										  echo '<input type="hidden" name="postdata[]" value="'. $value. '">';
+										}
+										?>
+                                    
                                 </div>
                                 <div class="sessionboxSub" style="width:110px;">
                                     <h3>Room</h3>
@@ -301,7 +318,7 @@ while ($row = $rel_teacher->fetch_assoc()) {
                                     <h3>Technical Notes</h3>
                                     <textarea style="height:40px; width:135px" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareatechnicalNotes" cols="20" rows="2" name="txtTechnicalNotes"><?php echo $sess_technical_notes_edit; ?></textarea>
                                 </div>
-                                <div class="sessionboxSub" style="width:154px;" >
+                                <div class="sessionboxSub" style="width:152px;" >
                                     <h3>Description</h3>
                                     <textarea style="height:40px;" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"><?php echo $sess_description_edit; ?></textarea>
                                 </div>
@@ -321,65 +338,77 @@ while ($row = $rel_teacher->fetch_assoc()) {
                             <?php
                             if ($subjectId != "") {
                                 $x = 0;
-                                $sessionHtml = '';
-                                $subj_session_query = "select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.start_time from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE subs.subject_id='" . $subjectId . "' order by subs.order_number ASC";
-                                $subj_session_result = mysqli_query($db, $subj_session_query);
-                                while ($subj_session_data = mysqli_fetch_assoc($subj_session_result)) {
-                                    $x++;
-                                    $actID = 0;
-                                    if ($subj_session_data['activityId'] != "") {
-                                        $actID = $subj_session_data['activityId'];
-                                    }
-                                    $edit_session_lnk = '<a class="table-icon edit" href="subjects.php?edit=' . $subIdEncrypt . '&edit_actid=' . $actID . '&edit_sessid=' . $subj_session_data['sessionID'] . '"></a>  |  ';
+								$sessionHtml = '';
+								$last_order ='';
+								$sessionHtml.='<div class="sessionList">
+												<table id="datatables" class="display datatableSession">
+												  <thead>
+												   <tr>
+												   <td colspan="11">
+												   <table>
+												   <tr>
+														<th width="8%">Session Name</th>
+														<th width="8%">Duration</th>
+														<th width="8%">Teacher</th>
+														<th width="8%">Room</th>
+														<th width="8%">Date</th>
+														<th width="8%">Start Time</th>
+														<th width="8%">Case No</th>
+														<th width="8%">Technical Notes</th>
+														<th width="8%">Description</th>
+														<td width="8%" style="display:none"></th>
+														<th width="8%">Actions</th>
+												   </tr>
+												   </table>
+												   </td>
+												   </tr>
+												  </thead>
+												 <tbody>';
+								$sql_get_act = "select id from subject_session WHERE subject_id = '" . $subjectId . "' order by order_number ASC";
+								$query_get_act = mysqli_query($db, $sql_get_act);
+								while($session_data = mysqli_fetch_assoc($query_get_act))
+								{
+									$x++;
+									$sessionHtml.='<tr id="' . $x . '" ><td colspan="11" class="dragHandle"><table>';
+									$subj_session_query = "select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.start_time from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE ta.session_id='" . $session_data['id'] . "' order by subs.order_number ASC";
+									$subj_session_result = mysqli_query($db, $subj_session_query);
+									while ($subj_session_data = mysqli_fetch_assoc($subj_session_result)) {
+										$actID = 0;
+										if ($subj_session_data['activityId'] != "") {
+											$actID = $subj_session_data['activityId'];
+										}
+										$edit_session_lnk = '<a class="table-icon edit" href="subjects.php?edit=' . $subIdEncrypt . '&edit_actid=' . $actID . '&edit_sessid=' . $subj_session_data['sessionID'] . '"></a>  |  ';
+										//setting default duration as 15 min for the activities
+										$duration = $subj_session_data['duration'];
+										if ($duration == "") {
+											$duration = "15";
+										} 
+										$act_Date = (trim($subj_session_data['act_date'])=='0000-00-00') ? '' : $subj_session_data['act_date'];
+										$sessionHtml.='<tr>
+										<td width="8%">' . $subj_session_data['session_name'] . '</td>
+										<td width="8%">' . date('H:i', mktime(0, $duration)) . '</td>
+										<td width="8%">' . $subj_session_data['teacher_name'] . '</td>
+										<td width="8%">' . $subj_session_data['room_name'] . '</td>
+										<td width="8%">' . $act_Date . '</td>
+										<td width="8%">' . $subj_session_data['start_time'] . '</td>
+										<td width="8%">' . $subj_session_data['case_number'] . '</td>
+										<td width="8%">' . $subj_session_data['technical_notes'] . '</td>
+										<td width="8%">' . $subj_session_data['description'] . '</td>';
+											$sessionHtml.='<td width="8%" style="display:none"><input type="hidden" name="sessionName[]" id="sessionName' . $x . '"  value="' . $subj_session_data['session_name'] . '"/>
 
+										<input type="hidden" name="sessionDesc[]" id="sessionDesc' . $x . '"  value="' . $subj_session_data['description'] . '"/>
+										<input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo' . $x . '"  value="' . $subj_session_data['case_number'] . '"/>
+										<input type="hidden" name="sessionTechNote[]" id="sessionTechNote' . $x . '"  value="' . $subj_session_data['technical_notes'] . '"/>
+										<input type="hidden" name="sessionOrder[]" id="sessionOrder' . $x . '"  value="' . $subj_session_data['order_number'] . '"/>
+										<input type="hidden" name="sessionRowId[]" id="sessionRowId' . $x . '"  value="' . $subj_session_data['id'] . '"/>
+										<input type="hidden" name="sessionSubId[]" id="sessionSubId' . $x . '"  value="' . $subj_session_data['sessionID'] . '"/></td>
+										<td width="8%" id=' . $x . '>' . $edit_session_lnk . '<a class="table-icon delete remove_field" onclick="removeSession(' . $actID . ',' . $subj_session_data['sessionID'] . ', ' . $subjectId . ', ' . $x . ');"></a></td></tr>';
+									}
+									$sessionHtml.='</table></td></tr>';
 
-                                    //setting default duration as 15 min for the activities
-                                    $duration = $subj_session_data['duration'];
-                                    if ($duration == "") {
-                                        $duration = "15";
-                                    }
-                                    if ($x == 1) {
-                                        $sessionHtml.='<div class="sessionList">
-   							<table id="datatables" class="display datatableSession">
-       						  <thead>
-          					   <tr>
-							<th>Sr. No.</th>
-          						<th >Session Name</th>
-                                                        <th >Duration</th>
-                                                        <th >Teacher</th>
-                                                        <th >Room</th>
-                                                        <th >Date</th>
-                                                        <th >Start Time</th>
-          						<th >Case No</th>
-                                                        <th >Technical Notes</th>
-                                                        <th >Description</th>
-                                                        <th >Actions</th>
-							</tr>
-       					      </thead>
-       					      <tbody>';
-                                    }
-                                    $act_Date = (trim($subj_session_data['act_date'])=='0000-00-00') ? '' : $subj_session_data['act_date'];
-                                    $sessionHtml.='<tr id="' . $x . '" >
-           						<td class="number">' . $x . '</td>
-	   							<td>' . $subj_session_data['session_name'] . '</td>
-								<td>' . date('H:i', mktime(0, $duration)) . '</td>
-								<td>' . $subj_session_data['teacher_name'] . '</td>
-								<td>' . $subj_session_data['room_name'] . '</td>
-								<td>' . $act_Date . '</td>
-								<td>' . $subj_session_data['start_time'] . '</td>
-								<td>' . $subj_session_data['case_number'] . '</td>
-	   							<td>' . $subj_session_data['technical_notes'] . '</td>
-								<td>' . $subj_session_data['description'] . '</td>';
-                                    $sessionHtml.='<td style="display:none"><input type="hidden" name="sessionName[]" id="sessionName' . $x . '"  value="' . $subj_session_data['session_name'] . '"/>
-
-								<input type="hidden" name="sessionDesc[]" id="sessionDesc' . $x . '"  value="' . $subj_session_data['description'] . '"/>
-								<input type="hidden" name="sessionCaseNo[]" id="sessionCaseNo' . $x . '"  value="' . $subj_session_data['case_number'] . '"/>
-								<input type="hidden" name="sessionTechNote[]" id="sessionTechNote' . $x . '"  value="' . $subj_session_data['technical_notes'] . '"/>
-								<input type="hidden" name="sessionOrder[]" id="sessionOrder' . $x . '"  value="' . $subj_session_data['order_number'] . '"/>
-								<input type="hidden" name="sessionRowId[]" id="sessionRowId' . $x . '"  value="' . $subj_session_data['id'] . '"/>
-								<input type="hidden" name="sessionSubId[]" id="sessionSubId' . $x . '"  value="' . $subj_session_data['sessionID'] . '"/></td>
-								<td style="width:50px" id=' . $x . '>' . $edit_session_lnk . '<a class="table-icon delete remove_field" onclick="removeSession(' . $actID . ',' . $subj_session_data['sessionID'] . ', ' . $subjectId . ', ' . $x . ');"></a></td></tr>';
-                                }
+								}
+							    
+                               
                                 $sessionHtml.='<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="' . $x . '"/>';
                                 $sessionHtml.='<input type="hidden" name="EditMaxExceptnListVal" id="EditMaxExceptnListVal"  value="' . $x . '"/>';
                                 $sessionHtml.='<input type="hidden" name="sessionIDVal" id="sessionIDVal"  value=""/>';
@@ -390,7 +419,7 @@ while ($row = $rel_teacher->fetch_assoc()) {
                                 echo $sessionHtml;
                                 ?>
                                 <script type="text/javascript">sortingSession();</script>
-<?php } ?>
+						<?php } ?>
                         </div>
                         <div class="clear"></div>
                         <div class="custtd_left">

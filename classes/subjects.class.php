@@ -301,5 +301,12 @@ class Subjects extends Base {
 		$row = $result->fetch_assoc();
 		return $row;
 	}
+	public function getAllActivities($sess_id)
+	{
+		$query="SELECT ta.teacher_id,ta.id
+						FROM teacher_activity as ta WHERE session_id='".$sess_id."'";
+		$result = $this->conn->query($query);
+		return $result;
+	}
 
 }

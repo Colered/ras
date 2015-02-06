@@ -526,7 +526,7 @@ function checkAvailability($forcing) {
 	    if($forcing == undefined){
 			$forcing="";
 		}
-		var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";
+		var txtSessionName="", txtCaseNo="", slctTeacher="",tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";
 		var subIdEncrypt = $('#subIdEncrypt').val();
   		//custom validation for all the fieelds on form
 		var formValid = 0;
@@ -537,7 +537,7 @@ function checkAvailability($forcing) {
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if($('#slctTeacher').val()==""){
+		if($('#slctTeacher').val()=="" || $('#slctTeacher').val()==null){
 			$('#slctTeacher').css('border', 'solid 1px red');
 			var formValid = 1; 
 		}else{
@@ -620,7 +620,7 @@ function checkAvailability($forcing) {
 						}else if($succ==3){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('Teacher is not available on the selected time and day.');
+							alert('Teacher is already engaged in other activity.');
 						}else if($succ==4){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -659,6 +659,10 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
+						}else if($succ==15){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Please choose a single teacher while creating a reserved activity.');
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -687,6 +691,20 @@ function addSubjectSession($forcing,$force_flag){
 			var formValid = 1;
 		}else{
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if($('#duration').val()==""){
+			$('#duration').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#duration').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
+		if($('#slctTeacher').val()=="" || $('#slctTeacher').val()==null){
+			$('#slctTeacher').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#slctTeacher').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
 		if($('#subjectId').val()==""){
@@ -731,7 +749,7 @@ function addSubjectSession($forcing,$force_flag){
 						}else if($succ==6){
 							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
 						}else if($succ==3){
-							alert('Teacher is not available on the selected time and day.');
+							alert('Teacher is already engaged in other activity.');
 						}else if($succ==4){
 							alert('Classroom is already engaged in other activity.');
 						}else if($succ==7){
@@ -751,9 +769,9 @@ function addSubjectSession($forcing,$force_flag){
 							opendialogToComfirmArea();
 							//alert('The sessions scheduled on Saturdays should be from the same academic area.');
 						}else if($succ==14){
-							$('#showstatusAvail').hide();
-							$('#showstatusNoAvail').show();
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
+						}else if($succ==15){
+							alert('Please choose a single teacher while creating a reserved activity.');
 						}else{
 							alert("Cannot create the session.");
 						}
@@ -809,12 +827,12 @@ function removeSession($activityId, $sessionID, $subjectId, $srno ){
 												//reload the page
 												$('#'+$srno).closest('tr').remove();
 												$('.green, .red').hide();
-												var Rows = $(".datatableSession tbody tr");
+												/*var Rows = $(".datatableSession tbody tr");
 												var cnt=0;
 												Rows.each(function(index, element) {
 														cnt++;
 												var firstCell = $(this).find('td').eq(0).text(cnt);
-												});
+												});*/
 												
 												//window.location.href = 'subjects.php?edit'+$subjectId+'';
 											}else{
@@ -2158,7 +2176,15 @@ function checkAvailSubSession(program_year_id,subject_id,sessionid,teacher_id,ro
 }
 
 function sortingSession(){
-	$(".datatableSession").tableDnD();
+	$(".datatableSession").tableDnD({
+		dragHandle: ".dragHandle"
+	});
+	$(".datatableSession tr").hover(function () {
+        $(".datatableSession tr").addClass('showDragHandle');
+    }, function () {
+        $(".datatableSession tr").removeClass('showDragHandle');
+    });
+
 }
 
 function checkweekTS()
