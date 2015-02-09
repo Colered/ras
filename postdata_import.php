@@ -48,6 +48,24 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$subjIdsArr[] = $row['id'];
 				$subjCodeArr[] = $row['subject_code'];
 			}
+			//get all rooms in the array
+			$objRoom = new Subjects();								
+			$respRoom = $objRoom->getRoom();
+			$roomNameArr = array(); $roomIdsArr = array(); 
+			while($row = mysqli_fetch_array($respRoom))
+			{
+				$roomNameArr[] = $row['room_name'];
+				$roomIdsArr[] = $row['id'];
+			}
+			//get all timeslot in the array
+			$objTS = new Timeslot();								
+			$respTS = $objTS->viewTimeslot();
+			$TimeSlotArr = array(); $TimeSlotIDArr = array(); 
+			while($row = mysqli_fetch_array($respTS))
+			{
+				$TimeSlotArr[] = $row['start_time'];
+				$TimeSlotIDArr[] = $row['id'];
+			}
 			//get all program and cycle
 			$objP = new Programs();								
 			$respP = $objP->getProgramWithNoOfCycle();
@@ -97,6 +115,20 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Code does not exist in the system";
 					}
+					//check if room name exist
+					$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('strtolower', $roomNameArr));
+					if(($RoomNamekey === 0) || ($RoomNamekey > 0)){
+						//$room_id = $subjIdsArr[$RoomNamekey];
+					}else{
+						$errorArr[] = "Error in Row no:" .$count." Room name does not exist in the system";
+					}
+					//check if timeslot exist
+					$TSkey =array_search(trim(strtolower($values[10])), array_map('strtolower', $TimeSlotArr));
+					if(($TSkey === 0) || ($TSkey > 0)){
+						//$room_id = $subjIdsArr[$RoomNamekey];
+					}else{
+						$errorArr[] = "Error in Row no:" .$count." Time Slot does not exist in the system";
+					}
 					//check if program  name exist
 					//$progNamekey = array_search($values[0], $progNameArr);
 					$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr)); 
@@ -113,9 +145,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$errorArr[] = "Error in Row no:" .$count." Program cycle does not exist in the system";
 					}
 					//check room date and start time needs to be blank
-					if(((strtolower(trim($values[8]))!="floating") && (strtolower(trim($values[8]))!="")) || ((strtolower(trim($values[9]))!="floating") && (strtolower(trim($values[9]))!="")) || ((strtolower(trim($values[10]))!="floating") && (strtolower(trim($values[10]))!="")))
+					if(((strtolower(trim($values[8]))!="floating") && (strtolower(trim($values[8]))!="")) && ((strtolower(trim($values[9]))!="floating") && (strtolower(trim($values[9]))!="")) && ((strtolower(trim($values[10]))!="floating") && (strtolower(trim($values[10]))!="")))
 					{
-						$errorArr[] = "Error in Row no:" .$count." Import can be done only for unreserved activities please make room, date and start time field as FLOATING or empty";
+						$errorArr[] = "Error in Row no:" .$count." Import can be done only for unreserved or semi-reserved activities please make either room or date or start time field as FLOATING or empty";
 					}
 					$count++;
 				}
@@ -140,6 +172,12 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								if(($subCodekey === 0) || ($subCodekey > 0)){
 									$subject_id = $subjIdsArr[$subCodekey];
 								}
+								//get the room ID
+								$room_id = '';
+								$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('strtolower', $roomNameArr));
+								if(($RoomNamekey === 0) || ($RoomNamekey > 0)){
+									$room_id = $roomIdsArr[$RoomNamekey];
+								}
 								//$progNamekey = array_search($values[0], $progNameArr); 
 								$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr));
 								$noOfCycle="";
@@ -147,6 +185,36 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									$program_year_id = $progYrIdsArr[$progNamekey];
 									$cycle_id   = $cycleIdArr[$progNamekey];
 								}
+								//check if date has been provided
+								if (isset($values[9]) && ($values[9]!='')){
+									$originalDate = $values[9];
+									$act_date = date("Y-m-d", strtotime($originalDate));
+								}
+								//check if start time has been provided
+								$start_time = ''; $tsIdsAll = '';
+								if (isset($values[10]) && ($values[10]!='')){
+									$TSkey =array_search(trim(strtolower($values[10])), array_map('strtolower', $TimeSlotArr));
+									if(($TSkey === 0) || ($TSkey > 0)){
+										$start_time = $TimeSlotIDArr[$TSkey];
+									}
+									//calculate all TS ids for the activity if Start Time and duration is set
+									$timeslotIdsArray = array();
+									if (isset($values[6]) && ($values[6]!='')){
+										if ($values[6] > 15) {
+											$noOfslots = $values[6] / 15;
+											$startTS = $start_time;
+											$endTS = $startTS + $noOfslots;
+											for ($i = $startTS; $i < $endTS; $i++) {
+												$timeslotIdsArray[] = $i;
+											}
+										} else {
+											$timeslotIdsArray[] = $start_time;
+										}
+										$tsIdsAll = implode(',', $timeslotIdsArray);
+									}
+								}
+								
+								
 								//check if session already exist
 								$resultQRY = mysqli_query($db, "SELECT id FROM subject_session WHERE subject_id='$subject_id' and cycle_no='$values[1]' and session_name='$values[4]' LIMIT 1");
 								$dRowQ = mysqli_fetch_assoc($resultQRY);
@@ -166,8 +234,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										$dRow = mysqli_fetch_assoc($result3);
 										$actCnt = substr($dRow['name'], 1);
 										$actName = 'A' . ($actCnt + 1);
+										//set the reserve flag variable
+										$reserveFlag = 0;
+										if(((strtolower(trim($values[8]))!="floating") && (strtolower(trim($values[8]))!="")) || ((strtolower(trim($values[9]))!="floating") && (strtolower(trim($values[9]))!="")) || ((strtolower(trim($values[10]))!="floating") && (strtolower(trim($values[10]))!="")))
+										{
+											$reserveFlag = 2;
+										}
 										//insert new activity
-										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '" . $actName . "', '" .$program_year_id. "', '" .$cycle_id. "', '" .$subject_id. "', '" . $sessionId . "', '" . $teacher_id . "', '','', '', '', '', 0, NOW(), NOW(), 0);");
+										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '".$actName."', '".$program_year_id."', '".$cycle_id."', '".$subject_id."', '".$sessionId."', '".$teacher_id."', '','".$room_id."', '".$start_time."', '".$tsIdsAll."', '".$act_date."', '".$reserveFlag."', NOW(), NOW(), 0);");
 									}
 								}
 								
