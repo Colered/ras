@@ -333,7 +333,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div></div>
                             <div class="clear"></div>
                         </div>
-                        <div class="divSession" style="text-align:left; <?php if(isset($_GET['clone']) && $_GET['clone'] != ""){ echo 'display:none'; } ?>">
+                        <div class="divSession" style="width:88%;text-align:left; <?php if(isset($_GET['clone']) && $_GET['clone'] != ""){ echo 'display:none'; } ?>">
                             <?php
                             if ($subjectId != "") {
                                 $x = 0;
