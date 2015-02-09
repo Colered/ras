@@ -265,7 +265,6 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                  <div class="sessionboxSub" style="width:150px;">
                                     <h3>Teacher</h3>									
 										<select id="slctTeacher" name="slctTeacher[]" class="required" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
-										<option value="">--Select--</option>
 										<?php
 										while ($row = $rel_teacher->fetch_assoc()) {
 											if(in_array($row['id'],$teachers))
@@ -368,11 +367,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 								$query_get_act = mysqli_query($db, $sql_get_act);
 								while($session_data = mysqli_fetch_assoc($query_get_act))
 								{
-									$x++;
-									$sessionHtml.='<tr id="' . $x . '" ><td colspan="11" class="dragHandle"><table>';
+									$sessionHtml.='<tr><td colspan="11" class="dragHandle"><table>';
 									$subj_session_query = "select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.start_time from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE ta.session_id='" . $session_data['id'] . "' order by subs.order_number ASC";
 									$subj_session_result = mysqli_query($db, $subj_session_query);
 									while ($subj_session_data = mysqli_fetch_assoc($subj_session_result)) {
+										$x++;
 										$actID = 0;
 										if ($subj_session_data['activityId'] != "") {
 											$actID = $subj_session_data['activityId'];
@@ -384,7 +383,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 											$duration = "15";
 										} 
 										$act_Date = (trim($subj_session_data['act_date'])=='0000-00-00') ? '' : $subj_session_data['act_date'];
-										$sessionHtml.='<tr>
+										$sessionHtml.='<tr  id="' . $x . '" >
 										<td width="8%">' . $subj_session_data['session_name'] . '</td>
 										<td width="8%">' . date('H:i', mktime(0, $duration)) . '</td>
 										<td width="8%">' . $subj_session_data['teacher_name'] . '</td>
@@ -402,7 +401,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 										<input type="hidden" name="sessionOrder[]" id="sessionOrder' . $x . '"  value="' . $subj_session_data['order_number'] . '"/>
 										<input type="hidden" name="sessionRowId[]" id="sessionRowId' . $x . '"  value="' . $subj_session_data['id'] . '"/>
 										<input type="hidden" name="sessionSubId[]" id="sessionSubId' . $x . '"  value="' . $subj_session_data['sessionID'] . '"/></td>
-										<td width="8%" id=' . $x . '>' . $edit_session_lnk . '<a class="table-icon delete remove_field" onclick="removeSession(' . $actID . ',' . $subj_session_data['sessionID'] . ', ' . $subjectId . ', ' . $x . ');"></a></td></tr>';
+										<td width="8%" id=' . $x . '>' . $edit_session_lnk . '<a class="table-icon delete remove_field" onclick="removeSession(' . $actID . ',' . $subj_session_data['sessionID'] . ', \'' . base64_encode($subjectId) . '\', ' . $x . ');"></a></td></tr>';
 									}
 									$sessionHtml.='</table></td></tr>';
 
