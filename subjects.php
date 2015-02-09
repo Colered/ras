@@ -108,6 +108,11 @@ $sess_caseno_edit = isset($_GET['edit_actid']) ? $dataSessArr['case_number'] : '
 $sess_technical_notes_edit = isset($_GET['edit_actid']) ? $dataSessArr['technical_notes'] : '';
 $sess_description_edit = isset($_GET['edit_actid']) ? $dataSessArr['description'] : '';
 ?>
+<style type="text/css">
+#content tr:nth-child(2n+1) {
+    background: none;
+}
+</style>
 <div id="content">
     <div id="main">
 <?php if (isset($_SESSION['succ_msg'])) {
@@ -367,7 +372,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 								$query_get_act = mysqli_query($db, $sql_get_act);
 								while($session_data = mysqli_fetch_assoc($query_get_act))
 								{
-									$sessionHtml.='<tr><td colspan="11" class="dragHandle"><table>';
+									$sessionHtml.='<tr class="addColor"><td colspan="11" class="dragHandle"><table>';
 									$subj_session_query = "select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.start_time from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE ta.session_id='" . $session_data['id'] . "' order by subs.order_number ASC";
 									$subj_session_result = mysqli_query($db, $subj_session_query);
 									while ($subj_session_data = mysqli_fetch_assoc($subj_session_result)) {
