@@ -49,7 +49,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$subjCodeArr[] = $row['subject_code'];
 			}
 			//get all rooms in the array
-			$objRoom = new Subjects();								
+			$objRoom = new Classroom();								
 			$respRoom = $objRoom->getRoom();
 			$roomNameArr = array(); $roomIdsArr = array(); 
 			while($row = mysqli_fetch_array($respRoom))
