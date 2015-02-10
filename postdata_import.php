@@ -231,7 +231,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									}
 								}
 								//check if session already exist
-								$resultQRY = mysqli_query($db, "SELECT id FROM subject_session WHERE subject_id='$subject_id' and cycle_no='$values[1]' and session_name='$values[4]' LIMIT 1");
+								$resultQRY = mysqli_query($db, "SELECT id FROM subject_session WHERE subject_id='$subject_id' and cycle_no='$cycle_id' and session_name='$values[4]' LIMIT 1");
 								$dRowQ = mysqli_fetch_assoc($resultQRY);
 								if (count($dRowQ) > 0) {
 									$sessionId = $dRowQ['id'];
