@@ -21,7 +21,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				for ($col = 0; $col < $highestColumnIndex; ++ $col) 
 				{
 				   $cell = $worksheet->getCellByColumnAndRow($col, $row);
-				   $val[] = (string)$cell->getValue();
+				   if($col == 10){
+				   		$val[] = (string)$cell->getFormattedValue();
+				   }else{
+				   		$val[] = (string)$cell->getValue();
+					}
 				}
 				$dataArr[] = $val;
 			}
@@ -104,7 +108,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					//check if subject name exist 
 					$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
 					if(($subNamekey === 0) || ($subNamekey > 0)){
-						//$subject_id = $subjIdsArr[$subNamekey];
+						//do nothing
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Name does not exist in the system";
 					}
@@ -116,21 +120,27 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$errorArr[] = "Error in Row no:" .$count." Subject Code does not exist in the system";
 					}
 					//check if room name exist
-					$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('strtolower', $roomNameArr));
-					if(($RoomNamekey === 0) || ($RoomNamekey > 0)){
-						//$room_id = $subjIdsArr[$RoomNamekey];
-					}else{
-						$errorArr[] = "Error in Row no:" .$count." Room name does not exist in the system";
+					if((strtolower(trim($values[8]))!="floating") && (strtolower(trim($values[8]))!=""))
+					{
+						$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('strtolower', $roomNameArr));
+						if(($RoomNamekey === 0) || ($RoomNamekey > 0)){
+							//do nothing
+						}else{
+							$errorArr[] = "Error in Row no:" .$count." Room name does not exist in the system";
+						}
 					}
 					//check if timeslot exist
-					$TSkey =array_search(trim(strtolower($values[10])), array_map('strtolower', $TimeSlotArr));
-					if(($TSkey === 0) || ($TSkey > 0)){
-						//$room_id = $subjIdsArr[$RoomNamekey];
-					}else{
-						$errorArr[] = "Error in Row no:" .$count." Time Slot does not exist in the system";
+					$time = date('h:i A', strtotime($values[10]));
+					if((strtolower(trim($time))!="floating") && (strtolower(trim($time))!=""))
+					{
+						$TSkey =array_search(trim(strtolower($time)), array_map('strtolower', $TimeSlotArr));
+						if(($TSkey === 0) || ($TSkey > 0)){
+							//do nothing
+						}else{
+							$errorArr[] = "Error in Row no:" .$count.'--'.$values[10]." Time Slot does not exist in the system";
+						}
 					}
 					//check if program  name exist
-					//$progNamekey = array_search($values[0], $progNameArr);
 					$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr)); 
 					$no_of_cycle="";
 					if(($progNamekey === 0) || ($progNamekey > 0)){
@@ -162,12 +172,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
 								$timeTempArr = explode(':', $cell_value);
 								$duration = ($timeTempArr[0]*60) + ($timeTempArr[1]); 
-								//$teachkey = array_search($values[7], $teacNameArr);
 								$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
 								if(($teachkey === 0) || ($teachkey > 0)){
 									$teacher_id = $teacIdsArr[$teachkey];
 								}
-								//$subNamekey = array_search($values[2], $subjNameArr);
 								$subCodekey =array_search(trim(strtolower($values[3])), array_map('strtolower', $subjCodeArr));
 								if(($subCodekey === 0) || ($subCodekey > 0)){
 									$subject_id = $subjIdsArr[$subCodekey];
@@ -178,7 +186,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								if(($RoomNamekey === 0) || ($RoomNamekey > 0)){
 									$room_id = $roomIdsArr[$RoomNamekey];
 								}
-								//$progNamekey = array_search($values[0], $progNameArr); 
 								$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr));
 								$noOfCycle="";
 								if(($progNamekey === 0) || ($progNamekey > 0)){
