@@ -193,42 +193,45 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 									$cycle_id   = $cycleIdArr[$progNamekey];
 								}
 								//check if date has been provided
-								if (isset($values[9]) && ($values[9]!='')){
-									$originalDate = $values[9];
-									$act_date = date("Y-m-d", strtotime($originalDate));
+								$act_date='';
+								if((strtolower(trim($values[9]))!="floating") && (strtolower(trim($values[9]))!="")){
+									$UNIX_DATE = ($values[9] - 25569) * 86400;
+									$act_date = gmdate("Y-m-d", $UNIX_DATE);
 								}
 								//check if start time has been provided
 								$start_time = ''; $tsIdsAll = '';
-								if (isset($values[10]) && ($values[10]!='')){
-									$TSkey =array_search(trim(strtolower($values[10])), array_map('trim', array_map('strtolower', $TimeSlotArr)));
+								if((strtolower(trim($values[10]))!="floating") && (strtolower(trim($values[10]))!="")){
+									$TSkey =array_search(trim(strtolower(date("h:i A" , strtotime($values[10])))), array_map('trim', array_map('strtolower', $TimeSlotArr))); 
 									if(($TSkey === 0) || ($TSkey > 0)){
 										$start_time = $TimeSlotIDArr[$TSkey];
 									}
 									//calculate all TS ids for the activity if Start Time and duration is set
 									$timeslotIdsArray = array();
 									if (isset($values[6]) && ($values[6]!='')){
-										if ($values[6] > 15) {
-											$noOfslots = $values[6] / 15;
+										$timeTemp = array();
+										$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
+										$timeTemp = explode(':', $cell_value);
+										$duration = ($timeTemp[0]*60) + $timeTemp[1];
+										if ($duration > 15) {
+											$noOfslots = $duration / 15;
 											$startTS = $start_time;
 											$endTS = $startTS + $noOfslots;
 											for ($i = $startTS; $i < $endTS; $i++) {
 												$timeslotIdsArray[] = $i;
 											}
 										} else {
-											$timeslotIdsArray[] = $start_time;
+											//$timeslotIdsArray[] = $start_time;
 										}
 										$tsIdsAll = implode(',', $timeslotIdsArray);
 									}
 								}
-								
-								
 								//check if session already exist
 								$resultQRY = mysqli_query($db, "SELECT id FROM subject_session WHERE subject_id='$subject_id' and cycle_no='$values[1]' and session_name='$values[4]' LIMIT 1");
 								$dRowQ = mysqli_fetch_assoc($resultQRY);
 								if (count($dRowQ) > 0) {
 									$sessionId = $dRowQ['id'];
 								}else{
-									$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .mysql_real_escape_string(trim($values[1])). "', '" .mysql_real_escape_string(trim($values[4])). "', '" .mysql_real_escape_string(trim($values[5])). "', '" .mysql_real_escape_string(trim($values[13])). "', '" .mysql_real_escape_string(trim($values[11])). "', '" .mysql_real_escape_string(trim($values[12])). "', '" .$duration. "', NOW(), NOW());");
+									$result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" .$subject_id. "', '" .$cycle_id. "', '" .mysql_real_escape_string(trim($values[4])). "', '" .mysql_real_escape_string(trim($values[5])). "', '" .mysql_real_escape_string(trim($values[13])). "', '" .mysql_real_escape_string(trim($values[11])). "', '" .mysql_real_escape_string(trim($values[12])). "', '" .$duration. "', NOW(), NOW());");
 									$sessionId = mysqli_insert_id($db);
 								}
 								if ($sessionId!="") {
