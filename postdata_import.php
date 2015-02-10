@@ -146,7 +146,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					if(($progNamekey === 0) || ($progNamekey > 0)){
 						$program_year_id = $progYrIdsArr[$progNamekey];
 						$no_of_cycle  = $noOfCycleArr[$progNamekey];
-						$cycle_id   = $cycleIdArr[$progNamekey];
+						$cycleNo =  $values[1];
+						$keyindex = $progNamekey + $cycleNo - 1;
+						$cycle_id   = $cycleIdArr[$keyindex];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Program name does not exist in the system";
 					}
@@ -190,7 +192,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								$noOfCycle="";
 								if(($progNamekey === 0) || ($progNamekey > 0)){
 									$program_year_id = $progYrIdsArr[$progNamekey];
-									$cycle_id   = $cycleIdArr[$progNamekey];
+									$cycleNo = $values[1];
+									$keyindex = $progNamekey + $cycleNo - 1;
+									$cycle_id   = $cycleIdArr[$keyindex];
+									//$cycle_id   = $cycleIdArr[$progNamekey];
 								}
 								//check if date has been provided
 								$act_date='';
