@@ -99,21 +99,21 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					$timeTemp = explode(':', $cell_value);
 					$duration = ($timeTemp[0]*60) + $timeTemp[1];
 					//check if teacher exist
-					$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
+					$teachkey =array_search(trim(strtolower($values[7])), array_map('trim', array_map('strtolower', $teacNameArr)));
 					if(($teachkey === 0) || ($teachkey > 0)){
 						$teacher_id = $teacIdsArr[$teachkey];
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Teacher name does not exist in the system";
 					}
 					//check if subject name exist 
-					$subNamekey =array_search(trim(strtolower($values[2])), array_map('strtolower', $subjNameArr));
+					$subNamekey =array_search(trim(strtolower($values[2])), array_map('trim', array_map('strtolower', $subjNameArr)));
 					if(($subNamekey === 0) || ($subNamekey > 0)){
 						//do nothing
 					}else{
 						$errorArr[] = "Error in Row no:" .$count." Subject Name does not exist in the system";
 					}
 					//check if subject code exist
-					$subCodekey =array_search(trim(strtolower($values[3])), array_map('strtolower', $subjCodeArr));
+					$subCodekey =array_search(trim(strtolower($values[3])), array_map('trim', array_map('strtolower', $subjCodeArr)));
 					if(($subCodekey === 0) || ($subCodekey > 0)){
 						$subject_id = $subjIdsArr[$subCodekey];
 					}else{
@@ -122,7 +122,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					//check if room name exist
 					if((strtolower(trim($values[8]))!="floating") && (strtolower(trim($values[8]))!=""))
 					{
-						$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('strtolower', $roomNameArr));
+						$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('trim', array_map('strtolower', $roomNameArr)));
 						if(($RoomNamekey === 0) || ($RoomNamekey > 0)){
 							//do nothing
 						}else{
@@ -133,7 +133,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					$time = date('h:i A', strtotime($values[10]));
 					if((strtolower(trim($time))!="floating") && (strtolower(trim($time))!=""))
 					{
-						$TSkey =array_search(trim(strtolower($time)), array_map('strtolower', $TimeSlotArr));
+						$TSkey =array_search(trim(strtolower($time)), array_map('trim', array_map('strtolower', $TimeSlotArr)));
 						if(($TSkey === 0) || ($TSkey > 0)){
 							//do nothing
 						}else{
@@ -141,7 +141,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						}
 					}
 					//check if program  name exist
-					$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr)); 
+					$progNamekey =array_search(trim(strtolower($values[0])), array_map('trim', array_map('strtolower', $progNameArr))); 
 					$no_of_cycle="";
 					if(($progNamekey === 0) || ($progNamekey > 0)){
 						$program_year_id = $progYrIdsArr[$progNamekey];
@@ -172,21 +172,21 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								$cell_value = PHPExcel_Style_NumberFormat::toFormattedString($values[6], 'hh:mm');
 								$timeTempArr = explode(':', $cell_value);
 								$duration = ($timeTempArr[0]*60) + ($timeTempArr[1]); 
-								$teachkey =array_search(trim(strtolower($values[7])), array_map('strtolower', $teacNameArr));
+								$teachkey =array_search(trim(strtolower($values[7])), array_map('trim', array_map('strtolower', $teacNameArr)));
 								if(($teachkey === 0) || ($teachkey > 0)){
 									$teacher_id = $teacIdsArr[$teachkey];
 								}
-								$subCodekey =array_search(trim(strtolower($values[3])), array_map('strtolower', $subjCodeArr));
+								$subCodekey =array_search(trim(strtolower($values[3])), array_map('trim', array_map('strtolower', $subjCodeArr)));
 								if(($subCodekey === 0) || ($subCodekey > 0)){
 									$subject_id = $subjIdsArr[$subCodekey];
 								}
 								//get the room ID
 								$room_id = '';
-								$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('strtolower', $roomNameArr));
+								$RoomNamekey =array_search(trim(strtolower($values[8])), array_map('trim', array_map('strtolower', $roomNameArr)));
 								if(($RoomNamekey === 0) || ($RoomNamekey > 0)){
 									$room_id = $roomIdsArr[$RoomNamekey];
 								}
-								$progNamekey =array_search(trim(strtolower($values[0])), array_map('strtolower', $progNameArr));
+								$progNamekey =array_search(trim(strtolower($values[0])), array_map('trim', array_map('strtolower', $progNameArr)));
 								$noOfCycle="";
 								if(($progNamekey === 0) || ($progNamekey > 0)){
 									$program_year_id = $progYrIdsArr[$progNamekey];
@@ -200,7 +200,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								//check if start time has been provided
 								$start_time = ''; $tsIdsAll = '';
 								if (isset($values[10]) && ($values[10]!='')){
-									$TSkey =array_search(trim(strtolower($values[10])), array_map('strtolower', $TimeSlotArr));
+									$TSkey =array_search(trim(strtolower($values[10])), array_map('trim', array_map('strtolower', $TimeSlotArr)));
 									if(($TSkey === 0) || ($TSkey > 0)){
 										$start_time = $TimeSlotIDArr[$TSkey];
 									}
