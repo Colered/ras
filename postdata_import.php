@@ -140,7 +140,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							$errorArr[] = "Error in Row no:" .$count.'--'.$values[10]." Time Slot does not exist in the system";
 						}
 					}
-					//check if program  name exist
+					
+					//check if program name exist
 					$progNamekey =array_search(trim(strtolower($values[0])), array_map('trim', array_map('strtolower', $progNameArr))); 
 					$no_of_cycle="";
 					if(($progNamekey === 0) || ($progNamekey > 0)){
@@ -155,6 +156,16 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					if(($values[1] <= 0) || ($values[1] > $no_of_cycle) || ($values[1] = ''))
 					{
 						$errorArr[] = "Error in Row no:" .$count." Program cycle does not exist in the system";
+					}
+					//check if subject is associated to given program and cycle
+					if ((isset($values[0]) && $values[0]!='') && (isset($values[2]) && $values[2]!='') && (isset($values[3]) && $values[3]!='')){
+						$resultQRY = mysqli_query($db, "SELECT id FROM subject WHERE program_year_id='$program_year_id' and cycle_no='$cycle_id' and subject_code='".trim($values[3])."' LIMIT 1");
+						$dRowQ = mysqli_fetch_assoc($resultQRY);
+						if(count($dRowQ) > 0){
+								//do nothing
+						}else{
+							$errorArr[] = "Error in Row no:" .$count." Subject code is not associated to given program and cycle";
+						}
 					}
 					//check room date and start time needs to be blank
 					if(((strtolower(trim($values[8]))!="floating") && (strtolower(trim($values[8]))!="")) && ((strtolower(trim($values[9]))!="floating") && (strtolower(trim($values[9]))!="")) && ((strtolower(trim($values[10]))!="floating") && (strtolower(trim($values[10]))!="")))
