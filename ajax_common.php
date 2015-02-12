@@ -637,7 +637,7 @@ switch ($codeBlock) {
         } else {
             //if only session name and duration is provide, just create a session and exit
             $currentDateTime = date("Y-m-d H:i:s");
-            if ((isset($_POST['txtSessionName']) && $_POST['txtSessionName'] != "") && (isset($_POST['tslot_id']) && $_POST['tslot_id'] == "") && (isset($_POST['room_id']) && $_POST['room_id'] == "") && (isset($_POST['subSessDate']) && $_POST['subSessDate'] == "")) {
+            if ((isset($_POST['txtSessionName']) && $_POST['txtSessionName'] != "") && (((isset($_POST['slctTeacher']) && $_POST['slctTeacher'] != "") && (isset($_POST['tslot_id']) && $_POST['tslot_id'] == "") && (isset($_POST['room_id']) && $_POST['room_id'] == "") && (isset($_POST['subSessDate']) && $_POST['subSessDate'] == "")) || ((isset($_POST['slctTeacher']) && $_POST['slctTeacher'] != "") && (($_POST['tslot_id'] == "" && $_POST['room_id'] != "" && $_POST['subSessDate'] != "") || ($_POST['tslot_id'] != "" && $_POST['room_id'] != "" && $_POST['subSessDate'] == "") || ($_POST['tslot_id'] != "" && $_POST['room_id'] == "" && $_POST['subSessDate'] != "") || ($_POST['tslot_id'] != "" && $_POST['room_id'] == "" && $_POST['subSessDate'] == "") || ($_POST['tslot_id'] == "" && $_POST['room_id'] != "" && $_POST['subSessDate'] == "") || ($_POST['tslot_id'] == "" && $_POST['room_id'] == "" && $_POST['subSessDate'] != ""))))) {
                 //check the total no of values in subject session to make a new order no
                 $sessCount_query = "select count(id) as total from subject_session";
                 $sessCount_res = mysqli_query($db, $sessCount_query);
@@ -660,15 +660,41 @@ switch ($codeBlock) {
                     $result = mysqli_query($db, "INSERT INTO subject_session (id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES('', '" . $_POST['subjectId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['txtSessionName'] . "', '" . $txtOrderNum . "', '" . $_POST['txtareaSessionDesp'] . "', '" . $_POST['txtCaseNo'] . "', '" . $_POST['txtareatechnicalNotes'] . "', '" . $duration . "', NOW(), NOW());");
                 }
 
-                //if only teacher name is also provided then create an un-reserved activity
+                //if only teacher name OR teacher and any 1 or 2 of room, date and timeslot is also provided then create an un-reserved activity
                 if (mysqli_affected_rows($db) > 0) {
-                    if (isset($_POST['slctTeacher']) && $_POST['slctTeacher'] != "") {
-                        if(!empty($sess_hidden_id))
+                    						
+						if(!empty($sess_hidden_id))
                             $sessionId = $sess_hidden_id;
                         else
                             $sessionId = mysqli_insert_id($db);
                         $group_id = "";
 						//print"<pre>";print_r($_POST['slctTeacher']);print"</pre>";print_r($_POST);die;
+						$room_id = isset($_POST['room_id'])?$_POST['room_id']:'';
+						$subSessDate = isset($_POST['subSessDate'])?$_POST['subSessDate']:'';
+						$tsIdsAll = "";
+						if(isset($_POST['tslot_id']) && $_POST['tslot_id'] != "")
+						{
+							//calculate all TS ids for the activity
+							$timeslotIdsArray = array();
+							if ($_POST['duration'] > 15) {
+								$noOfslots = $_POST['duration'] / 15;
+								$startTS = $_POST['tslot_id'];
+								$endTS = $startTS + $noOfslots;
+								for ($i = $startTS; $i < $endTS; $i++) {
+									$timeslotIdsArray[] = $i;
+								}
+							} else {
+								$timeslotIdsArray[] = $_POST['tslot_id'];
+							}
+							$tsIdsAll = implode(',', $timeslotIdsArray);
+						}
+						
+						if($_POST['subSessDate'] !='' || $_POST['subSessDate'] != '' || $_POST['tslot_id'] != '')
+						{
+							$reserved_flag = 2;
+						}else{
+							$reserved_flag = 0;
+						}
 						
 						$sql_count_act = mysqli_query($db, "SELECT ta.id,teacher_id FROM teacher_activity as ta WHERE session_id='".$sessionId."'");
 						$act_count = mysqli_num_rows($sql_count_act);
@@ -684,11 +710,11 @@ switch ($codeBlock) {
 								//update activity
 								$result2 = mysqli_query($db, "UPDATE teacher_activity SET
 																teacher_id = '" . $teacher_id . "',
-																room_id = '',
-																start_time = '',
-																timeslot_id = '',
-																act_date = '',
-																reserved_flag = '0',
+																room_id = '".$room_id."',
+																start_time = '".$_POST['tslot_id']."',
+																timeslot_id = '".$tsIdsAll."',
+																act_date = '".$subSessDate."',
+																reserved_flag = '".$reserved_flag."',
 																date_update = NOW() WHERE id = '".$act_ids[$j]."'");
 							$j++;
 							}													
@@ -701,11 +727,11 @@ switch ($codeBlock) {
 									{
 										$result2 = mysqli_query($db, "UPDATE teacher_activity SET
 																teacher_id = '" . $_POST['slctTeacher'][$j] . "',
-																room_id = '',
-																start_time = '',
-																timeslot_id = '',
-																act_date = '',
-																reserved_flag = '0',
+																room_id = '".$room_id."',
+																start_time = '".$_POST['tslot_id']."',
+																timeslot_id = '".$tsIdsAll."',
+																act_date = '".$subSessDate."',
+																reserved_flag = '".$reserved_flag."',
 																date_update = NOW() WHERE id = '".$act_ids[$j]."'");
 									}else{
 										//get last created activity name
@@ -714,7 +740,7 @@ switch ($codeBlock) {
 										$actCnt = substr($dRow['name'], 1);
 										$actName = 'A' . ($actCnt + 1);	
 										//insert new activity
-										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'][$j] . "', '" . $group_id . "','', '', '', '' , '0', NOW(), NOW());");	
+										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $_POST['slctTeacher'][$j] . "', '" . $group_id . "','".$room_id."', '".$_POST['tslot_id']."', '".$tsIdsAll."', '".$subSessDate."' , '".$reserved_flag."', NOW(), NOW());");	
 									}
 
 								}
@@ -727,7 +753,7 @@ switch ($codeBlock) {
 									$actCnt = substr($dRow['name'], 1);
 									$actName = 'A' . ($actCnt + 1);	
 									//insert new activity
-									$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $teacher_id . "', '" . $group_id . "','', '', '', '' , '0', NOW(), NOW());");									
+									$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update) VALUES ('', '" . $actName . "', '" . $_POST['programId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['subjectId'] . "', '" . $sessionId . "', '" . $teacher_id . "', '" . $group_id . "','".$room_id."', '".$_POST['tslot_id']."', '".$tsIdsAll."', '".$subSessDate."' , '".$reserved_flag."', NOW(), NOW());");									
 								}
 							}							
 						}elseif(count($_POST['slctTeacher']) < $act_count){
@@ -738,11 +764,11 @@ switch ($codeBlock) {
 								{
 									$result2 = mysqli_query($db, "UPDATE teacher_activity SET
 															teacher_id = '" . $_POST['slctTeacher'][$j] . "',
-															room_id = '',
-															start_time = '',
-															timeslot_id = '',
-															act_date = '',
-															reserved_flag = '0',
+															room_id = '".$room_id."',
+															start_time = '".$_POST['tslot_id']."',
+															timeslot_id = '".$tsIdsAll."',
+															act_date = '".$subSessDate."',
+															reserved_flag = '".$reserved_flag."',
 															date_update = NOW() WHERE id = '".$act_ids[$j]."'");
 								}else{
 									//delete extra activity
@@ -750,11 +776,8 @@ switch ($codeBlock) {
 									$qry = mysqli_query($db, $del_act_query);									
 								}
 							}
-						}                       
-                    } else {
-                        $del_act_query = "delete from teacher_activity where id='" . $act_hidden_id . "'";
-                        $qry = mysqli_query($db, $del_act_query);
-                    }
+						}                   
+                    
                     echo 1;
                 } else {
                     echo 0;

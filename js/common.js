@@ -632,7 +632,7 @@ function checkAvailability($forcing) {
 						}else if($succ==8){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create an activity.');
+							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create a reserved activity.');
 						}else if($succ==9){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -693,13 +693,6 @@ function addSubjectSession($forcing,$force_flag){
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if($('#duration').val()==""){
-			$('#duration').css('border', 'solid 1px red');
-			var formValid = 1; 
-		}else{
-			$('#duration').css('border', '1px solid #C0C0C0');
-			var formValid = 0;
-		}
 		if($('#slctTeacher').val()=="" || $('#slctTeacher').val()==null){
 			$('#slctTeacher').css('border', 'solid 1px red');
 			var formValid = 1; 
@@ -755,7 +748,7 @@ function addSubjectSession($forcing,$force_flag){
 						}else if($succ==7){
 							alert('Classroom is not free on the given date and time.');
 						}else if($succ==8){
-							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create an activity.');
+							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create a reserved activity.');
 						}else if($succ==9){
 							alert('Program is not available on the selected day and time.');
 						}else if($succ==10){
