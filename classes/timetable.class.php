@@ -1062,7 +1062,7 @@ class Timetable extends Base {
 				}
 			}			
 		}
-		return [$reserved_array,$program_session_count,$teachers_count,$teachers_sat,$reserved_areas,$reserved_subject_rooms,$locations,$reserved_teachers,$reserved_rooms,$unreserved_timeslots,$unreserved_times];
+		return array($reserved_array,$program_session_count,$teachers_count,$teachers_sat,$reserved_areas,$reserved_subject_rooms,$locations,$reserved_teachers,$reserved_rooms,$unreserved_timeslots,$unreserved_times);
 	}
 	
 	//Function to get all timeslots from the database
