@@ -1706,5 +1706,26 @@ switch ($codeBlock) {
 				echo "Enter-Rquired-Feild";
 			}
 			break;
+			case "acceptAllocation":
+			if(isset($_POST['check_activity_value']) && $_POST['check_activity_value'] != '')
+			{
+				$activityArr=array();
+				$objT = new Teacher();
+				$objTime = new Timetable();
+				$activityArr = (isset($_POST['check_activity_value'])) ? $_POST['check_activity_value'] : '';
+				foreach($activityArr as $key=>$value){
+					$resp = $objTime->checkTimetableByActivity($value);
+					if(mysqli_num_rows($resp)>0){
+						$row = mysqli_fetch_assoc($resp);
+						$all_ts = $objT -> getTimeslotId($row['timeslot']);
+						$time = explode(",",$all_ts);
+						$start_time = $time[0];
+						$objTime->updateTeachAct($row['activity_id'],$row['room_id'],$row['date'],$all_ts,$start_time,$row['date_upd']);
+					}	
+				}
+				$_SESSION['succ_msg']="Activities has been reserved successfully";
+				echo 1;
+			}
+		   break;
 }
 ?>

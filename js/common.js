@@ -2629,3 +2629,59 @@ $(document).ready(function() {
 		
 	});
 });
+
+function acceptAllocationFun(){
+	var values = new Array();
+	$.each($("input[name='activity_allocation[]']:checked"), function() {
+  		values.push($(this).val());
+    });
+	//alert(values);
+	$.ajax({
+           type: "POST",
+           url: "ajax_common.php",
+           data: {
+					'check_activity_value': values,
+					'codeBlock': 'acceptAllocation',
+				 },
+                success: function($succ){
+					if($succ==1){
+						$(location).attr('href', 'teacher_activity_view.php');
+					}else{
+						 alert('Please select at least one activity');	
+					}
+                }
+        });
+}
+
+//To the accept allocation
+$(document).ready(function() {
+	//To select/deselect for selectAll checkbox when all checkbox are selected or not
+	$(document).on('click', ".activityCkb", function() {
+			var desabledCkbCnt = $(".ckbDisabled").length;
+			//alert(desabledCkbCnt);
+			var allCkbOncurrntPageCnt =$(".allCKbCls").length;
+			//alert(allCkbOncurrntPageCnt);
+			var activeCkbOnpageCnt=allCkbOncurrntPageCnt-desabledCkbCnt;
+			//alert(activeCkbOnpageCnt);
+			var ckbCheckedCnt=$(".activityCkb:checked").length;
+			//alert(ckbCheckedCnt);
+			if(activeCkbOnpageCnt == ckbCheckedCnt) {
+				$("#ckbCheckAllActivity").prop("checked", "checked");
+			} else {
+				$("#ckbCheckAllActivity").removeAttr("checked");
+			}
+	});
+	
+    //To select/deselect the all checbox when click on select all checkbox
+	$('#ckbCheckAllActivity').click(function(event) { 
+			if(this.checked) { 
+				$('.activityCkb').each(function() { 
+					this.checked = true;             
+				});
+			}else{
+				$('.activityCkb').each(function() { 
+					this.checked = false;                       
+				});         
+			}
+		});
+});

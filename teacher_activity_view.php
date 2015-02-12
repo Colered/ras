@@ -16,10 +16,28 @@ $row_act_id = $result_act_id->fetch_assoc();
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function(){
-	$('#datatables').dataTable({
-		"sPaginationType":"full_numbers",
-		"aaSorting":[[0, "asc"]],
-		"bJQueryUI":true
+	oTable = $('#datatables').dataTable({
+	    "aaSorting":[[1, "asc"]],
+		"bJQueryUI" : true,
+		"sPaginationType" : "full_numbers",
+		"aoColumnDefs": [
+			  { 'bSortable': false, 'aTargets': [ 0 ] }
+			],
+		"fnDrawCallback": function( settings ) {
+				//managing the "Select all" checkbox
+				// everytime the table is drawn, it checks if all the 
+				//checkboxes are checked and if they are, then the select all
+				// checkbox in the table header is selected
+				var allChecked = true;
+				$('#datatables tbody tr').each(function() {
+				  $('.activityCkb').each(function() { 
+						if (!$(this).is(':checked')) {
+								allChecked = false;
+							}
+						});
+					});
+				$('#ckbCheckAllActivity').prop('checked', allChecked);
+			},
 	});
 })
 </script>
@@ -40,14 +58,16 @@ $(document).ready(function(){
 				$readonly = 'class="buttonsub" disabled="disabled" style="background-color:#CCCCCC; background-image:none"';
 			}?>
 			<div style="float:right">
-				<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
+				<!--<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
 				<input type="hidden" value="acceptAllocation" name="form_action">
 				<input  type="button" class="buttonsub"  disabled="disabled" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
-				</form>
+				</form>-->
+				<div class="btnAcceptAllocation"> <input  type="button" <?php echo $readonly;?> value="Accept Allocation" name="btnacceptallo" id="btnacceptallo" onclick="acceptAllocationFun();"/></div>
 			</div>
-            <table id="datatables" class="display">
+            <table id="datatables" class="display tblActivity">
                 <thead>
                     <tr>
+					    <th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" /><strong>Select All</strong></th>
                         <th>ID</th>
                         <th>Activity</th>
                         <th>Program</th>
@@ -102,6 +122,7 @@ $(document).ready(function(){
 							  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
 						?>
 						<tr<?php echo $trBColor;echo $trBColor1;?>>
+							<td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo $row['id'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['name'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['program_name'];?></td>
