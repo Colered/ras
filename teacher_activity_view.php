@@ -67,7 +67,7 @@ $(document).ready(function(){
             <table id="datatables" class="display tblActivity">
                 <thead>
                     <tr>
-					    <th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" /><strong>Select All</strong></th>
+					    <th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" /><strong>All</strong></th>
                         <th>ID</th>
                         <th>Activity</th>
                         <th>Program</th>

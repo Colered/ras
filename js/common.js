@@ -2635,22 +2635,25 @@ function acceptAllocationFun(){
 	$.each($("input[name='activity_allocation[]']:checked"), function() {
   		values.push($(this).val());
     });
-	//alert(values);
-	$.ajax({
-           type: "POST",
-           url: "ajax_common.php",
-           data: {
-					'check_activity_value': values,
-					'codeBlock': 'acceptAllocation',
-				 },
-                success: function($succ){
-					if($succ==1){
-						$(location).attr('href', 'teacher_activity_view.php');
-					}else{
-						 alert('Please select at least one activity');	
+	if(values.length === 0){
+		alert('Please select at least one activity');
+	}else if(confirm("Are you sure ,you want accept allocation for selected activity ?")){
+		$.ajax({
+			   type: "POST",
+			   url: "ajax_common.php",
+			   data: {
+						'check_activity_value': values,
+						'codeBlock': 'acceptAllocation',
+					 },
+					success: function($succ){
+						if($succ==1){
+							$(location).attr('href', 'teacher_activity_view.php');
+						}else{
+							 alert('Please select at least one activity');	
+						}
 					}
-                }
-        });
+			});
+	}
 }
 
 //To the accept allocation
