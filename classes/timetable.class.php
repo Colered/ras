@@ -250,7 +250,6 @@ class Timetable extends Base {
 					if(!in_array($date,$holidays))
 					{
 						$end_time = '';	
-						$sat_flag = 0;
 						$f_day = $this->getDayFromDate($date);
 						$reserved_timeslots = array();	
 						//CHECK if the day has any reserved activities scheduled
@@ -290,15 +289,14 @@ class Timetable extends Base {
 												}else{
 													$teachers_count[$date][$res_act_detail['teacher_id']] = 1;
 												}
-												if($f_day == 5 && $sat_flag == 0)
+												if($f_day == 5)
 												{
-													if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($res_act_detail['teacher_id'],$teachers_sat[$cycle_id]))
+													if(array_key_exists($res_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$res_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$res_act_detail['teacher_id']][$cycle_id]))
 													{
-													$teachers_sat[$cycle_id][$res_act_detail['teacher_id']] = $teachers_sat[$cycle_id][$res_act_detail['teacher_id']] + 1;
+													$teachers_sat[$res_act_detail['teacher_id']][$cycle_id][$date] = $teachers_sat[$res_act_detail['teacher_id']][$cycle_id][$date] + 1;
 													}else{
-														$teachers_sat[$cycle_id][$res_act_detail['teacher_id']] = 1;
-													}													
-													$sat_flag++;
+														$teachers_sat[$res_act_detail['teacher_id']][$cycle_id][$date] = 1;
+													}												
 												}
 												if($f_day == 5 && $res_act_detail['forced_flag'] != '1')
 												{
@@ -375,7 +373,7 @@ class Timetable extends Base {
 										if((array_key_exists($date,$teachers_count) && array_key_exists($free_act_detail['teacher_id'],$teachers_count[$date]) && $teachers_count[$date][$free_act_detail['teacher_id']] < 4) || !array_key_exists($date,$teachers_count) || !array_key_exists($free_act_detail['teacher_id'],$teachers_count[$date]))
 										{
 											//Here will check a teacher can have maximum of two saturdays working per cycle
-											if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($free_act_detail['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$free_act_detail['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)) || ($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && !array_key_exists($free_act_detail['teacher_id'],$teachers_sat[$cycle_id])))
+											if(($f_day == 5 && array_key_exists($free_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$free_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$free_act_detail['teacher_id']][$cycle_id])) || $f_day != 5 || ($f_day == 5 && !array_key_exists($free_act_detail['teacher_id'],$teachers_sat)) || ($f_day == 5 && array_key_exists($free_act_detail['teacher_id'],$teachers_sat) && !array_key_exists($cycle_id,$teachers_sat[$free_act_detail['teacher_id']])) || ($f_day == 5 && array_key_exists($free_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$free_act_detail['teacher_id']]) && !array_key_exists($date,$teachers_sat[$free_act_detail['teacher_id']][$cycle_id]) && sizeof($teachers_sat[$free_act_detail['teacher_id']][$cycle_id]) < 2))
 											{
 												//Here will check sessions from same area will be scheduled on saturday 
 												if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $free_act_detail['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
@@ -430,17 +428,15 @@ class Timetable extends Base {
 																				$teachers_count[$date][$free_act_detail['teacher_id']] = $teachers_count[$date][$free_act_detail['teacher_id']] + 1;
 																			}else{
 																				$teachers_count[$date][$free_act_detail['teacher_id']] = 1;
-																			}
-																			
-																			if($f_day == 5 && $sat_flag == 0)
+																			}													
+																			if($f_day == 5)
 																			{
-																				if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($free_act_detail['teacher_id'],$teachers_sat[$cycle_id]))
+																				if(array_key_exists($free_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$free_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$free_act_detail['teacher_id']][$cycle_id]))
 																				{
-																				$teachers_sat[$cycle_id][$free_act_detail['teacher_id']] = $teachers_sat[$cycle_id][$free_act_detail['teacher_id']] + 1;
+																				$teachers_sat[$free_act_detail['teacher_id']][$cycle_id][$date] = $teachers_sat[$free_act_detail['teacher_id']][$cycle_id][$date] + 1;
 																				}else{
-																					$teachers_sat[$cycle_id][$free_act_detail['teacher_id']] = 1;
-																				}														
-																				$sat_flag++;
+																					$teachers_sat[$free_act_detail['teacher_id']][$cycle_id][$date] = 1;
+																				}												
 																			}
 																			if($f_day == 5)
 																			{
@@ -466,7 +462,7 @@ class Timetable extends Base {
 									}
 								}							
 							}
-						}
+						}						
 					}
 				}
 			}
@@ -888,19 +884,19 @@ class Timetable extends Base {
 			if($semi_res_act_detail['program_year_id'] == $program_id && $semi_res_act_detail['cycle_id'] == $cycle_id)
 			{
 				if(($semi_res_date != '0000-00-00' && (($semi_res_act_detail['start_time'] == "" && $semi_res_act_detail['room_id'] == "0") || ($semi_res_act_detail['start_time'] != "" && $semi_res_act_detail['room_id'] == "0") || ($semi_res_act_detail['start_time'] == "" && $semi_res_act_detail['room_id'] != "0"))) || ($semi_res_date == '0000-00-00' && (($semi_res_act_detail['start_time'] != "" && $semi_res_act_detail['room_id'] != "0") || ($semi_res_act_detail['start_time'] != "" && $semi_res_act_detail['room_id'] == "0") || ($semi_res_act_detail['start_time'] == "" && $semi_res_act_detail['room_id'] != "0"))))
-				{					
+				{
 					//First we will check the count of Max No Sessions of Same Area during a Class day 
 					if((array_key_exists($date,$program_session_count) && array_key_exists($program_id,$program_session_count[$date]) && array_key_exists($semi_res_act_detail['area_id'],$program_session_count[$date][$program_id]) && $program_session_count[$date][$program_id][$semi_res_act_detail['area_id']]<$program_session_area[$program_id][$f_day]) || !array_key_exists($date,$program_session_count) || !array_key_exists($program_id,$program_session_count[$date]) || !array_key_exists($semi_res_act_detail['area_id'],$program_session_count[$date][$program_id]))
-					{						
+					{	
 						//Here will check a teacher can take maximum of 4 sessions per day
 						if((array_key_exists($date,$teachers_count) && array_key_exists($semi_res_act_detail['teacher_id'],$teachers_count[$date]) && $teachers_count[$date][$semi_res_act_detail['teacher_id']] < 4) || !array_key_exists($date,$teachers_count) || !array_key_exists($semi_res_act_detail['teacher_id'],$teachers_count[$date]))
-						{							
+						{
 							//Here will check a teacher can have maximum of two saturdays working per cycle
-							if(($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat[$cycle_id]) && ($teachers_sat[$cycle_id][$semi_res_act_detail['teacher_id']] < 2 || $sat_flag > 0)) || $f_day != 5 || ($f_day == 5 && !array_key_exists($cycle_id,$teachers_sat)) || ($f_day == 5 && array_key_exists($cycle_id,$teachers_sat) && !array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat[$cycle_id])))
-							{
+							if(($f_day == 5 && array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$semi_res_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id])) || $f_day != 5 || ($f_day == 5 && !array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat)) || ($f_day == 5 && array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat) && !array_key_exists($cycle_id,$teachers_sat[$semi_res_act_detail['teacher_id']])) || ($f_day == 5 && array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$semi_res_act_detail['teacher_id']]) && !array_key_exists($date,$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id]) && sizeof($teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id]) < 2))
+							{							
 								//Here will check sessions from same area will be scheduled on saturday 
 								if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $semi_res_act_detail['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
-								{									
+								{
 									//If activity is not already allocated ,session is not already taken and all the sessions with lesser order number have been taken, then we will allocate the activity
 									if(!$this->search_array($semi_res_act_detail['name'],$reserved_array) && !$this->search_array($semi_res_act_detail['subject_id']."-".$semi_res_act_detail['order_number'],$reserved_array))
 									{
@@ -914,7 +910,7 @@ class Timetable extends Base {
 											}else{
 												break;
 											}
-										}										
+										}
 										if($order_no_value == count($order_no_array))
 										{
 											//If start time is given use it otherwise use the unallocated timeslots of a day
@@ -956,16 +952,15 @@ class Timetable extends Base {
 															}else{
 																$teachers_count[$date][$semi_res_act_detail['teacher_id']] = 1;
 															}																	
-															if($f_day == 5 && $sat_flag == 0)
+															if($f_day == 5)
 															{
-																if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat[$cycle_id]))
+																if(array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$semi_res_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id]))
 																{
-																	$teachers_sat[$cycle_id][$semi_res_act_detail['teacher_id']] = $teachers_sat[$cycle_id][$semi_res_act_detail['teacher_id']] + 1;
+																$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] = $teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] + 1;
 																}else{
-																	$teachers_sat[$cycle_id][$semi_res_act_detail['teacher_id']] = 1;
-																}														
-																$sat_flag++;
-															}
+																	$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] = 1;
+																}												
+															}															
 															if($f_day == 5)
 															{
 																$reserved_areas[$date][$program_id] = $semi_res_act_detail['area_id'];
@@ -1025,15 +1020,14 @@ class Timetable extends Base {
 																	}else{
 																		$teachers_count[$date][$semi_res_act_detail['teacher_id']] = 1;
 																	}																
-																	if($f_day == 5 && $sat_flag == 0)
+																	if($f_day == 5)
 																	{
-																		if(array_key_exists($cycle_id,$teachers_sat) && array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat[$cycle_id]))
+																		if(array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$semi_res_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id]))
 																		{
-																			$teachers_sat[$cycle_id][$semi_res_act_detail['teacher_id']] = $teachers_sat[$cycle_id][$semi_res_act_detail['teacher_id']] + 1;
+																		$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] = $teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] + 1;
 																		}else{
-																			$teachers_sat[$cycle_id][$semi_res_act_detail['teacher_id']] = 1;
-																		}														
-																		$sat_flag++;
+																			$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] = 1;
+																		}												
 																	}
 																	if($f_day == 5)
 																	{

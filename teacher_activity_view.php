@@ -96,12 +96,12 @@ $(document).ready(function(){
 							$ts_array = explode(",",$row['timeslot_id']);
 							$min_ts_id = $ts_array[0];
 							$max_ts_id = $ts_array[count($ts_array)-1];
-							if(($row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date']) && $row['reserved_flag'] != 0)
+							if($row['act_date'] != '0000-00-00' && $row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date'])
 							{
 								$trBColor1 = ' style="background-color:#66CCFF; color:#FFFFFF;"';
 								$tdColor = ' style="color:#FFFFFF;"';
 							}else{
-								if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess) && $row['reserved_flag'] != 2)
+								if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess))
 								{
 									$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
 									$tdColor = ' style="color:#FFFFFF;"';
