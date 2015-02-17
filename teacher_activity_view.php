@@ -12,7 +12,7 @@ $row_id = $result_id->fetch_assoc();
 $result_act_id = $objTime->getLowestTeachAct($row_id['activity_id']);
 $row_act_id = $result_act_id->fetch_assoc();
 
-echo $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
+$activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
 
 
 ?>
@@ -24,7 +24,7 @@ $(document).ready(function(){
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
 		"aoColumnDefs": [
-			  { 'bSortable': false, 'aTargets': [ 0 ] }
+			  { 'bSortable': true, 'aTargets': [ 0 ] }
 			],
 		"fnDrawCallback": function( settings ) {
 				//managing the "Select all" checkbox
@@ -77,10 +77,10 @@ function activityFilter()
 				<input type="hidden" value="acceptAllocation" name="form_action">
 				<input  type="button" class="buttonsub"  disabled="disabled" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
 				</form>-->
-				<div class = "activity-color-filteration"> 
+				<div class = "activity-color-filteration" style="margin-right:420px;"> 
 					<form id="act_view_filter" name="act_view_filter" method="post" action="teacher_activity_view.php" novalidate="novalidate">	
 						<strong>Teacher Activity:</strong>
-						<select id="activity_color_filter" name="activity_color_filter" class="select-filter" onchange="activityFilter();" > 
+						<select id="activity_color_filter" name="activity_color_filter" class="select-filter" onchange="activityFilter();" style="width:110px;" > 
 							<option value="" selected="selected">--Select--</option>
 							<option value="1" <?php if($activity_filter_val == '1'){?> selected="selected"}<?php }?>>Floating</option>
 							<option value="2" <?php if($activity_filter_val == '2'){?> selected="selected"}<?php }?>>Allocated</option>
