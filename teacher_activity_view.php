@@ -12,6 +12,9 @@ $row_id = $result_id->fetch_assoc();
 $result_act_id = $objTime->getLowestTeachAct($row_id['activity_id']);
 $row_act_id = $result_act_id->fetch_assoc();
 
+echo $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
+
+
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -36,10 +39,22 @@ $(document).ready(function(){
 							}
 						});
 					});
-				$('#ckbCheckAllActivity').prop('checked', allChecked);
+				var desbCkbCnt = $(".ckbDisabled").length;
+				var allCkbCnt =$(".allCKbCls").length;
+				if(desbCkbCnt==allCkbCnt){
+					$('#ckbCheckAllActivity').prop('checked', false);
+				}else{
+					$('#ckbCheckAllActivity').prop('checked', allChecked);
+				}
 			},
 	});
+			
+			
 })
+function activityFilter()
+{
+	$('#act_view_filter').submit();
+}
 </script>
 <style type="text/css">
 	@import "css/demo_table_jui.css";
@@ -62,12 +77,24 @@ $(document).ready(function(){
 				<input type="hidden" value="acceptAllocation" name="form_action">
 				<input  type="button" class="buttonsub"  disabled="disabled" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
 				</form>-->
+				<div class = "activity-color-filteration"> 
+					<form id="act_view_filter" name="act_view_filter" method="post" action="teacher_activity_view.php" novalidate="novalidate">	
+						<strong>Teacher Activity:</strong>
+						<select id="activity_color_filter" name="activity_color_filter" class="select-filter" onchange="activityFilter();" > 
+							<option value="" selected="selected">--Select--</option>
+							<option value="1" <?php if($activity_filter_val == '1'){?> selected="selected"}<?php }?>>Floating</option>
+							<option value="2" <?php if($activity_filter_val == '2'){?> selected="selected"}<?php }?>>Allocated</option>
+							<option value="3" <?php if($activity_filter_val == '3'){?> selected="selected"}<?php }?>>Unallocated</option>
+							<option value="4" <?php if($activity_filter_val == '4'){?> selected="selected"}<?php }?>>Out of range</option>
+						</select>
+					</form>
+				</div>
 				<div class="btnAcceptAllocation"> <input  type="button" <?php echo $readonly;?> value="Accept Allocation" name="btnacceptallo" id="btnacceptallo" onclick="acceptAllocationFun();"/></div>
 			</div>
             <table id="datatables" class="display tblActivity">
                 <thead>
                     <tr>
-					    <th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" /><strong>All</strong></th>
+					    <th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" title="Select All"/></th>
                         <th>ID</th>
                         <th>Activity</th>
                         <th>Program</th>
@@ -86,33 +113,32 @@ $(document).ready(function(){
 				<?php
 					$result = $objT->getTeachersAct();
 					$result_sess = $objT->getSessionFromTT();
-					//print_r($result_sess);die;
 					$session_array = array();
 					if($result->num_rows){
 						while($row = $result->fetch_assoc())
-						{
-							//echo $row['session_id']."---"; print"<pre>";print_r($row);print"</pre>";die;
-							//print"<pre>";print_r($row);print"</pre>";die;
+						{   
+						    $class='';
 							$ts_array = explode(",",$row['timeslot_id']);
 							$min_ts_id = $ts_array[0];
 							$max_ts_id = $ts_array[count($ts_array)-1];
 							if($row['act_date'] != '0000-00-00' && $row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date'])
-							{
+							 {
 								$trBColor1 = ' style="background-color:#66CCFF; color:#FFFFFF;"';
 								$tdColor = ' style="color:#FFFFFF;"';
-							}else{
+								$class ="out-of-range";
+							 }else{
 								if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess))
 								{
-									$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
-									$tdColor = ' style="color:#FFFFFF;"';
-									$session_array[] = $row['session_id'];
+								 	$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
+								 	$tdColor = ' style="color:#FFFFFF;"';
+								 	$session_array[] = $row['session_id'];
+									$class = "unallocated-activity";
 								}else{
-									$trBColor1 = '';
-									$tdColor = '';
-								}
-							}
-							
-							
+								 	$trBColor1 = '';
+								 	$tdColor = '';
+									$class = 'floating-activity';
+									}
+							 }
 							$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
 							$teacher_name = $row['teacher_name'].$email;
 							if($row['reserved_flag']==1)
@@ -120,9 +146,11 @@ $(document).ready(function(){
 							else
 							  $res_flag = "No";
 							  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
+							  $class_allocated=($row['reserved_act_id']<>"") ? 'allocated-activity':'';
 						?>
-						<tr<?php echo $trBColor;echo $trBColor1;?>>
-							<td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td>
+						
+						<tr<?php echo $trBColor;echo $trBColor1;?> class=<?php if($trBColor == ''){echo $class;}else{echo $class_allocated ;}?>>
+							<td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo $row['id'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['name'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['program_name'];?></td>

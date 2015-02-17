@@ -1543,5 +1543,11 @@ class Timetable extends Base {
 												date_update = '".$date_update."'
 												where id = '".$activity_id."'";
 		$q_res = mysqli_query($this->conn, $sql_upd);
-	}	
+	}
+	public function checkTimetableByActivity($activity_id)
+	{
+		$tt_query="select * from timetable_detail where activity_id='".$activity_id."'"; 
+		$q_res = mysqli_query($this->conn, $tt_query);
+		return $q_res;
+	}
 }

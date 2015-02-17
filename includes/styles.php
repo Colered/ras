@@ -239,7 +239,7 @@ echo '  body {background: #f3f3f3 url(./images/bg_top.jpg) repeat-x;
   .main td.hasAllocatedTimeslot {
     	background-color:#FFE599;}
   .main td.hasAllAllocatedTimeslot {
-    	background-color:#FFD4D4;}
+    	background-color:#FFFF33;}
   .main td.hasUnAllocatedAvailability {
     	background-color:#F1C232;}
   .main td.othermonth {
@@ -1638,7 +1638,7 @@ color:white;}
   .minical td.hasExceptionDays{background-color:#A64D79 ;}
   .minical td.hasevents{background-color:#FFFF33;}
   .minical td.hasAllocatedTimeslot{background-color:#FFE599;}
-  .minical td.hasAllAllocatedTimeslot{background-color:#FFD4D4;}
+  .minical td.hasAllAllocatedTimeslot{background-color:#FFFF33;}
   .minical td.hasUnAllocatedAvailability{background-color:#F1C232;}
   .legend-color-free-ts{
   	height:14px;width:25px; background-color:#F1C232;float:left;
@@ -1650,7 +1650,7 @@ color:white;}
   	height:14px;width:25px; background-color:#FFD4D4;float:left;
    }
    .legend-color-use{
-  	height:14px;width:25px; background-color:#FFFF00;float:left;
+  	height:14px;width:25px; background-color:#FFFF33;float:left;
    }
    .legend-color-holiday{
   	height:14px;width:25px; background-color:#00FF00;float:left;

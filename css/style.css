@@ -676,4 +676,5 @@ width:40px;
 	background-position: center center;
 	cursor: move;
 }
+.activity-color-filteration{float:left;}
 .btnAcceptAllocation{float:right;padding-bottom:5px;padding-top:5px;}
