@@ -24,7 +24,7 @@ $(document).ready(function(){
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
 		"aoColumnDefs": [
-			  { 'bSortable': true, 'aTargets': [ 0 ] }
+			  { 'bSortable': false, 'aTargets': [ 0 ] }
 			],
 		"fnDrawCallback": function( settings ) {
 				//managing the "Select all" checkbox
