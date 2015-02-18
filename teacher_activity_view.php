@@ -82,10 +82,9 @@ function activityFilter()
 						<strong>Teacher Activity:</strong>
 						<select id="activity_color_filter" name="activity_color_filter" class="select-filter" onchange="activityFilter();" style="width:110px;" > 
 							<option value="" selected="selected">--Select--</option>
-							<option value="1" <?php if($activity_filter_val == '1'){?> selected="selected"}<?php }?>>Floating</option>
-							<option value="2" <?php if($activity_filter_val == '2'){?> selected="selected"}<?php }?>>Allocated</option>
-							<option value="3" <?php if($activity_filter_val == '3'){?> selected="selected"}<?php }?>>Unallocated</option>
-							<option value="4" <?php if($activity_filter_val == '4'){?> selected="selected"}<?php }?>>Out of range</option>
+							<option value="1" <?php if($activity_filter_val == '1'){?> selected="selected"}<?php }?>>Allocated</option>
+							<option value="2" <?php if($activity_filter_val == '2'){?> selected="selected"}<?php }?>>Floating</option>
+							<option value="3" <?php if($activity_filter_val == '3'){?> selected="selected"}<?php }?>>Out of range</option>
 						</select>
 					</form>
 				</div>
@@ -111,7 +110,7 @@ function activityFilter()
                 </thead>
                 <tbody>
 				<?php
-					$result = $objT->getTeachersAct();
+					$result = $objT->getTeachersActFilterView($activity_filter_val);
 					$result_sess = $objT->getSessionFromTT();
 					$session_array = array();
 					if($result->num_rows){

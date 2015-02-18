@@ -239,6 +239,33 @@ class Teacher extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;
 	}
+	public function getTeachersActFilterView($activity_filter_val)
+	{
+		$sql_tt_range="SELECT start_date ,end_date  from  timetable";
+		$result_tt_range =  $this->conn->query($sql_tt_range);
+		$Date_range = $result_tt_range->fetch_assoc();
+		$result_sess = $this->getSessionFromTT();
+		
+		$sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name FROM teacher_activity ta
+						left join subject s on(s.id = ta.subject_id)
+						left join subject_session ss on(ss.id=ta.session_id)
+						left join teacher t on(t.id = ta.teacher_id)
+						left join timetable_detail td on(td.activity_id=ta.id)
+						left join program_years py on(py.id=ta.program_year_id)";
+		if($activity_filter_val==1){
+			$sql.= " WHERE  td.activity_id = ta.id";
+		}
+		if($activity_filter_val==2){
+		
+			$sql.= " WHERE ta.id NOT IN ( SELECT activity_id from timetable_detail) && (ta.act_date between '".$Date_range['start_date']."' AND '".$Date_range['end_date']."' OR ta.act_date = '0000-00-00')";
+		}
+		if($activity_filter_val== 3){
+			$sql.= " WHERE ta.act_date != '0000-00-00' && ta.act_date < '".$Date_range['start_date']."' || ta.act_date > '".$Date_range['end_date']."' ";
+		}				
+		$sql.=" ORDER BY ta.name";
+		$result =  $this->conn->query($sql);
+		return $result;
+	}
 	public function getSessionFromTT()
 	{
 		$sql = "SELECT session_id FROM timetable_detail";

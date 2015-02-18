@@ -2681,38 +2681,3 @@ $(document).ready(function() {
 			}
 		});
 });
-
-//Filteration of teacher activity view allocated,floating and out of range
-$(document).ready(function() {
- if($( "#activity_color_filter" ).val()!=""){
-	  if($( "#activity_color_filter" ).val()=="4"){
-		$("#datatables").hide();
-		$("tr.out-of-range").show();
-		$("tr.allocated-activity").closest('tr').remove();
-		$("tr.unallocated-activity").closest('tr').remove();
-		$("tr.floating-activity").closest('tr').remove();
-		$("#datatables").show();
-	  }else if($( "#activity_color_filter" ).val()=="3"){
-		  		$("#datatables").hide();
-				$("tr.out-of-range").closest('tr').remove();
-				$("tr.allocated-activity").closest('tr').remove();
-				$("tr.unallocated-activity").show();
-				$("tr.floating-activity").closest('tr').remove();
-				$("#datatables").show();
-	  }else if($( "#activity_color_filter" ).val()=="2"){
-		  		$("#datatables").hide();
-				$("tr.out-of-range").closest('tr').remove();
-				$("tr.allocated-activity").show();
-				$("tr.unallocated-activity").closest('tr').remove();
-				$("tr.floating-activity").closest('tr').remove();
-				$("#datatables").show();
-	  }else if($( "#activity_color_filter" ).val()=="1"){
-		  		$("#datatables").hide();
-				$("tr.out-of-range").closest('tr').remove();
-				$("tr.allocated-activity").closest('tr').remove();
-				$("tr.unallocated-activity").closest('tr').remove();
-				$("tr.floating-activity").show();
-				$("#datatables").show();
-	  }
- }
-});
