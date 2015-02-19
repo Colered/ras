@@ -49,8 +49,14 @@ $(document).ready(function(){
 					</td>
 					<td class="align-center"><?php
 					$exceptionData = $obj->getExceptionForRoom($data['room_id']);
+					$i=0;
 					while($dataExcep = $exceptionData->fetch_assoc()){
-						echo $dataExcep['exception_date'].'</br>';
+						$i++;
+						if($i%4=='0')
+							echo $dataExcep['exception_date'].'</br>';
+						else
+							echo ($exceptionData->num_rows == $i) ? $dataExcep['exception_date']: $dataExcep['exception_date'].' , ';
+						    
 					} ?>
 					</td>
 					<td class="align-center" id="<?php echo $data['room_id'] ?>">
