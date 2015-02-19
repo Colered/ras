@@ -156,18 +156,42 @@ function activityFilter()
 							<td<?php echo $tdColor;?>><?php echo $row['subject_name'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['session_name'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $teacher_name;?></td>
-							<td<?php echo $tdColor;?>><?php echo $objB->getRoomFullName($row['room_id']);?></td>
+							<td<?php echo $tdColor;?>><font color="">
+								<?php
+									if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
+								 		echo '<font class="unreservedAlloctedAct">'. $objB->getRoomFullName($row['reserverd_room_id']).'</font>';
+									}else{
+										echo $objB->getRoomFullName($row['room_id']) ;
+									}
+								 ?>
+							</td>
 							<td<?php echo $tdColor;?>>
-								<?php if($row['act_date'] != "0000-00-00" && $row['act_date'] != null)
-								{
-									$date = date("Y-m-d",strtotime($row['act_date']));
-								}else{
-									$date = "";
+								<?php 
+								if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
+									if($row['date'] != "0000-00-00" && $row['date'] != null){
+										$date = '<font class="unreservedAlloctedAct">'.date("Y-m-d",strtotime($row['date'])).'<font>';
+									}else{
+										$date = "";
+									}
+								}else{								
+									if($row['act_date'] != "0000-00-00" && $row['act_date'] != null){
+										$date = date("Y-m-d",strtotime($row['act_date']));
+									}else{
+										$date = "";
+									}
 								}	
 								echo $date;
 								?>
 							</td>
-							<td<?php echo $tdColor;?>><?php echo $objT->getTimeslotById($min_ts_id,$max_ts_id);?></td>
+							<td<?php echo $tdColor;?>>
+								
+								<?php 
+								    if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
+									 	echo '<font class="unreservedAlloctedAct">'.$row['timeslot'].'<font>';
+									 }else{
+										echo $objT->getTimeslotById($min_ts_id,$max_ts_id);
+									 }
+								?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
