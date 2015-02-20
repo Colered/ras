@@ -678,7 +678,5 @@ width:40px;
 }
 .activity-color-filteration{float:left;}
 .btnAcceptAllocation{float:right;padding-bottom:5px;padding-top:5px;}
-.unreservedAlloctedAct{ 
-font-style:italic;
-color:red;
-}
+.unreservedAlloctedAct{ font-style:italic;color:red;}
+.edit-tt{width: 50px;}
