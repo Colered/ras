@@ -689,7 +689,7 @@ switch ($codeBlock) {
 							$tsIdsAll = implode(',', $timeslotIdsArray);
 						}
 						
-						if($_POST['subSessDate'] !='' || $_POST['subSessDate'] != '' || $_POST['tslot_id'] != '')
+						if($_POST['subSessDate'] !='' || $_POST['room_id'] != '' || $_POST['tslot_id'] != '')
 						{
 							$reserved_flag = 2;
 						}else{
@@ -1637,27 +1637,29 @@ switch ($codeBlock) {
 				{*/
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
 					$output_array = $obj->generateTimetable($start_date, $end_date,$programs);
-					if(isset($output_array['program_not_found'])){
-						$_SESSION['error_msg'] = $output_array['program_not_found'];
-					}elseif(isset($output_array['teacher_not_found'])){
-						$_SESSION['error_msg'] = $output_array['teacher_not_found'];
-					}elseif(isset($output_array['timeslot_not_found'])){
-						$_SESSION['error_msg'] = $output_array['timeslot_not_found'];
-					}elseif(isset($output_array['system_error'])){
-						$_SESSION['error_msg'] = $output_array['system_error'];
+					$final_output_array = $output_array[0];
+					$reasons = $output_array[1];
+					if(isset($final_output_array['program_not_found'])){
+						$_SESSION['error_msg'] = $final_output_array['program_not_found'];
+					}elseif(isset($final_output_array['teacher_not_found'])){
+						$_SESSION['error_msg'] = $final_output_array['teacher_not_found'];
+					}elseif(isset($final_output_array['timeslot_not_found'])){
+						$_SESSION['error_msg'] = $final_output_array['timeslot_not_found'];
+					}elseif(isset($final_output_array['system_error'])){
+						$_SESSION['error_msg'] = $final_output_array['system_error'];
 					}
 					if(isset($_SESSION['error_msg']) && $_SESSION['error_msg']!='')
 					{
 					    echo "Session-Error";
 						exit;
 					}
-					if($output_array)
+					if($final_output_array)
 					{
 						$obj->deleteData();
 						$res = $obj->addTimetable($_POST['txtAName'], $start_date, $end_date,$program_list);
 						if($res)
 						{
-							foreach($output_array as $key=>$value)
+							foreach($final_output_array as $key=>$value)
 							{
 								foreach($value as $newkey=>$val)
 								{
@@ -1714,6 +1716,12 @@ switch ($codeBlock) {
 										}
 									}
 								}
+							}
+							foreach($reasons as $key=>$value)
+							{
+								$activity_id = $key;
+								$reason = $value;
+								$obj->addReason($activity_id,$reason);
 							}
 							echo 1;
 						}

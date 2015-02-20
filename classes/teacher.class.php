@@ -230,12 +230,13 @@ class Teacher extends Base {
 	//function to get all teacher activities
 	public function getTeachersAct()
 	{
-	    $sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name FROM teacher_activity ta
+	    $sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,tar.reason,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name FROM teacher_activity ta
 						left join subject s on(s.id = ta.subject_id)
 						left join subject_session ss on(ss.id=ta.session_id)
 						left join teacher t on(t.id = ta.teacher_id)
 						left join timetable_detail td on(td.activity_id=ta.id)
-						left join program_years py on(py.id=ta.program_year_id) ORDER BY ta.name";
+						left join program_years py on(py.id=ta.program_year_id)
+						left join teacher_activity_reason tar on tar.activity_id = ta.id ORDER BY ta.name";
 		$result =  $this->conn->query($sql);
 		return $result;
 	}

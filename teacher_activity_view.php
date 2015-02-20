@@ -105,6 +105,7 @@ function activityFilter()
                         <th>Timeslot</th>
                         <th>PreAllocated</th>
                         <th>Allocation Status</th>
+						 <th>Reason</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -120,8 +121,8 @@ function activityFilter()
 							$ts_array = explode(",",$row['timeslot_id']);
 							$min_ts_id = $ts_array[0];
 							$max_ts_id = $ts_array[count($ts_array)-1];
-							if($row['act_date'] != '0000-00-00' && $row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date'])
-							 {
+							if($row['act_date'] != '0000-00-00' && $row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date'] || !in_array($row['program_year_id'],explode(",",$row_table['programs'])))
+							{
 								$trBColor1 = ' style="background-color:#66CCFF; color:#FFFFFF;"';
 								$tdColor = ' style="color:#FFFFFF;"';
 								$class ="out-of-range";
@@ -194,6 +195,7 @@ function activityFilter()
 								?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
+							<td class="align-center"<?php echo $tdColor;?>><?php echo $row['reason'];?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<?php /*?><a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&cycle_id=<?php echo base64_encode($row['cycle_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a><?php */?>
 								<a href="#" class="table-icon delete" onClick="deleteTeacherActivity('<?php echo $row['id'] ?>')"></a>
