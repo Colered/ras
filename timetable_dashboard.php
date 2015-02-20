@@ -66,6 +66,7 @@ $result=$obj->getTimetablesData();
                                     <td class="align-center"><?php echo $data['date_add']; ?></td>
                                     <td class="align-center"><?php echo $data['date_update']; ?></td>
 									 <td class="align-center" id="<?php echo $data['id'] ?>">
+									 	<a href="generate_timetable.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
 										<a href="#" class="table-icon delete" onClick="deleteTimetable(<?php echo $data['id'] ?>)"></a>
 									</td>
                                 </tr>

@@ -1550,4 +1550,10 @@ class Timetable extends Base {
 		$q_res = mysqli_query($this->conn, $tt_query);
 		return $q_res;
 	}
+	public function createdTTData($timetable_id){
+		$sql="SELECT start_date,end_date,programs FROM  timetable WHERE id ='".$timetable_id."' ";
+		$q_res=mysqli_query($this->conn, $sql);
+		$dataArr=$q_res->fetch_assoc();
+		return $dataArr;
+	}
 }

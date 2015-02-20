@@ -1,7 +1,13 @@
 <?php include('header.php');
-$name = isset($_GET['name']) ? $_GET['name'] : '';
-$fromGenrtTmtbl = isset($_GET['fromGenrtTmtbl']) ? $_GET['fromGenrtTmtbl'] : '';
-$toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';
+if(isset($_GET['edit']) && $_GET['edit']!=""){
+	$timetable_id = base64_decode($_GET['edit']);
+	$objTT = new Timetable();
+	$rowTT = $objTT->createdTTData($timetable_id); 
+}
+$fromGenrtTmtbl = (isset($rowTT['start_date']) && $rowTT['start_date']!="") ? date('d-m-Y' , strtotime($rowTT['start_date'])) : '';
+$toGenrtTmtbl = (isset($rowTT['end_date']) && $rowTT['end_date'] != "") ? date('d-m-Y' , strtotime($rowTT['end_date'])) : '';
+$program_year_id = (isset($rowTT['programs']) && $rowTT['programs']!="") ? $rowTT['programs'] : '';
+$prgm_IdArr = explode(',' ,$program_year_id);
 ?>
 <div id="content">
     <div id="main">
@@ -40,7 +46,8 @@ $toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';
 						$objP = new Programs();
 						$result = $objP->getProgramWithCycle();
 						while($row = $result->fetch_assoc()){
-							?><option value="<?php echo $row['program_year_id'];?>"><?php echo $row['name'];?></option><?php
+							 $selected=(in_array($row['program_year_id'],$prgm_IdArr)) ? 'selected="selected"' : '' ;
+							?><option value="<?php echo $row['program_year_id'];?>" <?php echo $selected;?>><?php echo $row['name'];?></option><?php
 						}						
 						?>                         
                         </select>
