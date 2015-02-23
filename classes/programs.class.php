@@ -9,9 +9,10 @@ class Programs extends Base {
      	$txtPrgmName = Base::cleanText($_POST['txtPrgmName']);
      	$txtCompanyName = Base::cleanText($_POST['txtCompanyName']);
 		$slctPrgmType = $_POST['slctPrgmType'];
-		$slctNumcycle = trim($_POST['slctNumcycle']);
+		//$slctNumcycle = trim($_POST['slctNumcycle']);
 		$slctUnit = implode(',',$_POST['slctUnit']);
 		$maxNoSess = implode('-', $_POST['maxSessNo']);
+		$maxTotSessNo = implode('-', $_POST['maxTotSessNo']);
 
 		$result =  $this->conn->query("SELECT program_name FROM program WHERE program_name='".$txtPrgmName."'");
 		$row_cnt = $result->num_rows;
@@ -21,7 +22,7 @@ class Programs extends Base {
 			$_SESSION['error_msg'] = $message;
 			return 0;
 		}
-		$sql = "INSERT INTO program (program_name,unit,company, program_type, max_no_session, date_add) VALUES ('".$txtPrgmName."','".$slctUnit."','".$txtCompanyName."', '".$slctPrgmType."', '".$maxNoSess."', NOW())";
+		$sql = "INSERT INTO program (program_name,unit,company, program_type, max_no_session, max_tot_no_session, date_add) VALUES ('".$txtPrgmName."','".$slctUnit."','".$txtCompanyName."', '".$slctPrgmType."', '".$maxNoSess."', '".$maxTotSessNo."', NOW())";
 		$rel = $this->conn->query($sql);
 		$last_ins_id = $this->conn->insert_id;
 		if(!$rel){
@@ -51,6 +52,7 @@ class Programs extends Base {
 		$slctPrgmType = $_POST['slctPrgmType'];
 		$slctUnit = implode(',',$_POST['slctUnit']);
 		$maxNoSess = implode('-', $_POST['maxSessNo']);
+		$maxTotSessNo = implode('-', $_POST['maxTotSessNo']);
 
 		$result =  $this->conn->query("SELECT program_name FROM program WHERE program_name='".$txtPrgmName."' AND id != '".$edit_id."'");
 		$row_cnt = $result->num_rows;
@@ -67,6 +69,7 @@ class Programs extends Base {
 						   company = '".$txtCompanyName."',
 						   program_type = '".$slctPrgmType."',
 						   max_no_session= '".$maxNoSess."',
+						   max_tot_no_session= '".$maxTotSessNo."',
 						   date_update = now() WHERE id=$edit_id";
 			$rel = $this->conn->query($sql);
 			if(!$rel){

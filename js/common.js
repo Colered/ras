@@ -663,6 +663,10 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Please choose a single teacher while creating a reserved activity.');
+						}else if($succ==16){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Program already have some reserved activity on the selected date and time.');
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();

@@ -1263,9 +1263,15 @@ switch ($codeBlock) {
 					if(isset($final_programs[$_POST['programId']][$_POST['cycleId']][$_POST['subSessDate']])){
 						$availTSIdsonSelDay = $final_programs[$_POST['programId']][$_POST['cycleId']][$_POST['subSessDate']];
 					}
-					//print"<pre>";print_r($availTSIdsonSelDay);die;
 					if(count($timeslotIdsArray)>0 && count($availTSIdsonSelDay)>0 && (count(array_intersect($timeslotIdsArray, $availTSIdsonSelDay)) == count($timeslotIdsArray))){
-						//program is available
+						//check if program is not engaged with any reserved activity for the given date and time
+						$progAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id='".$_POST['programId']."'";
+						$q_res = mysqli_query($db, $progAvail_query);
+						if (mysqli_affected_rows($db) > 0) {
+							echo 16;
+							$valid = 0;
+							exit;
+						}
 					}else{
                         echo 9;
                         $valid = 0;
@@ -1298,7 +1304,7 @@ switch ($codeBlock) {
                     			
                 }
 
-                //Rule: All the activities of a program needs to be in same classroom for one week
+                //Rule: All the activities of a subject needs to be in same classroom for one week
 				if ($valid == 1) {
 					if (isset($_POST['subjectId']) && $_POST['subjectId'] != "") {
 						//find out the start and end date of the week in which this activity will happen

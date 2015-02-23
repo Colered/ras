@@ -19,6 +19,7 @@ $program_name = isset($_GET['edit']) ? $row['program_name'] : (isset($_POST['txt
 $company_name = isset($_GET['edit']) ? $row['company'] : (isset($_POST['txtCompanyName'])? $_POST['txtCompanyName']:'');
 $program_type = isset($_GET['edit']) ? $row['program_type'] : (isset($_POST['slctPrgmType'])? $_POST['slctPrgmType']:'');
 $max_session_no = isset($_GET['edit']) ? $row['max_no_session'] : (isset($_POST['maxSessNo'])? $_POST['maxSessNo']:'');
+$max_tot_session_no = isset($_GET['edit']) ? $row['max_tot_no_session'] : (isset($_POST['maxTotSessNo'])? $_POST['maxTotSessNo']:'');
 $unitArr1 = isset($_GET['edit']) ? (isset($unitArr[0])? $unitArr[0]: array()) : (!empty($_POST['slctUnit']) ? $_POST['slctUnit'] : array());
 ?>
 <script type="text/javascript">
@@ -64,7 +65,7 @@ $(document).ready(function() {
 							<option value="4" <?php echo in_array(4,$unitArr1) ? 'selected' : ''?>>Activity</option>
                         </select>
                     </div>
-					 <div class="clear"></div>
+					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Max No Sessions of Same Area during a Class day <span class="redstar">*</span></h2>
                     </div>
@@ -106,6 +107,48 @@ $(document).ready(function() {
 							<?php } ?>
                         	</select>
                     </div>
+					<div class="clear"></div>
+                    <div class="custtd_left">
+                        <h2>Max Total No. of Sessions during a Class Day <span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+					<?php 
+						$maxTotSess = array();
+						if(count($max_tot_session_no)>0){
+							$maxTotSess = explode('-', $max_tot_session_no);
+						}
+					 ?>
+						<span>MON:</span> <select id="slctMon" name="maxTotSessNo[]" class="required">
+							<?php for($i=0; $i<=50; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxTotSess[0]) && $i == $maxTotSess[0]) || ((isset($maxTotSess[0]) && $maxTotSess[0]=='') && ($i==2))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>TUE:</span> <select id="slctTue" name="maxTotSessNo[]" class="required">
+							<?php for($i=0; $i<=50; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxTotSess[1]) && $i == $maxTotSess[1]) || ((!isset($maxTotSess[1]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>WED:</span> <select id="slctWed" name="maxTotSessNo[]" class="required">
+							<?php for($i=0; $i<=50; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxTotSess[2]) && $i == $maxTotSess[2]) || ((!isset($maxTotSess[2]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>THU:</span> <select id="slctThu" name="maxTotSessNo[]" class="required">
+							<?php for($i=0; $i<=50; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxTotSess[3]) && $i == $maxTotSess[3]) || ((!isset($maxTotSess[3]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>FRI:</span> <select id="slctFri" name="maxTotSessNo[]" class="required">
+							<?php for($i=0; $i<=50; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxTotSess[4]) && $i == $maxTotSess[4]) || ((!isset($maxTotSess[4]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+						<span>SAT:</span> <select id="slctSat" name="maxTotSessNo[]" class="required">
+							<?php for($i=0; $i<=50; $i++){ ?>
+							<option value="<?php echo $i; ?>" <?php echo ((isset($maxTotSess[5]) && $i == $maxTotSess[5]) || ((!isset($maxTotSess[5]) && ($i==2)))) ? 'selected' : ''?>><?php echo $i; ?></option>
+							<?php } ?>
+                        	</select>
+                    </div>
                     <div class="clear"></div>
 					<div class="custtd_left">
 						<h2>Company</h2>
@@ -133,8 +176,8 @@ $(document).ready(function() {
                         <h2>Program Duration <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        From:<input type="text" size="12" id="fromPrgm" name="prog_from_date" value="<?php echo $objP->formatDate($program_from_date);?>" class="required" readonly/>
-                        To:<input type="text" size="12" id="toPrgm" name="prog_to_date" value="<?php echo $objP->formatDate($program_to_date);?>" class="required" readonly/>
+                        From:<input type="text" size="12" id="fromPrgm" name="prog_from_date" value="<?php //echo $objP->formatDate($program_from_date);?>" class="required" readonly/>
+                        To:<input type="text" size="12" id="toPrgm" name="prog_to_date" value="<?php //echo $objP->formatDate($program_to_date);?>" class="required" readonly/>
                     </div>
                     <div class="clear"></div>-->
                     <div class="custtd_left">

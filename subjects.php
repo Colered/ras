@@ -21,7 +21,7 @@ $disDivCss = "";
 $disFDivCss = "";
 $subIdEncrypt = "";
 $objT = new Teacher();
-$rel_teacher = $objT->getTeachers();
+$rel_teacher = $objT->getTeachersWithRecess();
 $objS = new Subjects();
 $objB = new Buildings();
 $objTS = new Timeslot();
@@ -65,8 +65,8 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
     $disSession = "disabled";
     $disDivCss = "style='opacity:.5; pointer-event:none'";
 }
-$objT = new Teacher();
-$rel_teacher = $objT->getTeachers();
+//$objT = new Teacher();
+//$rel_teacher = $objT->getTeachers();
 if(isset($_GET['edit']) && $_GET['edit'] != ""){
 	//code for edit mode
 	$subjectName = isset($_GET['edit']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');

@@ -96,9 +96,16 @@ class Teacher extends Base {
 	//funtion to get all the teachers
 	public function getTeachers()
 	{
+		$result =  $this->conn->query("select * from teacher WHERE email<>'ravin.ims@gmail.com' order by teacher_name");
+		return $result;
+	}
+	//funtion to get all the teachers
+	public function getTeachersWithRecess()
+	{
 		$result =  $this->conn->query("select * from teacher order by teacher_name");
 		return $result;
 	}
+	
 	//function to add activity
 	public function addActivities()
 	{
@@ -282,7 +289,7 @@ class Teacher extends Base {
 	//get all teachers availability
 	public function getTeacherAvailRule()
 	{
-		$teac_query="select id, rule_name, start_date, end_date from teacher_availability_rule ORDER BY id DESC";
+		$teac_query="select id, rule_name, start_date, end_date from teacher_availability_rule WHERE rule_name<>'Always Available' ORDER BY id DESC";
 		$q_res = mysqli_query($this->conn, $teac_query);
 		/*if(mysqli_num_rows($q_res)<=0){
 			$message="No teacher availability rule exist.";
