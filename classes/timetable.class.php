@@ -273,7 +273,7 @@ class Timetable extends Base {
 											//Here will check if the activity is not already allocated then we will proceed with this activity
 											if(!$this->search_array($res_act_detail['name'],$reserved_array)) 
 											{
-												$end_time = date("h:i A", strtotime($start_time." + ".$res_act_detail['duration']." minutes"));												
+												$end_time = date("h:i A", strtotime($start_time." + ".$res_act_detail['duration']." minutes"));							
 												$activities_array =$this->makeArray($date,$cycle_id,$res_act_detail['activity_id'],$res_act_detail['name'],$res_act_detail['program_year_id'],$res_act_detail['area_id'],$res_act_detail['program_name'],$res_act_detail['teacher_id'],$res_act_detail['teacher_name'],$res_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$res_act_detail['session_id'],$res_act_detail['session_name'],$res_act_detail['subject_id'],$res_act_detail['subject_name'],$res_act_detail['order_number']);
 												$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 												$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $res_act_detail['room_id'];
@@ -332,7 +332,6 @@ class Timetable extends Base {
 							//first will give the priority to those activities only which have a date
 							if(array_key_exists($date,$semi_reserved_activities))
 							{
-								//echo $date;
 								//process them
 								$reserved_array = $this->processSemiReservedActivities($semi_reserved_activities,$program_id,$cycle_id,$program_session_count,$teachers_count,$teachers_sat,$reserved_areas,$allTimeslots,$reserved_teachers,$reserved_subject_rooms,$locations,$unreserved_timeslots,$unreserved_times,$program_session_area,$reserved_rooms,$f_day,$reserved_array,$i,$date,$date,$reasons);
 								$program_session_count = $reserved_array['1'];
@@ -442,7 +441,7 @@ class Timetable extends Base {
 																				$teachers_sat[$free_act_detail['teacher_id']][$cycle_id][$date] = $teachers_sat[$free_act_detail['teacher_id']][$cycle_id][$date] + 1;
 																				}else{
 																					$teachers_sat[$free_act_detail['teacher_id']][$cycle_id][$date] = 1;
-																				}												
+																				}									
 																			}
 																			if($f_day == 5)
 																			{
@@ -460,7 +459,6 @@ class Timetable extends Base {
 																			{
 																				unset($reasons[$free_act_detail['activity_id']]);
 																			}
-																			//echo $date;print"<pre>";print_r($reasons);
 																			break;
 																		}else{
 																			$reasons[$free_act_detail['activity_id']] = "Teacher is taking class at a different location same day";
@@ -481,7 +479,7 @@ class Timetable extends Base {
 														$reasons[$free_act_detail['activity_id']] = "Sessions of some other area is already allocated to this saturday";
 													}
 												}else{
-													$reasons[$free_act_detail['activity_id']] = "Teacher ia already allocated to two saturday of this cycle";
+													$reasons[$free_act_detail['activity_id']] = "Teacher is already allocated to two saturday of this cycle";
 												}
 											}else{
 												$reasons[$free_act_detail['activity_id']] = "Teacher is already having 4 sessions on the date ".$date;
@@ -997,7 +995,7 @@ class Timetable extends Base {
 																$teachers_count[$date][$semi_res_act_detail['teacher_id']] = $teachers_count[$date][$semi_res_act_detail['teacher_id']] + 1;
 															}else{
 																$teachers_count[$date][$semi_res_act_detail['teacher_id']] = 1;
-															}																	
+															}													
 															if($f_day == 5)
 															{
 																if(array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$semi_res_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id]))
@@ -1006,7 +1004,7 @@ class Timetable extends Base {
 																}else{
 																	$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] = 1;
 																}												
-															}															
+															}														
 															if($f_day == 5)
 															{
 																$reserved_areas[$date][$program_id] = $semi_res_act_detail['area_id'];
@@ -1055,8 +1053,7 @@ class Timetable extends Base {
 															{
 																//Here we will check if the teacher of the free activity is available at that time
 																if($this->checkTeacherAvailability($semi_res_act_detail['teacher_id'],$date,$all_ts) && !$this->isTeacherReserved($date,$start_time,$end_time,$semi_res_act_detail['teacher_id'],$reserved_teachers))
-																{
-																	
+																{												
 																	//If room is available,then proceed further otherwise exit
 																	$room_id = $this->searchRoom($semi_res_act_detail['subject_id'],$date,$reserved_rooms,$all_ts,$start_time,$end_time,$edit_room_id);
 																	//	echo $start_time."-".$end_time."--".$date."--".$semi_res_act_detail['name']."--".$room_id;
@@ -1081,7 +1078,7 @@ class Timetable extends Base {
 																				$teachers_count[$date][$semi_res_act_detail['teacher_id']] = $teachers_count[$date][$semi_res_act_detail['teacher_id']] + 1;
 																			}else{
 																				$teachers_count[$date][$semi_res_act_detail['teacher_id']] = 1;
-																			}																
+																			}										
 																			if($f_day == 5)
 																			{
 																				if(array_key_exists($semi_res_act_detail['teacher_id'],$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$semi_res_act_detail['teacher_id']]) && array_key_exists($date,$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id]))
@@ -1089,7 +1086,7 @@ class Timetable extends Base {
 																				$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] = $teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] + 1;
 																				}else{
 																					$teachers_sat[$semi_res_act_detail['teacher_id']][$cycle_id][$date] = 1;
-																				}												
+																				}									
 																			}
 																			if($f_day == 5)
 																			{
@@ -1134,7 +1131,7 @@ class Timetable extends Base {
 										$reasons[$semi_res_act_detail['activity_id']] = "Sessions of some other area is already allocated to this saturday";
 									}
 								}else{
-									$reasons[$semi_res_act_detail['activity_id']] = "Teacher ia already allocated to two saturday of this cycle";
+									$reasons[$semi_res_act_detail['activity_id']] = "Teacher is already allocated to two saturday of this cycle";
 								}
 							}else{
 								$reasons[$semi_res_act_detail['activity_id']] = "Teacher is already having 4 sessions on the date ".$date;

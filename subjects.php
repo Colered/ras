@@ -227,7 +227,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                         <input type="text" class="inp_txt_session number required" <?php //echo $disSession;  ?> id="txtOrderNum" maxlength="10" style="width:94px;" name="txtOrderNum" value="">
                                 </div>-->
                                 <div class="sessionboxSub" style="width:110px;">
-                                    <h3>Duration(Hr)</h3>
+                                    <h3>Duration(Hr)<span class="redstar">*</span></h3>
                                     <select name="duration" id="duration" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
                                         <option value="">--Select--</option>
                                         <option value="15">00:15</option>
@@ -268,7 +268,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                     </script>
                                 </div>
                                  <div class="sessionboxSub" style="width:150px;">
-                                    <h3>Teacher</h3>									
+                                    <h3>Teacher<span class="redstar">*</span></h3>									
 										<select id="slctTeacher" name="slctTeacher[]" class="required" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
 										<?php
 										while ($row = $rel_teacher->fetch_assoc()) {

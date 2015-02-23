@@ -105,7 +105,7 @@ function activityFilter()
                         <th>Timeslot</th>
                         <th>PreAllocated</th>
                         <th>Allocation Status</th>
-						 <th>Reason</th>
+						<th>Reason</th>
                         <th>Action</th>
                     </tr>
                 </thead>
