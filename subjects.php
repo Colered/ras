@@ -278,7 +278,12 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 											}else{
 												$selected = '';
 											}
-											echo '<option '.$selected.' value="' . $row['id'] . '">' . $row['teacher_name'] . ' (' . $row['email'] . ')</option>';
+											$teacherName="";
+											$teacherName = $row['teacher_name'];
+											if($row['email'] !=""){
+												$teacherName = $row['teacher_name'] . ' (' . $row['email'] . ')';
+											}
+											echo '<option '.$selected.' value="' . $row['id'] . '">' . $teacherName. '</option>';
 										}
 										?>                       
 									   </select>
