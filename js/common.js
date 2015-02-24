@@ -572,7 +572,7 @@ function checkAvailability($forcing) {
 			$('#subSessDate').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if(($('#txtSessionName').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="")){
+		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="")){
 			var formValid = 1; 
 			return false;
 			}
@@ -667,6 +667,10 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Program already have some reserved activity on the selected date and time.');
+						}else if($succ==17){
+							$('#showstatusAvail').hide();
+							$('#showstatusNoAvail').show();
+							alert('Maximum number of sessions of the Program for the selected date has been exceeded.');
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -697,6 +701,13 @@ function addSubjectSession($forcing,$force_flag){
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
+		if($('#duration').val()==""){
+			$('#duration').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#duration').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
 		if($('#slctTeacher').val()=="" || $('#slctTeacher').val()==null){
 			$('#slctTeacher').css('border', 'solid 1px red');
 			var formValid = 1; 
@@ -709,6 +720,10 @@ function addSubjectSession($forcing,$force_flag){
 			alert('Please save subject info before add to session.');
 			return false;
 		}
+		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="")){
+			var formValid = 1; 
+			return false;
+			}
 		//sending an ajax request to save the session and creating a teacher activity
 		if(formValid==0){
 			$.ajax({
@@ -752,7 +767,7 @@ function addSubjectSession($forcing,$force_flag){
 						}else if($succ==7){
 							alert('Classroom is not free on the given date and time.');
 						}else if($succ==8){
-							alert('Session Name, Teacher, Room, Timeslot and Date are mendatory fields to create a reserved activity.');
+							alert('Session Name, Duration, Teacher, Room, Timeslot and Date are mendatory fields to create a reserved activity.');
 						}else if($succ==9){
 							alert('Program is not available on the selected day and time.');
 						}else if($succ==10){
@@ -769,6 +784,10 @@ function addSubjectSession($forcing,$force_flag){
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
 						}else if($succ==15){
 							alert('Please choose a single teacher while creating a reserved activity.');
+						}else if($succ==16){							
+							alert('Program already have some reserved activity on the selected date and time.');
+						}else if($succ==17){
+							alert('Maximum number of sessions of the Program for the selected date has been exceeded.');
 						}else{
 							alert("Cannot create the session.");
 						}

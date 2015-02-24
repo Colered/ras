@@ -906,6 +906,47 @@ switch ($codeBlock) {
                         exit;
                     }
                 }
+
+				if($valid == 1)
+				{
+					//check if program is not engaged with any reserved activity for the given date and time
+					$progAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id='".$_POST['programId']."'";
+					if ($act_hidden_id <> "") {
+						$progAvail_query .= " AND ta.id != " . $act_hidden_id . "";
+					}
+					$q_res = mysqli_query($db, $progAvail_query);
+					if (mysqli_affected_rows($db) > 0) {
+						echo 16;
+						$valid = 0;
+						exit;
+					}
+				}
+				
+				//Rule: check the total count of Max No of Sessions during a Class day 
+                if ($valid == 1) {
+					$sql_max_tt_session = "select max_tot_no_session from program p inner join program_years py on py.program_id = p.id where py.id = '".$_POST['programId']."'";
+					$q_max_tt_session = mysqli_query($db, $sql_max_tt_session);
+					$data_max_tt_session = mysqli_fetch_assoc($q_max_tt_session);
+					$data_tt_session_array = explode("-",$data_max_tt_session['max_tot_no_session']);
+					$daysDBArr = array('0'=>$data_tt_session_array['0'],'1'=>$data_tt_session_array['1'],'2'=>$data_tt_session_array['2'],'3'=>$data_tt_session_array['3'],'4'=>$data_tt_session_array['4'],'5'=>$data_tt_session_array['5']);
+
+					$day = date('w', strtotime($_POST['subSessDate']));
+                    $final_day = $day - 1;
+					$teachAvail_query = "select count(ta.id) as session_count from teacher_activity ta where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = '0'";
+					if ($act_hidden_id <> "") {
+                        $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
+                    }
+					$q_res = mysqli_query($db, $teachAvail_query);
+					if (mysqli_affected_rows($db) > 0) {
+						$dataAll = mysqli_fetch_assoc($q_res);
+						if ($dataAll['session_count'] >= $daysDBArr[$final_day]) {
+							echo 17;
+							$valid = 0;
+							exit;
+						}
+					}                    			
+                }
+
 				//Rule: check the count of Max No Sessions of Same Area during a Class day 
                 if ($valid == 1) {
 					$sql_max_session = "select max_no_session from program p inner join program_years py on py.program_id = p.id where py.id = '".$_POST['programId']."'";
@@ -1266,6 +1307,9 @@ switch ($codeBlock) {
 					if(count($timeslotIdsArray)>0 && count($availTSIdsonSelDay)>0 && (count(array_intersect($timeslotIdsArray, $availTSIdsonSelDay)) == count($timeslotIdsArray))){
 						//check if program is not engaged with any reserved activity for the given date and time
 						$progAvail_query = "select ss.*, ta.room_id, ta.act_date, ta.timeslot_id, ta.teacher_id, ta.reserved_flag from subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id=ta.session_id where ta.reserved_flag=1 and ta.timeslot_id REGEXP '" . RexExpFormat($tsIdsAll) . "' and ta.act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id='".$_POST['programId']."'";
+						if ($act_hidden_id <> "") {
+							$progAvail_query .= " AND ta.id != " . $act_hidden_id . "";
+						}
 						$q_res = mysqli_query($db, $progAvail_query);
 						if (mysqli_affected_rows($db) > 0) {
 							echo 16;
@@ -1278,6 +1322,32 @@ switch ($codeBlock) {
                         exit;
                     }
                 }
+				
+				//Rule: check the total count of Max No of Sessions during a Class day 
+                if ($valid == 1) {
+					$sql_max_tt_session = "select max_tot_no_session from program p inner join program_years py on py.program_id = p.id where py.id = '".$_POST['programId']."'";
+					$q_max_tt_session = mysqli_query($db, $sql_max_tt_session);
+					$data_max_tt_session = mysqli_fetch_assoc($q_max_tt_session);
+					$data_tt_session_array = explode("-",$data_max_tt_session['max_tot_no_session']);
+					$daysDBArr = array('0'=>$data_tt_session_array['0'],'1'=>$data_tt_session_array['1'],'2'=>$data_tt_session_array['2'],'3'=>$data_tt_session_array['3'],'4'=>$data_tt_session_array['4'],'5'=>$data_tt_session_array['5']);
+
+					$day = date('w', strtotime($_POST['subSessDate']));
+                    $final_day = $day - 1;
+					$teachAvail_query = "select count(ta.id) as session_count from teacher_activity ta where reserved_flag=1 and act_date='" . $_POST['subSessDate'] . "' and ta.program_year_id = '".$_POST['programId']."' and ta.forced_flag = '0'";
+					if ($act_hidden_id <> "") {
+                        $teachAvail_query .= " AND ta.id != " . $act_hidden_id . "";
+                    }
+					$q_res = mysqli_query($db, $teachAvail_query);
+					if (mysqli_affected_rows($db) > 0) {
+						$dataAll = mysqli_fetch_assoc($q_res);
+						if ($dataAll['session_count'] >= $daysDBArr[$final_day]) {
+							echo 17;
+							$valid = 0;
+							exit;
+						}
+					}                    			
+                }
+
 				//Rule: check the count of Max No Sessions of Same Area during a Class day 
                 if ($valid == 1) {
 					$sql_max_session = "select max_no_session from program p inner join program_years py on py.program_id = p.id where py.id = '".$_POST['programId']."'";
