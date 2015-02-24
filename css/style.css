@@ -680,3 +680,8 @@ width:40px;
 .btnAcceptAllocation{float:right;padding-bottom:5px;padding-top:5px;}
 .unreservedAlloctedAct{ font-style:italic;color:red;}
 .edit-tt{width: 50px;}
+.rule-list li{ list-style:none; padding:5px;}
+.rule h2{color: #5A5A5A;
+font-family: 'Tahoma';
+font-size: 13px;
+line-height: 27px; margin-left:20px; margin-top:10px;}

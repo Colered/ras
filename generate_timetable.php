@@ -65,6 +65,32 @@ $prgm_IdArr = explode(',' ,$program_year_id);
                     </div>
                 </div>	
             </form>
+			<div class="clear"></div>
+			<div style="float:left">
+			<div class="rule">
+               <h2><strong>List Of Rules Being Followed By The System While Generating The Timetable.</strong></h2>
+            </div>
+			<ul class="rule-list">
+			<li>
+			<input type="checkbox" checked="checked" disabled="disabled" /> All the activities of a subject needs to be in same classroom for one week.
+			</li>
+			<li>
+			<input type="checkbox" checked="checked" disabled="disabled" /> A teacher cannot have more than 4 sessions per day.
+			</li>
+			<li>
+			<input type="checkbox" checked="checked" disabled="disabled" /> A teacher cannot have classes at different locations on the same day.
+			</li>
+			<li>
+			<input type="checkbox" checked="checked" disabled="disabled" /> A teacher can have maximum two working saturdays per cycle.
+			</li>
+			<li>
+			<input type="checkbox" checked="checked" disabled="disabled" /> All sessions scheduled on Saturday will be from same academic area.
+			</li>
+			<li>
+			<input type="checkbox" checked="checked" disabled="disabled" /> A teacher cannot have classes at different locations on the same day.
+			</li>
+			</ul>
+			</div>
         </div>
         <div class="clear"></div>
     </div>
