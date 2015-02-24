@@ -86,9 +86,6 @@ $prgm_IdArr = explode(',' ,$program_year_id);
 			<li>
 			<input type="checkbox" checked="checked" disabled="disabled" /> All sessions scheduled on Saturday will be from same academic area.
 			</li>
-			<li>
-			<input type="checkbox" checked="checked" disabled="disabled" /> A teacher cannot have classes at different locations on the same day.
-			</li>
 			</ul>
 			</div>
         </div>
