@@ -116,8 +116,8 @@ function activityFilter()
 					$session_array = array();
 					if($result->num_rows){
 						while($row = $result->fetch_assoc())
-						{   
-						    $class='';
+						{ 
+							$class='';
 							$ts_array = explode(",",$row['timeslot_id']);
 							$min_ts_id = $ts_array[0];
 							$max_ts_id = $ts_array[count($ts_array)-1];
@@ -152,12 +152,12 @@ function activityFilter()
 						<tr<?php echo $trBColor;echo $trBColor1;?> class=<?php if($trBColor == ''){echo $class;}else{echo $class_allocated ;}?>>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo $row['id'];?></td>
-							<td<?php echo $tdColor;?>><?php echo $row['name'];?></td>
-							<td<?php echo $tdColor;?>><?php echo $row['program_name'];?></td>
-							<td<?php echo $tdColor;?>><?php echo $row['subject_name'];?></td>
-							<td<?php echo $tdColor;?>><?php echo $row['session_name'];?></td>
-							<td<?php echo $tdColor;?>><?php echo $teacher_name;?></td>
-							<td<?php echo $tdColor;?>><font color="">
+							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['name'];?></a></td>
+							<td class="act_color"<?php echo $tdColor;?>><a href="program_cycles.php?edit=<?php echo base64_encode($row['program_year_id']);?>" target="_blank"><?php echo $row['program_name'];?></a></td>
+							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['subject_name'];?></a></td>
+							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['session_name'];?></a></td>
+							<td class="act_color"<?php echo $tdColor;?>><a href="teacher_availability.php?tid=<?php echo base64_encode($row['teacher_id']);?>" target="_blank"><?php echo $teacher_name;?></a></td>
+							<td class="act_color"<?php echo $tdColor;?>><a href="classroom_availability.php?rid=<?php echo $row['room_id'];?>" target="_blank"><font color="">
 								<?php
 									if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
 								 		echo '<font class="unreservedAlloctedAct">'. $objB->getRoomFullName($row['reserverd_room_id']).'</font>';
@@ -165,7 +165,7 @@ function activityFilter()
 										echo $objB->getRoomFullName($row['room_id']) ;
 									}
 								 ?>
-							</td>
+							</a></td>
 							<td<?php echo $tdColor;?>>
 								<?php 
 								if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
