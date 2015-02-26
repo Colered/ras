@@ -1753,4 +1753,12 @@ class Timetable extends Base {
 		$dataArr=$q_res->fetch_assoc();
 		return $dataArr;
 	}
+	public function getTeachersInDateRange($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id='',$module=''){
+		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,py.name,a.area_name,r.room_name from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit inner join subject_session s on s.id = td.session_id inner join area a on a.id = su.area_id inner join room r on r.id = td.room_id left join teacher_type tt on tt.id = t.teacher_type where date between '".$from."' and '".$to."'";
+		
+		$teacher_sql .= " order by td.teacher_id";
+		//echo $teacher_sql;die;
+		$q_res = mysqli_query($this->conn, $teacher_sql);
+		return $q_res;
+	}
 }

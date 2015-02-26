@@ -179,7 +179,41 @@ $(function() {
 			$("#fromclsRmAval").datepicker("option", "maxDate", selectedDate);
 		}
 	});
+  });
+
+$(function() {
+	$("#fromGenrtWR").datepicker({
+	    dateFormat: 'yy/mm/dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate) {
+			 $("#toGenrtWR").datepicker("option", "minDate", selectedDate);
+             var maxDate = new Date(Date.parse(selectedDate));
+			 maxDate.setDate(maxDate.getDate() + 6 ); 
+			 $( "#toGenrtWR" ).datepicker( "option", "maxDate", maxDate);
+        }
+	});
+	$("#toGenrtWR").datepicker({
+	    dateFormat: 'yy/mm/dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function(selectedDate) {
+			$("#fromGenrtWR").datepicker("option", "maxDate", selectedDate);
+			var minDate = new Date(Date.parse(selectedDate));
+            minDate.setDate(minDate.getDate() - 6 );   
+			$("#fromGenrtWR").datepicker("option", "minDate", minDate);
+		}
+	});
 });
+
+
+
 });
 //validate form for area
 $(document).ready(function(){
@@ -198,6 +232,7 @@ $(document).ready(function(){
 		$("#teacher_report").validate();
 		$("#teacher_rate_report").validate();
 		$("#timetable").validate();
+		$("#weekly_report").validate();
 		//$("#changePwdForm").validate();
 		$( "#forgotPwdForm" ).validate({
 			rules: {

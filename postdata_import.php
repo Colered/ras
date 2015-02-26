@@ -287,6 +287,296 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: session_upload.php');
 		}
 		break;
-		}
+		case "generateWeeklyReport":
+			if(isset($_POST['fromGenrtWR']) && $_POST['toGenrtWR'] != '')
+			{   
+				require 'classes/PHPExcel.php';
+				require_once 'classes/PHPExcel/IOFactory.php';
+				$objPHPExcel = PHPExcel_IOFactory::load("week_report_cal.xlsx");
+				$objPHPExcel->setActiveSheetIndex(0);
+				//$HeightestRow = $objPHPExcel->getActiveSheet()->getHighestRow()+2;
+				$HeightestRow=7;
+				$from = date("Y-m-d",strtotime($_POST['fromGenrtWR']));
+				$to = date("Y-m-d",strtotime($_POST['toGenrtWR']));
+				require_once('config.php');
+				$objTime = new Timetable();
+				$rows =$newArr= $dateArray=$programArray=$rows_match=array();
+				//getting the allocated activities details
+				$result = $objTime->getTeachersInDateRange($from,$to);
+				$date = $program_name = '';
+				$i=0;
+				$datePrgmArray=array();
+				//preparing a array for the date wise and program wise
+				while($row = $result->fetch_assoc()){
+				    $reformRowArr=array();
+					foreach($row as $k=>$v){
+							$reformRowArr[]=$v;
+					}
+					if(in_array(trim($row['date']).'-'.trim($row['name']),$datePrgmArray) && ($i>0)){
+						$j=0;
+						foreach($row as $key=>$val){
+						   $rows[trim($row['date'])][trim($row['name'])][$j]=$rows[trim($row['date'])][trim($row['name'])][$j].','.trim($val);
+						   $j++;
+						}
+					}else{
+						$datePrgmArray[] = trim($row['date']).'-'.trim($row['name']);
+						$date=trim($row['date']);
+						$program_name=trim($row['name']);
+						$rows[$date][$program_name]= $reformRowArr;
+					}
+					$i++;
+				}
+				//fectching the date week day and storing into the array
+				$dates=$date_day_name=$rowsDayArr = $rowsSortArr=array();
+				foreach($rows as $key1=>$value1){
+					$dates[] = $key;
+					$day=date('l', strtotime($key1));
+					if($day=="Monday"){
+						$day='0';
+					}
+					if($day=="Tuesday"){
+						$day='1';
+					}
+					if($day=="Wednesday"){
+						$day='2';
+					}
+					if($day=="Thursday"){
+						$day='3';
+					}
+					if($day=="Friday"){
+						$day='4';
+					}
+					if($day=="Saturday"){
+						$day='5';
+					}
+					if($day=="Sunday"){
+						$day='6';
+					}
+					$rowsDayArr[$day]=$value1;
+				}
+				//sorting of array according to week days
+				$arr2=array('0','1','2','3','4','5');
+				foreach($arr2 as $v){
+						if(array_key_exists($v,$rowsDayArr)){
+							$rowsSortArr[$v]=$rowsDayArr[$v]; 
+						}
+				}
+				//making new array after the sorting for set the key in 0,1 format
+				$mkNewArr=array();
+				foreach($rowsSortArr as $key=>$val){
+					$j=0;
+				   foreach($val as $k=>$v){
+				   	  $k=$j;
+					  $mkNewArr[$key][$k]=$v;
+					  $j++;
+				   }
+				}
+				$maxArr=array();
+				$mkNewArr = array_chunk($mkNewArr,1,true);
+				//creating seperate array for data and storing array key count in max array 
+				for($i=0;$i < count($mkNewArr);$i++){
+					${'array' . $i}[] = $mkNewArr[$i];
+					foreach($mkNewArr[$i] as $rowVal){
+					  	$maxArr[] = count($rowVal);
+					  }
+				}
+			if(!empty($maxArr)){
+				$dateStr='Date Range:-'.$from.' to '.$to;
+				$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+				
+				$objPHPExcel->getActiveSheet()->SetCellValue('A2', "Resumen Calendario Actividades");
+				$objPHPExcel->getActiveSheet()->getStyle('A2')->getFont()->setName('Calibri');
+				$objPHPExcel->getActiveSheet()->getStyle('A2')->getFont()->setSize(14);
+				$objPHPExcel->getActiveSheet()->getStyle('A2')->getFont()->setItalic(true);
+				$objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
+				
+				$objPHPExcel->getActiveSheet()->SetCellValue('A3', $dateStr);
+				$objPHPExcel->getActiveSheet()->getStyle('A3')->getFont()->setItalic(true);
+				$objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+				
+				$cells=array('A','B','C','D','E','F','G','H','I','J','K','L','M');
+				for($z=0;$z<max($maxArr);$z++){
+				    for($x=0;$x<7;$x++){
+					 if($x=='0'){
+					 	$y='4';
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "EVENTO / PROGRAMA");
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+					 }
+					  if($x=='1'){
+					 	$y='2';
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "HORA");
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+					 }
+					  if($x==2){
+					 	$y='';
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "PARTICIPANTES");
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+					 }
+					  if($x==3){
+					 	$y='6';
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "AREA ASIGNADA");
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+					 }
+					  if($x=='4'){
+					 	$y='3';
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "PROFESOR / RESPONSABLE");
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+					 }
+					  if($x=='5'){
+					 	$y='';
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "CONSUMOS");
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+					 }
+					  if($x=='6'){
+					 	$y='';
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "EQUIPOS INFORMATICOS");
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+					 }
+					  for($j=0;$j<13;$j++){
+					   if($j%2==0){
+					  	$objPHPExcel->getActiveSheet()->getStyle($cells[$j].$HeightestRow)->applyFromArray(
+																										array(
+																											'alignment' => array(
+																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																											),
+																											'borders' => array(
+																												'left'     => array(
+																													'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																												),
+																												'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																											),
+																											'font' => array(
+																														'name' => 'Calibri',
+																														'size' => 6
+																													)
+																										)
+																								);
+							}else{
+							$objPHPExcel->getActiveSheet()->getStyle($cells[$j].$HeightestRow)->applyFromArray(
+																										array(
+																											'alignment' => array(
+																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																											),
+																											'borders' => array(
+																												'left'     => array(
+																													'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																												),
+																												'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																											),
+																											'fill'  => array(
+																												'type' => PHPExcel_Style_Fill::FILL_SOLID,
+																												'color' => array('rgb' => 'D2D2D2')
+																											  ),
+																										)
+																								);
+						}																	
+						//$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);																		
+						if(isset(${'array' . $j}) || !empty(${'array' . $j}) ){
+					  	foreach(${'array' . $j} as $row){
+							foreach($row as $k=>$v){
+								if (array_key_exists($z, $v)) {
+								 if($y!=''){
+								  	if($k==0){
+								  		$objPHPExcel->getActiveSheet()->SetCellValue('C'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+										
+								    }
+								   if($k==1){
+								   		$objPHPExcel->getActiveSheet()->SetCellValue('E'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									}
+								   if($k==2){
+								   		$objPHPExcel->getActiveSheet()->SetCellValue('G'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									}
+								   if($k==3){
+								   		$objPHPExcel->getActiveSheet()->SetCellValue('I'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									}
+								   if($k==4){
+								   		$objPHPExcel->getActiveSheet()->SetCellValue('K'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+								    }
+								   if($k==5){
+								   		$objPHPExcel->getActiveSheet()->SetCellValue('M'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+								   }
+								}
+							   }	
+							}
+						}
+					  }
+				     }
+				 	   $HeightestRow++;
+					}
+					   for($i=0;$i<13;$i++){
+					   if($i%2==0){
+					   $objPHPExcel->getActiveSheet()->getStyle($cells[$i].$HeightestRow)->applyFromArray(
+																										array(
+																											'alignment' => array(
+																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																											),
+																											'borders' => array(
+																												'left'     => array(
+																													'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																												),
+																												'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+                    																							'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																												'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																											)
+																										)
+																								);
+						 }else{
+						 $objPHPExcel->getActiveSheet()->getStyle($cells[$i].$HeightestRow)->applyFromArray(
+																										array(
+																											'alignment' => array(
+																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																											),
+																											'borders' => array(
+																												'left'     => array(
+																													'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																												),
+																												'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+                    																							'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																												'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																											),
+																											'fill'  => array(
+																												'type' => PHPExcel_Style_Fill::FILL_SOLID,
+																												'color' => array('rgb' => 'D2D2D2')
+																											  ),
+																										)
+																								);
+						 
+						 }		
+						}																
+					   $HeightestRow=$HeightestRow+1;
+				}
+			 }else{
+			    $_SESSION['error_msg'] = "No data found.";
+				$_SESSION['from']=$_POST['fromGenrtWR'];
+				$_SESSION['to']=$_POST['toGenrtWR'];
+				header('Location: weekly_report.php');
+		    }
+	 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+	 header('Content-type: application/vnd.ms-excel');
+	 header('Content-Disposition: attachment; filename="week.xls"');
+	 $objWriter->save('php://output');
+	}
+	break;
+ }
 }
 ?>
