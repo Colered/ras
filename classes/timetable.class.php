@@ -1761,4 +1761,17 @@ class Timetable extends Base {
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
+	//making string after the sort timeslot for the weekly excel report
+	public function sortingTimesSlots($str_ts){
+		    $strTSArr = explode(',',$str_ts);
+			 usort($strTSArr,function ($a, $b) {
+         	 		 $a=explode("-",$a);
+		 			 $b=explode("-",$b);
+		 			 $a = strtotime($a[0]);
+ 		 			 $b = strtotime($b[0]);
+ 		 			return $a - $b;
+    		});
+			$sorted_ts_str = implode(', ',$strTSArr);
+			return trim($sorted_ts_str);
+	}
 }

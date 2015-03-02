@@ -314,9 +314,21 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					}
 					if(in_array(trim($row['date']).'-'.trim($row['name']),$datePrgmArray) && ($i>0)){
 						$j=0;
+						$array_val=array();
 						foreach($row as $key=>$val){
-						   $rows[trim($row['date'])][trim($row['name'])][$j]=$rows[trim($row['date'])][trim($row['name'])][$j].','.trim($val);
+						 if(trim($rows[trim($row['date'])][trim($row['name'])][$j])!=trim($val)){
+						   $array_val=explode(',',$rows[trim($row['date'])][trim($row['name'])][$j]);
+						     if(!in_array(trim($val),$array_val)){
+							  	$rows[trim($row['date'])][trim($row['name'])][trim($j)]=$rows[trim($row['date'])][trim($row['name'])][trim($j)].','.trim($val);
+							    $j++;
+						      }else{
+								$rows[trim($row['date'])][trim($row['name'])][trim($j)]=$rows[trim($row['date'])][trim($row['name'])][trim($j)];
+						   		$j++;
+							  }
+						 }else{
+						   $rows[trim($row['date'])][trim($row['name'])][trim($j)]=$rows[trim($row['date'])][trim($row['name'])][trim($j)];
 						   $j++;
+						 }
 						}
 					}else{
 						$datePrgmArray[] = trim($row['date']).'-'.trim($row['name']);
@@ -324,7 +336,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$program_name=trim($row['name']);
 						$rows[$date][$program_name]= $reformRowArr;
 					}
-					$i++;
+				  $i++;
 				}
 				//fectching the date week day and storing into the array
 				$dates=$date_day_name=$rowsDayArr = $rowsSortArr=array();
@@ -366,8 +378,15 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				foreach($rowsSortArr as $key=>$val){
 					$j=0;
 				   foreach($val as $k=>$v){
-				   	  $k=$j;
+				      $k=$j;
 					  $mkNewArr[$key][$k]=$v;
+					  	foreach($mkNewArr[$key][$k] as $ke=>$vl){
+						    if($ke==2){
+							     $mkNewArr[$key][$k][$ke] = $objTime->sortingTimesSlots($vl);
+							}else{
+								 $mkNewArr[$key][$k][$ke] = $vl;
+							}
+						}
 					  $j++;
 				   }
 				}
@@ -382,13 +401,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				}
 			if(!empty($maxArr)){
 				$dateStr='Date Range:-'.$from.' to '.$to;
-				$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-				$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
-				$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-				$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
-				$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
-				$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
-				$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+				
+				$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(24);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(24);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(24);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(24);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(24);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(24);
+				$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(24);
 				
 				$objPHPExcel->getActiveSheet()->SetCellValue('A2', "Resumen Calendario Actividades");
 				$objPHPExcel->getActiveSheet()->getStyle('A2')->getFont()->setName('Calibri');
@@ -409,6 +429,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true); 
 					 }
 					  if($x=='1'){
 					 	$y='2';
@@ -416,6 +437,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
 					  if($x==2){
 					 	$y='';
@@ -423,6 +445,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
 					  if($x==3){
 					 	$y='6';
@@ -430,6 +453,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
 					  if($x=='4'){
 					 	$y='3';
@@ -437,6 +461,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
 					  if($x=='5'){
 					 	$y='';
@@ -444,6 +469,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
 					  if($x=='6'){
 					 	$y='';
@@ -451,13 +477,15 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
+						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
 					  for($j=0;$j<13;$j++){
 					   if($j%2==0){
 					  	$objPHPExcel->getActiveSheet()->getStyle($cells[$j].$HeightestRow)->applyFromArray(
 																										array(
 																											'alignment' => array(
-																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
 																											),
 																											'borders' => array(
 																												'left'     => array(
@@ -467,15 +495,16 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																											),
 																											'font' => array(
 																														'name' => 'Calibri',
-																														'size' => 6
+																														'size' => 8
 																													)
-																										)
+																										    )
 																								);
 							}else{
 							$objPHPExcel->getActiveSheet()->getStyle($cells[$j].$HeightestRow)->applyFromArray(
 																										array(
 																											'alignment' => array(
-																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
 																											),
 																											'borders' => array(
 																												'left'     => array(
@@ -486,7 +515,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																											'fill'  => array(
 																												'type' => PHPExcel_Style_Fill::FILL_SOLID,
 																												'color' => array('rgb' => 'D2D2D2')
-																											  ),
+																											  )
 																										)
 																								);
 						}																	
@@ -498,8 +527,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								 if($y!=''){
 								  	if($k==0){
 								  		$objPHPExcel->getActiveSheet()->SetCellValue('C'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
-										
-								    }
+									}
 								   if($k==1){
 								   		$objPHPExcel->getActiveSheet()->SetCellValue('E'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
 									}
@@ -528,7 +556,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					   $objPHPExcel->getActiveSheet()->getStyle($cells[$i].$HeightestRow)->applyFromArray(
 																										array(
 																											'alignment' => array(
-																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
 																											),
 																											'borders' => array(
 																												'left'     => array(
@@ -544,7 +572,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						 $objPHPExcel->getActiveSheet()->getStyle($cells[$i].$HeightestRow)->applyFromArray(
 																										array(
 																											'alignment' => array(
-																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
 																											),
 																											'borders' => array(
 																												'left'     => array(
@@ -560,8 +588,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																											  ),
 																										)
 																								);
-						 
-						 }		
+						  }		
 						}																
 					   $HeightestRow=$HeightestRow+1;
 				}
@@ -571,10 +598,18 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$_SESSION['to']=$_POST['toGenrtWR'];
 				header('Location: weekly_report.php');
 		    }
-	 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-	 header('Content-type: application/vnd.ms-excel');
-	 header('Content-Disposition: attachment; filename="week.xls"');
-	 $objWriter->save('php://output');
+				$worksheet = $objPHPExcel->getActiveSheet();
+				$objDrawing = new PHPExcel_Worksheet_Drawing();
+				$objDrawing->setPath('./images/barna_excel.png');
+				$objDrawing->setResizeProportional(false);
+				$objDrawing->setWidth(110);
+				$objDrawing->setHeight(35);
+				$objDrawing->setCoordinates('M2');
+				$objDrawing->setWorksheet($worksheet);		
+				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+				header('Content-type: application/vnd.ms-excel');
+				header('Content-Disposition: attachment; filename="report_weekly.xls"');
+				$objWriter->save('php://output');
 	}
 	break;
  }
