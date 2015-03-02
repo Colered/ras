@@ -10,7 +10,7 @@
             <form action="postdata_import.php" method="post" id="weekly_report" name="weekly_report" >
 			<input type="hidden" value="generateWeeklyReport" name="form_action">
 				<div class="custtable_left">
-					<div class="red" style="padding-bottom:10px;">
+					<div class="red removeWKRErr" style="padding-bottom:10px;">
 							<?php if(isset($_SESSION['error_msg']))
 								echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
 					</div>
@@ -27,10 +27,10 @@
                         <h3><span class="redstar">*</span>All Fields are mandatory.</h3>
                     </div>
                     <div class="txtfield" style="padding-left:41px; padding-top:10px;">
-                        <input type="submit" name="btnGenrtWR" class="buttonsub btnGenertTimetbl" value="Generate Weekly Report">
+                        <input type="submit" name="btnGenrtWR" id="btnWKR" class="buttonsub btnGenertTimetbl" value="Generate Weekly Report">
                     </div>
                     <div class="txtfield" style="padding-top:10px;">
-                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'timetable_dashboard.php';">
+                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'weekly_report.php';">
                     </div>
                 </div>	
             </form>

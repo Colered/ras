@@ -2739,3 +2739,9 @@ $(document).ready(function() {
 			}
 		});
 });
+$(document).ready(function() {
+	$("#weekly_report").on("submit", function(){
+		 $('.removeWKRErr').hide();	
+	});
+});
+	
