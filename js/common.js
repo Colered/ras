@@ -2712,13 +2712,9 @@ $(document).ready(function() {
 	//To select/deselect for selectAll checkbox when all checkbox are selected or not
 	$(document).on('click', ".activityCkb", function() {
 			var desabledCkbCnt = $(".ckbDisabled").length;
-			//alert(desabledCkbCnt);
 			var allCkbOncurrntPageCnt =$(".allCKbCls").length;
-			//alert(allCkbOncurrntPageCnt);
 			var activeCkbOnpageCnt=allCkbOncurrntPageCnt-desabledCkbCnt;
-			//alert(activeCkbOnpageCnt);
 			var ckbCheckedCnt=$(".activityCkb:checked").length;
-			//alert(ckbCheckedCnt);
 			if(activeCkbOnpageCnt == ckbCheckedCnt) {
 				$("#ckbCheckAllActivity").prop("checked", "checked");
 			} else {
@@ -2741,7 +2737,7 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
 	$("#weekly_report").on("submit", function(){
-		 $('.removeWKRErr').hide();	
+		 $('.removeWKRErr').html("");	
 	});
 });
 	

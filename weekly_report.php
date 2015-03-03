@@ -10,7 +10,7 @@
             <form action="postdata_import.php" method="post" id="weekly_report" name="weekly_report" >
 			<input type="hidden" value="generateWeeklyReport" name="form_action">
 				<div class="custtable_left">
-					<div class="red removeWKRErr" style="padding-bottom:10px;">
+					<div class="red removeWKRErr">
 							<?php if(isset($_SESSION['error_msg']))
 								echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
 					</div>
