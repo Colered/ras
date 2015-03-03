@@ -628,6 +628,30 @@ class Teacher extends Base {
 		   //print_r($timeslotIds);
 		   return $timeslotIds;
 	}*/
-
+	public function getTeachersSpecialActFilterView($activity_filter_val)
+	{
+		$sql_tt_range="SELECT start_date ,end_date  from  timetable";
+		$result_tt_range =  $this->conn->query($sql_tt_range);
+		$Date_range = $result_tt_range->fetch_assoc();
+		$result_sess = $this->getSessionFromTT();
+		
+		$sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,tar.reason,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name ,td.room_id reserverd_room_id,td.date,td.timeslot FROM teacher_activity ta
+						left join subject s on(s.id = ta.subject_id)
+						left join subject_session ss on(ss.id=ta.session_id)
+						left join teacher t on(t.id = ta.teacher_id)
+						left join timetable_detail td on(td.activity_id=ta.id)
+						left join program_years py on(py.id=ta.program_year_id)
+						left join teacher_activity_reason tar on tar.activity_id = ta.id 
+						WHERE ta.reserved_flag IN (3,4,5)";
+		if($activity_filter_val==3)
+			$sql.= "AND ta.reserved_flag = 3";
+		if($activity_filter_val==4)
+			$sql.= "AND ta.reserved_flag = 4";
+		if($activity_filter_val== 5)
+			$sql.= "AND ta.reserved_flag = 5";
+		$sql.=" ORDER BY ta.name";
+		$result =  $this->conn->query($sql);
+		return $result;
+	}
 	
 }

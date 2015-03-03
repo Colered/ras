@@ -63,6 +63,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                                 <li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
 								<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
                                 <li>&#8250; <a href="teacher_activity_view.php">Activities</a></li>
+								<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
 								<li>&#8250; <a href="timetable_view.php">Timetable</a></li>
 								<li>&#8250; <a href="month.php">Calendar</a></li>
                            </ul>
@@ -82,6 +83,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                                 <li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
 								<li>&#8250; <a href="holidays_view.php">Manage Holidays</a></li>
 								<li>&#8250; <a href="teacher_activity_view.php">Activity List</a></li>
+								<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
                             </ul>
                         </li>
 						<li class="upp"><a href="">Data Upload</a>

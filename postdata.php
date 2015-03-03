@@ -561,6 +561,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			echo '</table>';
 		}		
 		break;
+		case "addEditSpecialActivity":
+			print_r($_POST); die;
 		}
 }
 ?>
