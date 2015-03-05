@@ -687,15 +687,13 @@ switch ($codeBlock) {
 								$timeslotIdsArray[] = $_POST['tslot_id'];
 							}
 							$tsIdsAll = implode(',', $timeslotIdsArray);
-						}
-						
+						}						
 						if($_POST['subSessDate'] !='' || $_POST['room_id'] != '' || $_POST['tslot_id'] != '')
 						{
 							$reserved_flag = 2;
 						}else{
 							$reserved_flag = 0;
 						}
-						
 						$sql_count_act = mysqli_query($db, "SELECT ta.id,teacher_id FROM teacher_activity as ta WHERE session_id='".$sessionId."'");
 						$act_count = mysqli_num_rows($sql_count_act);
 						while($row_act = mysqli_fetch_array($sql_count_act))

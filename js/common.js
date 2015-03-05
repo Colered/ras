@@ -2670,9 +2670,9 @@ $(document).ready(function() {
   		});
 		if(schdTime!="" && fromDate!="" && toDate!="" && programVal.length!=0){
 		   $("#wait").show();
-		   if($("input.btnGenertTimetbl").attr("disabled", true)){
-			  $('.btnGenertTimetbl').addClass('clsbtnGenrtTimtblDisable'); 
-			}
+		  // if($("input.btnGenertTimetbl").attr("disabled", true)){
+			  //$('.btnGenertTimetbl').addClass('clsbtnGenrtTimtblDisable'); 
+			//}
 			  $.ajax({
 			   type: "POST",
 			   url: "ajax_common.php",
