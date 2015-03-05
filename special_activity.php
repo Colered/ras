@@ -1,7 +1,8 @@
 <?php include('header.php');
-$obj = new Teacher();
-$teacherData = $obj->getTeachers();
-$teacherAvailData = $obj->getTeacherAvailRule();
+$obj = new SpecialActivity();
+$objTeach = new Teacher();
+$teacherData = $objTeach->getTeachers();
+$specialAvailData = $obj->getSpecialAvailRule();
 $obj2 = new Timeslot();
 $disFDivCss = "style='opacity:.5; pointer-event:none'";
 $disTest = "disabled";
@@ -27,7 +28,7 @@ $mappedruleids = array();
 if(isset($_GET['tid']) && $_GET['tid']!=""){
 	$teachId = $_GET['tid'];
 	$decodeTeachId = base64_decode($teachId);
-	$mappedruleids = $obj->getRuleIdsForTeacher($decodeTeachId);
+	$mappedruleids = $obj->getRuleIdsForSpecialAct($decodeTeachId);
 }
 ?>
 <div id="content">
@@ -48,10 +49,10 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 				<!-- new -->
 				<div class="addSubDiv" <?php //echo $disFDivCss; ?>>
                             <div class="custtd_left">
-                                <h2>Choose Program<span class="redstar">*</span></h2>
+                                <h2>Choose Activity<span class="redstar">*</span></h2>
                             </div>
                             <div class="txtfield">
-                                <select id="activity_color_filter" name="activity_color_filter" class="select1" onchange="activityFilter();" > 
+                                <select id="special_activity" name="special_activity" class="select1" onchange="specialActivity();"> 
 									<option value="" selected="selected">--Select--</option>
 									<option value="3" <?php if($activity_filter_val == '3'){?> selected="selected"}<?php }?>>Recess Activities</option>
 									<option value="4" <?php if($activity_filter_val == '4'){?> selected="selected"}<?php }?>>Group Meetings</option>
@@ -162,8 +163,8 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                         <h2>Time Interval <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        From:<input type="text" size="12" id="fromTeachAval" />
-                        To:<input type="text" size="12" id="toTeachAval" />
+                        From:<input type="text" size="12" id="fromSpecialAval" />
+                        To:<input type="text" size="12" id="toSpcialAval" />
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
@@ -208,7 +209,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 						</div>
                     </div>
 					<div class="custtable_left div-arrow-img" style="cursor:pointer">
-					<input type="button" name="saveRule" class="buttonsub" value="Create Rule" onclick="createTeachAvailRule();">
+					<input type="button" name="saveRule" class="buttonsub" value="Create Rule" onclick="createSpecialAvailRule();">
                    <!-- <img src="images/arrow.png" id="arrow-img" class="arrow-img"  onclick="createTeachAvailRule();"/>-->
                 	</div>
                     <div class="clear"></div>
@@ -225,15 +226,15 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                        <table width="1200" border="1" >
 					   <?php
 					    $count = 0;
-					   	while($data = $teacherAvailData->fetch_assoc()){
+					   	while($data = $specialAvailData->fetch_assoc()){
 							if($count%6 == 0){ echo "<tr>"; }?>
-								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 140px;"><li style="min-height:20px;" class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b>
+								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 140px;"><li style="min-height:20px;" class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>"  class="rule__listed_ckb" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b>
 								<span style="padding-left:10px; cursor:pointer; padding-top:5px;"><img alt="Delete Rule" style="margin-bottom:-3px;" onclick="deleteRuleTeacher(<?php echo $data['id']; ?>, '<?php echo $teachID = ($teachId !="" ? $teachId : 0); ?>');" src="images/delete-rule.png" /></span>
 								</li>
 								<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span>
 								<ul class="listing">
 									<?php //get the day and timeslot
-									$dayData = $obj->getTeacherAvailDay($data['id']);
+									$dayData = $obj->getSpecialAvailDay($data['id']);
 									while($ddata = $dayData->fetch_assoc()){
 										//$timeslotData2 = $obj->getTeacherAvailTimeslot($ddata['timeslot_id']);
 										
@@ -278,10 +279,10 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                         <h2>Add Exception</h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" size="12" id="exceptnTeachAval" />
+                        <input type="text" size="12" id="exceptnSpecialActAval" />
                     </div>
 					<div class="addbtnException">
-					    <input type="button" name="btnAddMore" class="btnTeachAvailExcep" value="Add">
+					    <input type="button" name="btnAddMore" class="btnSpecialActAvailExcep" value="Add">
                      </div>
                     <div class="clear"></div>
 					<div class="custtd_left">

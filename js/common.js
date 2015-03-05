@@ -65,6 +65,14 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
+	$("#exceptnSpecialActAval").datepicker({
+	    dateFormat: 'yy-mm-dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
 });			   
 
 $(function() {
@@ -210,8 +218,31 @@ $(function() {
 			$("#fromGenrtWR").datepicker("option", "minDate", minDate);
 		}
 	});
+ });
+$(function() {
+	$("#fromSpecialAval").datepicker({
+	    dateFormat: 'yy-mm-dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function(selectedDate) {
+			$("#toSpcialAval").datepicker("option", "minDate", selectedDate);
+		}
+	});
+	$("#toSpcialAval").datepicker({
+	    dateFormat: 'yy-mm-dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function(selectedDate) {
+			$("#fromSpecialAval").datepicker("option", "maxDate", selectedDate);
+		}
+	});
 });
-
 
 
 });
@@ -2740,4 +2771,158 @@ $(document).ready(function() {
 		 $('.removeWKRErr').html("");	
 	});
 });
+//function to show subjects by program
+function createSpecialAvailRule(){
 	
+	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
+	var regx = /^[A-Za-z0-9 .]+$/;
+    /*if (!regx.test($('#txtSchd').val())) {
+        alert('Please select a valid schedule name with alphanumeric options.');
+		return false;
+    }*/
+    if($('#txtSchd').val()==""){
+		alert('Please select a valid Schedule Name.');
+		return false;
+	}else if($('#fromSpecialAval').val()==""){
+			alert('Please select a valid From Time.');
+	}else if($('#toSpcialAval').val()==""){ 
+			alert('Please select a valid To Time.');
+	}else if($('.tmSlot input:checked').length <= 0){
+			alert('Please select atleast one day and timeslot.');
+	}else{
+		//get the selected values on each days
+		if(($('#Mon:checked').length > 0) && ($('#ts-avail-mon').val() != null)){
+				var timeslotMon = '{' +$('select#ts-avail-mon').val()+ '}';
+		}
+		if(($('#Tue:checked').length > 0) && ($('#ts-avail-tue').val() != null)){
+			var timeslotTue = '{' +$('select#ts-avail-tue').val()+ '}';
+		}
+		if(($('#Wed:checked').length > 0) && ($('#ts-avail-wed').val() != null)){
+			var timeslotWed = '{' +$('select#ts-avail-wed').val()+ '}';
+		}
+		if(($('#Thu:checked').length > 0) && ($('#ts-avail-thu').val() != null)){
+			var timeslotThu = '{' +$('select#ts-avail-thu').val()+ '}';
+		}
+		if(($('#Fri:checked').length > 0) && ($('#ts-avail-fri').val() != null)){
+			var timeslotFri = '{' +$('select#ts-avail-fri').val()+ '}';
+		}
+		if(($('#Sat:checked').length > 0) && ($('#ts-avail-sat').val() != null)){
+			var timeslotSat = '{' +$('select#ts-avail-sat').val()+ '}';
+		}
+		//send ajax request to insert values into DB		
+		if(timeslotMon!="" || timeslotTue!="" || timeslotWed!="" || timeslotThu!="" || timeslotFri!="" || timeslotSat!=""){
+			$.ajax({
+				url: "./ajax_common.php",
+				type: "POST",
+				data: {
+					'rule_name': $('#txtSchd').val(),
+					'start_date': $('#fromSpecialAval').val(),
+					'end_date': $('#toSpcialAval').val(),
+					'codeBlock': 'createSpecialAvaRule',
+					'timeslotMon': timeslotMon,
+					'timeslotTue': timeslotTue,
+					'timeslotWed': timeslotWed,
+					'timeslotThu': timeslotThu,
+					'timeslotFri': timeslotFri,
+					'timeslotSat': timeslotSat,
+					},
+				success: function($succ){
+						
+					if($succ==1){
+						$id = "";
+						if($('#slctTeacher').val()!=""){
+							$id = '?tid='+$('#slctTeacher').val();
+						}
+						window.location.href = 'special_activity.php'+$id+'';
+					}else{
+						alert("Rule name already exists.");
+					}
+				},
+				error: function(errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		}else{
+			alert('Please select atleast one timeslot.');
+			}
+	}
+}	
+
+$(document).ready(function() {
+	var max_fields = 10; 
+    var wrapper = $(".divException"); 
+    var add_button_class_exception = $(".btnSpecialActAvailExcep"); 
+    var x = 1,y=0; 
+    $(add_button_class_exception).click(function(e){ 
+		var exceptnDate = $('#exceptnSpecialActAval').val();
+		e.preventDefault();
+		var roomIdException=$('#roomId').val();
+		roomIdException="";
+		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
+		if(roomIdException!=""){
+			var maxSerialNumVal=maxSerialNum + 1;
+			$('#maxSessionListVal').val(maxSerialNumVal);
+			if(maxSerialNum==0){
+				$(wrapper).append('<div class="sessionList"><table id="datatables" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th >Session Name</th><th>Remove</th></tr></thead><tbody>');	
+			}
+			if(exceptnDate!=''){
+				$('#datatables').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exceptnDate+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="removeSpecialActException(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+				//$(wrapper).append('');
+				$('#exceptnSpecialActAval').val('');
+			}
+	    }else{
+			if(x < max_fields){ 
+			x++;
+			y++;
+			if(exceptnDate!=''){
+				if(y==1){
+				$(wrapper).append('<div class="exceptionList"><table id="datatables" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+						}
+				$('#datatables').append('<tr><td>'+y+'</td><td>'+exceptnDate+'</td><td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceoptionDate'+y+'"  value="'+exceptnDate+'"/></td><td id='+y+'><a class="remove_field" onclick="removeSpecialActException(0,'+y+')">Remove</a></td></tr></tbody></table></div>');
+				$('#exceptnSpecialActAval').val('');
+			}
+	  }
+    }
+ });
+});
+function removeSpecialActException($exceptionId, $serialId){
+	if(confirm("Are you sure you want to delete the Special activity exception?")) {
+	    	if($exceptionId == 0){
+				$('#'+$serialId).closest('tr').remove();
+				$('.green, .red').hide();
+			}else{
+				$.ajax({
+						type: "POST",
+						url: "ajax_common.php",
+						data: {
+							'id': $exceptionId,
+							'codeBlock': 'del_spc_act_exception',
+						},
+						success: function($succ){
+							if($succ==1){
+								$('#'+$exceptionId).closest('tr').remove();
+								$('.green, .red').hide();
+							}else{
+								alert("Cannot delete the selected exception.");
+								$('.green, .red').hide();
+							}
+						}
+				});
+    		}
+	}
+    return false;
+}
+function specialActivity(){
+	var activity=$( "#special_activity option:selected" ).val();
+	if(activity==5){
+		$('.txtSchd').val("");	
+		$('.fromSpecialAval').val("");
+		$('.toSpcialAval').val("");
+		$('.days').attr('checked', false);
+		$('.rule__listed_ckb').attr('checked', false); 
+		$(".slctTs option:selected").removeAttr("selected");
+		$('.scheduleBlock').hide();	
+	}else{
+		$('.scheduleBlock').show();	
+	}	   
+}

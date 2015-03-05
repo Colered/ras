@@ -1834,5 +1834,83 @@ switch ($codeBlock) {
 				echo 1;
 			}
 		   break;
+		case "createSpecialAvaRule":
+		$objT = new Teacher();
+		//check if the rule name exists
+		$rule_query="select id, rule_name from special_activity_rule where rule_name='".$_POST['rule_name']."'";
+		$q_res = mysqli_query($db, $rule_query);
+		$dataAll = mysqli_fetch_assoc($q_res);
+		if(count($dataAll)>0)
+		{
+			echo '0';
+		}else{
+			//Add the new rule
+			$currentDateTime = date("Y-m-d H:i:s");
+			$weeksDataVal = "";
+			if((isset($_POST['start_date']) && $_POST['start_date']!="") && (isset($_POST['end_date']) && $_POST['end_date']!="")){
+				$weeksData = array();
+				$obj = new Teacher();
+				$weeksData = $obj->getWeeksInDateRange($_POST['start_date'], $_POST['end_date']);
+				$weeksDataVal = implode(",",$weeksData);
+			}
+			if ($result = mysqli_query($db, "INSERT INTO special_activity_rule VALUES ('', '".$_POST['rule_name']."', '".$_POST['start_date']."', '".$_POST['end_date']."', '".$weeksDataVal."', '".$currentDateTime."', '".$currentDateTime."');")){
+				$special_activity_rule_id = $db->insert_id;
+				if($special_activity_rule_id!=""){
+						//insert values for monday
+						if(isset($_POST['timeslotMon']) && ($_POST['timeslotMon'])!=""){
+						$timeslotMon = substr($_POST['timeslotMon'], 1, -1);
+						$timeslotMon1 = $objT->getTimeslotId($timeslotMon);
+						$result = mysqli_query($db, "INSERT INTO  special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotMon."','".$timeslotMon1."', 0, 'Mon', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Tuesday
+						if(isset($_POST['timeslotTue'])  && ($_POST['timeslotTue'])!=""){
+						$timeslotTue = substr($_POST['timeslotTue'], 1, -1);
+						$timeslotTue1 = $objT->getTimeslotId($timeslotTue);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotTue."','".$timeslotTue1."', 1, 'Tue', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Wednesday
+						if(isset($_POST['timeslotWed']) && ($_POST['timeslotWed'])!=""){
+						$timeslotWed = substr($_POST['timeslotWed'], 1, -1);
+						$timeslotWed1 = $objT->getTimeslotId($timeslotWed);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotWed."','".$timeslotWed1."', 2, 'Wed', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Thursday
+						if(isset($_POST['timeslotThu']) && ($_POST['timeslotThu'])!=""){
+						$timeslotThu = substr($_POST['timeslotThu'], 1, -1);
+						$timeslotThu1 = $objT->getTimeslotId($timeslotThu);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotThu."','".$timeslotThu1."', 3, 'Thu', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Friday
+						if(isset($_POST['timeslotFri']) && ($_POST['timeslotFri'])!=""){
+						$timeslotFri = substr($_POST['timeslotFri'], 1, -1);
+						$timeslotFri1 = $objT->getTimeslotId($timeslotFri);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotFri."','".$timeslotFri1."', 4, 'Fri', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						//insert values for Saturday
+						if(isset($_POST['timeslotSat']) && ($_POST['timeslotSat'])!=""){
+						$timeslotSat =  substr($_POST['timeslotSat'], 1, -1);
+						$timeslotSat1 = $objT->getTimeslotId($timeslotSat);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotSat."','".$timeslotSat1."', 5, 'Sat', '".$currentDateTime."', '".$currentDateTime."');");
+						}
+						echo '1';
+				}else{
+						echo '0';
+				}
+			}else{
+				echo '0';
+			}
+		}
+	break;
+	case "del_spc_act_exception":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_special_act_excepton_query="delete from special_activity_exception where id='".$id."'";
+			$qry = mysqli_query($db, $del_special_act_excepton_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+    break;
 }
 ?>
