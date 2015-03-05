@@ -243,11 +243,35 @@ $(function() {
 		}
 	});
 });
-
+$(function() {
+	$("#fromPeriodicAct").datepicker({
+	    dateFormat: 'yy-mm-dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function(selectedDate) {
+			$("#toPeriodicAct").datepicker("option", "minDate", selectedDate);
+		}
+	});
+	$("#toPeriodicAct").datepicker({
+	    dateFormat: 'yy-mm-dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function(selectedDate) {
+			$("#fromPeriodicAct").datepicker("option", "maxDate", selectedDate);
+		}
+	});
+});
 
 });
 //validate form for area
 $(document).ready(function(){
+		$('.periodicAct').hide();				   
 		$("#dialog-confirm").hide();
 		$("#dialog-confirm-area").hide();
 		$("#areaForm").validate();
@@ -2912,6 +2936,7 @@ function removeSpecialActException($exceptionId, $serialId){
 	}
     return false;
 }
+//showing optional,required field and rule blocks
 function specialActivity(){
 	var activity=$( "#special_activity option:selected" ).val();
 	if(activity==5){
@@ -2922,7 +2947,37 @@ function specialActivity(){
 		$('.rule__listed_ckb').attr('checked', false); 
 		$(".slctTs option:selected").removeAttr("selected");
 		$('.scheduleBlock').hide();	
+		$('.spanPrgm').text("(Optional)");	
+		$('.spanCycle').text("(Optional)");	
+		$('.spanArea').text("(Optional)");	
+		$('.spanSubject').text("(Optional)");	
+		$('.spanSubCode').text("(Optional)");	
+		$('.spanSubCode').text("(Optional)");	
+	}else if(activity==4){
+		$('.spanPrgm').text("(Optional)");	
+		$('.spanCycle').text("(Optional)");	
+		$('.spanArea').text("(Optional)");	
+		$('.spanSubject').text("(Optional)");	
+		$('.spanSubCode').text("(Optional)");	
+		$('.spanSubCode').text("(Optional)");
+		$('.scheduleBlock').show();	
 	}else{
+		$('.spanPrgm').text("*");	
+		$('.spanCycle').text("*");	
+		$('.spanArea').text("*");	
+		$('.spanSubject').text("*");	
+		$('.spanSubCode').text("*");	
+		$('.spanSubCode').text("*");
 		$('.scheduleBlock').show();	
 	}	   
 }
+//showing and hiding the periodic date range
+function specialActivityType(){
+	   var activity_type = $( "#special_activity_type option:selected" ).val();
+	   if(activity_type==2){
+		   $('.periodicAct').show();	 
+		  }else{
+		   $('.periodicAct').hide();
+		}
+}
+

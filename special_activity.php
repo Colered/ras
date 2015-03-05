@@ -61,7 +61,25 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                             </div>
                             <div class="clear"></div>
 							<div class="custtd_left">
-                                <h2>Choose Program<span class="redstar">*</span></h2>
+                                <h2>Choose Activity Type<span class="redstar spanActivityType">*</span></h2>
+                            </div>
+                            <div class="txtfield">
+                                <select id="special_activity_type" name="special_activity_type" class="select1" onchange="specialActivityType();"> 
+									<option value="" selected="selected">--Select--</option>
+									<option value="1">One Time Activity</option>
+									<option value="2">Periodic Activity</option>
+								</select>
+                            </div>
+                            <div class="clear"></div>
+							<div class="custtd_left periodicAct" >
+                       		</div>
+                    		<div class="txtfield periodicAct">
+                       			 From:<input type="text" size="12" id="fromPeriodicAct" />
+                       			 To:<input type="text" size="12" id="toPeriodicAct" />
+                    		</div>
+                    		<div class="clear"></div>
+							<div class="custtd_left">
+                                <h2>Choose Program<span class="redstar spanPrgm">*</span></h2>
                             </div>
                             <div class="txtfield">
                                 <select id="slctProgram" name="slctProgram" class="select1 required" onchange="getCycleByProgId(this)">
@@ -79,7 +97,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                             </div>
                             <div class="clear"></div>
                             <div class="custtd_left">
-                                <h2>Choose Cycle<span class="redstar">*</span></h2>
+                                <h2>Choose Cycle<span class="redstar spanCycle">*</span></h2>
                             </div>
                             <div class="txtfield">
                                 <select id="slctCycle" name="slctCycle" class="select1 required" >
@@ -96,7 +114,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                             </div>
                             <div class="clear"></div>
                             <div class="custtd_left" <?php echo $disFDivCss; ?>>
-                                <h2>Choose Area <span class="redstar">*</span></h2>
+                                <h2>Choose Area <span class="redstar spanArea">*</span></h2>
                             </div>
                             <div class="txtfield " <?php echo $disFDivCss; ?>>
                                 <select id="slctArea" name="slctArea" class="select1 required" <?php echo $disTest; ?>>
@@ -114,14 +132,14 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                             </div>
                             <div class="clear"></div>
                             <div class="custtd_left" <?php echo $disFDivCss; ?>>
-                                <h2>Subject Name<span class="redstar">*</span></h2>
+                                <h2>Subject Name<span class="redstar spanSubject">*</span></h2>
                             </div>
                             <div class="txtfield" <?php echo $disFDivCss; ?>>
                                 <input type="text" class="inp_txt required" id="txtSubjName" maxlength="50" name="txtSubjName" value="N/A" <?php echo $disTest; ?>>
                             </div>
                             <div class="clear"></div>
                             <div class="custtd_left" <?php echo $disFDivCss; ?>>
-                                <h2>Subject Code <span class="redstar">*</span></h2>
+                                <h2>Subject Code <span class="redstar spanSubCode">*</span></h2>
                             </div>
                             <div class="txtfield" <?php echo $disFDivCss; ?>>
                                 <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="N/A" readonly <?php echo $disTest; ?>>
@@ -136,7 +154,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 				<!-- end -->
 				
                     <div class="custtd_left" <?php echo $disFDivCss; ?>>
-                        <h2>Teacher <span class="redstar">*</span></h2>
+                        <h2>Teacher <span class="redstar spanSubCode">*</span></h2>
                     </div>
                     <div class="txtfield" <?php echo $disFDivCss; ?>>
 					 <select id="slctTeacher" name="slctTeacher" class="select1 required" onchange="changeTeacherData()"  <?php echo $disTest; ?>>
