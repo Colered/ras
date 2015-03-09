@@ -263,6 +263,11 @@ class Timetable extends Base {
 						$f_day = $this->getDayFromDate($date);
 						$reserved_timeslots = array();	
 						$counter = 1;
+						$total_timeslots = array();
+						foreach($v as $start_id)
+						{
+							$total_timeslots[] = $start_id;
+						}
 						//CHECK if the day has any reserved activities scheduled
 						if(array_key_exists($date,$reserved_activities))
 						{
@@ -299,17 +304,96 @@ class Timetable extends Base {
 													$recess_act_detail = $recess_activities[$date][$program_id];
 													$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
 													$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$recess_act_detail['duration']." minutes"));
-													if($this->checkRoomAvailability($res_act_detail['room_id'],$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$res_act_detail['room_id'],$reserved_rooms))
+													$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
+													$time = explode(",",$recess_act_detail['timeslot_id']);
+													$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
+													if($ts_cnt == count($time))
 													{
-														$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number']);
-														$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
-														$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $res_act_detail['room_id'];
-														$ts_array = explode(",",$recess_act_detail['timeslot_id']);
-														foreach($ts_array as $ts_id)
+														if($this->checkRoomAvailability($res_act_detail['room_id'],$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$res_act_detail['room_id'],$reserved_rooms))
 														{
-															$reserved_timeslots[] = trim($ts_id);
-														}	
+															$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number']);
+															$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
+															$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $res_act_detail['room_id'];
+															$ts_array = explode(",",$recess_act_detail['timeslot_id']);
+															foreach($ts_array as $ts_id)
+															{
+																$reserved_timeslots[] = trim($ts_id);
+															}	
+														}
+													}else{
+														$reasons[$recess_act_detail['activity_id']] = "Timeslot is not available for this activity";
 													}
+												}
+												//process group meetings only if some group meetings are scheduled for day
+												if(!empty($group_meetings))
+												{
+													if($counter == '1' && array_key_exists($date,$group_meetings))
+													{
+														$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
+														foreach($group_meetings[$date] as $meeting_id=>$meeting_detail)
+														{
+															$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
+															$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$meeting_detail['duration']." minutes"));
+															$time = explode(",",$meeting_detail['timeslot_id']);
+															$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
+															if($ts_cnt == count($time))
+															{
+																$room_id = $this->searchRoomForGM($date,$meeting_detail['timeslot_id'],$meet_start_time,$meet_end_time,$reserved_rooms);
+																if($room_id > 0)
+																{
+																	$room_name = $this->getRoomName($room_id);
+																	//allocate group meeting
+																	$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number']);
+																	$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time] = $activities_array;
+																	$reserved_rooms[$date][$meet_start_time." - ".$meet_end_time][$i] = $room_id;
+																	$ts_array = explode(",",$meeting_detail['timeslot_id']);
+																	foreach($ts_array as $ts_id)
+																	{
+																		$reserved_timeslots[] = trim($ts_id);
+																	}
+																}
+															}else{
+																$reasons[$meeting_detail['activity_id']] = "Timeslot is not available for this activity";
+															}									
+														}
+													}							
+												}
+												//process adhoc activities only if some adhoc activities are scheduled for day
+												if(!empty($adhoc_activities))
+												{
+													if($counter == '1' && array_key_exists($date,$adhoc_activities))
+													{
+														$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
+														foreach($adhoc_activities[$date] as $adh_act_id=>$adh_act_detail)
+														{
+															if(!$this->search_array($adh_act_detail['name'],$reserved_array))
+															{
+																$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
+																$adh_end_time = date("h:i A", strtotime($adh_start_time." +		".$adh_act_detail['duration']." minutes"));
+																$time = explode(",",$adh_act_detail['timeslot_id']);
+																$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
+																if($ts_cnt == count($time))
+																{
+																	$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms);
+																	if($room_id > 0)
+																	{
+																		$room_name = $this->getRoomName($room_id);
+																		//allocate group meeting
+																		$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number']);
+																		$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
+																		$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
+																		$ts_array = explode(",",$adh_act_detail['timeslot_id']);
+																		foreach($ts_array as $ts_id)
+																		{
+																			$reserved_timeslots[] = trim($ts_id);
+																		}
+																	}
+																}else{
+																	$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
+																}
+															}
+														}
+													}							
 												}
 												if(array_key_exists($date,$teachers_count) && array_key_exists($res_act_detail['teacher_id'],$teachers_count[$date]))
 												{
@@ -343,7 +427,7 @@ class Timetable extends Base {
 												}else{
 													$programs_count[$date][$res_act_detail['program_year_id']] = 1;
 												}	
-												//$counter++;
+												$counter++;
 												break;	
 											}
 										}
@@ -354,11 +438,6 @@ class Timetable extends Base {
 						//print"<pre>";print_r($reserved_array);
 						//print"<pre>";print_r($reserved_timeslots);die;						
 						//Calculate the unreserved timeslots for a date
-						$total_timeslots = array();
-						foreach($v as $start_id)
-						{
-							$total_timeslots[] = $start_id;
-						}
 						$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
 						$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 						//process only if semi reserved activities exist and some unallocated timeslots left for day
@@ -535,7 +614,11 @@ class Timetable extends Base {
 																					}
 																					$counter++;
 																					break;
+																				}else{
+																					$reasons[$free_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																				}
+																			}else{
+																				$reasons[$free_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																			}
 																		}else{
 																			$reasons[$free_act_detail['activity_id']] = "Room is not available for this activity";
@@ -595,7 +678,9 @@ class Timetable extends Base {
 												$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 												$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 											}
-										}	
+										}else{
+											$reasons[$meeting_detail['activity_id']] = "Timeslot is not available for this activity";
+										}
 									}
 								}
 							}							
@@ -627,6 +712,8 @@ class Timetable extends Base {
 												$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 												$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 											}
+										}else{
+											$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
 										}	
 									}
 								}
@@ -1268,6 +1355,8 @@ class Timetable extends Base {
 																				$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 																				$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 																			}
+																		}else{
+																			$reasons[$meeting_detail['activity_id']] = "Timeslot is not available for this activity";
 																		}									
 																	}
 																}							
@@ -1299,7 +1388,9 @@ class Timetable extends Base {
 																					$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 																					$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 																				}
-																			}	
+																			}else{
+																				$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
+																			}
 																		}
 																	}
 																}							
@@ -1358,7 +1449,11 @@ class Timetable extends Base {
 																		unset($reasons[$semi_res_act_detail['activity_id']]);
 																	}
 																	$counter++;														
+																}else{
+																	$reasons[$semi_res_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																}
+															}else{
+																$reasons[$semi_res_act_detail['activity_id']] = "Timeslot is not available for this activity";
 															}															
 														}else{
 															$reasons[$semi_res_act_detail['activity_id']] = "Room is not available";
@@ -1441,6 +1536,8 @@ class Timetable extends Base {
 																								$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 																								$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 																							}
+																						}else{
+																							$reasons[$meeting_detail['activity_id']] = "Timeslot is not available for this activity";
 																						}									
 																					}
 																				}							
@@ -1473,6 +1570,8 @@ class Timetable extends Base {
 																									$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 																									$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 																								}
+																							}else{
+																									$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																							}	
 																						}
 																					}
@@ -1532,7 +1631,11 @@ class Timetable extends Base {
 																					}
 																					$counter++;
 																					break;
+																				}else{
+																					$reasons[$semi_res_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																				}
+																			}else{
+																					$reasons[$semi_res_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																			}
 																		}else{
 																			$reasons[$semi_res_act_detail['activity_id']] = "No room is available to allocate this activity";
