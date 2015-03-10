@@ -295,7 +295,7 @@ class Subjects extends Base {
 		 $query="SELECT ta.start_time,
 						ta.act_date,
 						ta.teacher_id,
-						ta.room_id,
+						ta.room_id,ta.reason,
 						ta.timeslot_id FROM teacher_activity as ta WHERE ta.id='".$actid."'";
 		$result = $this->conn->query($query);
 		$row = $result->fetch_assoc();

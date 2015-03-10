@@ -88,9 +88,23 @@ if (isset($_GET['edit_actid']) && isset($_GET['edit_sessid'])) {
     $dataActArr = $objS->getActRow($act_hidden_id);
 	$result_act = $objS->getAllActivities($sess_hidden_id);
 	while($dataTeachArr = $result_act->fetch_assoc()) {
-		$teachers[] = $dataTeachArr['teacher_id'];
+		$pos = strpos($dataTeachArr['teacher_id'],",");
+		
+		if($pos == false)
+		{
+			$teachers[] = $dataTeachArr['teacher_id'];
+		}
+		else
+		{
+			$teachers_all = explode(",",$dataTeachArr['teacher_id']);
+			foreach($teachers_all as $tid)
+			{
+				$teachers[] = $tid;
+			}
+		}
 		$activities[] = $dataTeachArr['id'];
 	}
+//	echo "here";print"<pre>";print_r($teachers);print"</pre>";die;
     $sess_btn_lbl = "Update Session";
 } else {
     $sess_btn_lbl = "Add Session";
@@ -299,8 +313,8 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                     <h3>Multiple Teacher Reason</h3>									
 										<select id="reason" name="reason" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
 										 <option value="">--Select--</option>
-										 <option value="Alternate Choices for Session">Alternate Choices for Session</option>
-										 <option value="Teaching Session Jointly">Teaching Session Jointly</option>
+										 <option <?php if($dataActArr['reason'] == 'Alternate Choices for Session') echo 'selected';?> value="Alternate Choices for Session">Alternate Choices for Session</option>
+										 <option <?php if($dataActArr['reason'] == 'Teaching Session Jointly') echo 'selected';?> value="Teaching Session Jointly">Teaching Session Jointly</option>
 									   </select>									  
                                 </div>
                                 <div class="sessionboxSub" style="width:108px;">
@@ -339,11 +353,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                     <h3>Description</h3>
                                     <textarea style="height:40px;" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"><?php echo $sess_description_edit; ?></textarea>
                                 </div>
-								<div class="sessionboxSub addbtnSession" style="width:125px;float:right;">
+								<div class="sessionboxSub addbtnSession" style="width:140px;float:right;">
                                     <input type="button" name="btnAddMore" <?php echo $disSession; ?> id="btnAddNewSess" class="btnSession buttonsub" value="<?php echo $sess_btn_lbl; ?>" style="width:115px; height:30px; margin-bottom: 1px;">
 
                                 </div>
-                                <div class="sessionboxSub addbtnSession" style="width:125px;float:right;">
+                                <div class="sessionboxSub addbtnSession" style="width:140px;float:right;">
                                     <input type="button" name="btnCheckAvail" id="btnCheckAvail" class="btnSession buttonsub" <?php echo $disSession; ?> value="Check Availability" style="height:30px;">
                                     <span style="display:none" name="showstatusAvail" id="showstatusAvail" ><img alt="OK" src="images/ok.gif" /></span>
                                     <span style="display:none" name="showstatusNoAvail" id="showstatusNoAvail" ><img alt="OK" src="images/error.gif" /></span>
@@ -388,7 +402,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 								while($session_data = mysqli_fetch_assoc($query_get_act))
 								{
 									$sessionHtml.='<tr class="addColor"><td colspan="11" class="dragHandle"><table>';
-									$subj_session_query = "select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, tea.teacher_name, room.room_name, ts.start_time from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN teacher as tea ON ta.teacher_id = tea.id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE ta.session_id='" . $session_data['id'] . "' order by subs.order_number ASC";
+									$subj_session_query = "select subs.id as sessionID, subs.*, ta.id as activityId,  ta.*, room.room_name, ts.start_time from  subject_session as subs LEFT JOIN teacher_activity as ta ON subs.id = ta.session_id LEFT JOIN room ON ta.room_id = room.id LEFT JOIN timeslot as ts ON ta.timeslot_id = ts.id WHERE ta.session_id='" . $session_data['id'] . "' order by subs.order_number ASC";
 									$subj_session_result = mysqli_query($db, $subj_session_query);
 									while ($subj_session_data = mysqli_fetch_assoc($subj_session_result)) {
 										$x++;
@@ -403,10 +417,20 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 											$duration = "15";
 										} 
 										$act_Date = (trim($subj_session_data['act_date'])=='0000-00-00') ? '' : $subj_session_data['act_date'];
+										$teacher_array = explode(",",$subj_session_data['teacher_id']);
+										$teachers_names = array();
+										foreach($teacher_array as $teacher_id)
+										{
+											$sql_teach = "select teacher_name from teacher where id='".$teacher_id."'";
+											$sql_teach_result = mysqli_query($db, $sql_teach);
+											$sql_teach_result_data = mysqli_fetch_assoc($sql_teach_result);
+											$teachers_names[] = $sql_teach_result_data['teacher_name'];
+										}
+										$teacher_str = implode(" , ",$teachers_names);
 										$sessionHtml.='<tr  id="' . $x . '" >
 										<td width="8%">' . $subj_session_data['session_name'] . '</td>
 										<td width="8%">' . date('H:i', mktime(0, $duration)) . '</td>
-										<td width="8%">' . $subj_session_data['teacher_name'] . '</td>
+										<td width="8%">' . $teacher_str . '</td>
 										<td width="8%">' . $subj_session_data['reason'] . '</td>
 										<td width="8%">' . $subj_session_data['room_name'] . '</td>
 										<td width="8%">' . $act_Date . '</td>
