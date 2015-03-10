@@ -218,7 +218,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 <h2><strong>Manage Sessions:-</strong></h2>
                             </div>
                             <div class="txtfield" style="padding:0px;">
-                                <div class="sessionboxSub" style="width:110px;">
+                                <div class="sessionboxSub" style="width:108px;">
                                     <h3>Session Name<span class="redstar">*</span></h3>
                                     <input type="text" class="inp_txt_session required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="<?php echo $sess_name_edit; ?>">
                                 </div>
@@ -226,7 +226,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 <h3>Order Number<span class="redstar">*</span></h3>
                                         <input type="text" class="inp_txt_session number required" <?php //echo $disSession;  ?> id="txtOrderNum" maxlength="10" style="width:94px;" name="txtOrderNum" value="">
                                 </div>-->
-                                <div class="sessionboxSub" style="width:110px;">
+                                <div class="sessionboxSub" style="width:108px;">
                                     <h3>Duration(Hr)<span class="redstar">*</span></h3>
                                     <select name="duration" id="duration" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
                                         <option value="">--Select--</option>
@@ -269,7 +269,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
                                  <div class="sessionboxSub" style="width:150px;">
                                     <h3>Teacher<span class="redstar">*</span></h3>									
-										<select id="slctTeacher" name="slctTeacher[]" class="required" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
+										<select id="slctTeacher" name="slctTeacher[]" class="required" onchange="processSelectBox();" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
 										<?php
 										while ($row = $rel_teacher->fetch_assoc()) {
 											if(in_array($row['id'],$teachers))
@@ -295,7 +295,15 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 										?>
                                     
                                 </div>
-                                <div class="sessionboxSub" style="width:110px;">
+								<div class="sessionboxSub" style="width:165px;margin-left:5px;">
+                                    <h3>Multiple Teacher Reason</h3>									
+										<select id="reason" name="reason" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
+										 <option value="">--Select--</option>
+										 <option value="Alternate Choices for Session">Alternate Choices for Session</option>
+										 <option value="Teaching Session Jointly">Teaching Session Jointly</option>
+									   </select>									  
+                                </div>
+                                <div class="sessionboxSub" style="width:108px;">
                                     <h3>Room</h3>
                                     <select name="room_id" id="room_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px;">
                                         <option value="">--Select--</option>
@@ -305,11 +313,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                         jQuery('#room_id').val("<?php echo $sess_roomid_edit; ?>");
                                     </script>
                                 </div>
-                                <div class="sessionboxSub" style="width:110px;">
+                                <div class="sessionboxSub" style="width:105px;">
                                     <h3>Date</h3>
                                     <input type="text" size="12" id="subSessDate" value="<?php echo ($sess_act_date_edit=='0000-00-00') ? '' : $sess_act_date_edit; ?>" <?php echo $disSession; ?> style="height:23px; width:102px;"/>
                                 </div>
-                                <div class="sessionboxSub" style="width:110px;">
+                                <div class="sessionboxSub" style="width:108px;">
                                     <h3>Start Time</h3>
                                     <select name="tslot_id" id="tslot_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
                                         <option value="">--Select--</option>
@@ -319,28 +327,29 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                         jQuery('#tslot_id').val("<?php echo $sess_starttime_edit; ?>");
                                     </script>
                                 </div>
-								<div class="sessionboxSub" style="width:110px;">
+								<div class="sessionboxSub" style="width:108px;">
                                     <h3>Case No</h3>
                                     <input type="text" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtCaseNo" style="width:94px;" name="txtCaseNo" value="<?php echo $sess_caseno_edit; ?>">
                                 </div>
-                                <div class="sessionboxSub"style="width:152px;">
+                                <div class="sessionboxSub"style="width:150px;">
                                     <h3>Technical Notes</h3>
                                     <textarea style="height:40px; width:135px" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareatechnicalNotes" cols="20" rows="2" name="txtTechnicalNotes"><?php echo $sess_technical_notes_edit; ?></textarea>
                                 </div>
-                                <div class="sessionboxSub" style="width:152px;" >
+                                <div class="sessionboxSub" style="width:150px;" >
                                     <h3>Description</h3>
                                     <textarea style="height:40px;" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"><?php echo $sess_description_edit; ?></textarea>
                                 </div>
-                                <div class="sessionboxSub addbtnSession">
+								<div class="sessionboxSub addbtnSession" style="width:125px;float:right;">
+                                    <input type="button" name="btnAddMore" <?php echo $disSession; ?> id="btnAddNewSess" class="btnSession buttonsub" value="<?php echo $sess_btn_lbl; ?>" style="width:115px; height:30px; margin-bottom: 1px;">
+
+                                </div>
+                                <div class="sessionboxSub addbtnSession" style="width:125px;float:right;">
                                     <input type="button" name="btnCheckAvail" id="btnCheckAvail" class="btnSession buttonsub" <?php echo $disSession; ?> value="Check Availability" style="height:30px;">
                                     <span style="display:none" name="showstatusAvail" id="showstatusAvail" ><img alt="OK" src="images/ok.gif" /></span>
                                     <span style="display:none" name="showstatusNoAvail" id="showstatusNoAvail" ><img alt="OK" src="images/error.gif" /></span>
                                     <!--<input style="display:none" type="button" name="showstatus" id="showstatus" class="btnSession buttonsub" value="">-->
                                 </div>
-                                <div class="sessionboxSub addbtnSession">
-                                    <input type="button" name="btnAddMore" <?php echo $disSession; ?> id="btnAddNewSess" class="btnSession buttonsub" value="<?php echo $sess_btn_lbl; ?>" style="width:115px; height:30px; margin-bottom: 1px;">
-
-                                </div></div>
+                                </div>
                             <div class="clear"></div>
                         </div>
                         <div class="divSession" style="width:88%;text-align:left; <?php if(isset($_GET['clone']) && $_GET['clone'] != ""){ echo 'display:none'; } ?>">
@@ -359,6 +368,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 														<th width="8%">Session Name</th>
 														<th width="8%">Duration</th>
 														<th width="8%">Teacher</th>
+														<th width="8%">Multiple Teacher Reason</th>
 														<th width="8%">Room</th>
 														<th width="8%">Date</th>
 														<th width="8%">Start Time</th>
@@ -397,6 +407,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 										<td width="8%">' . $subj_session_data['session_name'] . '</td>
 										<td width="8%">' . date('H:i', mktime(0, $duration)) . '</td>
 										<td width="8%">' . $subj_session_data['teacher_name'] . '</td>
+										<td width="8%">' . $subj_session_data['reason'] . '</td>
 										<td width="8%">' . $subj_session_data['room_name'] . '</td>
 										<td width="8%">' . $act_Date . '</td>
 										<td width="8%">' . $subj_session_data['start_time'] . '</td>
