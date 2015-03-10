@@ -621,7 +621,7 @@ class Timetable extends Base {
 																				$reasons[$free_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																			}
 																		}else{
-																			$reasons[$free_act_detail['activity_id']] = "Room is not available for this activity";
+																			$reasons[$free_act_detail['activity_id']] = "Room is not available for this activity. May be some other activity is scheduled in same room at this time or availability time does not match";
 																		}
 																	}else{
 																		$reasons[$free_act_detail['activity_id']] = "Teacher is not available for this activity";
@@ -1456,7 +1456,7 @@ class Timetable extends Base {
 																$reasons[$semi_res_act_detail['activity_id']] = "Timeslot is not available for this activity";
 															}															
 														}else{
-															$reasons[$semi_res_act_detail['activity_id']] = "Room is not available";
+															$reasons[$semi_res_act_detail['activity_id']] = "Room is not available for this activity. May be some other activity is scheduled in same room at this time or availability time does not match";
 														}														
 													}else{
 														$reasons[$semi_res_act_detail['activity_id']] = "Teacher is not available";
