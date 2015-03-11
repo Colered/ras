@@ -75,9 +75,9 @@ function activityFilter()
 						<strong>Activity Filter  </strong>
 						<select id="activity_color_filter" name="activity_color_filter" class="select-filter" onchange="activityFilter();" style="width:110px;" > 
 							<option value="" selected="selected">--Select--</option>
-							<option value="3" <?php if($activity_filter_val == '3'){?> selected="selected"}<?php }?>>Recess Activities</option>
-							<option value="4" <?php if($activity_filter_val == '4'){?> selected="selected"}<?php }?>>Group Meetings</option>
-							<option value="5" <?php if($activity_filter_val == '5'){?> selected="selected"}<?php }?>>Adhoc Activities</option>
+							<option value="3" <?php if($activity_filter_val == '3'){?> selected="selected" <?php }?>>Recess Activities</option>
+							<option value="4" <?php if($activity_filter_val == '4'){?> selected="selected" <?php }?>>Group Meetings</option>
+							<option value="5" <?php if($activity_filter_val == '5'){?> selected="selected" <?php }?>>Adhoc Activities</option>
 						</select>
 					</form>
 				</div>
@@ -89,6 +89,7 @@ function activityFilter()
 					    <!--<th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" title="Select All"/></th>-->
                         <th>ID</th>
                         <th>Activity</th>
+						<th>Activity Type</th>
                         <th>Program</th>
                         <th>Subject</th>
                         <th>Session</th>
@@ -146,6 +147,15 @@ function activityFilter()
 							<?php /*?><td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td><?php */?>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo $row['id'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['name'];?></td>
+							<td<?php echo $tdColor;?>>
+							<?php
+							 if($row['reserved_flag']==3)
+							 	echo "Recess Activities";
+							 else if($row['reserved_flag']==4)
+							 	echo "Group Meetings";
+							 else if($row['reserved_flag']==5)
+							 	echo "Adhoc Activities";
+							 ?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['program_name'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['subject_name'];?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['session_name'];?></td>
