@@ -2928,7 +2928,7 @@ $(document).ready(function() {
 	  }
     }
   }else{
-		alert('please select the rule date range before add the exception');  
+		alert('please select the rule date range before adding a exception');  
 	}
   });
 });

@@ -45,7 +45,6 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 				</div>
 				<div class="clear"></div>
                 <div class="custtable_left">
-				
 				<!-- new -->
 				<div class="addSubDiv" <?php //echo $disFDivCss; ?>>
                             <div class="custtd_left">
@@ -111,8 +110,8 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                                             $selected = ($cycleData[$i] == $cycle_no) ? ' selected="selected"' : '';
                                             ?>
                                             <option value="<?php echo $cycleData[$i]; ?>" <?php echo $selected; ?>><?php echo $i + 1; ?></option>
-    <?php }
-} ?>
+										<?php }
+									} ?>
                                 </select>
                             </div>
                             <div class="clear"></div>
@@ -165,15 +164,9 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                             <div class="txtfield" <?php echo $disFDivCss; ?>>
                                 <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="" >
                             </div>
-                            <!--<div class="sessionboxSub btnSessiondiv">
-                                <div style="float:left; width:175px;"><input type="submit" name="saveSubject" class="buttonsub"  value="Save Subject">
-								<input type="button" name="btnCancel" class="buttonsub"  value="Cancel" onclick="location.href = 'subject_view.php';"></div>
-                            </div>-->
                             <div class="clear"></div>
                         </div>
-				
 				<!-- end -->
-				
                     <div class="custtd_left" <?php echo $disFDivCss; ?>>
                         <h2>Teacher <span class="redstar spanSubCode">*</span></h2>
                     </div>
@@ -252,7 +245,6 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                    <!-- <img src="images/arrow.png" id="arrow-img" class="arrow-img"  onclick="createTeachAvailRule();"/>-->
                 	</div>
                     <div class="clear"></div>
-							
 					<div class="custtd_left">
                         <h2>Add Exception</h2>
                     </div>
@@ -270,7 +262,6 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 					<div class="clear"></div>
 					</div>
                 </div>
-
 			<div class="clear"></div>
 			<div class="scheduleBlock" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 				<div>
@@ -292,8 +283,6 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 									<?php //get the day and timeslot
 									$dayData = $obj->getSpecialAvailDay($data['id']);
 									while($ddata = $dayData->fetch_assoc()){
-										//$timeslotData2 = $obj->getTeacherAvailTimeslot($ddata['timeslot_id']);
-										
 										$tempData  = explode(',', $ddata['timeslot_id']);
 										unset($startArr, $endArr);
 										foreach($tempData as $data){
@@ -315,32 +304,28 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 										   $allTSVal[] = $startTmpArr[$i].'-'.$endTmpArr[$i];
 										}
 										$finalTSval = implode(', ', $allTSVal);
-										
 										?>
 										<li><span style="text-decoration:underline"><?php echo $ddata['day_name'].'</span>:&nbsp;'.$finalTSval;
 											?>
 										</li>
 									<?php } ?>
 								</ul>
-								Exception Date:
 								<?php 
 								$exceptionDates = $obj->getExceptionDate($rule_id);
-								echo '<br>';
-								$i=0;
+								if(count($exceptionDates)>0){
+									echo '<strong>Exception Date:</strong> <br>';
+									$i=0;
 									foreach($exceptionDates as $value){
-									 	
-										if($i%2==0){
+										if($i%2==0)
 											echo $value.' , ';
-										}else{
+										else
 										echo $value.'<br>';
-										}
 										$i++;
 									}
-								 ?>
+								} ?>
 								</div>
 								</td>
-						<?php $count++; } 
-						?>
+						<?php $count++; } ?>
 						</tr>
 						</table>
                     </ul>
