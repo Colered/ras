@@ -72,6 +72,8 @@ $(document).ready(function() {
 		numberOfMonths: 1,
 		changeMonth: true, 
 		changeYear: true,
+		//$("#toSpcialAval").datepicker("option", "minDate", selectedDate);
+		//$("#toSpcialAval").datepicker("option", "minDate", selectedDate);
 	});
 	$("#oneTimeDate").datepicker({
 	    dateFormat: 'yy-mm-dd',
@@ -237,7 +239,9 @@ $(function() {
 		changeYear: true,
 		onClose: function(selectedDate) {
 			$("#toSpcialAval").datepicker("option", "minDate", selectedDate);
+			$("#exceptnSpecialActAval").datepicker("option", "minDate", selectedDate);
 		}
+		
 	});
 	$("#toSpcialAval").datepicker({
 	    dateFormat: 'yy-mm-dd',
@@ -248,6 +252,7 @@ $(function() {
 		changeYear: true,
 		onClose: function(selectedDate) {
 			$("#fromSpecialAval").datepicker("option", "maxDate", selectedDate);
+			$("#exceptnSpecialActAval").datepicker("option", "maxDate", selectedDate);
 		}
 	});
 });
@@ -2889,9 +2894,10 @@ function createSpecialAvailRule(){
 $(document).ready(function() {
 	var max_fields = 10; 
     var wrapper = $(".divException"); 
-    var add_button_class_exception = $(".btnSpecialActAvailExcep"); 
+	var add_button_class_exception = $(".btnSpecialActAvailExcep"); 
     var x = 1,y=0; 
     $(add_button_class_exception).click(function(e){ 
+	if($("#fromSpecialAval").val()!="" && $("#fromSpecialAval").val()!=""){										 
 		var exceptnDate = $('#exceptnSpecialActAval').val();
 		e.preventDefault();
 		var roomIdException=$('#roomId').val();
@@ -2921,7 +2927,10 @@ $(document).ready(function() {
 			}
 	  }
     }
- });
+  }else{
+		alert('please select the rule date range before add the exception');  
+	}
+  });
 });
 function removeSpecialActException($exceptionId, $serialId){
 	if(confirm("Are you sure you want to delete the Special activity exception?")) {
