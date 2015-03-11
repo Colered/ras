@@ -313,8 +313,8 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                     <h3>Multiple Teacher Reason</h3>									
 										<select id="reason" name="reason" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
 										 <option value="">--Select--</option>
-										 <option <?php if($dataActArr['reason'] == 'Alternate Choices for Session') echo 'selected';?> value="Alternate Choices for Session">Alternate Choices for Session</option>
-										 <option <?php if($dataActArr['reason'] == 'Teaching Session Jointly') echo 'selected';?> value="Teaching Session Jointly">Teaching Session Jointly</option>
+										 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Alternate Choices for Session') echo 'selected';?> value="Alternate Choices for Session">Alternate Choices for Session</option>
+										 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Teaching Session Jointly') echo 'selected';?> value="Teaching Session Jointly">Teaching Session Jointly</option>
 									   </select>									  
                                 </div>
                                 <div class="sessionboxSub" style="width:108px;">

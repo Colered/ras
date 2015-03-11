@@ -1224,7 +1224,16 @@ switch ($codeBlock) {
                         $actName = 'A' . ($actCnt + 1);
                         //insert new activity
                         if ($act_hidden_id <> "") {
-                            $result2 = mysqli_query($db, "UPDATE teacher_activity SET
+							if($_POST['reason'] == 'Teaching Session Jointly')
+							{
+								$sql_select_act = mysqli_query($db, "select id from teacher_Activity where id != '".$act_hidden_id."' and session_id = '".$sessionId."'");
+								if(mysqli_num_rows($sql_select_act)>0)
+								{
+									$sql_delete_all_act = "delete from teacher_activity where session_id='".$sessionId."' and id != '".$act_hidden_id."'";
+									$qry = mysqli_query($db, $sql_delete_all_act);
+								}
+							}
+							$result2 = mysqli_query($db, "UPDATE teacher_activity SET
 							                                       program_year_id = '" . $_POST['programId'] . "',
 							                                       cycle_id = '" . $_POST['cycleId'] . "',
 							                                       subject_id = '" . $_POST['subjectId'] . "',
