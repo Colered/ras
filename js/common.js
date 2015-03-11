@@ -73,6 +73,14 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
+	$("#oneTimeDate").datepicker({
+	    dateFormat: 'yy-mm-dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+	});
 });			   
 
 $(function() {
@@ -271,7 +279,8 @@ $(function() {
 });
 //validate form for area
 $(document).ready(function(){
-		$('.periodicAct').hide();				   
+		$('.periodicAct').hide();
+		$('.otAct').hide();
 		$("#dialog-confirm").hide();
 		$("#dialog-confirm-area").hide();
 		$("#areaForm").validate();
@@ -2938,46 +2947,164 @@ function removeSpecialActException($exceptionId, $serialId){
 }
 //showing optional,required field and rule blocks
 function specialActivity(){
-	var activity=$( "#special_activity option:selected" ).val();
-	if(activity==5){
-		$('.txtSchd').val("");	
-		$('.fromSpecialAval').val("");
-		$('.toSpcialAval').val("");
-		$('.days').attr('checked', false);
-		$('.rule__listed_ckb').attr('checked', false); 
-		$(".slctTs option:selected").removeAttr("selected");
-		$('.scheduleBlock').hide();	
-		$('.spanPrgm').text("(Optional)");	
-		$('.spanCycle').text("(Optional)");	
-		$('.spanArea').text("(Optional)");	
-		$('.spanSubject').text("(Optional)");	
-		$('.spanSubCode').text("(Optional)");	
-		$('.spanSubCode').text("(Optional)");	
-	}else if(activity==4){
-		$('.spanPrgm').text("(Optional)");	
-		$('.spanCycle').text("(Optional)");	
-		$('.spanArea').text("(Optional)");	
-		$('.spanSubject').text("(Optional)");	
-		$('.spanSubCode').text("(Optional)");	
-		$('.spanSubCode').text("(Optional)");
-		$('.scheduleBlock').show();	
-	}else{
-		$('.spanPrgm').text("*");	
-		$('.spanCycle').text("*");	
-		$('.spanArea').text("*");	
-		$('.spanSubject').text("*");	
-		$('.spanSubCode').text("*");	
-		$('.spanSubCode').text("*");
-		$('.scheduleBlock').show();	
-	}	   
+		 var activity = $( "#special_activity option:selected" ).val();
+		 var activity_type = $( "#special_activity_type" ).val();
+		 if(activity==3 && activity_type==1){
+		   $('.otAct').show();
+		   $('.scheduleBlock').hide();	
+		   $('.spanPrgm').text("*");	
+		   $('.spanCycle').text("*");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $("#slctArea option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $("#slctRoom option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $('#txtSubjName').val('N/A');
+		   $('#txtSubjCode').val('N/A');
+		   $("#slctTeacher option").filter(function(){
+		    return this.text == 'N/A (n/a@gmail.com)'; 
+		}).attr('selected', true);
+	   }else if(activity==3 && activity_type==2){
+		   $('.otAct').hide();
+		   $('.scheduleBlock').show();	
+		   $('.spanPrgm').text("*");	
+		   $('.spanCycle').text("*");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $("#slctArea option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $("#slctRoom option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $('#txtSubjName').val('N/A');
+		   $('#txtSubjCode').val('N/A');
+		   $("#slctTeacher option").filter(function(){
+		    return this.text == 'N/A (n/a@gmail.com)'; 
+		}).attr('selected', true);
+	   }
+	  if((activity==4 || activity==5) && activity_type==1){
+		   $('.otAct').show();
+		   $('.scheduleBlock').hide();	
+		   $('.spanPrgm').text("");	
+		   $('.spanCycle').text("");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $('#slctArea option[value=""]').attr("selected",true);
+		   $('#slctRoom option[value=""]').attr("selected",true);
+		   $('#slctRoom option[value=""]').attr("selected",true);
+		   $('#txtSubjName').val('');
+		   $('#txtSubjCode').val('');
+		   $('#slctTeacher option[value=""]').attr("selected",true);
+	  	}
+		if((activity==4 || activity==5) && activity_type==2){
+		   $('.otAct').hide();
+		   $('.scheduleBlock').show();	
+		   $('.spanPrgm').text("");	
+		   $('.spanCycle').text("");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $('#slctArea option[value=""]').attr("selected",true);
+		   $('#slctRoom option[value=""]').attr("selected",true);
+		   $('#slctRoom option[value=""]').attr("selected",true);
+		   $('#txtSubjName').val('');
+		   $('#txtSubjCode').val('');
+		   $('#slctTeacher option[value=""]').attr("selected",true);
+	  	}
 }
-//showing and hiding the periodic date range
 function specialActivityType(){
+	   var activity=$( "#special_activity" ).val();
 	   var activity_type = $( "#special_activity_type option:selected" ).val();
-	   if(activity_type==2){
-		   $('.periodicAct').show();	 
-		  }else{
-		   $('.periodicAct').hide();
-		}
+	   if(activity==3 && activity_type==1){
+		   $('.otAct').show();
+		   $('.scheduleBlock').hide();	
+		   $('.spanPrgm').text("*");	
+		   $('.spanCycle').text("*");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $("#slctArea option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $("#slctRoom option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $('#txtSubjName').val('N/A');
+		   $('#txtSubjCode').val('N/A');
+		   $("#slctTeacher option").filter(function(){
+		    return this.text == 'N/A (n/a@gmail.com)'; 
+		}).attr('selected', true);
+	   }else if(activity==3 && activity_type==2){
+		   $('.otAct').hide();
+		   $('.scheduleBlock').show();	
+		   $('.spanPrgm').text("*");	
+		   $('.spanCycle').text("*");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $("#slctArea option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $("#slctRoom option").filter(function() {
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   $('#txtSubjName').val('N/A');
+		   $('#txtSubjCode').val('N/A');
+		   $("#slctTeacher option").filter(function(){
+		    return this.text == 'N/A (n/a@gmail.com)'; 
+		}).attr('selected', true);
+	   }
+	  if((activity==4 || activity==5) && activity_type==1){
+		   $('.otAct').show();
+		   $('.scheduleBlock').hide();	
+		   $('.spanPrgm').text("");	
+		   $('.spanCycle').text("");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $('#slctArea option[value=""]').attr("selected",true);
+		   $('#slctRoom option[value=""]').attr("selected",true);
+		   $('#txtSubjName').val('');
+		   $('#txtSubjCode').val('');
+		   $('#slctTeacher option[value=""]').attr("selected",true);
+	  	}
+		if((activity==4 || activity==5) && activity_type==2){
+		   $('.otAct').hide();
+		   $('.scheduleBlock').show();	
+		   $('.spanPrgm').text("");	
+		   $('.spanCycle').text("");
+		   $('.spanArea').text("");
+		   $('.spanRoom').text("");	
+		   $('.spanSubject').text("");	
+		   $('.spanSubCode').text("");	
+		   $('.spanSubCode').text("");
+		   $('#slctArea option[value=""]').attr("selected",true);
+		   $('#slctRoom option[value=""]').attr("selected",true);
+		   $('#txtSubjName').val('');
+		   $('#txtSubjCode').val('');
+		   $('#slctTeacher option[value=""]').attr("selected",true);
+	  	}
+	   
 }
 

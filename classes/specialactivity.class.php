@@ -26,4 +26,21 @@ class SpecialActivity extends Base {
 		$q_res = mysqli_query($this->conn, $specia_act_query);
 		return $q_res;
 	}
+	public function ruleStartEndDate($rule_id){
+		$query = mysqli_query ($this->conn, "SELECT start_date , end_date FROM  special_activity_rule WHERE  id='".$rule_id."' ");
+		$data = $query->fetch_assoc();
+		return $data;
+	}
+	public function activityLastReocrd(){
+		$query = mysqli_query($this->conn, "SELECT id,name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+		$data=$query->fetch_assoc();
+		return $data;
+	}
+	public function ruleTimeslotandDay($ruleId){
+		$query = mysqli_query($this->conn, "SELECT id,actual_timeslot_id,day FROM  special_activity_rule_day_map  WHERE  special_activity_rule_id='".$ruleId."' ");
+		while($data = $query->fetch_assoc()){
+				$timeslot[$data['day']] =  $data['actual_timeslot_id'];
+		}
+		return $timeslot;
+	}
 }

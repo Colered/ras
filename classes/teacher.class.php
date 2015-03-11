@@ -498,7 +498,9 @@ class Teacher extends Base {
 		return '';
 	}
 	public function getTimeslotId($timeSoltArr)
-	{
+	{   
+		echo '<pre>';
+		print_r($timeSoltArr);
 		$ts_array = explode(",",$timeSoltArr);
 		$timeslots = array();
 		foreach($ts_array as $val)
@@ -517,7 +519,9 @@ class Teacher extends Base {
 				$timeslots[] = $i;
 			}				
 		}
-		$timeslotIds = implode(',',$timeslots);		
+		$timeslotIds = implode(',',$timeslots);	
+		echo '<br>';
+		print_r($timeslotIds);
 		return $timeslotIds;
 	}
 	public function getTeachersType()

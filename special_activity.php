@@ -4,8 +4,8 @@ $objTeach = new Teacher();
 $teacherData = $objTeach->getTeachers();
 $specialAvailData = $obj->getSpecialAvailRule();
 $obj2 = new Timeslot();
-$disFDivCss = "style='opacity:.5; pointer-event:none'";
-$disTest = "disabled";
+$tslot_dropDwn = $obj2->getTimeSlotStartDateDropDwn();
+$disFDivCss = "style=''";
 $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
 $options = '<option value="08:00 AM-09:00 AM">08:00 AM-09:00 AM</option>
 			<option value="09:00 AM-10:00 AM">09:00 AM-10:00 AM</option>
@@ -60,10 +60,10 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 								</select>
                             </div>
                             <div class="clear"></div>
-							<div class="custtd_left">
+							<div class="custtd_left actType">
                                 <h2>Choose Activity Type<span class="redstar spanActivityType">*</span></h2>
                             </div>
-                            <div class="txtfield">
+                            <div class="txtfield actType">
                                 <select id="special_activity_type" name="special_activity_type" class="select1" onchange="specialActivityType();"> 
 									<option value="" selected="selected">--Select--</option>
 									<option value="1">One Time Activity</option>
@@ -71,11 +71,14 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 								</select>
                             </div>
                             <div class="clear"></div>
-							<div class="custtd_left periodicAct" >
+							<div class="custtd_left otAct" >
                        		</div>
-                    		<div class="txtfield periodicAct">
-                       			 From:<input type="text" size="12" id="fromPeriodicAct" />
-                       			 To:<input type="text" size="12" id="toPeriodicAct" />
+                    		<div class="txtfield otAct">
+                       			 Date:<input type="text" size="12" id="oneTimeDate"  name="oneTimeDate" class="txtfield" />
+                       			 Start Time:<select id="ot_tslot_id"  name="ot_tslot_id[]"  multiple="multiple">
+                                        		<option value="">--Select--</option>
+												<?php echo $options;?>
+											</select>
                     		</div>
                     		<div class="clear"></div>
 							<div class="custtd_left">
@@ -117,17 +120,35 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                                 <h2>Choose Area <span class="redstar spanArea">*</span></h2>
                             </div>
                             <div class="txtfield " <?php echo $disFDivCss; ?>>
-                                <select id="slctArea" name="slctArea" class="select1 required" <?php echo $disTest; ?>>
+                                <select id="slctArea" name="slctArea" class="select1 required">
                                     <option value="" selected="selected">--Select Area--</option>
-<?php
-$areaId = "";
-$area_qry = "select * from area";
-$area_result = mysqli_query($db, $area_qry);
-while ($area_data = mysqli_fetch_assoc($area_result)) {
-    $selected = (trim($areaId) == trim($area_data['id'])) ? ' selected="selected"' : '';
-    ?>
-                                        <option value="<?php echo $area_data['id'] ?>" <?php if($area_data['area_name'] == 'N/A'){echo "selected"; } ?>><?php echo $area_data['area_name']; ?></option>
+						<?php
+						$areaId = "";
+						$area_qry = "select * from area";
+						$area_result = mysqli_query($db, $area_qry);
+						while ($area_data = mysqli_fetch_assoc($area_result)) {
+							$selected = (trim($areaId) == trim($area_data['id'])) ? ' selected="selected"' : '';
+							?>
+                                        <option value="<?php echo $area_data['id'] ?>" ><?php echo $area_data['area_name']; ?></option>
 <?php } ?>
+                                </select>
+                            </div>
+                            <div class="clear"></div>
+							 <div class="custtd_left" <?php echo $disFDivCss; ?>>
+                                <h2>Choose Room <span class="redstar spanRoom">*</span></h2>
+                            </div>
+							<div class="txtfield " <?php echo $disFDivCss; ?>>
+                                <select id="slctRoom" name="slctRoom" class="select1 required">
+                                    <option value="" selected="selected">--Select Room--</option>
+								<?php
+								$roomId = "";
+								$room_qry = "select * from room";
+								$room_result = mysqli_query($db, $room_qry);
+								while ($room_data = mysqli_fetch_assoc($room_result)) {
+									$selected = (trim($roomId) == trim($room_data['id'])) ? ' selected="selected"' : '';
+									?>
+                                        <option value="<?php echo $room_data['id'] ?>" ><?php echo $room_data['room_name']; ?></option>
+							<?php } ?>
                                 </select>
                             </div>
                             <div class="clear"></div>
@@ -135,18 +156,18 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 <h2>Subject Name<span class="redstar spanSubject">*</span></h2>
                             </div>
                             <div class="txtfield" <?php echo $disFDivCss; ?>>
-                                <input type="text" class="inp_txt required" id="txtSubjName" maxlength="50" name="txtSubjName" value="N/A" <?php echo $disTest; ?>>
+                                <input type="text" class="inp_txt required" id="txtSubjName" maxlength="50" name="txtSubjName" value="" >
                             </div>
                             <div class="clear"></div>
                             <div class="custtd_left" <?php echo $disFDivCss; ?>>
                                 <h2>Subject Code <span class="redstar spanSubCode">*</span></h2>
                             </div>
                             <div class="txtfield" <?php echo $disFDivCss; ?>>
-                                <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="N/A" readonly <?php echo $disTest; ?>>
+                                <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="" >
                             </div>
                             <!--<div class="sessionboxSub btnSessiondiv">
-                                <div style="float:left; width:175px;"><input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
-								<input type="button" name="btnCancel" class="buttonsub" <?php echo $disTest; ?> value="Cancel" onclick="location.href = 'subject_view.php';"></div>
+                                <div style="float:left; width:175px;"><input type="submit" name="saveSubject" class="buttonsub"  value="Save Subject">
+								<input type="button" name="btnCancel" class="buttonsub"  value="Cancel" onclick="location.href = 'subject_view.php';"></div>
                             </div>-->
                             <div class="clear"></div>
                         </div>
@@ -157,10 +178,10 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                         <h2>Teacher <span class="redstar spanSubCode">*</span></h2>
                     </div>
                     <div class="txtfield" <?php echo $disFDivCss; ?>>
-					 <select id="slctTeacher" name="slctTeacher" class="select1 required" onchange="changeTeacherData()"  <?php echo $disTest; ?>>
-						<option value="" >Please select</option>
+					 <select id="slctTeacher" name="slctTeacher" class="select1 required" >
+						<option value="" >--Select--</option>
 						<?php while($data = $teacherData->fetch_assoc()){ ?>
-									<option value="<?php echo base64_encode($data['id']); ?>" <?php if($data['teacher_name'] == 'N/A'){echo "selected"; } ?>><?php echo $data['teacher_name']; ?><?php if($data['email'] !=""){echo ' ('.$data['email'].')'; } ?></option>
+									<option value="<?php echo $data['id']; ?>" ><?php echo $data['teacher_name']; ?><?php if($data['email'] !=""){echo ' ('.$data['email'].')'; } ?></option>
 						<?php } ?>
 					</select>
                     </div>
@@ -354,4 +375,3 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
     <div class="clear"></div>
 </div>
 <?php include('footer.php'); ?>
-
