@@ -43,4 +43,16 @@ class SpecialActivity extends Base {
 		}
 		return $timeslot;
 	}
+	public function getExceptionDate($ruleId){
+		//echo "hello";
+		$exceptionDate=array();
+		$query = mysqli_query($this->conn, "SELECT exception_date FROM special_activity_exception  WHERE  special_activity_rule_id='".$ruleId."' ");
+		while($data = $query->fetch_assoc()){
+				$exceptionDate[] =  $data['exception_date'];
+		}
+		//echo $ruleId;
+		//print_r($exceptionDate);
+		
+		return $exceptionDate;
+	}
 }

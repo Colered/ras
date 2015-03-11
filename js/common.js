@@ -2806,14 +2806,18 @@ $(document).ready(function() {
 });
 //function to show subjects by program
 function createSpecialAvailRule(){
-	
 	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
 	var regx = /^[A-Za-z0-9 .]+$/;
     /*if (!regx.test($('#txtSchd').val())) {
         alert('Please select a valid schedule name with alphanumeric options.');
 		return false;
     }*/
-    if($('#txtSchd').val()==""){
+	//$("input[name=exceptionDate[]]").val();
+	var exceptionDateArr = [];
+	$("input[name='exceptionDate[]']").each(function () {
+		exceptionDateArr.push( this.value );
+	});
+	if($('#txtSchd').val()==""){
 		alert('Please select a valid Schedule Name.');
 		return false;
 	}else if($('#fromSpecialAval').val()==""){
@@ -2852,6 +2856,7 @@ function createSpecialAvailRule(){
 					'start_date': $('#fromSpecialAval').val(),
 					'end_date': $('#toSpcialAval').val(),
 					'codeBlock': 'createSpecialAvaRule',
+					'exceptionSpecialActDates': exceptionDateArr,
 					'timeslotMon': timeslotMon,
 					'timeslotTue': timeslotTue,
 					'timeslotWed': timeslotWed,

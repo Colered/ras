@@ -209,7 +209,7 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                     <div class="custtd_left">
                         <h2>Days and Timeslot<span class="redstar">*</span></h2>
                     </div>
-                    <div class="txtfield" >
+					<div class="txtfield" >
 					    <div class="tmSlot">
                         <input type="checkbox" id="Mon" name="day[]"  value="Mon" class="days"/><span class="dayName"> Mon </span>
 						<select id="ts-avail-mon" name="Mon[]" class="slctTs" multiple="multiple" style="height:110px;">
@@ -252,6 +252,22 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
                    <!-- <img src="images/arrow.png" id="arrow-img" class="arrow-img"  onclick="createTeachAvailRule();"/>-->
                 	</div>
                     <div class="clear"></div>
+							
+					<div class="custtd_left">
+                        <h2>Add Exception</h2>
+                    </div>
+                    <div class="txtfield">
+                        <input type="text" size="12" id="exceptnSpecialActAval" />
+                    </div>
+					<div class="addbtnException">
+					    <input type="button" name="btnAddMore" class="btnSpecialActAvailExcep" value="Add">
+                     </div>
+                    <div class="clear"></div>
+					 <div class="custtd_left">
+                    </div>
+					<div class="divException">
+					</div>
+					<div class="clear"></div>
 					</div>
                 </div>
 
@@ -266,7 +282,8 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 					   <?php
 					    $count = 0;
 					   	while($data = $specialAvailData->fetch_assoc()){
-							if($count%6 == 0){ echo "<tr>"; }?>
+							$rule_id=$data['id'];
+							if($count%6 == 0){ echo "<tr>"; }  ?>
 								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 140px;"><li style="min-height:20px;" class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>"  class="rule__listed_ckb" <?php if(in_array($data['id'], $mappedruleids)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b>
 								<span style="padding-left:10px; cursor:pointer; padding-top:5px;"><img alt="Delete Rule" style="margin-bottom:-3px;" onclick="deleteRuleTeacher(<?php echo $data['id']; ?>, '<?php echo $teachID = ($teachId !="" ? $teachId : 0); ?>');" src="images/delete-rule.png" /></span>
 								</li>
@@ -305,62 +322,31 @@ if(isset($_GET['tid']) && $_GET['tid']!=""){
 										</li>
 									<?php } ?>
 								</ul>
+								Exception Date:
+								<?php 
+								$exceptionDates = $obj->getExceptionDate($rule_id);
+								echo '<br>';
+								$i=0;
+									foreach($exceptionDates as $value){
+									 	
+										if($i%2==0){
+											echo $value.' , ';
+										}else{
+										echo $value.'<br>';
+										}
+										$i++;
+									}
+								 ?>
 								</div>
 								</td>
-						<?php $count++; } ?>
+						<?php $count++; } 
+						?>
 						</tr>
 						</table>
                     </ul>
                 </div>
 			</div>
 			<div class="clear"></div>
-                    <div class="custtd_left">
-                        <h2>Add Exception</h2>
-                    </div>
-                    <div class="txtfield">
-                        <input type="text" size="12" id="exceptnSpecialActAval" />
-                    </div>
-					<div class="addbtnException">
-					    <input type="button" name="btnAddMore" class="btnSpecialActAvailExcep" value="Add">
-                     </div>
-                    <div class="clear"></div>
-					<div class="custtd_left">
-                    </div>
-					<div class="divException">
-					<?php
-					if($decodeTeachId!=""){
-						$x=0;
-						$sessionHtml='';
-						$subj_session_query="select * from  teacher_availability_exception where teacher_id='".$decodeTeachId."'";
-						$subj_session_result= mysqli_query($db, $subj_session_query);
-						while($subj_session_data = mysqli_fetch_assoc($subj_session_result)){
-						$x++;
-						if($x==1){
-						?>
-							<div class="exceptionList">
-   							<table id="datatables" class="exceptionTbl">
-       						  <thead>
-          					   <tr>
-								<th>Sr. No.</th>
-								<th >Exception Date</th>
-								<th >Remove</th>
-							   </tr>
-       					      </thead>
-       					      <tbody>
-						<?php } ?>
-						 	<tr>
-           						<td><?php echo $x; ?></td>
-	   							<td><?php echo $subj_session_data['exception_date']; ?></td>
-								<td style="display:none"><input type="hidden" name="exceptionDate[]" id="exceptnDate<?php echo $x; ?>" value="<?php echo $subj_session_data['exception_date']; ?>" />
-								<input type="hidden" name="sessionRowId[]" id="sessionRowId<?php echo $x; ?>"  value="<?php echo $subj_session_data['id']; ?>"/></td>
-								<td id="<?php echo $subj_session_data['id']; ?>"><a class="remove_field" onclick="deleteExcepTeachAvail(<?php echo $subj_session_data['id']; ?>, 0);">Remove</a></td></tr>
-					<?php } ?>
-					<input type="hidden" name="maxSessionListVal" id="maxSessionListVal"  value="<?php echo $x; ?>"/>
-					</tbody></table></div>
-					<?php
-					}?>
-					</div>
-					<div class="clear"></div>
                     <div class="clear"></div>
 					<div class="txtfield" style="margin-left:500px;">
                         <input type="submit" name="btnSave" class="buttonsub" value="Save">

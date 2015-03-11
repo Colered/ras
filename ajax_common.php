@@ -1890,6 +1890,11 @@ switch ($codeBlock) {
 						$timeslotSat1 = $objT->getTimeslotId($timeslotSat);
 						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotSat."','".$timeslotSat1."', 5, 'Sat', '".$currentDateTime."', '".$currentDateTime."');");
 						}
+						if(isset($_POST['exceptionSpecialActDates']) && $_POST['exceptionSpecialActDates']!=""){
+							foreach($_POST['exceptionSpecialActDates'] as $exception_date){
+								$exception_result = mysqli_query($db, "INSERT INTO  special_activity_exception VALUES ('','".$special_activity_rule_id."','".$exception_date."','".$currentDateTime."','".$currentDateTime."') ");
+							}
+						}
 						echo '1';
 				}else{
 						echo '0';

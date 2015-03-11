@@ -625,11 +625,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							}
 					   }
 					}
-					if(isset($_POST['exceptionDate']) && $_POST['exceptionDate']!=""){
-						foreach($_POST['exceptionDate'] as $exception_date){
-							$exception_result = mysqli_query($db, "INSERT INTO  special_activity_exception VALUES ('','".$ruleId."','".$exception_date."','".$currentDateTime."','".$currentDateTime."') ");
-						}
-					}
 				}
 				//header('Location: special_activity_view.php');
 		   }	
