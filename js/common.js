@@ -3009,10 +3009,12 @@ function processSelectBox()
 	if(count>1)
 	{
 		 $("#reason").removeAttr("disabled");
-		 $('#reason option[value="Alternate Choices for Session"]').attr("selected",true);
+		 $("#reason option:selected").prop("selected", false);
+		 $('#reason option[value="Alternate Choices for Session"]').prop("selected", "selected");
 	}else{
-		$('#reason option[value=""]').attr("selected",true);
-		$("#reason").prop('disabled', 'disabled');
+		$("#reason option:selected").prop("selected", false);
+		$("#reason option:first").prop("selected", "selected");
+		$("#reason").attr('disabled', 'disabled');
 	}
 }
 
