@@ -562,8 +562,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		}		
 		break;
 		case "addEditSpecialActivity":
-			echo '<pre>';
-			print_r($_POST);
 			$subject_id="";
 			$session_id="";
 			$start_time="";
@@ -597,14 +595,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					header('Location: special_activity.php');
 				}	
 		   	}else{
-				echo '<pre>';
-			   //print_r($_POST['ruleval']);
+				
 			   foreach($_POST['ruleval'] as $ruleId){
 				$ruleStartEnddate = $obj_SA->ruleStartEndDate($ruleId);
-				//echo '<pre>';
-				//print_r($ruleStartEnddate);
 				$ruleTimeslot = $obj_SA->ruleTimeslotandDay($ruleId);
-				//print_r($ruleTimeslot);
 				$startPADate=$ruleStartEnddate['start_date'];
 				$endPADate=$ruleStartEnddate['end_date'];
 				$endPADate = date('Y-m-d',strtotime($endPADate . "+1 days"));
