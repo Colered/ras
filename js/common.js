@@ -3008,7 +3008,8 @@ function processSelectBox()
 	var count = $('#slctTeacher option:selected').length;
 	if(count>1)
 	{
-		 $("#reason").removeAttr("disabled");		
+		 $("#reason").removeAttr("disabled");
+		 $('#reason option[value="Alternate Choices for Session"]').attr("selected",true);
 	}else{
 		$('#reason option[value=""]').attr("selected",true);
 		$("#reason").prop('disabled', 'disabled');
