@@ -3272,7 +3272,6 @@ function deleteRuleSpecialActivity($id){
 					'codeBlock': 'del_rule_special_activity',
 				},
                 success: function($succ){
-					alert($succ);
 					if($succ==1){
 						window.location.href = 'special_activity.php';
 					}else{

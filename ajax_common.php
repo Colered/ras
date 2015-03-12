@@ -2012,9 +2012,10 @@ switch ($codeBlock) {
 				
 				//getting the special teacher activity id's
 				$sql = "select teacher_activity_id from  special_activity_mapping where special_activity_rule_id ='".$_POST['rule_id']."' ";
-					$query = mysqli_query($db,$sql);
-					while($data_teahcer_act=$query->fetch_assoc()){
-						$teacher_activity_id_arr[] = $data_teahcer_act['teacher_activity_id'];
+				$query = mysqli_query($db,$sql);
+				$teacher_activity_id_arr = array();
+				while($data_teahcer_act=$query->fetch_assoc()){
+					$teacher_activity_id_arr[] = $data_teahcer_act['teacher_activity_id'];
 				}
 				//deleting the special teacher activity and special activity mapping
 				if(count($teacher_activity_id_arr)>0){
