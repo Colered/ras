@@ -565,7 +565,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			$obj=new SpecialActivity();
 			if(isset($_POST['special_act_id']) && $_POST['special_act_id']!=''){
 				$resp = $obj->updateSpecialActivity();//update a SpecialActivity
-			}else{echo "kk";die;
+			}else{
 				$resp = $obj->addSpecialActivity();//add new SpecialActivity
 			}
 			if($resp){
