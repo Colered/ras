@@ -3,17 +3,6 @@ class SpecialActivity extends Base {
     public function __construct(){
    		 parent::__construct();
    	}
-	/*function for add professor*/
-	public function getRuleIdsForSpecialAct($ids)
-	{
-		$special_avail_query="select special_activity_rule_id from  special_activity_rule_teacher_map where teacher_id =".$ids;
-		$q_res = mysqli_query($this->conn, $special_avail_query);
-		$allIds = array();
-		while($data = $q_res->fetch_assoc()){
-			$allIds[] =  $data['special_activity_rule_id'];
-		}
-		return $allIds;
-	}
 	public function getSpecialAvailDay($id)
 	{
 		$area_query="select id, actual_timeslot_id , duration , day_name from special_activity_rule_day_map where special_activity_rule_id ='".$id."'";

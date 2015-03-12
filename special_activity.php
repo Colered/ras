@@ -60,11 +60,6 @@ $option_duration='<option value="">--Select--</option>
 $name="";
 $teachId = ""; $decodeTeachId="";
 $mappedruleids = array();
-if(isset($_GET['tid']) && $_GET['tid']!=""){
-	$teachId = $_GET['tid'];
-	$decodeTeachId = base64_decode($teachId);
-	$mappedruleids = $obj->getRuleIdsForSpecialAct($decodeTeachId);
-}
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$special_act_id = base64_decode($_GET['edit']);
 	$detail = $obj->specialActivityDetail($special_act_id);
@@ -254,7 +249,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 					</select>
                     </div>
                     <div class="clear"></div>
-					<div class="scheduleBlock" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
+					<div class="scheduleBlockSpAct" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 					<div class="custtd_left">
                         <span style="font-size:14px"><b>Create A New Rule(optional):</b></span>
                     </div>

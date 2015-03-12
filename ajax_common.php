@@ -2036,5 +2036,21 @@ switch ($codeBlock) {
 				echo 1;
 		}
     	break;
+		case "special_activity_listing":
+			if(isset($_POST['activity']) && $_POST['activity_type']!=""){
+				$sql = "select special_activity_rule_id from  special_activity_mapping where special_activity_type ='".$_POST['activity_type']."' group by special_activity_rule_id ";
+				$query = mysqli_query($db,$sql);
+				$ruleIdArr = array();
+				while ($data = mysqli_fetch_array($query)){
+					$ruleIdArr[] = $data['special_activity_rule_id'];
+				}
+				$rule_id_str = implode(',',$ruleIdArr);
+				echo $rule_id_str;
+			}else{
+				$message="Please enter activity and activity_type to listing activities";
+				$_SESSION['error_msg'] = $message;
+				header('Location: index.php');	
+			}
+		break;
 }
 ?>

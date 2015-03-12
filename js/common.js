@@ -3151,7 +3151,7 @@ function specialActivityType(){
 	   var activity_type = $( "#special_activity_type option:selected" ).val();
 	   if(activity==3 && activity_type==1){
 		   $('.otAct').show();
-		   $('.scheduleBlock').hide();	
+		   $('.scheduleBlockSpAct').hide();	
 		   $('.spanPrgm').text("*");	
 		   $('.spanCycle').text("*");
 		   $('.spanArea').text("");
@@ -3172,7 +3172,7 @@ function specialActivityType(){
 		}).attr('selected', true);
 	   }else if(activity==3 && activity_type==2){
 		   $('.otAct').hide();
-		   $('.scheduleBlock').show();	
+		   $('.scheduleBlockSpAct').show();	
 		   $('.spanPrgm').text("*");	
 		   $('.spanCycle').text("*");
 		   $('.spanArea').text("");
@@ -3191,10 +3191,52 @@ function specialActivityType(){
 		   $("#slctTeacher option").filter(function(){
 		    return this.text == 'N/A (n/a@gmail.com)'; 
 		}).attr('selected', true);
+		    $.ajax({
+				type: "POST",
+				url: "ajax_common.php",
+				data: {
+					'activity': activity,
+					'activity_type': activity_type,
+					'codeBlock': 'special_activity_listing',
+				},
+				success: function($succ){
+					var checkedRuleCkb = new Array();
+					var rule_ids = $succ.split(',');
+					for (var i = 0; i < rule_ids.length; i++) {
+						$("input[name='ruleval[]']").each(function (){
+							 if(rule_ids[i]==parseInt($(this).val())){
+								$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", true);
+								checkedRuleCkb.push($(this).val());
+							 }
+						});
+						
+					}
+					/*if (checkedRuleCkb.length!= 0){
+						$.ajax({
+								type: "POST",
+								url: "ajax_common.php",
+								data: {
+									'id': checkedRuleCkb,
+									'codeBlock': 'del_special_activity',
+								},
+								success: function($succ){
+									if($succ==1){
+										$('#'+$id).closest('tr').remove();
+										$('.green, .red').hide();
+									}else{
+										alert("Cannot delete the selected special activity.");
+										$('.green, .red').hide();
+									}
+								}
+						});
+					}*/
+					
+				}
+           });
 	   }
 	  if((activity==4 || activity==5) && activity_type==1){
 		   $('.otAct').show();
-		   $('.scheduleBlock').hide();	
+		   $('.scheduleBlockSpAct').hide();	
 		   $('.spanPrgm').text("");	
 		   $('.spanCycle').text("");
 		   $('.spanArea').text("");
@@ -3210,7 +3252,7 @@ function specialActivityType(){
 	  	}
 		if((activity==4 || activity==5) && activity_type==2){
 		   $('.otAct').hide();
-		   $('.scheduleBlock').show();	
+		   $('.scheduleBlockSpAct').show();	
 		   $('.spanPrgm').text("");	
 		   $('.spanCycle').text("");
 		   $('.spanArea').text("");
@@ -3229,7 +3271,7 @@ function specialActivityType(){
 $(document).ready(function() {
 	$('.showotBlock').show();
 	if($('#special_act_id').val()!=""){
-		$('.scheduleBlock').hide();
+		$('.scheduleBlockSpAct').hide();
 	}
 });
 //Ajax delete the areas function 
