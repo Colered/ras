@@ -3012,9 +3012,9 @@ function processSelectBox()
 		 $("#reason option:selected").prop("selected", false);
 		 $('#reason option[value="Alternate Choices for Session"]').prop("selected", "selected");
 	}else{
-		$("#reason option:selected").prop("selected", false);
-		$("#reason option:first").prop("selected", "selected");
 		$("#reason").attr('disabled', 'disabled');
+		$("#reason option:selected").prop("selected", false);
+		$("#reason option:first").prop("selected", "selected");		
 	}
 }
 
