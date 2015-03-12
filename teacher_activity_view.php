@@ -127,7 +127,7 @@ function activityFilter()
 								$tdColor = ' style="color:#FFFFFF;"';
 								$class ="out-of-range";
 							 }else{
-								if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess))
+								if(!empty($result_sess) && (!in_array($row['session_id'],$session_array) || $row['session_id'] != '') && (!in_array($row['session_id'],$result_sess) || $row['session_id'] != ''))
 								{
 								 	$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
 								 	$tdColor = ' style="color:#FFFFFF;"';
