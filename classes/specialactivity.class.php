@@ -25,13 +25,6 @@ class SpecialActivity extends Base {
 		$data=$query->fetch_assoc();
 		return $data;
 	}
-	/*public function ruleTimeslotandDay($ruleId){
-		$query = mysqli_query($this->conn, "SELECT id,actual_timeslot_id,duration,day FROM  special_activity_rule_day_map  WHERE  special_activity_rule_id='".$ruleId."' ");
-		while($data = $query->fetch_assoc()){
-				$timeslot[$data['day']] =  $data['actual_timeslot_id'];
-		}
-		return $timeslot;
-	}*/
 	public function ruleTimeslotandDay($ruleId){
 		$query = mysqli_query($this->conn, "SELECT id,actual_timeslot_id,duration,day FROM  special_activity_rule_day_map  WHERE  special_activity_rule_id='".$ruleId."' ");
 		while($data = $query->fetch_assoc()){
@@ -70,7 +63,7 @@ class SpecialActivity extends Base {
 			$last_activity_record=$obj_SA->activityLastReocrd();
 			$act_name_num= ltrim ($last_activity_record['name'],'A');
 			$objTeach = new Teacher();
-			if($_POST['special_activity']!="" && $_POST['special_activity_type']!="2" && $_POST['slctProgram']!="" && $_POST['slctCycle']!="" && $_POST['duration']!=""){
+			if($_POST['special_activity']!="" && $_POST['special_activity_type']!="2"){
 			  $timeslotIdsArray = array();
 			  if ($_POST['duration'] > 15) {
 				   $noOfslots = $_POST['duration'] / 15;
@@ -91,7 +84,7 @@ class SpecialActivity extends Base {
 					$last_id = mysqli_insert_id($this->conn);
 					$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping VALUES ('','".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$_POST['duration']."','".$currentDateTime."','".$currentDateTime."') ");
 				if($result){
-					$message="Activity has benn inserted successfully";
+					$message="Activity has been inserted successfully";
 					$_SESSION['succ_msg'] = $message;
 					header('Location: special_activity_view.php');
 				}else{
@@ -155,7 +148,7 @@ class SpecialActivity extends Base {
 						  }  
 					  }
 				  }
-				$message="Activities have benn inserted successfully";
+				$message="Activities have been inserted successfully";
 				$_SESSION['succ_msg'] = $message;
 				header('Location: special_activity_view.php');
 				return 1;
@@ -181,7 +174,7 @@ class SpecialActivity extends Base {
 				$result_update = mysqli_query($this->conn, "Update teacher_activity set timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$_POST['oneTimeDate']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['special_act_id']."' ");
 				$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set duration = '".$_POST['duration']."',date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$_POST['special_act_id']."' ");
 				if($result_update==1 && $result_mapping_update==1){
-					$message="Activity has benn updated successfully";
+					$message="Activity has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					header('Location: special_activity_view.php');
 				}else{
@@ -194,5 +187,19 @@ class SpecialActivity extends Base {
 				$_SESSION['error_msg'] = $message;
 				header('Location: special_activity.php');
 			}
+	}
+	
+	public function getSpecialActivityDetail($rule_ids,$special_act){
+		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name  FROM teacher_activity ta
+						left join subject s on(s.id = ta.subject_id)
+						left join subject_session ss on(ss.id=ta.session_id)
+						left join teacher t on(t.id = ta.teacher_id)
+						left join program_years py on(py.id=ta.program_year_id)
+						left join room rm on(rm.id=ta.room_id)
+						left join special_activity_mapping sam on(ta.id = sam.teacher_activity_id)
+						WHERE ta.reserved_flag ='".$special_act."'
+						and sam.special_activity_rule_id IN ($rule_ids)";
+		$result =  $this->conn->query($sql);
+		return $result;				
 	}
 }

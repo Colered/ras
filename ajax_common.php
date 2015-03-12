@@ -1862,7 +1862,7 @@ switch ($codeBlock) {
 				$special_activity_rule_id = $db->insert_id;
 				if($special_activity_rule_id!=""){
 						//insert values for monday
-						if((isset($_POST['dateMon']) && ($_POST['dateMon'])!="") && (isset($_POST['durationMon']) && ($_POST['durationMon'])!="") && (isset($_POST['timeslotMon']) && ($_POST['timeslotMon'])!="")){
+						if((isset($_POST['durationMon']) && ($_POST['durationMon'])!="") && (isset($_POST['timeslotMon']) && ($_POST['timeslotMon'])!="")){
 						$durationMon=$_POST['durationMon'];
 						$timeslotIdsMonArray = array();
 						if ($_POST['durationMon'] > 15) {
@@ -1879,7 +1879,7 @@ switch ($codeBlock) {
 						$result = mysqli_query($db, "INSERT INTO  special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_mon_str."','".$durationMon."', 0, 'Mon', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Tuesday
-						if((isset($_POST['dateTue']) && ($_POST['dateTue'])!="") && (isset($_POST['durationTue']) && ($_POST['durationTue'])!="") && (isset($_POST['timeslotTue']) && ($_POST['timeslotTue'])!="")){
+						if((isset($_POST['durationTue']) && ($_POST['durationTue'])!="") && (isset($_POST['timeslotTue']) && ($_POST['timeslotTue'])!="")){
 						$durationTue=$_POST['durationTue'];
 						$timeslotIdsTueArray = array();
 						if ($_POST['durationTue'] > 15) {
@@ -1896,7 +1896,7 @@ switch ($codeBlock) {
 						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_tue_str."','".$durationTue."', 1, 'Tue', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Wednesday
-						if((isset($_POST['dateWed']) && ($_POST['dateWed'])!="") && (isset($_POST['durationWed']) && ($_POST['durationWed'])!="") && (isset($_POST['timeslotWed']) && ($_POST['timeslotWed'])!="")){
+						if((isset($_POST['durationWed']) && ($_POST['durationWed'])!="") && (isset($_POST['timeslotWed']) && ($_POST['timeslotWed'])!="")){
 						$durationWed=$_POST['durationWed'];
 						$timeslotIdsWedArray = array();
 						if ($_POST['durationWed'] > 15) {
@@ -1913,7 +1913,7 @@ switch ($codeBlock) {
 						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_wed_str."','".$durationWed."', 2, 'Wed', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Thursday
-						if((isset($_POST['dateThu']) && ($_POST['dateThu'])!="") && (isset($_POST['durationThu']) && ($_POST['durationThu'])!="") && (isset($_POST['timeslotThu']) && ($_POST['timeslotThu'])!="")){
+						if((isset($_POST['durationThu']) && ($_POST['durationThu'])!="") && (isset($_POST['timeslotThu']) && ($_POST['timeslotThu'])!="")){
 						$durationThu=$_POST['durationThu'];
 						$timeslotIdsThuArray = array();
 						if ($_POST['durationThu'] > 15) {
@@ -1930,7 +1930,7 @@ switch ($codeBlock) {
 						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_thu_str."','".$durationThu."', 3, 'Thu', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Friday
-						if((isset($_POST['dateFri']) && ($_POST['dateFri'])!="") && (isset($_POST['durationFri']) && ($_POST['durationFri'])!="") && (isset($_POST['timeslotFri']) && ($_POST['timeslotFri'])!="")){
+						if((isset($_POST['durationFri']) && ($_POST['durationFri'])!="") && (isset($_POST['timeslotFri']) && ($_POST['timeslotFri'])!="")){
 						$durationFri=$_POST['durationFri'];
 						$timeslotIdsFriArray = array();
 						if ($_POST['durationFri'] > 15) {
@@ -1947,7 +1947,7 @@ switch ($codeBlock) {
 						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_fri_str."','".$durationFri."', 4, 'Fri', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Saturday
-						if((isset($_POST['dateSat']) && ($_POST['dateSat'])!="") && (isset($_POST['durationSat']) && ($_POST['durationSat'])!="") && (isset($_POST['timeslotSat']) && ($_POST['timeslotSat'])!="")){
+						if((isset($_POST['durationSat']) && ($_POST['durationSat'])!="") && (isset($_POST['timeslotSat']) && ($_POST['timeslotSat'])!="")){
 						$durationSat=$_POST['durationSat'];
 						$timeslotIdsSatArray = array();
 						if ($_POST['durationSat'] > 15) {
@@ -2052,5 +2052,85 @@ switch ($codeBlock) {
 				header('Location: index.php');	
 			}
 		break;
+		case "special_activity_periodic":
+			if(isset($_POST['checkedRuleidsCkb']) && $_POST['checkedRuleidsCkb']!=""){
+				$objT = new Teacher();
+				$data_special_activity = array();
+				$obj_SA=new SpecialActivity();
+				$rule_ids = implode(',', $_POST['checkedRuleidsCkb']);
+				$result = $obj_SA->getSpecialActivityDetail($rule_ids,$_POST['activity_new']);
+				$html="";
+				$html.='<div><h>Special Activity Listing:-</h></div>';
+				$html.='<table id="datatables" class="display tblActivity">
+                <thead>
+                    <tr>
+					    <!--<th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" title="Select All"/></th>-->
+                        <th>ID</th>
+                        <th>Activity</th>
+						<th>Activity Type</th>
+                        <th>Program</th>
+                        <th>Subject</th>
+                        <th>Session</th>
+                        <th>Teacher</th>
+                        <th>Class Room</th>
+                        <th>Date</th>
+                        <th>Timeslot</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>';
+					if($result->num_rows){
+						$timeslot_arr=array();
+						while($row = $result->fetch_assoc())
+						{
+						   $timeslot_arr=explode(',',$row['timeslot_id']);
+						   $min_ts_id = $timeslot_arr[0];
+						   $max_ts_id = $timeslot_arr[count($timeslot_arr)-1];
+						   if($row['reserved_flag']=="3"){$recess="Recess Activity";}
+						   if($row['reserved_flag']=="4"){$recess="Group Activity";}
+						   if($row['reserved_flag']=="4"){$recess="AdHoc Activity";}
+						   if($row['subject_id']=="0"){$subject_name="N/A";}
+						   if($row['session_id']=="0"){$session_name="N/A";}
+						   	if($row['room_id']=="0"){
+						   		$room_id="N/A";
+							}else{
+								$room_id=$row['room_id'];
+							}
+							if($row['teacher_id']=="0"){
+						   		$teacher_id="N/A";
+							}else{
+								$teacher_id=$row['teacher_name'];
+							}
+						    $html.='<tr>';
+							$html.='
+							<td>'.$row['id'].'</td>
+							<td>'.$row['name'].'</td>
+							<td>'.$recess.'</td>
+							<td>'.$row['program_name'].'</td>
+							<td>'.$subject_name.'</td>
+							<td>'.$session_name.'</td>
+							<td>'.$teacher_id.'</td>
+							<td>'.$room_id.'</td>
+							<td>'.$row['act_date'].'</td>
+							<td>'.$objT->getTimeslotById($min_ts_id,$max_ts_id).'</td>
+							<td><a href="special_activity.php?edit='.base64_encode($row['id']).'?>" class="table-icon edit" title="Edit"></a>
+								<a href="#" class="table-icon delete" onClick="deleteSpecialActivity('.$row['id'].')"></a>
+							</td>';
+							$html.='</tr>';
+							
+							
+								
+						} 
+									
+				$html.='</tbody>
+            </table>';
+			echo $html;
+			}
+			}else{
+				$message="Please enter activity and activity_type to listing activities";
+				$_SESSION['error_msg'] = $message;
+				header('Location: index.php');	
+			}
+			break;
 }
 ?>

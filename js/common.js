@@ -83,54 +83,6 @@ $(document).ready(function() {
 		changeMonth: true, 
 		changeYear: true,
 	});
-	$("#date-sp-mon").datepicker({
-	    dateFormat: 'yy-mm-dd',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-	});
-	$("#date-sp-tue").datepicker({
-	    dateFormat: 'yy-mm-dd',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-	});
-	$("#date-sp-wed").datepicker({
-	    dateFormat: 'yy-mm-dd',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-	});
-	$("#date-sp-thu").datepicker({
-	    dateFormat: 'yy-mm-dd',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-	});
-	$("#date-sp-fri").datepicker({
-	    dateFormat: 'yy-mm-dd',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-	});
-	$("#date-sp-sat").datepicker({
-	    dateFormat: 'yy-mm-dd',
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		changeMonth: true, 
-		changeYear: true,
-	});
 });			   
 
 $(function() {
@@ -1437,7 +1389,6 @@ $(document).ready(function(){
 });
 $(document).ready(function(){
 	$(".sp-act-ts-mon,.sp-act-ts-tue,.sp-act-ts-wed,.sp-act-ts-thu,.sp-act-ts-fri,.sp-act-ts-sat").hide();
-	//$("#date-sp-mon,#date-sp-tue,#date-sp-wed,#date-sp-thu,#date-sp-fri,#date-sp-sat").hide();
 	   $('input[class=days]').click(function(){
             if($(this).attr("value")=="Mon"){
 				$(".sp-act-ts-mon").toggle();
@@ -2904,43 +2855,32 @@ function createSpecialAvailRule(){
 			alert('Please select atleast one day and timeslot.');
 	}else{
 		//get the selected values on each days
-		if(($('#Mon:checked').length > 0) && ($('#date-sp-mon').val() != null) && ($('#duration-sp-mon').val() != null) && ($('#ts-sp-mon').val() != null)){
-				var dateMon = $('input#date-sp-mon').val();
+		if(($('#Mon:checked').length > 0)  && ($('#duration-sp-mon').val() != null) && ($('#ts-sp-mon').val() != null)){
 				var durationMon = $('select#duration-sp-mon').val();
 				var timeslotMon = $('select#ts-sp-mon').val();
 		}
-		if(($('#Tue:checked').length > 0) & ($('#date-sp-tue').val() != null) && ($('#duration-sp-tue').val() != null) && ($('#ts-sp-tue').val() != null)){
-			//var timeslotTue = '{' +$('select#ts-avail-tue').val()+ '}';
-				var dateTue = $('input#date-sp-tue').val();
+		if(($('#Tue:checked').length > 0)  && ($('#duration-sp-tue').val() != null) && ($('#ts-sp-tue').val() != null)){
 				var durationTue = $('select#duration-sp-tue').val();
 				var timeslotTue = $('select#ts-sp-tue').val();
 		}
-		if(($('#Wed:checked').length > 0) & ($('#date-sp-wed').val() != null) && ($('#duration-sp-wed').val() != null) && ($('#ts-sp-wed').val() != null)){
-			//var timeslotWed = '{' +$('select#ts-avail-wed').val()+ '}';
-				var dateWed = $('input#date-sp-wed').val();
+		if(($('#Wed:checked').length > 0) && ($('#duration-sp-wed').val() != null) && ($('#ts-sp-wed').val() != null)){
 				var durationWed = $('select#duration-sp-wed').val();
 				var timeslotWed = $('select#ts-sp-wed').val();
 		}
-		if(($('#Thu:checked').length > 0) & ($('#date-sp-thu').val() != null) && ($('#duration-sp-thu').val() != null) && ($('#ts-sp-thu').val() != null)){
-			//var timeslotThu = '{' +$('select#ts-avail-thu').val()+ '}';
-				var dateThu = $('input#date-sp-thu').val();
+		if(($('#Thu:checked').length > 0)  && ($('#duration-sp-thu').val() != null) && ($('#ts-sp-thu').val() != null)){
 				var durationThu = $('select#duration-sp-thu').val();
 				var timeslotThu = $('select#ts-sp-thu').val();
 		}
-		if(($('#Fri:checked').length > 0) & ($('#date-sp-fri').val() != null) && ($('#duration-sp-fri').val() != null) && ($('#ts-sp-fri').val() != null)){
-			//var timeslotFri = '{' +$('select#ts-avail-fri').val()+ '}';
-				var dateFri = $('input#date-sp-fri').val();
+		if(($('#Fri:checked').length > 0) && ($('#duration-sp-fri').val() != null) && ($('#ts-sp-fri').val() != null)){
 				var durationFri = $('select#duration-sp-fri').val();
 				var timeslotFri = $('select#ts-sp-fri').val();
 		}
-		if(($('#Sat:checked').length > 0) & ($('#date-sp-sat').val() != null) && ($('#duration-sp-sat').val() != null) && ($('#ts-sp-sat').val() != null)){
-			//var timeslotSat = '{' +$('select#ts-avail-sat').val()+ '}';
-				var dateSat = $('input#date-sp-sat').val();
+		if(($('#Sat:checked').length > 0) && ($('#duration-sp-sat').val() != null) && ($('#ts-sp-sat').val() != null)){
 				var durationSat = $('select#duration-sp-sat').val();
 				var timeslotSat = $('select#ts-sp-sat').val();
 		}
 		//send ajax request to insert values into DB		
-		if((dateMon!="" && durationMon!="" && timeslotMon!="" )|| (dateTue!="" && durationTue!="" && timeslotTue!="" ) || (dateWed!="" && durationWed!="" && timeslotWed!="" ) || (dateThu!="" && durationThu!="" && timeslotThu!="" )|| (dateFri!="" && durationFri!="" && timeslotFri!="" ) || (dateSat!="" && durationSat!="" && timeslotSat!="" )){
+		if((durationMon!="" && timeslotMon!="" )|| (durationTue!="" && timeslotTue!="" ) || (durationWed!="" && timeslotWed!="" ) || (durationThu!="" && timeslotThu!="" )|| (durationFri!="" && timeslotFri!="" ) || (durationSat!="" && timeslotSat!="" )){
 			$.ajax({
 				url: "./ajax_common.php",
 				type: "POST",
@@ -2950,38 +2890,22 @@ function createSpecialAvailRule(){
 					'end_date': $('#toSpcialAval').val(),
 					'codeBlock': 'createSpecialAvaRule',
 					'exceptionSpecialActDates': exceptionDateArr,
-					
-					'dateMon': dateMon,
 					'durationMon': durationMon,
 					'timeslotMon': timeslotMon,
-					
-					'dateTue': dateTue,
 					'durationTue': durationTue,
 					'timeslotTue': timeslotTue,
-					
-					'dateWed': dateWed,
 					'durationWed': durationWed,
 					'timeslotWed': timeslotWed,
-					
-					'dateThu': dateThu,
 					'durationThu': durationThu,
 					'timeslotThu': timeslotThu,
-					
-					'dateFri': dateFri,
 					'durationFri': durationFri,
 					'timeslotFri': timeslotFri,
-					
-					'dateSat': dateSat,
 					'durationSat': durationSat,
 					'timeslotSat': timeslotSat,
 					},
 				success: function($succ){
 					if($succ==1){
-						$id = "";
-						if($('#slctTeacher').val()!=""){
-							$id = '?tid='+$('#slctTeacher').val();
-						}
-						window.location.href = 'special_activity.php'+$id+'';
+						window.location.href = 'special_activity.php';
 					}else{
 						alert("Rule name already exists.");
 					}
@@ -3066,11 +2990,12 @@ function removeSpecialActException($exceptionId, $serialId){
 }
 //showing optional,required field and rule blocks
 function specialActivity(){
+		 listingSpecialAct();
 		 var activity = $( "#special_activity option:selected" ).val();
 		 var activity_type = $( "#special_activity_type" ).val();
 		 if(activity==3 && activity_type==1){
 		   $('.otAct').show();
-		   $('.scheduleBlock').hide();	
+		   $('.scheduleBlockSpAct').hide();	
 		   $('.spanPrgm').text("*");	
 		   $('.spanCycle').text("*");
 		   $('.spanArea').text("");
@@ -3091,7 +3016,7 @@ function specialActivity(){
 		}).attr('selected', true);
 	   }else if(activity==3 && activity_type==2){
 		   $('.otAct').hide();
-		   $('.scheduleBlock').show();	
+		   $('.scheduleBlockSpAct').show();	
 		   $('.spanPrgm').text("*");	
 		   $('.spanCycle').text("*");
 		   $('.spanArea').text("");
@@ -3113,7 +3038,7 @@ function specialActivity(){
 	   }
 	  if((activity==4 || activity==5) && activity_type==1){
 		   $('.otAct').show();
-		   $('.scheduleBlock').hide();	
+		   $('.scheduleBlockSpAct').hide();	
 		   $('.spanPrgm').text("");	
 		   $('.spanCycle').text("");
 		   $('.spanArea').text("");
@@ -3130,7 +3055,7 @@ function specialActivity(){
 	  	}
 		if((activity==4 || activity==5) && activity_type==2){
 		   $('.otAct').hide();
-		   $('.scheduleBlock').show();	
+		   $('.scheduleBlockSpAct').show();	
 		   $('.spanPrgm').text("");	
 		   $('.spanCycle').text("");
 		   $('.spanArea').text("");
@@ -3147,6 +3072,7 @@ function specialActivity(){
 	  	}
 }
 function specialActivityType(){
+	listingSpecialAct();
 	   var activity=$( "#special_activity" ).val();
 	   var activity_type = $( "#special_activity_type option:selected" ).val();
 	   if(activity==3 && activity_type==1){
@@ -3191,49 +3117,7 @@ function specialActivityType(){
 		   $("#slctTeacher option").filter(function(){
 		    return this.text == 'N/A (n/a@gmail.com)'; 
 		}).attr('selected', true);
-		    $.ajax({
-				type: "POST",
-				url: "ajax_common.php",
-				data: {
-					'activity': activity,
-					'activity_type': activity_type,
-					'codeBlock': 'special_activity_listing',
-				},
-				success: function($succ){
-					var checkedRuleCkb = new Array();
-					var rule_ids = $succ.split(',');
-					for (var i = 0; i < rule_ids.length; i++) {
-						$("input[name='ruleval[]']").each(function (){
-							 if(rule_ids[i]==parseInt($(this).val())){
-								$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", true);
-								checkedRuleCkb.push($(this).val());
-							 }
-						});
-						
-					}
-					/*if (checkedRuleCkb.length!= 0){
-						$.ajax({
-								type: "POST",
-								url: "ajax_common.php",
-								data: {
-									'id': checkedRuleCkb,
-									'codeBlock': 'del_special_activity',
-								},
-								success: function($succ){
-									if($succ==1){
-										$('#'+$id).closest('tr').remove();
-										$('.green, .red').hide();
-									}else{
-										alert("Cannot delete the selected special activity.");
-										$('.green, .red').hide();
-									}
-								}
-						});
-					}*/
-					
-				}
-           });
-	   }
+}
 	  if((activity==4 || activity==5) && activity_type==1){
 		   $('.otAct').show();
 		   $('.scheduleBlockSpAct').hide();	
@@ -3324,3 +3208,83 @@ function deleteRuleSpecialActivity($id){
     }
     return false;
 }
+function listingSpecialAct(){
+	if($('#special_activity').val()!="" && $('#special_activity_type').val()=="2"){
+		var activity=$('#special_activity').val();
+		var activity_type=$('#special_activity_type').val();
+		$.ajax({
+				type: "POST",
+				url: "ajax_common.php",
+				data: {
+					'activity': activity,
+					'activity_type': activity_type,
+					'codeBlock': 'special_activity_listing',
+				},
+				success: function($succ){
+					var checkedRuleCkb = new Array();
+					var rule_ids = $succ.split(',');
+					for (var i = 0; i < rule_ids.length; i++) {
+						$("input[name='ruleval[]']").each(function (){
+							 if(rule_ids[i]==parseInt($(this).val())){
+								$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", true);
+								checkedRuleCkb.push($(this).val());
+							 }
+						});
+						
+					}
+					if (checkedRuleCkb.length!= 0){
+						$.ajax({
+								type: "POST",
+								url: "ajax_common.php",
+								data: {
+									'activity_new': activity,
+									'activity_type_new': activity_type,
+									'checkedRuleidsCkb': checkedRuleCkb,
+									'codeBlock': 'special_activity_periodic',
+								},
+								success: function($succ1){
+									$(".special_act_list").html($succ1);
+								}
+						});
+					}
+					
+				}
+           });
+	}
+}
+$(document).ready(function() {
+	$("#specialActivityForm").on("submit", function(){
+		if($("#special_activity").val()===""){
+				alert('please select the activity ');
+				return false;
+		}else if($("#special_activity_type").val()===""){
+				alert('please select the activity type');
+				return false;
+		}											
+		if($('#special_activity_type').val()==="1"){
+			 if($("#oneTimeDate").val()===""){
+				 	alert('please select the date');
+					return false;
+			 }else if($("#duration").val()===""){
+				 	alert('please select the duration');
+					return false;
+			 }else if($("#ot_tslot_id").val()===""){
+					alert('please select the timeslot');
+					return false;
+			 }
+		}
+		if($('#special_activity').val()==="3"){
+		  	 if($("#slctProgram").val()===""){
+				 	alert('please select the program');
+					return false;
+			 }else if($("#slctCycle").val()===""){
+				 	alert('please select the cycle');
+					return false;
+			 }
+		}
+		if($('#special_activity_type').val()==="2" && $('[name="ruleval[]"]:checked').length===0){
+				alert('please select at least one rule');
+					return false;
+		}
+	});
+});

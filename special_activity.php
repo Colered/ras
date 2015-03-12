@@ -208,6 +208,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 							<div class="txtfield " <?php echo $disFDivCss; ?>>
                                 <select id="slctRoom" name="slctRoom" class="select1 required" <?php echo $disabled;?>>
                                     <option value="" selected="selected">--Select Room--</option>
+									<option value="0">N/A</option>
 								<?php
 								$roomId = "";
 								$room_qry = "select * from room";
@@ -276,7 +277,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 					    <div class="tmSlot">
                         <input type="checkbox" id="Mon" name="day[]"  value="Mon" class="days"/><span class="dayName"> Mon </span>
 							<div class="sp-act-ts-mon">
-								<input type="text" size="12" id="date-sp-mon"  name="date-sp-mon" class="txtfield" value=""/>
 								<select name="duration-sp-mon" id="duration-sp-mon" class="cls-duration-sp-mon" >
 								   <?php echo $option_duration;?>
 								</select>
@@ -289,7 +289,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 						<div class="tmSlot">
                         <input type="checkbox" id="Tue" name="day[]"  value="Tue" class="days"/><span class="dayName"> Tue </span>
 							<div class="sp-act-ts-tue">
-								<input type="text" size="12" id="date-sp-tue"  name="date-sp-tue" class="txtfield" value=""/>
 								<select name="duration-sp-tue" id="duration-sp-tue" class="cls-duration-sp-tue" >
 								   <?php echo $option_duration;?>
 								</select>
@@ -302,7 +301,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 						<div class="tmSlot">
                         <input type="checkbox" id="Wed" name="day[]"  value="Wed" class="days"/><span class="dayName"> Wed </span>
 							<div class="sp-act-ts-wed">
-								<input type="text" size="12" id="date-sp-wed"  name="date-sp-wed" class="txtfield" value=""/>
 								<select name="duration-sp-wed" id="duration-sp-wed" class="cls-duration-sp-wed" >
 								   <?php echo $option_duration;?>
 								</select>
@@ -315,7 +313,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 						<div class="tmSlot">
                         <input type="checkbox" id="Thu" name="day[]"  value="Thu" class="days"/><span class="dayName"> Thu </span>
 							<div class="sp-act-ts-thu">
-								<input type="text" size="12" id="date-sp-thu"  name="date-sp-thu" class="txtfield" value=""/>
 								<select name="duration-sp-thu" id="duration-sp-thu" class="cls-duration-sp-thu" >
 								   <?php echo $option_duration;?>
 								</select>
@@ -328,7 +325,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 						<div class="tmSlot">
                         <input type="checkbox" id="Fri" name="day[]"  value="Fri" class="days"/><span class="dayName"> Fri </span>
 							<div class="sp-act-ts-fri">
-								<input type="text" size="12" id="date-sp-fri"  name="date-sp-fri" class="txtfield" value=""/>
 								<select name="duration-sp-fri" id="duration-sp-fri" class="cls-duration-sp-fri" >
 								   <?php echo $option_duration;?>
 								</select>
@@ -341,7 +337,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 						<div class="tmSlot">
 						<input type="checkbox" id="Sat" name="day[]"  value="Sat" class="days"/><span class="dayName"> Sat </span>
 							<div class="sp-act-ts-sat">
-								<input type="text" size="12" id="date-sp-sat"  name="date-sp-sat" class="txtfield" value=""/>
 								<select name="duration-sp-sat" id="duration-sp-sat" class="cls-duration-sp-sat" >
 								   <?php echo $option_duration;?>
 								</select>
@@ -375,7 +370,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 					</div>
                 </div>
 			<div class="clear"></div>
-			<div class="scheduleBlock" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
+			<div class="scheduleBlockSpAct" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 				<div>
 					<span style="font-size:14px"><b>Select A Rule For Recess Activity / Group Meetings:</b></span>
 				</div>
@@ -426,6 +421,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 			</div>
 			<div class="clear"></div>
                     <div class="clear"></div>
+					<div class="special_act_list"> </div>
 					<div class="txtfield" style="margin-left:500px;">
                         <input type="submit" name="btnSave" class="buttonsub" value="<?php echo $btnSubmit;?>">
                     </div>

@@ -643,6 +643,7 @@ class Teacher extends Base {
 						left join program_years py on(py.id=ta.program_year_id)
 						left join teacher_activity_reason tar on tar.activity_id = ta.id 
 						WHERE ta.reserved_flag IN (3,4,5)";
+						
 		if($activity_filter_val==3)
 			$sql.= "AND ta.reserved_flag = 3";
 		if($activity_filter_val==4)
