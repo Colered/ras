@@ -398,25 +398,24 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 										$tempData  = explode(',', $ddata['actual_timeslot_id']);
 										$start_time = $obj->getStartTime($tempData['0']);
 										?>
-										<li><span style="text-decoration:underline"><?php echo $ddata['day_name'].'</span>:&nbsp;'.$start_time['start_time'].'  ( Duration-'.$ddata['duration'].')' ;
+										<li><span style="text-decoration:underline"><?php echo $ddata['day_name'].'</span>:&nbsp;'.$start_time['start_time'].'  ( Duration : '.$ddata['duration'].' Min)' ;
 											?>
 										</li>
 									<?php } ?>
 								</ul>
-								Exception Date:
 								<?php 
 								$exceptionDates = $obj->getExceptionDate($rule_id);
-								echo '<br>';
-								$i=0;
+								if(count($exceptionDates)>0){
+									echo '<strong>Exception Date:</strong> <br>';
+									$i=0;
 									foreach($exceptionDates as $value){
-										if($i%2==0){
+										if($i%2==0)
 											echo $value.' , ';
-										}else{
+										else
 										echo $value.'<br>';
-										}
 										$i++;
 									}
-								 ?>
+								} ?>
 								</div>
 								</td>
 						<?php $count++; } ?>
