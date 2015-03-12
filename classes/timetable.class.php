@@ -915,7 +915,6 @@ class Timetable extends Base {
 				$data_session_tt_array = explode("-",$data_max_session['max_tot_no_session']);
 				$total_program_session[$data_max_session['program_year_id']] = array('0'=>$data_session_tt_array['0'],'1'=>$data_session_tt_array['1'],'2'=>$data_session_tt_array['2'],'3'=>$data_session_tt_array['3'],'4'=>$data_session_tt_array['4'],'5'=>$data_session_tt_array['5']);
 			}
-
 		}
 		return array($program_session_area,$total_program_session);
 	}

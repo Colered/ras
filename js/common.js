@@ -2801,7 +2801,7 @@ $(document).ready(function() {
 							$("#wait").hide();
 							window.location.href = 'timetable_view.php';
 							//header('Location: timetable_view.php');
-						}else if($succ=="Session-Error" || $succ=="Name-Exist"){
+						}else if($succ=="Session-Error" || $succ=="Name-Exist" || $succ=="Timetable-Error"){
 							if($("input.btnGenertTimetbl").attr("disabled", false)){
 								 $('.btnGenertTimetbl').removeClass("clsbtnGenrtTimtblDisable");
 							 }
