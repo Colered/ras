@@ -1855,40 +1855,106 @@ switch ($codeBlock) {
 				$special_activity_rule_id = $db->insert_id;
 				if($special_activity_rule_id!=""){
 						//insert values for monday
-						if(isset($_POST['timeslotMon']) && ($_POST['timeslotMon'])!=""){
-						$timeslotMon = substr($_POST['timeslotMon'], 1, -1);
-						$timeslotMon1 = $objT->getTimeslotId($timeslotMon);
-						$result = mysqli_query($db, "INSERT INTO  special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotMon."','".$timeslotMon1."', 0, 'Mon', '".$currentDateTime."', '".$currentDateTime."');");
+						if((isset($_POST['dateMon']) && ($_POST['dateMon'])!="") && (isset($_POST['durationMon']) && ($_POST['durationMon'])!="") && (isset($_POST['timeslotMon']) && ($_POST['timeslotMon'])!="")){
+						$durationMon=$_POST['durationMon'];
+						$timeslotIdsMonArray = array();
+						if ($_POST['durationMon'] > 15) {
+							   $noOfslots_mon = $_POST['durationMon'] / 15;
+							   $startTS_mon = $_POST['timeslotMon'];
+							   $endTS_mon = $startTS_mon + $noOfslots_mon;
+							   for ($i = $startTS_mon; $i < $endTS_mon; $i++) {
+								$timeslotIdsMonArray[] = $i;
+							   }
+						}else {
+						   $timeslotIdsMonArray[] = $_POST['timeslotMon'];
+						}
+						$timeSlot_id_mon_str = implode(',',$timeslotIdsMonArray);
+						$result = mysqli_query($db, "INSERT INTO  special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_mon_str."','".$durationMon."', 0, 'Mon', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Tuesday
-						if(isset($_POST['timeslotTue'])  && ($_POST['timeslotTue'])!=""){
-						$timeslotTue = substr($_POST['timeslotTue'], 1, -1);
-						$timeslotTue1 = $objT->getTimeslotId($timeslotTue);
-						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotTue."','".$timeslotTue1."', 1, 'Tue', '".$currentDateTime."', '".$currentDateTime."');");
+						if((isset($_POST['dateTue']) && ($_POST['dateTue'])!="") && (isset($_POST['durationTue']) && ($_POST['durationTue'])!="") && (isset($_POST['timeslotTue']) && ($_POST['timeslotTue'])!="")){
+						$durationTue=$_POST['durationTue'];
+						$timeslotIdsTueArray = array();
+						if ($_POST['durationTue'] > 15) {
+							   $noOfslots_tue = $_POST['durationTue'] / 15;
+							   $startTS_tue = $_POST['timeslotTue'];
+							   $endTS_tue = $startTS_tue + $noOfslots_tue;
+							   for ($i = $startTS_tue; $i < $endTS_tue; $i++) {
+								$timeslotIdsTueArray[] = $i;
+							   }
+						}else {
+						   $timeslotIdsTueArray[] = $_POST['timeslotTue'];
+						}
+						$timeSlot_id_tue_str = implode(',',$timeslotIdsTueArray);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_tue_str."','".$durationTue."', 1, 'Tue', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Wednesday
-						if(isset($_POST['timeslotWed']) && ($_POST['timeslotWed'])!=""){
-						$timeslotWed = substr($_POST['timeslotWed'], 1, -1);
-						$timeslotWed1 = $objT->getTimeslotId($timeslotWed);
-						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotWed."','".$timeslotWed1."', 2, 'Wed', '".$currentDateTime."', '".$currentDateTime."');");
+						if((isset($_POST['dateWed']) && ($_POST['dateWed'])!="") && (isset($_POST['durationWed']) && ($_POST['durationWed'])!="") && (isset($_POST['timeslotWed']) && ($_POST['timeslotWed'])!="")){
+						$durationWed=$_POST['durationWed'];
+						$timeslotIdsWedArray = array();
+						if ($_POST['durationWed'] > 15) {
+							   $noOfslots_wed = $_POST['durationWed'] / 15;
+							   $startTS_wed = $_POST['timeslotWed'];
+							   $endTS_wed = $startTS_wed + $noOfslots_wed;
+							   for ($i = $startTS_wed; $i < $endTS_wed; $i++) {
+								$timeslotIdsWedArray[] = $i;
+							   }
+						}else {
+						   $timeslotIdsWedArray[] = $_POST['timeslotWed'];
+						}
+						$timeSlot_id_wed_str = implode(',',$timeslotIdsWedArray);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_wed_str."','".$durationWed."', 2, 'Wed', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Thursday
-						if(isset($_POST['timeslotThu']) && ($_POST['timeslotThu'])!=""){
-						$timeslotThu = substr($_POST['timeslotThu'], 1, -1);
-						$timeslotThu1 = $objT->getTimeslotId($timeslotThu);
-						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotThu."','".$timeslotThu1."', 3, 'Thu', '".$currentDateTime."', '".$currentDateTime."');");
+						if((isset($_POST['dateThu']) && ($_POST['dateThu'])!="") && (isset($_POST['durationThu']) && ($_POST['durationThu'])!="") && (isset($_POST['timeslotThu']) && ($_POST['timeslotThu'])!="")){
+						$durationThu=$_POST['durationThu'];
+						$timeslotIdsThuArray = array();
+						if ($_POST['durationThu'] > 15) {
+							   $noOfslots_thu = $_POST['durationThu'] / 15;
+							   $startTS_thu = $_POST['timeslotThu'];
+							   $endTS_thu = $startTS_thu + $noOfslots_thu;
+							   for ($i = $startTS_thu; $i < $endTS_thu; $i++) {
+								$timeslotIdsThuArray[] = $i;
+							   }
+						}else {
+						   $timeslotIdsThuArray[] = $_POST['timeslotThu'];
+						}
+						$timeSlot_id_thu_str = implode(',',$timeslotIdsThuArray);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_thu_str."','".$durationThu."', 3, 'Thu', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Friday
-						if(isset($_POST['timeslotFri']) && ($_POST['timeslotFri'])!=""){
-						$timeslotFri = substr($_POST['timeslotFri'], 1, -1);
-						$timeslotFri1 = $objT->getTimeslotId($timeslotFri);
-						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotFri."','".$timeslotFri1."', 4, 'Fri', '".$currentDateTime."', '".$currentDateTime."');");
+						if((isset($_POST['dateFri']) && ($_POST['dateFri'])!="") && (isset($_POST['durationFri']) && ($_POST['durationFri'])!="") && (isset($_POST['timeslotFri']) && ($_POST['timeslotFri'])!="")){
+						$durationFri=$_POST['durationFri'];
+						$timeslotIdsFriArray = array();
+						if ($_POST['durationFri'] > 15) {
+							   $noOfslots_fri = $_POST['durationFri'] / 15;
+							   $startTS_fri = $_POST['timeslotFri'];
+							   $endTS_fri = $startTS_fri + $noOfslots_fri;
+							   for ($i = $startTS_fri; $i < $endTS_fri; $i++) {
+								$timeslotIdsFriArray[] = $i;
+							   }
+						}else {
+						   $timeslotIdsFriArray[] = $_POST['timeslotFri'];
+						}
+						$timeSlot_id_fri_str = implode(',',$timeslotIdsFriArray);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_fri_str."','".$durationFri."', 4, 'Fri', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						//insert values for Saturday
-						if(isset($_POST['timeslotSat']) && ($_POST['timeslotSat'])!=""){
-						$timeslotSat =  substr($_POST['timeslotSat'], 1, -1);
-						$timeslotSat1 = $objT->getTimeslotId($timeslotSat);
-						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeslotSat."','".$timeslotSat1."', 5, 'Sat', '".$currentDateTime."', '".$currentDateTime."');");
+						if((isset($_POST['dateSat']) && ($_POST['dateSat'])!="") && (isset($_POST['durationSat']) && ($_POST['durationSat'])!="") && (isset($_POST['timeslotSat']) && ($_POST['timeslotSat'])!="")){
+						$durationSat=$_POST['durationSat'];
+						$timeslotIdsSatArray = array();
+						if ($_POST['durationSat'] > 15) {
+							   $noOfslots_sat = $_POST['durationSat'] / 15;
+							   $startTS_sat = $_POST['timeslotSat'];
+							   $endTS_sat = $startTS_sat + $noOfslots_sat;
+							   for ($i = $startTS_sat; $i < $endTS_sat; $i++) {
+								$timeslotIdsSatArray[] = $i;
+							   }
+						}else {
+						   $timeslotIdsSatArray[] = $_POST['timeslotSat'];
+						}
+						$timeSlot_id_sat_str = implode(',',$timeslotIdsSatArray);
+						$result = mysqli_query($db, "INSERT INTO special_activity_rule_day_map VALUES ('', '".$special_activity_rule_id."', '".$timeSlot_id_sat_str."','".$durationSat."', 5, 'Sat', '".$currentDateTime."', '".$currentDateTime."');");
 						}
 						if(isset($_POST['exceptionSpecialActDates']) && $_POST['exceptionSpecialActDates']!=""){
 							foreach($_POST['exceptionSpecialActDates'] as $exception_date){
@@ -1915,5 +1981,52 @@ switch ($codeBlock) {
 				echo 0;
 		}
     break;
+	case "del_special_activity":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			//delete the teacher activity
+			$del_query="delete from  teacher_activity where id='".$id."'";
+			$qry = mysqli_query($db, $del_query);
+			if(mysqli_affected_rows($db)>0){
+				// delete teacher activity mapping 
+				$del_act_query="delete from  special_activity_mapping where teacher_activity_id ='".$id."'";
+				mysqli_query($db, $del_act_query);
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}
+	 break;
+	 case "del_rule_special_activity":
+		if(isset($_POST['rule_id']) && $_POST['rule_id']!=""){
+				//then delete the days associate with rule from table special_activity_rule_day_map
+				$delRuleDay="delete from special_activity_rule_day_map where special_activity_rule_id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delRuleDay);
+				//delete the rule
+				$delRule="delete from  special_activity_rule where id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delRule);
+				
+				//delete the rule exception 
+				$delException = "delete from special_activity_exception where special_activity_rule_id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delException);
+				
+				//getting the special teacher activity id's
+				$sql = "select teacher_activity_id from  special_activity_mapping where special_activity_rule_id ='".$_POST['rule_id']."' ";
+					$query = mysqli_query($db,$sql);
+					while($data_teahcer_act=$query->fetch_assoc()){
+						$teacher_activity_id_arr[] = $data_teahcer_act['teacher_activity_id'];
+				}
+				//deleting the special teacher activity and special activity mapping
+				if(count($teacher_activity_id_arr)>0){
+					foreach($teacher_activity_id_arr as $teacher_act_id){
+						$sql_delete_teache_act = "delete from teacher_activity where id='".$teacher_act_id."'";
+						$query_delete = mysqli_query($db,$sql_delete_teache_act);
+						$sql_delete_mapping_act = "delete from special_activity_mapping where teacher_activity_id='".$teacher_act_id."'";
+						$query_delete1 = mysqli_query($db,$sql_delete_mapping_act);
+					}
+				}
+				echo 1;
+		}
+    	break;
 }
 ?>

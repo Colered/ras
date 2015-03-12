@@ -562,76 +562,18 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		}		
 		break;
 		case "addEditSpecialActivity":
-			$subject_id="";
-			$session_id="";
-			$start_time="";
-			$currentDateTime = date("Y-m-d H:i:s");
-			$obj_SA = new SpecialActivity();
-			$last_activity_record=$obj_SA->activityLastReocrd();
-			$act_name_num= ltrim ($last_activity_record['name'],'A');
-			$objTeach = new Teacher();
-			if($_POST['special_activity']!="" && $_POST['special_activity_type']!="2" && $_POST['slctProgram']!="" && $_POST['slctCycle']!=""){
-			   	$ot_timeslotArr = array();
-			   	$ot_timeslot = $_POST['ot_tslot_id'];
-			   	if ($ot_timeslot){
-					foreach($ot_timeslot as $value){
-						$ot_timeslotArr[]=$value;
-				  }
-				}
-				$act_name_num = $act_name_num+1;
-				$act_name='A'.$act_name_num;
-				$ot_timeslot_str = implode(',',$ot_timeslotArr);
-				$ts_ids = $objTeach->getTimeslotId($ot_timeslot_str);
-				$ts_id_Arr = explode(',',$ts_ids);
-				$start_time = $ts_id_Arr['0'];
-					$result = mysqli_query($db, "INSERT INTO teacher_activity VALUES ('','".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$subject_id."','".$session_id."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ts_ids."','".$start_time."','".$_POST['oneTimeDate']."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
-					$last_id = mysqli_insert_id($db);
-					$result_mapping = mysqli_query($db, "INSERT INTO special_activity_mapping VALUES ('','".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$currentDateTime."','".$currentDateTime."') ");
-				if($result){
-					header('Location: special_activity_view.php');
-				}else{
-					$message="Not inserted ";
-					$_SESSION['error_msg'] = $message;
-					header('Location: special_activity.php');
-				}	
-		   	}else{
-				
-			   foreach($_POST['ruleval'] as $ruleId){
-				$ruleStartEnddate = $obj_SA->ruleStartEndDate($ruleId);
-				$ruleTimeslot = $obj_SA->ruleTimeslotandDay($ruleId);
-				$startPADate=$ruleStartEnddate['start_date'];
-				$endPADate=$ruleStartEnddate['end_date'];
-				$endPADate = date('Y-m-d',strtotime($endPADate . "+1 days"));
-				$begin = new DateTime($startPADate);
-				$end = new DateTime($endPADate);
-				$interval = DateInterval::createFromDateString('1 day');
-				$period = new DatePeriod($begin, $interval, $end);
-					foreach ( $period as $dt ){
-							$act_name_num = $act_name_num+1;
-							$act_name='A'.$act_name_num ;
-							$date_str=$dt->format( "Y-m-d \n" );
-							//check if the date is not added as exception for the selected rule
-							$exception_query="select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date='".$date_str."'";
-							$q_res = mysqli_query($db, $exception_query);
-							$dataAll = mysqli_fetch_assoc($q_res);
-							if(count($dataAll)==0)
-							{
-								$date_wk_day=date('l', strtotime($date_str));
-								$day_of_week = date('N', strtotime($date_wk_day));
-								$day_num=$day_of_week-1;
-								foreach($ruleTimeslot as  $key=>$val){
-									if($key==$day_num){
-										$ts_id_Arr = explode(',',$val);
-										$start_time = $ts_id_Arr['0'];	
-										$result = mysqli_query($db, "INSERT INTO teacher_activity VALUES ('','".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$subject_id."','".$session_id."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$val."','".$start_time."','".$date_str."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
-										$last_id = mysqli_insert_id($db);
-										$result_mapping = mysqli_query($db, "INSERT INTO special_activity_mapping VALUES ('','".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$currentDateTime."','".$currentDateTime."') ");
-									}
-								}
-							}
-					}
-				}
-		   }	
-		}
+			$obj=new SpecialActivity();
+			if(isset($_POST['special_act_id']) && $_POST['special_act_id']!=''){
+				$resp = $obj->updateSpecialActivity();//update a SpecialActivity
+			}else{echo "kk";die;
+				$resp = $obj->addSpecialActivity();//add new SpecialActivity
+			}
+			if($resp){
+				header('Location: special_activity_view.php');
+			}else{
+				header('Location: /special_activity.php');
+			}
+		break;	
+	}
 }
 ?>
