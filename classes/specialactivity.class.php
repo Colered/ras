@@ -116,14 +116,17 @@ class SpecialActivity extends Base {
 				foreach($_POST['ruleval'] as $ruleId){
 					$sql = "select teacher_activity_id from  special_activity_mapping where special_activity_rule_id ='".$ruleId."' ";
 					$query = mysqli_query($this->conn,$sql);
+					$teacher_activity_id_arr=array();
 					while($data_teahcer_act=$query->fetch_assoc()){
 						$teacher_activity_id_arr[] = $data_teahcer_act['teacher_activity_id'];
 					}
-					foreach($teacher_activity_id_arr as $teacher_act_id){
-						$sql_delete_teache_act = "delete from teacher_activity where id='".$teacher_act_id."'";
-						$query_delete = mysqli_query($this->conn,$sql_delete_teache_act);
-						$sql_delete_mapping_act = "delete from special_activity_mapping where teacher_activity_id='".$teacher_act_id."'";
-						$query_delete1 = mysqli_query($this->conn,$sql_delete_mapping_act);
+					if(count($teacher_activity_id_arr)>0){
+						foreach($teacher_activity_id_arr as $teacher_act_id){
+							$sql_delete_teache_act = "delete from teacher_activity where id='".$teacher_act_id."'";
+							$query_delete = mysqli_query($this->conn,$sql_delete_teache_act);
+							$sql_delete_mapping_act = "delete from special_activity_mapping where teacher_activity_id='".$teacher_act_id."'";
+							$query_delete1 = mysqli_query($this->conn,$sql_delete_mapping_act);
+						}
 					}
 				}
 				//inserting new mapping
@@ -141,10 +144,9 @@ class SpecialActivity extends Base {
 							$act_name_num = $act_name_num+1;
 							$act_name='A'.$act_name_num ;
 							$date_str=$dt->format( "Y-m-d \n" );
-							
 							//check if the date is not added as exception for the selected rule
 							$exception_query="select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date='".$date_str."'";
-							$q_res = mysqli_query($db, $exception_query);
+							$q_res = mysqli_query($this->conn, $exception_query);
 							$dataAll = mysqli_fetch_assoc($q_res);
 							if(count($dataAll)==0){
 							$date_wk_day=date('l', strtotime($date_str));
