@@ -1759,6 +1759,16 @@ switch ($codeBlock) {
 											$cycle_id = $v['cycle_id'];
 											$subject_id = $v['subject_id'];
 											$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
+											if($v['reserved_flag'] == '3')
+											{
+												$description = "Recess Activity - ".$program_name;
+											}elseif($v['reserved_flag'] == '4')
+											{
+												$description = "Group Meeting";
+											}elseif($v['reserved_flag'] == '5')
+											{
+												$description = "Adhoc Activity";
+											}											
 											$date = $v['date'];
 											$date_add = date("Y-m-d H:i:s");
 											$date_upd = date("Y-m-d H:i:s");
@@ -1803,7 +1813,7 @@ switch ($codeBlock) {
 							}
 						}
 					}else{
-						$message="System could not generate yout timetable. Please check your data first.";
+						$message="System could not generate your timetable. Please check your data first.";
 						$_SESSION['error_msg'] = $message;
 						echo "Timetable-Error";
 					}

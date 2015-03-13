@@ -289,7 +289,7 @@ class Timetable extends Base {
 											if(!$this->search_array($res_act_detail['name'],$reserved_array)) 
 											{
 												$end_time = date("h:i A", strtotime($start_time." + ".$res_act_detail['duration']." minutes"));							
-												$activities_array =$this->makeArray($date,$cycle_id,$res_act_detail['activity_id'],$res_act_detail['name'],$res_act_detail['program_year_id'],$res_act_detail['area_id'],$res_act_detail['program_name'],$res_act_detail['teacher_id'],$res_act_detail['teacher_name'],$res_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$res_act_detail['session_id'],$res_act_detail['session_name'],$res_act_detail['subject_id'],$res_act_detail['subject_name'],$res_act_detail['order_number']);
+												$activities_array =$this->makeArray($date,$cycle_id,$res_act_detail['activity_id'],$res_act_detail['name'],$res_act_detail['program_year_id'],$res_act_detail['area_id'],$res_act_detail['program_name'],$res_act_detail['teacher_id'],$res_act_detail['teacher_name'],$res_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$res_act_detail['session_id'],$res_act_detail['session_name'],$res_act_detail['subject_id'],$res_act_detail['subject_name'],$res_act_detail['order_number'],$res_act_detail['reserved_flag']);
 												$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 												$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $res_act_detail['room_id'];
 												$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $res_act_detail['teacher_id'];
@@ -314,7 +314,7 @@ class Timetable extends Base {
 														{
 															if($this->checkRoomAvailability($res_act_detail['room_id'],$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$res_act_detail['room_id'],$reserved_rooms))
 															{
-																$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number']);
+																$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag']);
 																$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $res_act_detail['room_id'];
 																$ts_array = explode(",",$recess_act_detail['timeslot_id']);
@@ -355,7 +355,7 @@ class Timetable extends Base {
 																{
 																	$room_name = $this->getRoomName($room_id);
 																	//allocate group meeting
-																	$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number']);
+																	$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number'],$meeting_detail['reserved_flag']);
 																	$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time] = $activities_array;
 																	$reserved_rooms[$date][$meet_start_time." - ".$meet_end_time][$i] = $room_id;
 																	$ts_array = explode(",",$meeting_detail['timeslot_id']);
@@ -398,7 +398,7 @@ class Timetable extends Base {
 																	{
 																		$room_name = $this->getRoomName($room_id);
 																		//allocate group meeting
-																		$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number']);
+																		$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag']);
 																		$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 																		$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
 																		$ts_array = explode(",",$adh_act_detail['timeslot_id']);
@@ -579,7 +579,7 @@ class Timetable extends Base {
 																					$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
 																					if($ts_cnt == count($time))
 																					{
-																						$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number']);
+																						$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag']);
 																						$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																						$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $room_id;
 																						$times_array = explode(",",$recess_act_detail['timeslot_id']);
@@ -597,7 +597,7 @@ class Timetable extends Base {
 																				{
 																					//Append the reserved activity array here
 																					$room_name = $this->getRoomName($room_id);
-																					$activities_array =$this->makeArray($date,$cycle_id,$free_act_detail['activity_id'],$free_act_detail['name'],$free_act_detail['program_year_id'],$free_act_detail['area_id'],$free_act_detail['program_name'],$free_act_detail['teacher_id'],$free_act_detail['teacher_name'],$free_act_detail['teacher_type'],$room_id,$room_name,$free_act_detail['session_id'],$free_act_detail['session_name'],$free_act_detail['subject_id'],$free_act_detail['subject_name'],$free_act_detail['order_number']);
+																					$activities_array =$this->makeArray($date,$cycle_id,$free_act_detail['activity_id'],$free_act_detail['name'],$free_act_detail['program_year_id'],$free_act_detail['area_id'],$free_act_detail['program_name'],$free_act_detail['teacher_id'],$free_act_detail['teacher_name'],$free_act_detail['teacher_type'],$room_id,$room_name,$free_act_detail['session_id'],$free_act_detail['session_name'],$free_act_detail['subject_id'],$free_act_detail['subject_name'],$free_act_detail['order_number'],$free_act_detail['reserved_flag']);
 																					$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 																					$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $free_act_detail['teacher_id'];
 																					$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
@@ -706,7 +706,7 @@ class Timetable extends Base {
 											{
 												$room_name = $this->getRoomName($room_id);
 												//allocate group meeting
-												$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number']);
+												$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number'],$meeting_detail['reserved_flag']);
 												$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time] = $activities_array;
 												$reserved_rooms[$date][$meet_start_time." - ".$meet_end_time][$i] = $room_id;
 												$times_array = explode(",",$meeting_detail['timeslot_id']);
@@ -747,7 +747,7 @@ class Timetable extends Base {
 											{
 												$room_name = $this->getRoomName($room_id);
 												//allocate group meeting
-												$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number']);
+												$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag']);
 												$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 												$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
 												$times_array = explode(",",$adh_act_detail['timeslot_id']);
@@ -1044,7 +1044,7 @@ class Timetable extends Base {
 	}
 
 	//Function to make final reserved array
-	public function makeArray($date,$cycle_id,$activity_id,$name,$program_year_id,$area_id,$program_name,$teacher_id,$teacher_name,$teacher_type,$room_id,$room_name,$session_id,$session_name,$subject_id,$subject_name,$order_number)
+	public function makeArray($date,$cycle_id,$activity_id,$name,$program_year_id,$area_id,$program_name,$teacher_id,$teacher_name,$teacher_type,$room_id,$room_name,$session_id,$session_name,$subject_id,$subject_name,$order_number,$reserved_flag)
 	{
 		$activities_array = array();
 		$activities_array['activity_id'] = $activity_id;
@@ -1064,6 +1064,7 @@ class Timetable extends Base {
 		$activities_array['subject_order'] = $subject_id."-".$order_number;
 		$activities_array['date'] = $date;
 		$activities_array['cycle_id'] = $cycle_id;
+		$activities_array['reserved_flag'] = $reserved_flag;
 		return $activities_array;
 	}
 
@@ -1084,7 +1085,7 @@ class Timetable extends Base {
 	public function searchReservedActivities()
 	{
 		$reserved_activities = array();
-		$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.act_date,ta.program_year_id,ta.cycle_id,py.name as program_name, ta.subject_id,su.subject_name,su.area_id,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,ta.room_id,r.room_name,s.order_number,s.duration, ta.start_time,ta.timeslot_id, b.location_id, ta.forced_flag from teacher_activity ta 
+		$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.act_date,ta.program_year_id,ta.cycle_id,py.name as program_name, ta.subject_id,su.subject_name,su.area_id,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,ta.room_id,r.room_name,s.order_number,s.duration, ta.start_time,ta.timeslot_id, b.location_id, ta.forced_flag,ta.reserved_flag from teacher_activity ta 
 		left join subject_session s on s.id = ta.session_id
 		left join program_years py on py.id = ta.program_year_id
 		left join subject su on su.id = ta.subject_id
@@ -1115,6 +1116,7 @@ class Timetable extends Base {
 			$reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['timeslot_id'] = $result_reserv_act['timeslot_id'];
 			$reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['location_id'] = $result_reserv_act['location_id'];
 			$reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['forced_flag'] = $result_reserv_act['forced_flag'];
+			$reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['reserved_flag'] = $result_reserv_act['reserved_flag'];
 		}
 		return $reserved_activities;
 	}
@@ -1123,7 +1125,7 @@ class Timetable extends Base {
 	public function searchSemiReservedActivities()
 	{
 		$semi_reserved_activities = array();
-		$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.act_date,ta.program_year_id,ta.cycle_id,py.name as program_name, ta.subject_id,su.subject_name,su.area_id,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,ta.room_id,r.room_name,s.order_number,s.duration, ta.start_time,ta.timeslot_id, b.location_id, ta.forced_flag from teacher_activity ta 
+		$sql_reserv_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.act_date,ta.program_year_id,ta.cycle_id,py.name as program_name, ta.subject_id,su.subject_name,su.area_id,ta.session_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,ta.room_id,r.room_name,s.order_number,s.duration, ta.start_time,ta.timeslot_id, b.location_id, ta.forced_flag,ta.reserved_flag from teacher_activity ta 
 		left join subject_session s on s.id = ta.session_id
 		left join program_years py on py.id = ta.program_year_id
 		left join subject su on su.id = ta.subject_id
@@ -1152,7 +1154,8 @@ class Timetable extends Base {
 			$semi_reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['order_number'] = $result_reserv_act['order_number'];
 			$semi_reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['duration'] = $result_reserv_act['duration'];
 			$semi_reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['timeslot_id'] = $result_reserv_act['timeslot_id'];
-			$semi_reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['location_id'] = $result_reserv_act['location_id'];			
+			$semi_reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['location_id'] = $result_reserv_act['location_id'];
+			$semi_reserved_activities[$result_reserv_act['act_date']][$result_reserv_act['activity_id']]['reserved_flag'] = $result_reserv_act['reserved_flag'];
 		}
 		return $semi_reserved_activities;
 	}
@@ -1161,7 +1164,7 @@ class Timetable extends Base {
 	public function searchFreeActivities($program_id,$cycle_id)
 	{
 		$free_activities = array();
-		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration 
+		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration,ta.reserved_flag
 							from teacher_activity ta 
 							left join subject_session s on s.id = ta.session_id 
 							left join program_years py on py.id = ta.program_year_id 
@@ -1185,6 +1188,7 @@ class Timetable extends Base {
 			$free_activities[$result_free_act['activity_id']]['teacher_type'] = $result_free_act['teacher_type'];
 			$free_activities[$result_free_act['activity_id']]['order_number'] = $result_free_act['order_number'];
 			$free_activities[$result_free_act['activity_id']]['duration'] = $result_free_act['duration'];
+			$free_activities[$result_free_act['activity_id']]['reserved_flag'] = $result_free_act['reserved_flag'];
 		}
 		return $free_activities;
 	}
@@ -1193,7 +1197,7 @@ class Timetable extends Base {
 	public function searchRecessActivities()
 	{
 		$recess_activities = array();
-		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.start_time,ta.timeslot_id,ta.act_date,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration 
+		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.start_time,ta.timeslot_id,ta.act_date,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration,ta.reserved_flag 
 							from teacher_activity ta 
 							left join subject_session s on s.id = ta.session_id 
 							left join program_years py on py.id = ta.program_year_id 
@@ -1219,6 +1223,7 @@ class Timetable extends Base {
 			$recess_activities[$result_free_act['act_date']][$result_free_act['program_year_id']][$result_free_act['activity_id']]['duration'] = $result_free_act['duration'];
 			$recess_activities[$result_free_act['act_date']][$result_free_act['program_year_id']][$result_free_act['activity_id']]['timeslot_id'] = $result_free_act['timeslot_id'];
 			$recess_activities[$result_free_act['act_date']][$result_free_act['program_year_id']][$result_free_act['activity_id']]['start_time'] = $result_free_act['start_time'];
+			$recess_activities[$result_free_act['act_date']][$result_free_act['program_year_id']][$result_free_act['activity_id']]['reserved_flag'] = $result_free_act['reserved_flag'];
 		}
 		return $recess_activities;
 	}
@@ -1234,7 +1239,7 @@ class Timetable extends Base {
 	public function searchGroupMeetings()
 	{
 		$group_meetings = array();
-		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.start_time,ta.timeslot_id,ta.act_date,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration,ta.room_id 
+		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.start_time,ta.timeslot_id,ta.act_date,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration,ta.room_id,ta.reserved_flag 
 							from teacher_activity ta 
 							left join subject_session s on s.id = ta.session_id 
 							left join program_years py on py.id = ta.program_year_id 
@@ -1261,6 +1266,7 @@ class Timetable extends Base {
 			$group_meetings[$result_free_act['act_date']][$result_free_act['activity_id']]['timeslot_id'] = $result_free_act['timeslot_id'];
 			$group_meetings[$result_free_act['act_date']][$result_free_act['activity_id']]['start_time'] = $result_free_act['start_time'];
 			$group_meetings[$result_free_act['act_date']][$result_free_act['activity_id']]['room_id'] = $result_free_act['room_id'];
+			$group_meetings[$result_free_act['act_date']][$result_free_act['activity_id']]['reserved_flag'] = $result_free_act['reserved_flag'];
 		}
 		return $group_meetings;
 	}
@@ -1269,7 +1275,7 @@ class Timetable extends Base {
 	public function searchAdhocActivities()
 	{
 		$adhoc_activities = array();
-		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.start_time,ta.timeslot_id,ta.act_date,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration ,ta.room_id
+		$sql_free_act = $this->conn->query("select ta.id as activity_id,ta.start_time,ta.timeslot_id,ta.act_date,ta.name,ta.program_year_id,py.name as program_name, ta.subject_id, su.subject_name,su.area_id, ta.session_id,ta.cycle_id,s.session_name as session_name,ta.teacher_id,t.teacher_name,t.teacher_type,s.order_number,s.duration ,ta.room_id,ta.reserved_flag
 							from teacher_activity ta 
 							left join subject_session s on s.id = ta.session_id 
 							left join program_years py on py.id = ta.program_year_id 
@@ -1296,6 +1302,7 @@ class Timetable extends Base {
 			$adhoc_activities[$result_free_act['act_date']][$result_free_act['activity_id']]['timeslot_id'] = $result_free_act['timeslot_id'];
 			$adhoc_activities[$result_free_act['act_date']][$result_free_act['activity_id']]['start_time'] = $result_free_act['start_time'];
 			$adhoc_activities[$result_free_act['act_date']][$result_free_act['activity_id']]['room_id'] = $result_free_act['room_id'];
+			$adhoc_activities[$result_free_act['act_date']][$result_free_act['activity_id']]['reserved_flag'] = $result_free_act['reserved_flag'];
 		}
 		return $adhoc_activities;
 	}
@@ -1379,7 +1386,7 @@ class Timetable extends Base {
 																	$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
 																	if($ts_cnt == count($time))
 																	{
-																		$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number']);
+																		$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag']);
 																		$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																		$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $room_id;
 																		$times_array = explode(",",$recess_act_detail['timeslot_id']);
@@ -1413,7 +1420,7 @@ class Timetable extends Base {
 																			{
 																				$room_name = $this->getRoomName($room_id);
 																				//allocate group meeting
-																				$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number']);
+																				$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number'],$meeting_detail['reserved_flag']);
 																				$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time] = $activities_array;
 																				$reserved_rooms[$date][$meet_start_time." - ".$meet_end_time][$i] = $room_id;
 																				$times_array = explode(",",$meeting_detail['timeslot_id']);
@@ -1453,7 +1460,7 @@ class Timetable extends Base {
 																				{
 																					$room_name = $this->getRoomName($room_id);
 																					//allocate group meeting
-																					$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number']);
+																					$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag']);
 																					$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 																					$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
 																					$times_array = explode(",",$adh_act_detail['timeslot_id']);
@@ -1476,7 +1483,7 @@ class Timetable extends Base {
 																{
 																	//Append the reserved array
 																	$times_array = explode(",",$semi_res_act_detail['timeslot_id']);
-																	$activities_array =$this->makeArray($date,$cycle_id,$semi_res_act_detail['activity_id'],$semi_res_act_detail['name'],$semi_res_act_detail['program_year_id'],$semi_res_act_detail['area_id'],$semi_res_act_detail['program_name'],$semi_res_act_detail['teacher_id'],$semi_res_act_detail['teacher_name'],$semi_res_act_detail['teacher_type'],$room_id,$room_name,$semi_res_act_detail['session_id'],$semi_res_act_detail['session_name'],$semi_res_act_detail['subject_id'],$semi_res_act_detail['subject_name'],$semi_res_act_detail['order_number']);
+																	$activities_array =$this->makeArray($date,$cycle_id,$semi_res_act_detail['activity_id'],$semi_res_act_detail['name'],$semi_res_act_detail['program_year_id'],$semi_res_act_detail['area_id'],$semi_res_act_detail['program_name'],$semi_res_act_detail['teacher_id'],$semi_res_act_detail['teacher_name'],$semi_res_act_detail['teacher_type'],$room_id,$room_name,$semi_res_act_detail['session_id'],$semi_res_act_detail['session_name'],$semi_res_act_detail['subject_id'],$semi_res_act_detail['subject_name'],$semi_res_act_detail['order_number'],$semi_res_act_detail['reserved_flag']);
 																	$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 																	$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $semi_res_act_detail['teacher_id'];
 																	$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
@@ -1582,7 +1589,7 @@ class Timetable extends Base {
 																					$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
 																					if($ts_cnt == count($time))
 																					{
-																						$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number']);
+																						$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag']);
 																						$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																						$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $room_id;
 																						$times_array = explode(",",$recess_act_detail['timeslot_id']);
@@ -1616,7 +1623,7 @@ class Timetable extends Base {
 																							{
 																								$room_name = $this->getRoomName($room_id);
 																								//allocate group meeting
-																								$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number']);
+																								$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number'],$meeting_detail['reserved_flag']);
 																								$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time] = $activities_array;
 																								$reserved_rooms[$date][$meet_start_time." - ".$meet_end_time][$i] = $room_id;
 																								$times_array = explode(",",$meeting_detail['timeslot_id']);
@@ -1657,7 +1664,7 @@ class Timetable extends Base {
 																								{
 																									$room_name = $this->getRoomName($room_id);
 																									//allocate group meeting
-																									$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number']);
+																									$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag']);
 																									$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 																									$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
 																									$times_array = explode(",",$adh_act_detail['timeslot_id']);
@@ -1679,7 +1686,7 @@ class Timetable extends Base {
 																				if($ts_cnt == count($time))
 																				{
 																					//Append the reserved array
-																					$activities_array =$this->makeArray($date,$cycle_id,$semi_res_act_detail['activity_id'],$semi_res_act_detail['name'],$semi_res_act_detail['program_year_id'],$semi_res_act_detail['area_id'],$semi_res_act_detail['program_name'],$semi_res_act_detail['teacher_id'],$semi_res_act_detail['teacher_name'],$semi_res_act_detail['teacher_type'],$room_id,$room_name,$semi_res_act_detail['session_id'],$semi_res_act_detail['session_name'],$semi_res_act_detail['subject_id'],$semi_res_act_detail['subject_name'],$semi_res_act_detail['order_number']);
+																					$activities_array =$this->makeArray($date,$cycle_id,$semi_res_act_detail['activity_id'],$semi_res_act_detail['name'],$semi_res_act_detail['program_year_id'],$semi_res_act_detail['area_id'],$semi_res_act_detail['program_name'],$semi_res_act_detail['teacher_id'],$semi_res_act_detail['teacher_name'],$semi_res_act_detail['teacher_type'],$room_id,$room_name,$semi_res_act_detail['session_id'],$semi_res_act_detail['session_name'],$semi_res_act_detail['subject_id'],$semi_res_act_detail['subject_name'],$semi_res_act_detail['order_number'],$semi_res_act_detail['reserved_flag']);
 																					$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 																					$reserved_teachers[$date][$start_time." - ".$end_time][$i] = $semi_res_act_detail['teacher_id'];
 																					$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
