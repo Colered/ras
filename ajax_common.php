@@ -2048,14 +2048,22 @@ switch ($codeBlock) {
     	break;
 		case "special_activity_listing":
 			if(isset($_POST['activity']) && $_POST['activity_type']!=""){
-				$sql = "select special_activity_rule_id from  special_activity_mapping where special_activity_type ='".$_POST['activity_type']."' group by special_activity_rule_id ";
+			  $sql = "select ta.id,ta.reserved_flag,sam.special_activity_rule_id,sam.special_activity_type from  teacher_activity ta 
+					left join  special_activity_mapping sam on(sam.teacher_activity_id = ta.id) 
+					where reserved_flag ='".$_POST['activity']."' and sam.special_activity_type='".$_POST['activity_type']."' ";
+					
+			//$sql = "select special_activity_rule_id from  special_activity_mapping where special_activity_type ='".$_POST['activity_type']."' group by special_activity_rule_id ";				
 				$query = mysqli_query($db,$sql);
-				$ruleIdArr = array();
+				//print_r($query );die;
+				$ruleIdArr =$ruleIdArrNew= $actIdArr=array();
 				while ($data = mysqli_fetch_array($query)){
 					$ruleIdArr[] = $data['special_activity_rule_id'];
+					$actIdArr[] = $data['id'];
 				}
-				$rule_id_str = implode(',',$ruleIdArr);
-				echo $rule_id_str;
+				$ruleIdArrNew = array_unique($ruleIdArr);
+				$rule_id_str = implode(',',$ruleIdArrNew);
+				$act_id_str = implode(',',$actIdArr);
+				echo $rule_id_str.'-'.$act_id_str;
 			}else{
 				$message="Please enter activity and activity_type to listing activities";
 				$_SESSION['error_msg'] = $message;
@@ -2063,12 +2071,12 @@ switch ($codeBlock) {
 			}
 		break;
 		case "special_activity_periodic":
-			if(isset($_POST['checkedRuleidsCkb']) && $_POST['checkedRuleidsCkb']!=""){
+			if((isset($_POST['checkedRuleidsCkb']) && $_POST['checkedRuleidsCkb']!="") && (isset($_POST['activityIdArr']) && $_POST['activityIdArr']!="")){
 				$objT = new Teacher();
 				$data_special_activity = array();
 				$obj_SA=new SpecialActivity();
 				$rule_ids = implode(',', $_POST['checkedRuleidsCkb']);
-				$result = $obj_SA->getSpecialActivityDetail($rule_ids,$_POST['activity_new']);
+				$result = $obj_SA->getSpecialActivityDetail($_POST['activityIdArr']);
 				$html="";
 				$html.='<div><h>Special Activity Listing:-</h></div>';
 				$html.='<table id="datatables" class="display tblActivity">
@@ -2098,7 +2106,7 @@ switch ($codeBlock) {
 						   $max_ts_id = $timeslot_arr[count($timeslot_arr)-1];
 						   if($row['reserved_flag']=="3"){$recess="Recess Activity";}
 						   if($row['reserved_flag']=="4"){$recess="Group Activity";}
-						   if($row['reserved_flag']=="4"){$recess="AdHoc Activity";}
+						   if($row['reserved_flag']=="5"){$recess="AdHoc Activity";}
 						   if($row['subject_id']=="0"){$subject_name="N/A";}
 						   if($row['session_id']=="0"){$session_name="N/A";}
 						   	if($row['room_id']=="0"){
@@ -2127,20 +2135,14 @@ switch ($codeBlock) {
 								<a href="#" class="table-icon delete" onClick="deleteSpecialActivity('.$row['id'].')"></a>
 							</td>';
 							$html.='</tr>';
-							
-							
-								
 						} 
-									
 				$html.='</tbody>
             </table>';
 			echo $html;
-			}
-			}else{
-				$message="Please enter activity and activity_type to listing activities";
-				$_SESSION['error_msg'] = $message;
-				header('Location: index.php');	
-			}
+			 }
+		}else{
+			echo $html="";
+		}
 			break;
 }
 ?>

@@ -3209,7 +3209,11 @@ function deleteRuleSpecialActivity($id){
     return false;
 }
 function listingSpecialAct(){
-	if($('#special_activity').val()!="" && $('#special_activity_type').val()=="2"){
+	var ele = $("ul.rule").find('input[type=checkbox]');
+    if(ele.is(':checked')){
+		ele.removeAttr('checked');
+    }
+	if($('#special_activity').val()!="" && $('#special_activity_type').val()!=""){
 		var activity=$('#special_activity').val();
 		var activity_type=$('#special_activity_type').val();
 		$.ajax({
@@ -3221,24 +3225,32 @@ function listingSpecialAct(){
 					'codeBlock': 'special_activity_listing',
 				},
 				success: function($succ){
+					var ruleIdActid_str = $succ.split('-');
+					var ruleIdActid_Arr = new Array();
+					for (var i = 0; i < ruleIdActid_str.length; i++){
+						ruleIdActid_Arr.push(ruleIdActid_str[i]);
+					}
 					var checkedRuleCkb = new Array();
-					var rule_ids = $succ.split(',');
-					for (var i = 0; i < rule_ids.length; i++) {
-						$("input[name='ruleval[]']").each(function (){
-							 if(rule_ids[i]==parseInt($(this).val())){
-								$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", true);
-								checkedRuleCkb.push($(this).val());
-							 }
-						});
-						
+					var rule_ids = ruleIdActid_Arr[0].split(',');
+					if($('#special_activity_type').val()!="1"){
+						for (var i = 0; i < rule_ids.length; i++) {
+							$("input[name='ruleval[]']").each(function (){
+								 if(rule_ids[i]==parseInt($(this).val())){
+									 //$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", "checked");
+									$('input[type=checkbox][value='+rule_ids[i]+']').prop('checked', true);
+									checkedRuleCkb.push($(this).val());
+								 }
+							});
+						}
+					}else{
+						checkedRuleCkb.push(0);
 					}
 					if (checkedRuleCkb.length!= 0){
 						$.ajax({
 								type: "POST",
 								url: "ajax_common.php",
 								data: {
-									'activity_new': activity,
-									'activity_type_new': activity_type,
+									'activityIdArr': ruleIdActid_Arr[1],
 									'checkedRuleidsCkb': checkedRuleCkb,
 									'codeBlock': 'special_activity_periodic',
 								},
