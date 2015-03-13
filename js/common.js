@@ -3225,6 +3225,7 @@ function listingSpecialAct(){
 					'codeBlock': 'special_activity_listing',
 				},
 				success: function($succ){
+					alert($succ);
 					var ruleIdActid_str = $succ.split('-');
 					var ruleIdActid_Arr = new Array();
 					for (var i = 0; i < ruleIdActid_str.length; i++){
@@ -3233,15 +3234,19 @@ function listingSpecialAct(){
 					var checkedRuleCkb = new Array();
 					var rule_ids = ruleIdActid_Arr[0].split(',');
 					if($('#special_activity_type').val()!="1"){
-						for (var i = 0; i < rule_ids.length; i++) {
-							$("input[name='ruleval[]']").each(function (){
-								 if(rule_ids[i]==parseInt($(this).val())){
-									 //$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", "checked");
-									$('input[type=checkbox][value='+rule_ids[i]+']').prop('checked', true);
-									checkedRuleCkb.push($(this).val());
-								 }
-							});
-						}
+						if($succ=='-'){
+							$(".special_act_list").html("");
+						}else{
+							for (var i = 0; i < rule_ids.length; i++) {
+								$("input[name='ruleval[]']").each(function (){
+									 if(rule_ids[i]==parseInt($(this).val())){
+										 //$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", "checked");
+										$('input[type=checkbox][value='+rule_ids[i]+']').prop('checked', true);
+										checkedRuleCkb.push($(this).val());
+									 }
+								});
+							}
+					  }
 					}else{
 						checkedRuleCkb.push(0);
 					}
@@ -3255,6 +3260,7 @@ function listingSpecialAct(){
 									'codeBlock': 'special_activity_periodic',
 								},
 								success: function($succ1){
+									alert($succ1);
 									$(".special_act_list").html($succ1);
 								}
 						});
