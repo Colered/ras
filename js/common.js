@@ -3225,7 +3225,6 @@ function listingSpecialAct(){
 					'codeBlock': 'special_activity_listing',
 				},
 				success: function($succ){
-					alert($succ);
 					var ruleIdActid_str = $succ.split('-');
 					var ruleIdActid_Arr = new Array();
 					for (var i = 0; i < ruleIdActid_str.length; i++){
@@ -3260,7 +3259,6 @@ function listingSpecialAct(){
 									'codeBlock': 'special_activity_periodic',
 								},
 								success: function($succ1){
-									alert($succ1);
 									$(".special_act_list").html($succ1);
 								}
 						});
