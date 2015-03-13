@@ -41,8 +41,8 @@ class SpecialActivity extends Base {
 		return $exceptionDate;
 	}
 	public function specialActivityDetail($special_act_id){
-		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.start_time,ta.reserved_flag,ta.act_date,sa.teacher_activity_id,sa.id,sa.special_activity_rule_id,sa.area_id,sa.special_activity_type,sa.duration FROM teacher_activity ta
-						left join  special_activity_mapping sa on(sa.id = ta.id)
+		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.start_time,ta.reserved_flag,ta.act_date,sa.teacher_activity_id,sa.id as special_id,sa.special_activity_rule_id,sa.area_id,sa.special_activity_type,sa.duration FROM teacher_activity ta
+						inner join  special_activity_mapping sa on(sa.teacher_activity_id = ta.id)
 						WHERE ta.id='".$special_act_id."' ";
 		$query = mysqli_query($this->conn,$sql);
 		$data=$query->fetch_assoc();
