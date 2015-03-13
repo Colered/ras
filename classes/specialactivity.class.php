@@ -82,7 +82,9 @@ class SpecialActivity extends Base {
 				$start_time = $ts_id_Arr['0'];
 				$result = mysqli_query($this->conn, "INSERT INTO teacher_activity VALUES ('','".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$subject_id."','".$session_id."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ot_timeslot_str."','".$start_time."','".$_POST['oneTimeDate']."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
 					$last_id = mysqli_insert_id($this->conn);
-					$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping VALUES ('','".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$_POST['duration']."','".$currentDateTime."','".$currentDateTime."') ");
+					if($last_id!=''){
+						$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping VALUES ('','".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$_POST['duration']."','".$currentDateTime."','".$currentDateTime."') ");
+					}
 				if($result){
 					$message="Activity has been inserted successfully";
 					$_SESSION['succ_msg'] = $message;
@@ -142,7 +144,9 @@ class SpecialActivity extends Base {
 								$duration = $ts_durationArr[1];
 								$result = mysqli_query($this->conn, "INSERT INTO teacher_activity VALUES ('','".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$subject_id."','".$session_id."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ts_durationArr[0]."','".$start_time."','".$date_str."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
 								$last_id = mysqli_insert_id($this->conn);
-								$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping VALUES ('','".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$currentDateTime."','".$currentDateTime."') ");
+								if($last_id!=''){
+									$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping VALUES ('','".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$currentDateTime."','".$currentDateTime."') ");
+								}
 							  }
 					   	    }
 						  }  
@@ -172,7 +176,9 @@ class SpecialActivity extends Base {
 				$ts_id_Arr = explode(',',$ot_timeslot_str);
 				$start_time = $ts_id_Arr['0'];
 				$result_update = mysqli_query($this->conn, "Update teacher_activity set timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$_POST['oneTimeDate']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['special_act_id']."' ");
-				$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set duration = '".$_POST['duration']."',date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$_POST['special_act_id']."' ");
+				if($result_update){
+					$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set duration = '".$_POST['duration']."',date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$_POST['special_act_id']."' ");
+				}
 				if($result_update==1 && $result_mapping_update==1){
 					$message="Activity has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
