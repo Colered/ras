@@ -137,6 +137,7 @@ function activityFilter()
 								 	$trBColor1 = '';
 								 	$tdColor = '';
 									$class = 'floating-activity';
+									$row['reason'] = '';
 									}
 							 }
 							$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';

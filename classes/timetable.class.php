@@ -218,7 +218,6 @@ class Timetable extends Base {
 			}
 		}
 		//print"<pre>";print_r($new_programs);die;
-
 		$reserved_array = array();
 		$reserved_teachers = array();
 		$reserved_rooms = array();
@@ -470,8 +469,7 @@ class Timetable extends Base {
 									}
 								}
 							}
-						}
-						//print"<pre>";print_r($reserved_array);die;
+						}						
 						//print"<pre>";print_r($reserved_teachers);die;					
 						//Calculate the unreserved timeslots for a date
 						$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
@@ -518,8 +516,7 @@ class Timetable extends Base {
 								$counter = $reserved_array['13'];
 								$reserved_array = $reserved_array['0'];	
 							}
-						}
-												
+						}																	
 						//process free activities only if some unallocated timeslots left for day
 						if(!empty($unreserved_times))
 						{
