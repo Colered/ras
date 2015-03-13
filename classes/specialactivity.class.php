@@ -194,7 +194,7 @@ class SpecialActivity extends Base {
 				header('Location: special_activity.php');
 			}
 	}
-	
+	//fetching detail for the listing special activity
 	public function getSpecialActivityDetail($special_act){
 		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name  FROM teacher_activity ta
 						left join subject s on(s.id = ta.subject_id)
@@ -206,5 +206,32 @@ class SpecialActivity extends Base {
 						WHERE ta.id IN ($special_act)";
 		$result =  $this->conn->query($sql);
 		return $result;				
+	}
+	
+	public function deleteSpecialActivityies(){
+		$sql = "SELECT ta.id  FROM teacher_activity ta
+						left join special_activity_mapping sam on(ta.id = sam.teacher_activity_id)
+						WHERE ta.reserved_flag='".$_POST['activity']."' and  sam.special_activity_type='".$_POST['activityType']."' and sam.special_activity_rule_id='".$_POST['id']."'";
+		$result =  $this->conn->query($sql);
+		$spActIds=array();
+		if($result->num_rows > 0 ){
+			while($data = $result->fetch_assoc()){
+				$spActIds[] =  $data['id'];
+			}
+			$ids_str = implode(',',$spActIds);
+			
+		    $del_sp_act_query="delete from teacher_activity where id IN ($ids_str)";
+			$this->conn->query($del_sp_act_query);
+			
+			$del_sp_act_mapping="delete from special_activity_mapping where teacher_activity_id IN ($ids_str)";
+			$this->conn->query($del_sp_act_mapping);
+			$message="Activities have been deleted successfully";
+			$_SESSION['succ_msg'] = $message;
+			return 1;
+		}else{
+		    $message="There is no activity to delete";
+			$_SESSION['succ_msg'] = $message;
+			return 0;
+		}
 	}
 }

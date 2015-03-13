@@ -2143,6 +2143,15 @@ switch ($codeBlock) {
 		}else{
 			echo $html="";
 		}
-			break;
+	break;
+	case "delete_rule_associated_activity":
+		if((isset($_POST['id']) && $_POST['id']!="") && (isset($_POST['activity']) && $_POST['activity']!="") && (isset($_POST['activityType']) && $_POST['activityType']!="")){
+			$obj_SA=new SpecialActivity();
+			$result_query = $obj_SA->deleteSpecialActivityies();
+			echo $result_query;
+		}else {
+			echo 0;
+		}
+	break;
 }
 ?>

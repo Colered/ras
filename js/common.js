@@ -3208,6 +3208,7 @@ function deleteRuleSpecialActivity($id){
     }
     return false;
 }
+//listing the special activity when selecting the activity (Recess/grup/adhoc) and activity type (onetime/periodic) 
 function listingSpecialAct(){
 	var ele = $("ul.rule").find('input[type=checkbox]');
     if(ele.is(':checked')){
@@ -3268,6 +3269,7 @@ function listingSpecialAct(){
            });
 	}
 }
+//validation for the special activity
 $(document).ready(function() {
 	$("#specialActivityForm").on("submit", function(){
 		if($("#special_activity").val()===""){
@@ -3303,4 +3305,69 @@ $(document).ready(function() {
 					return false;
 		}
 	});
+});
+//deleting the special activity which are associate rule
+function deleteAreassssss($id){
+	if($id==""){
+		alert("Please select a area to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Area?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_area',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest('tr').remove();
+						$('.green, .red').hide();
+					}else if($succ==2){
+						alert("Cannot delete this area as this is being used by some other subjects.");
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Area.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}
+
+$(document).ready(function() {
+   $('.rule__listed_ckb').click(function(){
+		if($(this).is(":checked")){
+		}else if($(this).is(":not(:checked)")){
+			var activity=$('#special_activity').val();
+			var activityType=$('#special_activity_type').val();
+			var rule_id=$(this).val();
+			if(rule_id==""){
+				alert("Please select a rule to delete");
+				return false;
+			}else if(confirm("Are you sure you want to delete the assciciated special activity ?")) {
+				$.ajax({
+						type: "POST",
+						url: "ajax_common.php",
+						data: {
+							'id': rule_id,
+							'activity': activity,
+							'activityType': activityType,
+							'codeBlock': 'delete_rule_associated_activity',
+						},
+						success: function($succ){
+							if($succ==1){
+								window.location.href = 'special_activity_view.php';
+								$('.green, .red').hide();
+							}else{
+								alert('Activity can not be delete');
+								$('.green, .red').hide();
+							}
+						}
+				});
+			}
+			return false;
+		}
+    });
 });
