@@ -96,22 +96,24 @@ class SpecialActivity extends Base {
 				}	
 				return 1;
 		   	}else{
+				$rulesIds= (isset($_POST['ruleval']) && $_POST['ruleval']!="") ?  $_POST['ruleval']:"";
+				$rulesIds_str = implode(',',$rulesIds);
 				//deleting old mapping
-				foreach($_POST['ruleval'] as $ruleId){
-					$sql = "select teacher_activity_id from  special_activity_mapping where special_activity_rule_id ='".$ruleId."' ";
-					$query = mysqli_query($this->conn,$sql);
-					$teacher_activity_id_arr=array();
-					while($data_teahcer_act=$query->fetch_assoc()){
-						$teacher_activity_id_arr[] = $data_teahcer_act['teacher_activity_id'];
+				$sql = "SELECT ta.id  FROM teacher_activity ta
+						left join special_activity_mapping sam on(ta.id = sam.teacher_activity_id)
+						WHERE ta.reserved_flag='".$_POST['special_activity']."' and  sam.special_activity_type='".$_POST['special_activity_type']."' and sam.special_activity_rule_id IN ($rulesIds_str)";
+				$result1 =  $this->conn->query($sql);
+				$spActIds=array();
+				if($result1->num_rows > 0 ){
+					while($data = $result1->fetch_assoc()){
+						$spActIds[] =  $data['id'];
 					}
-					if(count($teacher_activity_id_arr)>0){
-						foreach($teacher_activity_id_arr as $teacher_act_id){
-							$sql_delete_teache_act = "delete from teacher_activity where id='".$teacher_act_id."'";
-							$query_delete = mysqli_query($this->conn,$sql_delete_teache_act);
-							$sql_delete_mapping_act = "delete from special_activity_mapping where teacher_activity_id='".$teacher_act_id."'";
-							$query_delete1 = mysqli_query($this->conn,$sql_delete_mapping_act);
-						}
-					}
+					$ids_str = implode(',',$spActIds);
+					$del_sp_act_query="delete from teacher_activity where id IN ($ids_str)";
+					$this->conn->query($del_sp_act_query);
+					
+					$del_sp_act_mapping="delete from special_activity_mapping where teacher_activity_id IN ($ids_str)";
+					$this->conn->query($del_sp_act_mapping);
 				}
 				//inserting new mapping
 				foreach($_POST['ruleval'] as $ruleId){

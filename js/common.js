@@ -2800,6 +2800,11 @@ function acceptAllocationFun(){
 
 //To the accept allocation
 $(document).ready(function() {
+	$('.rule__listed_ckb').each(function() {
+		if(!$(this).prop('checked')) {
+			$(this).prop('disabled', true);
+		}
+	});					   
 	//To select/deselect for selectAll checkbox when all checkbox are selected or not
 	$(document).on('click', ".activityCkb", function() {
 			var desabledCkbCnt = $(".ckbDisabled").length;
@@ -3215,6 +3220,11 @@ function listingSpecialAct(){
 		ele.removeAttr('checked');
     }
 	if($('#special_activity').val()!="" && $('#special_activity_type').val()!=""){
+		$('.rule__listed_ckb').each(function() {
+			if(!$(this).prop('checked')) {
+				$(this).prop('disabled', false);
+			}
+		});	
 		var activity=$('#special_activity').val();
 		var activity_type=$('#special_activity_type').val();
 		$.ajax({
@@ -3332,7 +3342,8 @@ $(document).ready(function() {
 								window.location.href = 'special_activity_view.php';
 								$('.green, .red').hide();
 							}else{
-								alert('Activity can not be delete');
+								alert('Activity can not be deleted');
+								$('input[type=checkbox][value='+rule_id+']').prop('checked', false);
 								$('.green, .red').hide();
 							}
 						}
