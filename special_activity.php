@@ -123,7 +123,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 							<div class="custtd_left otAct <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
                        		</div>
                     		<div class="txtfield otAct <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
-                       			 Duration:<span class="redstar spanPrgm">*</span><select name="duration" id="duration" class="activity_row_chk" >
+                       			 Duration:<span class="redstar spanDuration">*</span><select name="duration" id="duration" class="activity_row_chk" >
                                         	<?php echo $option_duration;?>
                                     	  </select>
 									<script type="text/javascript">
