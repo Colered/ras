@@ -3181,7 +3181,7 @@ function deleteSpecialActivity($id){
 				},
                 success: function($succ){
 					if($succ==1){
-                        $('#'+$id).closest('tr').remove();
+						$('#'+$id).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected special activity.");

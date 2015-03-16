@@ -2079,7 +2079,7 @@ switch ($codeBlock) {
 				$result = $obj_SA->getSpecialActivityDetail($_POST['activityIdArr']);
 				$html="";
 				$html.='<div><h>Special Activity Listing:-</h></div>';
-				$html.='<table id="datatables" class="display tblActivity">
+				$html.='<table id="datatables" class="display tblSpActivity">
                 <thead>
                     <tr>
 					    <!--<th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" title="Select All"/></th>-->
@@ -2127,8 +2127,8 @@ switch ($codeBlock) {
 							<td>'.$room_id.'</td>
 							<td>'.$row['act_date'].'</td>
 							<td>'.$objT->getTimeslotById($min_ts_id,$max_ts_id).'</td>
-							<td><a href="special_activity.php?edit='.base64_encode($row['id']).'?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" onClick="deleteSpecialActivity('.$row['id'].')"></a>
+							<td id='.$row['id'].'><a href="special_activity.php?edit='.base64_encode($row['id']).'?>" class="table-icon edit" title="Edit"></a>
+								<a class="table-icon delete" onClick="deleteSpecialActivity('.$row['id'].')"></a>
 							</td>';
 							$html.='</tr>';
 						} 
