@@ -84,7 +84,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 <div id="content">
     <div id="main">
         <div class="full_w">
-            <div class="h_title">Recess Activity / Group Meetings</div>
+            <div class="h_title">Recess Activity / Group Meetings / Ad-hoc Activity</div>
 			<form name="specialActivityForm" id="specialActivityForm" action="postdata.php" method="post">
 				<input type="hidden" name="form_action" value="addEditSpecialActivity" />
 				<input type="hidden" id="special_act_id" name="special_act_id" value="<?php echo $special_act_id; ?>" />
@@ -98,7 +98,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 				<!-- new -->
 				<div class="addSubDiv" <?php //echo $disFDivCss; ?>>
                             <div class="custtd_left">
-                                <h2>Choose Activity<span class="redstar">*</span></h2>
+                                <h2 class="blod-text">Choose Activity Type<span class="redstar">*</span></h2>
                             </div>
                             <div class="txtfield">
                                 <select id="special_activity" name="special_activity" class="select1" onchange="specialActivity();" <?php echo $disabled;?>> 
@@ -110,10 +110,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                             </div>
                             <div class="clear"></div>
 							<div class="custtd_left actType">
-                                <h2>Choose Activity Type<span class="redstar spanActivityType">*</span></h2>
+                                <h2 class="blod-text">Choose Activity Frequency<span class="redstar spanActivityType">*</span></h2>
                             </div>
                             <div class="txtfield actType">
-                                <select id="special_activity_type" name="special_activity_type" class="select1" onchange="specialActivityType();" <?php echo $disabled;?>> 
+                                <select id="special_activity_type" name="special_activity_type" class="select1" onchange="specialActivity();" <?php echo $disabled;?>> 
 									<option value="" selected="selected">--Select--</option>
 									<option value="1" <?php if($special_activity_type == '1' || $special_activity_type == '2'){?> selected="selected"}<?php }?>>One Time Activity</option>
 									<option value="2">Periodic Activity</option>
@@ -123,15 +123,16 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 							<div class="custtd_left otAct <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
                        		</div>
                     		<div class="txtfield otAct <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
-                       			 Date:<input type="text" size="12" id="oneTimeDate"  name="oneTimeDate" class="txtfield" value="<?php 
-								 if($special_activity_type == '1' || $special_activity_type == '2')
-								 	{ echo $act_date;}else{ echo "";} ?>"/>
-								 Duration:<select name="duration" id="duration" class="activity_row_chk" >
+                       			 Duration:<span class="redstar spanPrgm">*</span><select name="duration" id="duration" class="activity_row_chk" >
                                         	<?php echo $option_duration;?>
                                     	  </select>
 									<script type="text/javascript">
                                         jQuery('#duration').val("<?php echo $duration; ?>");
                                     </script>
+								 Date:<input type="text" size="12" id="oneTimeDate"  name="oneTimeDate" class="txtfield" value="<?php 
+								 if($special_activity_type == '1' || $special_activity_type == '2')
+								 	{ echo $act_date;}else{ echo "";} ?>"/>
+								 
                                   Start Time:<select id="ot_tslot_id"  name="ot_tslot_id" >
                                         		<option value="">--Select--</option>
 												<?php echo $tslot_dropDwn;?>
@@ -250,6 +251,8 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 					</select>
                     </div>
                     <div class="clear"></div>
+					<h4 style="color:#999999">Note: Each non-mandatory field in the above form are just for information purpose only and will not be used by the timetable allocation algorithm.</h4><br />
+					<div class="clear"></div>
 					<div class="scheduleBlockSpAct" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 					<div class="custtd_left">
                         <span style="font-size:14px"><b>Create A New Rule(optional):</b></span>

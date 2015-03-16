@@ -3001,13 +3001,15 @@ function specialActivity(){
 		 if(activity==3 && activity_type==1){
 		   $('.otAct').show();
 		   $('.scheduleBlockSpAct').hide();	
-		   $('.spanPrgm').text("*");	
-		   $('.spanCycle').text("*");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
+		   $('.spanPrgm, .spanCycle').text("*");
+		   //$('.spanCycle').text("*");
+		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'bold'});
+		   //$('.spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'bold'});
+		   $('.spanArea, .spanRoom, .spanSubject, .spanSubCode, .spanSubCode').text("");
+		   //$('.spanRoom').text("");	
+		   //$('.spanSubject').text("");	
+		   //$('.spanSubCode').text("");	
+		   //$('.spanSubCode').text("");
 		   $("#slctArea option").filter(function() {
 		    return this.text == 'N/A'; 
 			}).attr('selected', true);
@@ -3022,13 +3024,14 @@ function specialActivity(){
 	   }else if(activity==3 && activity_type==2){
 		   $('.otAct').hide();
 		   $('.scheduleBlockSpAct').show();	
-		   $('.spanPrgm').text("*");	
-		   $('.spanCycle').text("*");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
+		   $('.spanPrgm, .spanCycle').text("*");	
+		   //$('.spanCycle').text("*");
+		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'bold'});
+		   $('.spanArea, .spanRoom, .spanSubject, .spanSubCode').text("");
+		   //$('.spanRoom').text("");	
+		   //$('.spanSubject').text("");	
+		   //$('.spanSubCode').text("");	
+		   //$('.spanSubCode').text("");
 		   $("#slctArea option").filter(function() {
 		    return this.text == 'N/A'; 
 			}).attr('selected', true);
@@ -3044,13 +3047,13 @@ function specialActivity(){
 	  if((activity==4 || activity==5) && activity_type==1){
 		   $('.otAct').show();
 		   $('.scheduleBlockSpAct').hide();	
-		   $('.spanPrgm').text("");	
-		   $('.spanCycle').text("");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
+		   $('.spanPrgm, .spanCycle, .spanArea, .spanRoom, .spanSubject, .spanSubCode ').text("");	
+		   //$('.spanCycle').text("");
+		   //$('.spanArea').text("");
+		   //$('.spanRoom').text("");	
+		   //$('.spanSubject').text("");	
+		   //$('.spanSubCode').text("");	
+		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'normal'});
 		   $('#slctArea option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
@@ -3061,13 +3064,13 @@ function specialActivity(){
 		if((activity==4 || activity==5) && activity_type==2){
 		   $('.otAct').hide();
 		   $('.scheduleBlockSpAct').show();	
-		   $('.spanPrgm').text("");	
-		   $('.spanCycle').text("");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
+		   $('.spanPrgm, .spanCycle, .spanArea, .spanRoom, .spanSubject, .spanSubCode').text("");	
+		   //$('.spanCycle').text("");
+		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'normal'});
+		   //$('.spanArea').text("");
+		   //$('.spanRoom').text("");	
+		   //$('.spanSubject').text("");	
+		   //$('.spanSubCode').text("");	
 		   $('#slctArea option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
@@ -3076,7 +3079,7 @@ function specialActivity(){
 		   $('#slctTeacher option[value=""]').attr("selected",true);
 	  	}
 }
-function specialActivityType(){
+/*function specialActivityType(){
 	listingSpecialAct();
 	   var activity=$( "#special_activity" ).val();
 	   var activity_type = $( "#special_activity_type option:selected" ).val();
@@ -3156,7 +3159,7 @@ function specialActivityType(){
 		   $('#slctTeacher option[value=""]').attr("selected",true);
 	  	}
 	   
-}
+}*/
 $(document).ready(function() {
 	$('.showotBlock').show();
 	if($('#special_act_id').val()!=""){
