@@ -3017,7 +3017,7 @@ function specialActivity(){
 		   $('#txtSubjName').val('N/A');
 		   $('#txtSubjCode').val('N/A');
 		   $("#slctTeacher option").filter(function(){
-		    return this.text == 'N/A (n/a@gmail.com)'; 
+		    return this.text == 'N/A'; 
 		}).attr('selected', true);
 	   }else if(activity==3 && activity_type==2){
 		   $('.otAct').hide();
@@ -3038,7 +3038,7 @@ function specialActivity(){
 		   $('#txtSubjName').val('N/A');
 		   $('#txtSubjCode').val('N/A');
 		   $("#slctTeacher option").filter(function(){
-		    return this.text == 'N/A (n/a@gmail.com)'; 
+		    return this.text == 'N/A'; 
 		}).attr('selected', true);
 	   }
 	  if((activity==4 || activity==5) && activity_type==1){
@@ -3099,7 +3099,7 @@ function specialActivityType(){
 		   $('#txtSubjName').val('N/A');
 		   $('#txtSubjCode').val('N/A');
 		   $("#slctTeacher option").filter(function(){
-		    return this.text == 'N/A (n/a@gmail.com)'; 
+		    return this.text == 'N/A'; 
 		}).attr('selected', true);
 	   }else if(activity==3 && activity_type==2){
 		   $('.otAct').hide();
@@ -3120,7 +3120,7 @@ function specialActivityType(){
 		   $('#txtSubjName').val('N/A');
 		   $('#txtSubjCode').val('N/A');
 		   $("#slctTeacher option").filter(function(){
-		    return this.text == 'N/A (n/a@gmail.com)'; 
+		    return this.text == 'N/A'; 
 		}).attr('selected', true);
 }
 	  if((activity==4 || activity==5) && activity_type==1){
@@ -3194,7 +3194,7 @@ function deleteRuleSpecialActivity($id){
 	if($id==""){
 		alert("Please select a rule to delete");
 		return false;
-	}else if(confirm("Are you sure you want to delete the Rule?")) {
+	}else if(confirm("Are you sure you want to delete rule with associated activities ?")) {
 	    $.ajax({
                 type: "POST",
                 url: "ajax_common.php",
@@ -3327,7 +3327,7 @@ $(document).ready(function() {
 			if(rule_id==""){
 				alert("Please select a rule to delete");
 				return false;
-			}else if(confirm("Are you sure you want to delete the assciciated special activity ?")) {
+			}else if(confirm("Are you sure you want to delete all associated activities with this rule ?")) {
 				$.ajax({
 						type: "POST",
 						url: "ajax_common.php",
