@@ -2112,14 +2112,10 @@ switch ($codeBlock) {
 						   	if($row['room_id']=="0"){
 						   		$room_id="N/A";
 							}else{
-								$room_id=$row['room_id'];
+								$room_id=$row['room_name'];
 							}
-							if($row['teacher_id']=="0"){
-						   		$teacher_id="N/A";
-							}else{
-								$teacher_id=$row['teacher_name'];
-							}
-						    $html.='<tr>';
+							$teacher_id=$row['teacher_name'];
+							$html.='<tr>';
 							$html.='
 							<td>'.$row['id'].'</td>
 							<td>'.$row['name'].'</td>

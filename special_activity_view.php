@@ -111,12 +111,12 @@ function activityFilter()
 					if($result->num_rows){
 						while($row = $result->fetch_assoc())
 						{   
-						    $class='';
+							$class='';
 							$ts_array = explode(",",$row['timeslot_id']);
 							$min_ts_id = $ts_array[0];
 							$max_ts_id = $ts_array[count($ts_array)-1];
-							if($row['act_date'] != '0000-00-00' && $row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date'] || !in_array($row['program_year_id'],explode(",",$row_table['programs'])))
-							{
+							if($row['act_date'] != '0000-00-00' && $row['act_date'] < $row_table['start_date'] || $row['act_date'] > $row_table['end_date'])
+							{	
 								$trBColor1 = ' style="background-color:#66CCFF; color:#FFFFFF;"';
 								$tdColor = ' style="color:#FFFFFF;"';
 								$class ="out-of-range";
@@ -139,7 +139,7 @@ function activityFilter()
 							   $res_flag = "Yes";
 							else
 							  $res_flag = "No";
-							  $trBColor=($row['reserved_act_id']<>"" && $row['reserved_flag']!= "3" && $row['reserved_flag']!= "4" && $row['reserved_flag']!= "5") ? ' style="background-color:#90EE90;"':'';
+							  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
 							  $class_allocated=($row['reserved_act_id']<>"") ? 'allocated-activity':'';
 						?>
 						
@@ -157,21 +157,25 @@ function activityFilter()
 							 	echo "Adhoc Activities";
 							 ?></td>
 							<td<?php echo $tdColor;?>><?php echo $row['program_name'];?></td>
-							<td<?php echo $tdColor;?>><?php echo $row['subject_name'];?></td>
-							<td<?php echo $tdColor;?>><?php echo $row['session_name'];?></td>
+							<td<?php echo $tdColor;?>><?php if($row['subject_id']==0){echo "N/A";}else{echo $row['subject_name'];}?></td>
+							<td<?php echo $tdColor;?>><?php if($row['session_id']==0){echo "N/A";}else{echo $row['session_name'];}?></td>
 							<td<?php echo $tdColor;?>><?php echo $teacher_name;?></td>
 							<td<?php echo $tdColor;?>><font color="">
 								<?php
-									if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1" && $row['reserved_flag']!= "3" && $row['reserved_flag']!= "4" && $row['reserved_flag']!= "5")){
+									if(($row['reserved_act_id']<>"")){
 								 		echo '<font class="unreservedAlloctedAct">'. $objB->getRoomFullName($row['reserverd_room_id']).'</font>';
 									}else{
-										echo $objB->getRoomFullName($row['room_id']) ;
+										if($row['room_id']==0){
+											echo "N/A";
+										}else{
+											echo $objB->getRoomFullName($row['room_id']) ;
+										}
 									}
 								 ?>
 							</td>
 							<td<?php echo $tdColor;?>>
 								<?php 
-								if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1" && $row['reserved_flag']!= "3" && $row['reserved_flag']!= "4" && $row['reserved_flag']!= "5")){
+								if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
 									if($row['date'] != "0000-00-00" && $row['date'] != null){
 										$date = '<font class="unreservedAlloctedAct">'.date("Y-m-d",strtotime($row['date'])).'<font>';
 									}else{
@@ -190,14 +194,14 @@ function activityFilter()
 							<td<?php echo $tdColor;?>>
 								
 								<?php 
-								    if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1" && $row['reserved_flag']!= "3" && $row['reserved_flag']!= "4" && $row['reserved_flag']!= "5")){
+								    if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
 									 	echo '<font class="unreservedAlloctedAct">'.$row['timeslot'].'<font>';
 									 }else{
 										echo $objT->getTimeslotById($min_ts_id,$max_ts_id);
 									 }
 								?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
-							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"" && $row['reserved_flag']!= "3" && $row['reserved_flag']!= "4" && $row['reserved_flag']!= "5")? 'Allocated':'Floating';?></td>
+							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"" )? 'Allocated':'Floating';?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $row['reason'];?></td>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<?php /*?><a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&cycle_id=<?php echo base64_encode($row['cycle_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a><?php */?>
