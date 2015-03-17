@@ -63,7 +63,18 @@ $mappedruleids = array();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$special_act_id = base64_decode($_GET['edit']);
 	$detail = $obj->specialActivityDetail($special_act_id);
+	//echo '<pre>';
+	//print_r($detail);
 }
+	$ad_hoc_act_date_dd = "";
+	if(isset($detail['reserved_flag']) && $detail['reserved_flag']=="5" && $detail['adhoc_start_date']=="0000-00-00"){
+		$ad_hoc_act_date_dd="1";
+	}else if(isset($detail['reserved_flag']) && $detail['reserved_flag']=="5"){
+		$ad_hoc_act_date_dd="2";
+	}else{
+		$ad_hoc_act_date_dd="";
+	}
+	$special_act_name =(isset($detail['special_activity_name']) && $detail['special_activity_name']!="")? $detail['special_activity_name'] :"";
 	$special_activity =(isset($detail['reserved_flag']) && $detail['reserved_flag']!="")? $detail['reserved_flag'] :"";
 	$special_activity_type =(isset($detail['special_activity_type']) && $detail['special_activity_type']!="")? $detail['special_activity_type'] :"";
 	$program_year_id =(isset($detail['program_year_id']) && $detail['program_year_id']!="")? $detail['program_year_id'] :"";
@@ -76,6 +87,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$act_date =(isset($detail['act_date']) && $detail['act_date']!="")? $detail['act_date'] :"";
 	$start_time_id =(isset($detail['start_time']) && $detail['start_time']!="")? $detail['start_time'] :"";
 	$duration =(isset($detail['duration']) && $detail['duration']!="")? $detail['duration'] :"";
+	//$actName=(isset($detail['act_name']) && $detail['act_name']!="")? $detail['act_name'] :"";
 	$disabled =(isset($special_act_id) && $special_act_id!="")? 'disabled="disabled"' :"";
 	$btnSubmit =(isset($_GET['edit']) && $_GET['edit']!="")? "Update" :"Save";
 	$objTS = new Timeslot();
@@ -96,16 +108,23 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 				<div class="clear"></div>
                 <div class="custtable_left">
 				<!-- new -->
-				<div class="addSubDiv" <?php //echo $disFDivCss; ?>>
+				<div class="addSubDiv">
                             <div class="custtd_left">
+                                <h2 class="blod-text">Activity Name<span class="redstar">*</span></h2>
+                            </div>
+                            <div class="txtfield">
+                                <input type="text" class="inp_txt" id="txtActName" maxlength="50" name="txtActName" value="<?php echo $special_act_name;?>" <?php echo $disabled;?>>
+                            </div>
+                            <div class="clear"></div>
+							<div class="custtd_left">
                                 <h2 class="blod-text">Choose Activity Type<span class="redstar">*</span></h2>
                             </div>
                             <div class="txtfield">
                                 <select id="special_activity" name="special_activity" class="select1" onchange="specialActivity();" <?php echo $disabled;?>> 
 									<option value="" selected="selected">--Select--</option>
-									<option value="3" <?php if($special_activity == '3'){?> selected="selected"}<?php }?>>Recess Activities</option>
-									<option value="4" <?php if($special_activity == '4'){?> selected="selected"}<?php }?>>Group Meetings</option>
-									<option value="5" <?php if($special_activity == '5'){?> selected="selected"}<?php }?>>Adhoc Activities</option>
+									<option value="3" <?php if($special_activity == '3'){echo  'selected="selected"'; }?>>Recess Activities</option>
+									<option value="4" <?php if($special_activity == '4'){echo  'selected="selected"'; }?>>Group Meetings</option>
+									<option value="5" <?php if($special_activity == '5'){echo  'selected="selected"'; }?>>Adhoc Activities</option>
 								</select>
                             </div>
                             <div class="clear"></div>
@@ -115,24 +134,27 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                             <div class="txtfield actType">
                                 <select id="special_activity_type" name="special_activity_type" class="select1" onchange="specialActivity();" <?php echo $disabled;?>> 
 									<option value="" selected="selected">--Select--</option>
-									<option value="1" <?php if($special_activity_type == '1' || $special_activity_type == '2'){?> selected="selected"}<?php }?>>One Time Activity</option>
+									<option value="1" <?php if($special_activity_type == '1' || $special_activity_type == '2'){echo  'selected="selected"'; }?>>One Time Activity</option>
 									<option value="2">Periodic Activity</option>
 								</select>
                             </div>
                             <div class="clear"></div>
-							<div class="custtd_left otAct <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
+							<div class="custtd_left otAct divDuration <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
                        		</div>
                     		<div class="txtfield otAct <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
-                       			 Duration:<span class="redstar spanDuration">*</span><select name="duration" id="duration" class="activity_row_chk" >
+                       			Duration:<span class="redstar spanDuration">*</span><select name="duration" id="duration" class="activity_row_chk" >
                                         	<?php echo $option_duration;?>
                                     	  </select>
 									<script type="text/javascript">
                                         jQuery('#duration').val("<?php echo $duration; ?>");
                                     </script>
+							</div>
+							<div class="txtfield otAct divDateSingle <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>">
 								 Date:<input type="text" size="12" id="oneTimeDate"  name="oneTimeDate" class="txtfield" value="<?php 
 								 if($special_activity_type == '1' || $special_activity_type == '2')
 								 	{ echo $act_date;}else{ echo "";} ?>"/>
-								 
+							</div> 
+							<div class="txtfield otAct divTs <?php if($special_activity_type == '1' || $special_activity_type == '2'){ echo "showotBlock";}else{ echo "";} ?>"> 
                                   Start Time:<select id="ot_tslot_id"  name="ot_tslot_id" >
                                         		<option value="">--Select--</option>
 												<?php echo $tslot_dropDwn;?>
@@ -142,6 +164,28 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                                     </script>
                     		</div>
                     		<div class="clear"></div>
+							<div class="custtd_left otAct div-ad-hoc-label  <?php if($ad_hoc_act_date_dd == '1' || $ad_hoc_act_date_dd == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
+                       		</div>
+                    		<div class="txtfield otAct div-ad-hoc-date-slct <?php if($ad_hoc_act_date_dd == '1' || $ad_hoc_act_date_dd == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
+									Activity Date:<span class="redstar spanAdHocDate">*</span>
+								 	<select name="ad_hoc_date_slct" id="ad_hoc_date_slct"  onchange="adHocDateShowHide();">
+											<option value="">-Select-</option>
+											<option value="1" <?php if($ad_hoc_act_date_dd == '1'){echo  'selected="selected"'; }?>>Fixed Date</option>
+											<option value="2" <?php if($ad_hoc_act_date_dd == '2'){echo  'selected="selected"'; }?> >Range Date</option>
+									</select>
+							</div>
+							<div class="txtfield otAct div-ad-hoc-fixed" >
+								    Date:<span class="redstar spanAdHocDate">*</span>
+									<input type="text" size="12" id="ad_hoc_fix_date"  name="ad_hoc_fix_date" class="txtfield" value=" "/>
+							</div>
+							<div class="txtfield otAct div-ad-hoc-range" >
+									From:<input type="text" size="12" id="fromADHocDate"  name="fromADHocDate"/>
+                        			To:<input type="text" size="12" id="toADHocDate" name="toADHocDate"/>
+								    <script type="text/javascript">
+                                        jQuery('#ad_hoc_date_slct').val("<?php echo $duration; ?>");
+                                    </script>
+							</div>		
+							<div class="clear"></div>
 							<div class="custtd_left">
                                 <h2>Choose Program<span class="redstar spanPrgm">*</span></h2>
                             </div>
@@ -164,7 +208,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                                 <h2>Choose Cycle<span class="redstar spanCycle">*</span></h2>
                             </div>
                             <div class="txtfield">
-                                <select id="slctCycle" name="slctCycle" class="select1 required" <?php echo $disabled;?>>
+                                <select id="slctCycle" name="slctCycle" class="select1 required" <?php echo $disabled;?> onchange="getSubjectByProgIDAndCycleID();">
                                     <option value="" selected="selected">--Select Cycle--</option>
                                     <?php
 									if(isset($program_year_id) && $program_year_id!=""){
@@ -185,10 +229,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                                 </select>
                             </div>
                             <div class="clear"></div>
-                            <div class="custtd_left" <?php echo $disFDivCss; ?>>
+                            <div class="custtd_left">
                                 <h2>Choose Area <span class="redstar spanArea">*</span></h2>
                             </div>
-                            <div class="txtfield " <?php echo $disFDivCss; ?>>
+                            <div class="txtfield ">
                                 <select id="slctArea" name="slctArea" class="select1 required" <?php echo $disabled;?>>
                                     <option value="" selected="selected">--Select Area--</option>
 						<?php
@@ -203,10 +247,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                                 </select>
                             </div>
                             <div class="clear"></div>
-							 <div class="custtd_left" <?php echo $disFDivCss; ?>>
+							 <div class="custtd_left">
                                 <h2>Choose Room <span class="redstar spanRoom">*</span></h2>
                             </div>
-							<div class="txtfield " <?php echo $disFDivCss; ?>>
+							<div class="txtfield">
                                 <select id="slctRoom" name="slctRoom" class="select1 required" <?php echo $disabled;?>>
                                     <option value="" selected="selected">--Select Room--</option>
 									<option value="0">N/A</option>
@@ -222,26 +266,29 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                                 </select>
                             </div>
                             <div class="clear"></div>
-                            <div class="custtd_left" <?php echo $disFDivCss; ?>>
+                            <div class="custtd_left" >
                                 <h2>Subject Name<span class="redstar spanSubject">*</span></h2>
                             </div>
-                            <div class="txtfield" <?php echo $disFDivCss; ?>>
-                                <input type="text" class="inp_txt" id="txtSubjName" maxlength="50" name="txtSubjName" value="<?php echo $subject_val;?>" <?php echo $disabled;?>>
+                            <div class="txtfield">
+                                <select id="slctSubjectName" name="slctSubjectName" class="select1 required" <?php echo $disabled;?> >
+                                    <option value="" selected="selected">--Select Subject--</option>
+                                    <option value="0">N/A</option>
+                                </select>
                             </div>
                             <div class="clear"></div>
-                            <div class="custtd_left" <?php echo $disFDivCss; ?>>
+                            <div class="custtd_left" style="display:none;">
                                 <h2>Subject Code <span class="redstar spanSubCode">*</span></h2>
                             </div>
-                            <div class="txtfield" <?php echo $disFDivCss; ?>>
+                            <div class="txtfield" style="display:none;">
                                 <input type="text" class="inp_txt" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subject_val;?>" <?php echo $disabled;?>>
                             </div>
                             <div class="clear"></div>
                         </div>
 				<!-- end -->
-                    <div class="custtd_left" <?php echo $disFDivCss; ?>>
+                    <div class="custtd_left">
                         <h2>Teacher <span class="redstar spanSubCode">*</span></h2>
                     </div>
-                    <div class="txtfield" <?php echo $disFDivCss; ?>>
+                    <div class="txtfield">
 					 <select id="slctTeacher" name="slctTeacher" class="select1 required" <?php echo $disabled;?> >
 						<option value="" >--Select--</option>
 						<?php while($data = $teacherData->fetch_assoc()){ 

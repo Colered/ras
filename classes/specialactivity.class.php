@@ -41,7 +41,7 @@ class SpecialActivity extends Base {
 		return $exceptionDate;
 	}
 	public function specialActivityDetail($special_act_id){
-		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.start_time,ta.reserved_flag,ta.act_date,sa.teacher_activity_id,sa.id as special_id,sa.special_activity_rule_id,sa.area_id,sa.special_activity_type,sa.duration FROM teacher_activity ta
+		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.start_time,ta.reserved_flag,ta.act_date,sa.teacher_activity_id,sa.id as special_id,sa.special_activity_rule_id,sa.area_id,sa.special_activity_type,sa.duration,sa.special_activity_name,sa.adhoc_start_date,sa.adhoc_end_date FROM teacher_activity ta
 						inner join  special_activity_mapping sa on(sa.teacher_activity_id = ta.id)
 						WHERE ta.id='".$special_act_id."' ";
 		$query = mysqli_query($this->conn,$sql);
@@ -55,36 +55,42 @@ class SpecialActivity extends Base {
 		return $data;
 	}
 	public function addSpecialActivity(){
-			$subject_id="";
-			$session_id="";
-			$start_time="";
+			$start_time=$activity_date="";
 			$currentDateTime = date("Y-m-d H:i:s");
 			$obj_SA = new SpecialActivity();
 			$last_activity_record=$obj_SA->activityLastReocrd();
 			$act_name_num= ltrim ($last_activity_record['name'],'A');
 			$objTeach = new Teacher();
-			if($_POST['special_activity']!="" && $_POST['special_activity_type']!="2"){
+			if($_POST['txtActName']!="" && $_POST['special_activity']!="" && $_POST['special_activity_type']!="2"){
 			  $timeslotIdsArray = array();
-			  if ($_POST['duration'] > 15) {
-				   $noOfslots = $_POST['duration'] / 15;
-				   $startTS = $_POST['ot_tslot_id'];
-				   $endTS = $startTS + $noOfslots;
-				   for ($i = $startTS; $i < $endTS; $i++) {
-					$timeslotIdsArray[] = $i;
-				   }
-			  }else {
-			   $timeslotIdsArray[] = $_POST['ot_tslot_id'];
-			  }
+			 	if(isset($_POST['ot_tslot_id'])&& $_POST['ot_tslot_id']!=""){
+					  if ($_POST['duration'] > 15) {
+						   $noOfslots = $_POST['duration'] / 15;
+						   $startTS = $_POST['ot_tslot_id'];
+						   $endTS = $startTS + $noOfslots;
+						   for ($i = $startTS; $i < $endTS; $i++) {
+								$timeslotIdsArray[] = $i;
+					  		}
+					  }else {
+					   			$timeslotIdsArray[] = $_POST['ot_tslot_id'];
+					  }
+					$ot_timeslot_str = implode(',',$timeslotIdsArray);
+				}else{
+					$ot_timeslot_str="";
+				}
+				if(isset($_POST['ad_hoc_date_slct'])&&  $_POST['ad_hoc_date_slct']==1 && $_POST['ad_hoc_fix_date']!=""){
+						$activity_date=$_POST['ad_hoc_fix_date'];
+				}else{
+						$activity_date=$_POST['oneTimeDate'];
+				}
 			   	$act_name_num = $act_name_num+1;
 				$act_name='A'.$act_name_num;
-				$ot_timeslot_str = implode(',',$timeslotIdsArray);
 				$ts_id_Arr = explode(',',$ot_timeslot_str);
 				$start_time = $ts_id_Arr['0'];
-				$result = mysqli_query($this->conn, "INSERT INTO teacher_activity(name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$subject_id."','".$session_id."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ot_timeslot_str."','".$start_time."','".$_POST['oneTimeDate']."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
-				
+				$result = mysqli_query($this->conn, "INSERT INTO teacher_activity(name, program_year_id, cycle_id, subject_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ot_timeslot_str."','".$start_time."','".$activity_date."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
 					$last_id = mysqli_insert_id($this->conn);
 					if($last_id!=''){
-						$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$_POST['duration']."','".$currentDateTime."','".$currentDateTime."') ");
+						$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name,adhoc_start_date,adhoc_end_date, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$_POST['duration']."','".$_POST['txtActName']."','".$_POST['fromADHocDate']."','".$_POST['toADHocDate']."','".$currentDateTime."','".$currentDateTime."') ");
 					}
 				if($result){
 					$message="Activity has been inserted successfully";
@@ -112,7 +118,6 @@ class SpecialActivity extends Base {
 					$ids_str = implode(',',$spActIds);
 					$del_sp_act_query="delete from teacher_activity where id IN ($ids_str)";
 					$this->conn->query($del_sp_act_query);
-					
 					$del_sp_act_mapping="delete from special_activity_mapping where teacher_activity_id IN ($ids_str)";
 					$this->conn->query($del_sp_act_mapping);
 				}
@@ -145,10 +150,10 @@ class SpecialActivity extends Base {
 								$ts_id_Arr = explode(',',$ts_durationArr[0]);
 								$start_time = $ts_id_Arr['0'];	
 								$duration = $ts_durationArr[1];
-								$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$subject_id."','".$session_id."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ts_durationArr[0]."','".$start_time."','".$date_str."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
+								$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ts_durationArr[0]."','".$start_time."','".$date_str."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
 								$last_id = mysqli_insert_id($this->conn);
 								if($last_id!=''){
-									$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$currentDateTime."','".$currentDateTime."') ");
+									$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
 								}
 							  }
 					   	    }
@@ -160,7 +165,6 @@ class SpecialActivity extends Base {
 				header('Location: special_activity_view.php');
 				return 1;
 			}
-		   
 	}
 	public function updateSpecialActivity(){
 		if($_POST['special_activity_type']!="2" && $_POST['duration']!=""){
@@ -199,7 +203,7 @@ class SpecialActivity extends Base {
 	}
 	//fetching detail for the listing special activity
 	public function getSpecialActivityDetail($special_act){
-		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name  FROM teacher_activity ta
+		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name FROM teacher_activity ta
 						left join subject s on(s.id = ta.subject_id)
 						left join subject_session ss on(ss.id=ta.session_id)
 						left join teacher t on(t.id = ta.teacher_id)
@@ -210,7 +214,6 @@ class SpecialActivity extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;				
 	}
-	
 	public function deleteSpecialActivityies(){
 		$sql = "SELECT ta.id  FROM teacher_activity ta
 						left join special_activity_mapping sam on(ta.id = sam.teacher_activity_id)
@@ -222,10 +225,8 @@ class SpecialActivity extends Base {
 				$spActIds[] =  $data['id'];
 			}
 			$ids_str = implode(',',$spActIds);
-			
 		    $del_sp_act_query="delete from teacher_activity where id IN ($ids_str)";
 			$this->conn->query($del_sp_act_query);
-			
 			$del_sp_act_mapping="delete from special_activity_mapping where teacher_activity_id IN ($ids_str)";
 			$this->conn->query($del_sp_act_mapping);
 			$message="Activities have been deleted successfully";

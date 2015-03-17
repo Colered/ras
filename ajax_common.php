@@ -2097,6 +2097,7 @@ switch ($codeBlock) {
                     </tr>
                 </thead>
                 <tbody>';
+					$subject_name="";
 					if($result->num_rows){
 						$timeslot_arr=array();
 						while($row = $result->fetch_assoc())
@@ -2148,6 +2149,22 @@ switch ($codeBlock) {
 		}else {
 			echo 0;
 		}
+	break;
+	case "getSubjectByPrgmIDAndCycleID":
+		if((isset($_POST['prgmId']) && $_POST['prgmId']!="") && (isset($_POST['cycleId']) && $_POST['cycleId']!="")){
+				$options .='<option value="">--Select Subject--</option>';
+				$subject_query="select id,subject_name,subject_code from subject where program_year_id='".$_POST['prgmId']."' and cycle_no='".$_POST['cycleId']."'";
+				$subjectData = mysqli_query($db, $subject_query);
+				$subjectArr = array();
+				if($subjectData->num_rows>0){
+					while ($data = mysqli_fetch_assoc($subjectData)){
+						$subjectStr = $data['subject_name'].'('.$data['subject_code'].')';
+						$options .='<option value="'.$data['id'].'" >'.$subjectStr.'</option>';
+					}
+				}
+		}
+		$options.='<option value="0" >N/A</option>';
+		echo $options;
 	break;
 }
 ?>
