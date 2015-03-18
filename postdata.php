@@ -571,7 +571,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			if($resp){
 				header('Location: special_activity_view.php');
 			}else{
-				header('Location: special_activity_view.php');
+				header('Location: special_activity.php');
 			}
 		break;	
 	}

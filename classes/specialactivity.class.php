@@ -55,11 +55,22 @@ class SpecialActivity extends Base {
 		return $data;
 	}
 	public function addSpecialActivity(){
-			$start_time=$activity_date="";
-			$currentDateTime = date("Y-m-d H:i:s");
-			$obj_SA = new SpecialActivity();
-			$last_activity_record=$obj_SA->activityLastReocrd();
-			$act_name_num= ltrim ($last_activity_record['name'],'A');
+		if($_POST['txtActName']!=""){
+			//check if the activity name exists
+			$check_query="select special_activity_name from special_activity_mapping where special_activity_name='".trim($_POST['txtActName'])."'";
+			$check_query_res = mysqli_query($this->conn, $check_query);
+			$dataAll = mysqli_fetch_assoc($check_query_res);
+			if(count($dataAll)>0){
+					$message="Activity Name already exists.";
+					$_SESSION['error_msg'] = $message;
+					header('Location: special_activity.php');
+					return 0;
+			}else{
+				$start_time=$activity_date="";
+				$currentDateTime = date("Y-m-d H:i:s");
+				$obj_SA = new SpecialActivity();
+				$last_activity_record=$obj_SA->activityLastReocrd();
+				$act_name_num= ltrim ($last_activity_record['name'],'A');
 			$objTeach = new Teacher();
 			if($_POST['txtActName']!="" && $_POST['special_activity']!="" && $_POST['special_activity_type']!="2"){
 			  $timeslotIdsArray = array();
@@ -165,7 +176,14 @@ class SpecialActivity extends Base {
 				header('Location: special_activity_view.php');
 				return 1;
 			}
+		}	
+	}else{
+		$message="Activity Name can not be empty.";
+		$_SESSION['error_msg'] = $message;
+		header('Location: special_activity.php');
+		return 0;
 	}
+  }
 	public function updateSpecialActivity(){
 		if($_POST['special_activity_type']!="2" && $_POST['duration']!=""){
 			  $timeslotIdsArray = array();
@@ -247,5 +265,27 @@ class SpecialActivity extends Base {
 			$_SESSION['succ_msg'] = $message;
 			return 0;
 		}
+	}
+	public function getSpecialActivityDetailView(){
+		$sql = "SELECT ta.id, ta.program_year_id, ta.cycle_id, ta.subject_id, ta.session_id, ta.teacher_id, ta.group_id, ta.room_id, ta.timeslot_id, ta.reserved_flag, ta.act_date, s.subject_name, t.teacher_name, t.email, py.name program_name, rm.room_name, sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date,sam.special_activity_type,ar.area_name
+				FROM teacher_activity ta
+				LEFT JOIN subject s ON ( s.id = ta.subject_id )
+				LEFT JOIN subject_session ss ON ( ss.id = ta.session_id )
+				LEFT JOIN teacher t ON ( t.id = ta.teacher_id )
+				LEFT JOIN program_years py ON ( py.id = ta.program_year_id )
+				LEFT JOIN room rm ON ( rm.id = ta.room_id )
+				LEFT JOIN special_activity_mapping sam ON ( ta.id = sam.teacher_activity_id )
+				LEFT JOIN area ar ON ( ar.id = sam.area_id )
+				WHERE ta.id = sam.teacher_activity_id GROUP BY sam.special_activity_name";
+		$result =  $this->conn->query($sql);
+		return $result;				
+	}
+	public function getSpecialActivityByActName($spActName){
+		$sql = "SELECT ta.id,ta.name, ta.timeslot_id, ta.reserved_flag, ta.act_date,sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date
+				FROM teacher_activity ta
+				LEFT JOIN special_activity_mapping sam ON ( ta.id = sam.teacher_activity_id )
+				WHERE ta.id = sam.teacher_activity_id and sam.special_activity_name='".trim($spActName)."' ";
+		$result =  $this->conn->query($sql);
+		return $result;				
 	}
 }

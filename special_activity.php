@@ -100,6 +100,16 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 ?>
 <div id="content">
     <div id="main">
+		<?php if (isset($_SESSION['succ_msg'])) {
+  			  echo '<div class="full_w green center">' . $_SESSION['succ_msg'] . '</div>';
+    		  unset($_SESSION['succ_msg']);
+		} ?>
+        <div class="custtd_left red">
+		<?php if (isset($_SESSION['error_msg']))
+    			echo $_SESSION['error_msg']; unset($_SESSION['error_msg']);
+		?>
+		</div>
+		<div class="clear"></div>
         <div class="full_w">
             <div class="h_title">Recess Activity / Group Meetings / Ad-hoc Activity</div>
 			<form name="specialActivityForm" id="specialActivityForm" action="postdata.php" method="post">

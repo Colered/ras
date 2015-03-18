@@ -1414,6 +1414,7 @@ function checkActAvailability(program_year_id,subject_id,sessionid,teacher_id,ro
 }
 $(document).ready(function(){
 	$("#ts-avail-mon,#ts-avail-tue,#ts-avail-wed,#ts-avail-thu,#ts-avail-fri,#ts-avail-sat").hide();
+	$('.actNameCls').hide();
 	   $('input[class=days]').click(function(){
             if($(this).attr("value")=="Mon"){
 				$("#ts-avail-mon").toggle();
@@ -3066,7 +3067,11 @@ function specialActivity(){
 		   $("#slctRoom option").filter(function() {
 		    return this.text == 'N/A'; 
 			}).attr('selected', true);
-		   $('#txtSubjName').val('N/A');
+		   
+		   $("#slctSubjectName option").filter(function(){
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
+		   
 		   $('#txtSubjCode').val('N/A');
 		   $("#slctTeacher option").filter(function(){
 		    return this.text == 'N/A'; 
@@ -3085,7 +3090,9 @@ function specialActivity(){
 		   $("#slctRoom option").filter(function() {
 		    return this.text == 'N/A'; 
 			}).attr('selected', true);
-		   $('#txtSubjName').val('N/A');
+		   $("#slctSubjectName option").filter(function(){
+		    return this.text == 'N/A'; 
+			}).attr('selected', true);
 		   $('#txtSubjCode').val('N/A');
 		   $("#slctTeacher option").filter(function(){
 		    return this.text == 'N/A'; 
@@ -3227,22 +3234,22 @@ $(document).ready(function() {
 		}
 	}
 });
-//Ajax delete the areas function 
-function deleteSpecialActivity($id){
-	if($id==""){
+//Ajax delete special activity function for the view page
+function deleteSpecialActivity($actityName){
+	if($actityName==""){
 		alert("Please select a special activity to delete");
 		return false;
-	}else if(confirm("Are you sure you want to delete the special activity?")) {
+	}else if(confirm("Are you sure you want to delete the special activity associated with activity name?")) {
 	    $.ajax({
                 type: "POST",
                 url: "ajax_common.php",
                 data: {
-					'id': $id,
+					'actityName': $actityName,
 					'codeBlock': 'del_special_activity',
 				},
                 success: function($succ){
 					if($succ==1){
-						$('#'+$id).closest('tr').remove();
+						$('#'+$actityName).closest('tr').remove();
 						$('.green, .red').hide();
 					}else{
 						alert("Cannot delete the selected special activity.");
@@ -3501,4 +3508,48 @@ function processSelectBox()
 		$("#reason option:selected").prop("selected", false);
 		$("#reason option:first").prop("selected", "selected");		
 	}
+}
+
+function getActName(actNameViewId)
+{
+	var divActName = '#divActName'+actNameViewId;
+    var imageId='#actNameImg'+actNameViewId;
+		if($(divActName).css('display') == 'none') {
+		//close all the open links
+		$(".actNameCls").slideUp("slow");
+		$(".actNameImgCls").attr({src: 'images/plus_icon.png'});
+		//open the clicked link
+		$(divActName).slideDown("slow");
+        $(imageId).attr({src: 'images/minus_icon.png'});
+    }
+    else {
+        $(divActName).slideUp("slow");
+        $(imageId).attr({src: 'images/plus_icon.png'});
+	}
+}
+//Ajax deleting special activity function from the listing when combination select
+function deleteSpecialActivityListing($id){
+	if($id==""){
+		alert("Please select a special activity to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the special activity?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_special_activity_listing',
+				},
+                success: function($succ){
+					if($succ==1){
+						$('#'+$id).closest('tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected special activity.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
 }

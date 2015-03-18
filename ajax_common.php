@@ -2050,16 +2050,28 @@ switch ($codeBlock) {
 		}
     break;
 	case "del_special_activity":
-		if(isset($_POST['id'])){
-			$id = $_POST['id'];
-			//delete the teacher activity
-			$del_query="delete from  teacher_activity where id='".$id."'";
-			$qry = mysqli_query($db, $del_query);
-			if(mysqli_affected_rows($db)>0){
-				// delete teacher activity mapping 
-				$del_act_query="delete from  special_activity_mapping where teacher_activity_id ='".$id."'";
-				mysqli_query($db, $del_act_query);
-				echo 1;
+		if(isset($_POST['actityName'])){
+			$actityName = trim($_POST['actityName']);
+			//fetching the activity ids using activity name
+			$sql="select teacher_activity_id from special_activity_mapping where special_activity_name='".$actityName."'";
+			$query_result = mysqli_query($db, $sql);
+			$teacher_activity_id_arr = array();
+			while($data_teahcer_act=$query_result->fetch_assoc()){
+					$teacher_activity_id_arr[] = $data_teahcer_act['teacher_activity_id'];
+			}
+			$act_is_str = implode(',',$teacher_activity_id_arr);
+			if(count($teacher_activity_id_arr)>0){
+				//deleting the activities
+				$del_act_query="delete from  teacher_activity where id IN ($act_is_str)";
+				$qry = mysqli_query($db, $del_act_query);
+				if(mysqli_affected_rows($db)>0){
+					// delete teacher mapping activity
+					$del_act_mapp_query="delete from  special_activity_mapping where teacher_activity_id IN ($act_is_str)";
+					mysqli_query($db, $del_act_mapp_query);
+					echo 1;
+				}else{
+					echo 0;
+				}
 			}else{
 				echo 0;
 			}
@@ -2102,10 +2114,8 @@ switch ($codeBlock) {
 			  $sql = "select ta.id,ta.reserved_flag,sam.special_activity_rule_id,sam.special_activity_type from  teacher_activity ta 
 					left join  special_activity_mapping sam on(sam.teacher_activity_id = ta.id) 
 					where reserved_flag ='".$_POST['activity']."' and sam.special_activity_type='".$_POST['activity_type']."' ";
-					
 			//$sql = "select special_activity_rule_id from  special_activity_mapping where special_activity_type ='".$_POST['activity_type']."' group by special_activity_rule_id ";				
 				$query = mysqli_query($db,$sql);
-				//print_r($query );die;
 				$ruleIdArr =$ruleIdArrNew= $actIdArr=array();
 				while ($data = mysqli_fetch_array($query)){
 					$ruleIdArr[] = $data['special_activity_rule_id'];
@@ -2180,7 +2190,7 @@ switch ($codeBlock) {
 							<td>'.$row['act_date'].'</td>
 							<td>'.$objT->getTimeslotById($min_ts_id,$max_ts_id).'</td>
 							<td id='.$row['id'].'><a href="special_activity.php?edit='.base64_encode($row['id']).'?>" class="table-icon edit" title="Edit"></a>
-								<a class="table-icon delete" onClick="deleteSpecialActivity('.$row['id'].')"></a>
+								<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$row['id'].')"></a>
 							</td>';
 							$html.='</tr>';
 						} 
@@ -2217,5 +2227,21 @@ switch ($codeBlock) {
 		$options.='<option value="0" >N/A</option>';
 		echo $options;
 	break;
+	case "del_special_activity_listing":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			//delete the teacher activity
+			$del_query="delete from  teacher_activity where id='".$id."'";
+			$qry = mysqli_query($db, $del_query);
+			if(mysqli_affected_rows($db)>0){
+				// delete teacher activity mapping 
+				$del_act_query="delete from  special_activity_mapping where teacher_activity_id ='".$id."'";
+				mysqli_query($db, $del_act_query);
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}
+	 break;
 }
 ?>
