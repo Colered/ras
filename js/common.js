@@ -3199,6 +3199,16 @@ $(document).ready(function() {
 	$('.showotBlock').show();
 	if($('#special_act_id').val()!=""){
 		$('.scheduleBlockSpAct').hide();
+		if($('#ad_hoc_act_date_dd').val()!="" && $('#ad_hoc_act_date_dd').val()=="1"){
+			$('.div-ad-hoc-fixed').show();
+			$('#oneTimeDate').val('');
+			$('.divDateSingle').hide();
+			$('.div-ad-hoc-range').hide();
+		}else if($('#ad_hoc_act_date_dd').val()!=""){
+			$('.divDateSingle').hide();
+			$('.div-ad-hoc-fixed').hide();
+			$('.div-ad-hoc-range').show();
+		}
 	}
 });
 //Ajax delete the areas function 

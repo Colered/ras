@@ -167,24 +167,37 @@ class SpecialActivity extends Base {
 			}
 	}
 	public function updateSpecialActivity(){
+		//echo '<pre>';
+		//print_r($_POST);die;
 		if($_POST['special_activity_type']!="2" && $_POST['duration']!=""){
 			  $timeslotIdsArray = array();
-			  if ($_POST['duration'] > 15) {
-				   $noOfslots = $_POST['duration'] / 15;
-				   $startTS = $_POST['ot_tslot_id'];
-				   $endTS = $startTS + $noOfslots;
-				   for ($i = $startTS; $i < $endTS; $i++) {
-					$timeslotIdsArray[] = $i;
-				   }
-			  }else {
-			   $timeslotIdsArray[] = $_POST['ot_tslot_id'];
-			  }
-			   	$ot_timeslot_str = implode(',',$timeslotIdsArray);
-				$ts_id_Arr = explode(',',$ot_timeslot_str);
+			  
+			  if(isset($_POST['ot_tslot_id'])&& $_POST['ot_tslot_id']!=""){
+					  if ($_POST['duration'] > 15) {
+						   $noOfslots = $_POST['duration'] / 15;
+						   $startTS = $_POST['ot_tslot_id'];
+						   $endTS = $startTS + $noOfslots;
+						   for ($i = $startTS; $i < $endTS; $i++) {
+								$timeslotIdsArray[] = $i;
+					  		}
+					  }else {
+					   			$timeslotIdsArray[] = $_POST['ot_tslot_id'];
+					  }
+					$ot_timeslot_str = implode(',',$timeslotIdsArray);
+				}else{
+					$ot_timeslot_str="";
+				}
+				if(isset($_POST['ad_hoc_date_slct'])&&  $_POST['ad_hoc_date_slct']==1 && $_POST['ad_hoc_fix_date']!=""){
+						$activity_date=$_POST['ad_hoc_fix_date'];
+				}else{
+						$activity_date=$_POST['oneTimeDate'];
+				}
+			  
+			    $ts_id_Arr = explode(',',$ot_timeslot_str);
 				$start_time = $ts_id_Arr['0'];
-				$result_update = mysqli_query($this->conn, "Update teacher_activity set timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$_POST['oneTimeDate']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['special_act_id']."' ");
+				$result_update = mysqli_query($this->conn, "Update teacher_activity set timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$activity_date."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['special_act_id']."' ");
 				if($result_update){
-					$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set duration = '".$_POST['duration']."',date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$_POST['special_act_id']."' ");
+					$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set duration = '".$_POST['duration']."',adhoc_start_date = '".$_POST['fromADHocDate']."',adhoc_end_date = '".$_POST['toADHocDate']."',date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$_POST['special_act_id']."' ");
 				}
 				if($result_update==1 && $result_mapping_update==1){
 					$message="Activity has been updated successfully";

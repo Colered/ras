@@ -66,7 +66,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	//echo '<pre>';
 	//print_r($detail);
 }
-	$ad_hoc_act_date_dd = "";
+	$ad_hoc_fix_date="";
 	if(isset($detail['reserved_flag']) && $detail['reserved_flag']=="5" && $detail['adhoc_start_date']=="0000-00-00"){
 		$ad_hoc_act_date_dd="1";
 	}else if(isset($detail['reserved_flag']) && $detail['reserved_flag']=="5"){
@@ -74,6 +74,9 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	}else{
 		$ad_hoc_act_date_dd="";
 	}
+	$act_date =(isset($detail['act_date']) && $detail['act_date']!="")? $detail['act_date'] :"";
+	$act_ad_hoc_fix_date =(isset($detail['act_date']) && $detail['act_date']!="")? $detail['act_date'] :"";
+
 	$special_act_name =(isset($detail['special_activity_name']) && $detail['special_activity_name']!="")? $detail['special_activity_name'] :"";
 	$special_activity =(isset($detail['reserved_flag']) && $detail['reserved_flag']!="")? $detail['reserved_flag'] :"";
 	$special_activity_type =(isset($detail['special_activity_type']) && $detail['special_activity_type']!="")? $detail['special_activity_type'] :"";
@@ -84,9 +87,11 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$subject_id =(isset($detail['subject_id']) && $detail['subject_id']!="")? $detail['subject_id'] :"";
 	$subject_val=(isset($detail['subject_id']) && $detail['subject_id']==0)? "N/A": "";
 	$teacher_id =(isset($detail['teacher_id']) && $detail['teacher_id']!="")? $detail['teacher_id'] :"";
-	$act_date =(isset($detail['act_date']) && $detail['act_date']!="")? $detail['act_date'] :"";
 	$start_time_id =(isset($detail['start_time']) && $detail['start_time']!="")? $detail['start_time'] :"";
 	$duration =(isset($detail['duration']) && $detail['duration']!="")? $detail['duration'] :"";
+	$adhoc_start_date =(isset($detail['adhoc_start_date']) && $detail['adhoc_start_date']!="" && $detail['act_date']=="0000-00-00")? $detail['adhoc_start_date'] :"";
+	$adhoc_end_date =(isset($detail['adhoc_end_date']) && $detail['adhoc_end_date']!="" && $detail['act_date']=="0000-00-00")? $detail['adhoc_end_date'] :"";
+	
 	//$actName=(isset($detail['act_name']) && $detail['act_name']!="")? $detail['act_name'] :"";
 	$disabled =(isset($special_act_id) && $special_act_id!="")? 'disabled="disabled"' :"";
 	$btnSubmit =(isset($_GET['edit']) && $_GET['edit']!="")? "Update" :"Save";
@@ -100,7 +105,9 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 			<form name="specialActivityForm" id="specialActivityForm" action="postdata.php" method="post">
 				<input type="hidden" name="form_action" value="addEditSpecialActivity" />
 				<input type="hidden" id="special_act_id" name="special_act_id" value="<?php echo $special_act_id; ?>" />
-                <div class="custtable_left">
+                <input type="hidden" id="ad_hoc_act_date_dd" name="ad_hoc_act_date_dd" value="<?php echo $ad_hoc_act_date_dd; ?>" />
+                
+				<div class="custtable_left">
 				<div class="custtd_left red">
 					<?php if(isset($_SESSION['error_msg']))
 						echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
@@ -168,22 +175,19 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                        		</div>
                     		<div class="txtfield otAct div-ad-hoc-date-slct <?php if($ad_hoc_act_date_dd == '1' || $ad_hoc_act_date_dd == '2'){ echo "showotBlock";}else{ echo "";} ?>" >
 									Activity Date:<span class="redstar spanAdHocDate">*</span>
-								 	<select name="ad_hoc_date_slct" id="ad_hoc_date_slct"  onchange="adHocDateShowHide();">
-											<option value="">-Select-</option>
+								 	<select id="ad_hoc_date_slct" name="ad_hoc_date_slct"   onchange="adHocDateShowHide();">
+											<option value="" selected="selected">-Select-</option>
 											<option value="1" <?php if($ad_hoc_act_date_dd == '1'){echo  'selected="selected"'; }?>>Fixed Date</option>
-											<option value="2" <?php if($ad_hoc_act_date_dd == '2'){echo  'selected="selected"'; }?> >Range Date</option>
+											<option value="2" <?php if($ad_hoc_act_date_dd == '2'){echo  'selected="selected"'; }?>>Range Date</option>
 									</select>
 							</div>
 							<div class="txtfield otAct div-ad-hoc-fixed" >
 								    Date:<span class="redstar spanAdHocDate">*</span>
-									<input type="text" size="12" id="ad_hoc_fix_date"  name="ad_hoc_fix_date" class="txtfield" value=" "/>
+									<input type="text" size="12" id="ad_hoc_fix_date"  name="ad_hoc_fix_date" class="txtfield" value="<?php echo $act_ad_hoc_fix_date;?>"/>
 							</div>
 							<div class="txtfield otAct div-ad-hoc-range" >
-									From:<input type="text" size="12" id="fromADHocDate"  name="fromADHocDate"/>
-                        			To:<input type="text" size="12" id="toADHocDate" name="toADHocDate"/>
-								    <script type="text/javascript">
-                                        jQuery('#ad_hoc_date_slct').val("<?php echo $duration; ?>");
-                                    </script>
+									From:<input type="text" size="12" id="fromADHocDate"  name="fromADHocDate" value="<?php echo $adhoc_start_date; ?>"/>
+                        			To:<input type="text" size="12" id="toADHocDate" name="toADHocDate" value="<?php echo $adhoc_end_date; ?>"/>
 							</div>		
 							<div class="clear"></div>
 							<div class="custtd_left">
@@ -316,8 +320,8 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
                         <h2>Time Interval <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        From:<input type="text" size="12" id="fromSpecialAval" />
-                        To:<input type="text" size="12" id="toSpcialAval" />
+                        From:<input type="text" size="12" id="fromSpecialAval" name="fromSpecialAval" />
+                        To:<input type="text" size="12" id="toSpcialAval" name="toSpcialAval" />
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
