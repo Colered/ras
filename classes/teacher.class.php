@@ -254,7 +254,7 @@ class Teacher extends Base {
 		$Date_range = $result_tt_range->fetch_assoc();
 		$result_sess = $this->getSessionFromTT();
 		
-		$sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,tar.reason,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name ,td.room_id reserverd_room_id,td.date,td.timeslot FROM teacher_activity ta
+		$sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,ta.reason as reason_flag,tar.reason,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name ,td.room_id reserverd_room_id,td.date,td.timeslot FROM teacher_activity ta
 						left join subject s on(s.id = ta.subject_id)
 						left join subject_session ss on(ss.id=ta.session_id)
 						left join teacher t on(t.id = ta.teacher_id)
@@ -409,6 +409,7 @@ class Teacher extends Base {
 		  return $row['teacher_name'].'('.$row['email'].')';
 		}
     }
+	
 	public function getWebTeachersDetail($program_id='',$teacher_id='',$subject_id='',$room_id='',$area_id='',$teacher_type_id='',$cycle_id='')
 	{ 
 	    $row=$rowmainArr=$newArr=array();
@@ -654,5 +655,17 @@ class Teacher extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;
 	}
+	/*get teacher name by id*/
+	public function getTeacherNameByID($id)
+	{
+		$sql="SELECT teacher_name,email FROM teacher WHERE id='".$id."'";
+		$result = $this->conn->query($sql);
+		if(!$result->num_rows){
+			return '';
+		}else{
+		  $row = $result->fetch_assoc();
+		  return $row['teacher_name'];
+		}
+    }
 	
 }

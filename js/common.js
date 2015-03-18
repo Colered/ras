@@ -1,5 +1,5 @@
 $(document).ready(function() {
- $(function() {
+$(function() {
     $(".activityDateCal").datepicker({
 		dateFormat: 'dd-mm-yy',
 		defaultDate: "+1w",
@@ -680,6 +680,13 @@ function checkAvailability($forcing) {
 			$('#slctTeacher').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
+		if($('#slctTeacher option:selected').length > 1 && $('#reason').val()==""){
+			$('#reason').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#reason').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
 		if($('#room_id').val()==""){
 			$('#room_id').css('border', 'solid 1px red');
 			var formValid = 1; 
@@ -708,7 +715,7 @@ function checkAvailability($forcing) {
 			$('#subSessDate').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="")){
+		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="") || ($('#slctTeacher option:selected').length > 1 && $('#reason').val()=="")){
 			var formValid = 1; 
 			return false;
 			}
@@ -735,6 +742,7 @@ function checkAvailability($forcing) {
 						'sess_hidden_id': $('#sess_hidden_id').val(),
 						'act_hidden_id': $('#act_hidden_id').val(),
 						'check_avail_force_entry':$forcing,
+						'reason':$('#reason').val(),
 						'codeBlock': 'checkAvailabilitySession',
 					},
 					success: function($succ){
@@ -798,7 +806,7 @@ function checkAvailability($forcing) {
 						}else if($succ==15){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
-							alert('Please choose a single teacher while creating a reserved activity.');
+							alert('Please choose a single teacher while creating a reserved activity with alternate teacher option.');
 						}else if($succ==16){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -851,12 +859,19 @@ function addSubjectSession($forcing,$force_flag){
 			$('#slctTeacher').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
+		if($('#slctTeacher option:selected').length > 1 && $('#reason').val()==""){
+			$('#reason').css('border', 'solid 1px red');
+			var formValid = 1; 
+		}else{
+			$('#reason').css('border', '1px solid #C0C0C0');
+			var formValid = 0;
+		}
 		if($('#subjectId').val()==""){
 			var formValid = 1;
 			alert('Please save subject info before add to session.');
 			return false;
 		}
-		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="")){
+		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher option:selected').length > 1 && $('#reason').val()=="")){
 			var formValid = 1; 
 			return false;
 			}
@@ -884,6 +899,7 @@ function addSubjectSession($forcing,$force_flag){
 						'act_hidden_id': $('#act_hidden_id').val(),
 						'force_var':$forcing,
 						'force_flag':$force_flag,
+						'reason':$('#reason').val(),
 						'codeBlock': 'add_sub_session',
 					},
 					success: function($succ){
@@ -919,7 +935,7 @@ function addSubjectSession($forcing,$force_flag){
 						}else if($succ==14){
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
 						}else if($succ==15){
-							alert('Please choose a single teacher while creating a reserved activity.');
+							alert('Please choose a single teacher while creating a reserved activity with alternate teacher option.');
 						}else if($succ==16){							
 							alert('Program already have some reserved activity on the selected date and time.');
 						}else if($succ==17){
@@ -3237,6 +3253,7 @@ function deleteSpecialActivity($id){
     }
     return false;
 }
+<<<<<<< HEAD
 //Ajax to delete the special activity rule
 function deleteRuleSpecialActivity($id){
 	if($id==""){
@@ -3463,5 +3480,26 @@ function getSubjectByProgIDAndCycleID(){
 	
 	}else{
 		$("#slctSubjectName").html("<option value=''>--Select a program and cycle first--</option>");	
+	}
+}
+$(document).ready(function() {
+	var count = $('#slctTeacher option:selected').length;
+	if(count == 1)
+	{
+		$("#reason").prop('disabled', 'disabled');
+	}
+});
+function processSelectBox()
+{
+	var count = $('#slctTeacher option:selected').length;
+	if(count>1)
+	{
+		 $("#reason").removeAttr("disabled");
+		 $("#reason option:selected").prop("selected", false);
+		 $('#reason option[value="Alternate Choices for Session"]').prop("selected", "selected");
+	}else{
+		$("#reason").attr('disabled', 'disabled');
+		$("#reason option:selected").prop("selected", false);
+		$("#reason option:first").prop("selected", "selected");		
 	}
 }

@@ -140,7 +140,18 @@ function activityFilter()
 									}
 							 }
 							$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
-							$teacher_name = $row['teacher_name'].$email;
+							$teacher_str = $row['teacher_name'].$email;
+							if($row['reason_flag'] == 'Teaching Session Jointly')
+							{
+								$teacher_array = explode(",",$row['teacher_id']);
+								$teachers_names = array();
+								foreach($teacher_array as $teacher_id)
+								{
+									$t_name = $objT->getTeacherByID($teacher_id);
+									$teachers_names[] = $t_name;
+								}
+								$teacher_str = implode(" , ",$teachers_names);
+							}							
 							if($row['reserved_flag']==1)
 							   $res_flag = "Yes";
 							else
@@ -156,7 +167,7 @@ function activityFilter()
 							<td class="act_color"<?php echo $tdColor;?>><a href="program_cycles.php?edit=<?php echo base64_encode($row['program_year_id']);?>" target="_blank"><?php echo $row['program_name'];?></a></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['subject_name'];?></a></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['session_name'];?></a></td>
-							<td class="act_color"<?php echo $tdColor;?>><a href="teacher_availability.php?tid=<?php echo base64_encode($row['teacher_id']);?>" target="_blank"><?php echo $teacher_name;?></a></td>
+							<td class="act_color"<?php echo $tdColor;?>><a href="teacher_availability.php?tid=<?php echo base64_encode($row['teacher_id']);?>" target="_blank"><?php echo $teacher_str;?></a></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="classroom_availability.php?rid=<?php echo $row['room_id'];?>" target="_blank"><font color="">
 								<?php
 									if(($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")){
