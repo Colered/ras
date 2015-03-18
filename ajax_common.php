@@ -1813,12 +1813,15 @@ switch ($codeBlock) {
 											if($v['reserved_flag'] == '3')
 											{
 												$description = "Recess Activity - ".$program_name;
+												$name = $v['special_activity_name'];
 											}elseif($v['reserved_flag'] == '4')
 											{
 												$description = "Group Meeting";
+												$name = $v['special_activity_name'];
 											}elseif($v['reserved_flag'] == '5')
 											{
 												$description = "Adhoc Activity";
+												$name = $v['special_activity_name'];
 											}											
 											$date = $v['date'];
 											$date_add = date("Y-m-d H:i:s");
