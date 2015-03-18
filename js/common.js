@@ -3253,7 +3253,6 @@ function deleteSpecialActivity($id){
     }
     return false;
 }
-<<<<<<< HEAD
 //Ajax to delete the special activity rule
 function deleteRuleSpecialActivity($id){
 	if($id==""){
