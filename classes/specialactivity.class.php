@@ -288,4 +288,25 @@ class SpecialActivity extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;				
 	}
+	/*public function getSpecialActivityByActName($spActName){
+		$sql = "SELECT ta.id,ta.name, ta.timeslot_id, ta.reserved_flag, ta.act_date,sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date
+				FROM teacher_activity ta
+				LEFT JOIN special_activity_mapping sam ON ( ta.id = sam.teacher_activity_id )
+				WHERE ta.id = sam.teacher_activity_id and sam.special_activity_name='".trim($spActName)."' ";
+		$result =  $this->conn->query($sql);
+		return $result;				
+	}
+*/	public function getSpecialActivityDetailOnGrpEdit($special_gp_act_name){
+	echo $special_gp_act_name;echo '<br>';
+		echo $sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name,sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date FROM teacher_activity ta
+						left join subject s on(s.id = ta.subject_id)
+						left join subject_session ss on(ss.id=ta.session_id)
+						left join teacher t on(t.id = ta.teacher_id)
+						left join program_years py on(py.id=ta.program_year_id)
+						left join room rm on(rm.id=ta.room_id)
+						left join special_activity_mapping sam on(ta.id = sam.teacher_activity_id)
+						WHERE sam.special_activity_name='".$special_gp_act_name."' ";
+		$result =  $this->conn->query($sql);
+		return $result;				
+	}
 }

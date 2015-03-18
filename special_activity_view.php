@@ -42,6 +42,8 @@ $(document).ready(function(){
                     <?php 
 					$i=1;
 					while ($data = $result->fetch_assoc()){ 
+					//echo '<pre>';
+					//print_r($data);
 					?>
 					<tr>
                         <td><?php echo $i;?></td>
@@ -57,9 +59,9 @@ $(document).ready(function(){
 						    $actHtml=''; $count=0;
 							$act_name_query_result=$obj->getSpecialActivityByActName($data['special_activity_name']);
 							if($data['reserved_flag']!=5){
-								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th></tr></thead><tbody>';
+								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th >Action</th></tr></thead><tbody>';
 							}else{
-								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th >Ad-Hoc Start time</th><th >Ad-Hoc End time</th></tr></thead><tbody>';
+								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th >Ad-Hoc Start time</th><th >Ad-Hoc End time</th><th>Action</th></tr></thead><tbody>';
 							}
 							while($act_name_data_result = mysqli_fetch_assoc($act_name_query_result)){
 									$ts_array = explode(",",$act_name_data_result['timeslot_id']);
@@ -72,6 +74,9 @@ $(document).ready(function(){
 															<td>'.$act_name_data_result['name'].'</td>
 															<td>'.$act_name_data_result['act_date'].'</td>
 															<td>'.$timeslot.'</td>
+															<td>
+																<a href="special_activity.php?edit='.base64_encode($act_name_data_result['id']).'?>" class="table-icon edit" title="Edit"></a>
+																<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$act_name_data_result['id'].')"></a></td>
 												  </tr> ';
 									}else{
 										$actHtml.='<tr>
@@ -80,6 +85,10 @@ $(document).ready(function(){
 															<td>'.$timeslot.'</td>
 															<td>'.$act_name_data_result['adhoc_start_date'].'</td>
 															<td>'.$act_name_data_result['adhoc_end_date'].'</td>
+															<td id='.$act_name_data_result['id'].'>
+																<a href="special_activity.php?edit='.base64_encode($act_name_data_result['id']).'?>" class="table-icon edit" title="Edit"></a>
+																<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$act_name_data_result['id'].')"></a>
+															</td>
 												  </tr> ';
 									}
 							}
@@ -93,13 +102,13 @@ $(document).ready(function(){
 						<?php }else{ ?>
 						<td class="align-center" width="200">N/A</td>
 						<?php } ?>
-						<td><?php echo $data['program_name'];?></td>
-						<td><?php echo $data['area_name'];?></td>
-						<td><?php echo $data['room_name'];?></td>
-						<td><?php echo $data['subject_name'];?></td>
-						<td><?php echo $data['teacher_name'];?></td>
+						<td><?php if($data['program_year_id']==0){echo 'N/A';}else{echo $data['program_name'];}?></td>
+						<td><?php if($data['area_name']==""){echo 'N/A';}else{echo $data['area_name'];}?></td>
+						<td><?php if($data['room_id']==0){echo 'N/A';}else{echo $data['room_name'];}?></td>
+						<td><?php if($data['subject_id']==0){echo 'N/A';}else{echo $data['subject_name'];}?></td>
+						<td><?php if($data['teacher_id']==0){echo 'N/A';}else{echo $data['teacher_name'];}?></td>
 						<td id="<?php echo trim($data['special_activity_name']) ?>">
-							<a href="special_activity.php?edit=<?php echo base64_encode($data['special_activity_name'])?>" class="table-icon edit" title="Edit"></a>
+							<!--<a href="special_activity.php?gp_Edit=<?php //echo base64_encode($data['special_activity_name'])?>" class="table-icon edit" title="Edit"></a>-->
 							<a class="table-icon delete" onClick="deleteSpecialActivity('<?php echo trim($data['special_activity_name']) ?>')"></a>
 						</td>
                     </tr>

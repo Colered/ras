@@ -1,9 +1,10 @@
-<?php include('header.php');
+<?php 
+include('header.php');
 $obj = new SpecialActivity();
 $objTeach = new Teacher();
+$obj2 = new Timeslot();
 $teacherData = $objTeach->getTeachers();
 $specialAvailData = $obj->getSpecialAvailRule();
-$obj2 = new Timeslot();
 $tslot_dropDwn = $obj2->getTimeSlotStartDateDropDwn();
 $disFDivCss = "style=''";
 $special_act_id="";
@@ -57,16 +58,13 @@ $option_duration='<option value="">--Select--</option>
                   <option value="330">07:30</option>
                   <option value="345">07:45</option>
                   <option value="345">08:00</option>';			
-$name="";
-$teachId = ""; $decodeTeachId="";
-$mappedruleids = array();
-if(isset($_GET['edit']) && $_GET['edit']!=""){
-	$special_act_id = base64_decode($_GET['edit']);
-	$detail = $obj->specialActivityDetail($special_act_id);
-	//echo '<pre>';
-	//print_r($detail);
-}
-	$ad_hoc_fix_date="";
+	$name="";
+	$teachId = ""; $decodeTeachId=$ad_hoc_fix_date="";
+	$mappedruleids = array();
+	if(isset($_GET['edit']) && $_GET['edit']!=""){
+		$special_act_id = base64_decode($_GET['edit']);
+		$detail = $obj->specialActivityDetail($special_act_id);
+	}
 	if(isset($detail['reserved_flag']) && $detail['reserved_flag']=="5" && $detail['adhoc_start_date']=="0000-00-00"){
 		$ad_hoc_act_date_dd="1";
 	}else if(isset($detail['reserved_flag']) && $detail['reserved_flag']=="5"){
@@ -76,7 +74,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	}
 	$act_date =(isset($detail['act_date']) && $detail['act_date']!="")? $detail['act_date'] :"";
 	$act_ad_hoc_fix_date =(isset($detail['act_date']) && $detail['act_date']!="")? $detail['act_date'] :"";
-
 	$special_act_name =(isset($detail['special_activity_name']) && $detail['special_activity_name']!="")? $detail['special_activity_name'] :"";
 	$special_activity =(isset($detail['reserved_flag']) && $detail['reserved_flag']!="")? $detail['reserved_flag'] :"";
 	$special_activity_type =(isset($detail['special_activity_type']) && $detail['special_activity_type']!="")? $detail['special_activity_type'] :"";
@@ -91,8 +88,6 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$duration =(isset($detail['duration']) && $detail['duration']!="")? $detail['duration'] :"";
 	$adhoc_start_date =(isset($detail['adhoc_start_date']) && $detail['adhoc_start_date']!="" && $detail['act_date']=="0000-00-00")? $detail['adhoc_start_date'] :"";
 	$adhoc_end_date =(isset($detail['adhoc_end_date']) && $detail['adhoc_end_date']!="" && $detail['act_date']=="0000-00-00")? $detail['adhoc_end_date'] :"";
-	
-	//$actName=(isset($detail['act_name']) && $detail['act_name']!="")? $detail['act_name'] :"";
 	$disabled =(isset($special_act_id) && $special_act_id!="")? 'disabled="disabled"' :"";
 	$btnSubmit =(isset($_GET['edit']) && $_GET['edit']!="")? "Update" :"Save";
 	$objTS = new Timeslot();
