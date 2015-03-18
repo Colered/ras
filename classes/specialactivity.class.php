@@ -167,8 +167,6 @@ class SpecialActivity extends Base {
 			}
 	}
 	public function updateSpecialActivity(){
-		//echo '<pre>';
-		//print_r($_POST);die;
 		if($_POST['special_activity_type']!="2" && $_POST['duration']!=""){
 			  $timeslotIdsArray = array();
 			  
@@ -192,7 +190,6 @@ class SpecialActivity extends Base {
 				}else{
 						$activity_date=$_POST['oneTimeDate'];
 				}
-			  
 			    $ts_id_Arr = explode(',',$ot_timeslot_str);
 				$start_time = $ts_id_Arr['0'];
 				$result_update = mysqli_query($this->conn, "Update teacher_activity set timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$activity_date."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['special_act_id']."' ");
