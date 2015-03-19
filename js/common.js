@@ -3300,33 +3300,43 @@ $(document).ready(function() {
 			var activityType=$('#special_activity_type').val();
 			var activityName=$('#txtActName').val();
 			var rule_id=$(this).val();
-			if(rule_id==""){
-				alert("Please select a rule to delete");
-				return false;
-			}else if(confirm("Are you sure you want to delete all associated activities with this rule?")) {
-				$.ajax({
-						type: "POST",
-						url: "ajax_common.php",
-						data: {
-							'id': rule_id,
-							'activity': activity,
-							'activityType': activityType,
-							'activityName':activityName,
-							'codeBlock': 'delete_rule_associated_activity',
-						},
-						success: function($succ){
-							if($succ==1){
-								window.location.href = 'special_activity_view.php';
-								$('.green, .red').hide();
-							}else{
-								alert('Activity can not be deleted');
-								$('input[type=checkbox][value='+rule_id+']').prop('checked', false);
-								$('.green, .red').hide();
-							}
-						}
-				});
+			var ruleIdActid_str = $('#rule_id_grp').val().split(',');
+			var ruleCheckedValStr="";
+			for (var i = 0; i < ruleIdActid_str.length; i++){
+					if(rule_id===ruleIdActid_str[i]){
+						ruleCheckedValStr="matched";
+						break;
+					}
 			}
-			return false;
+			if(ruleCheckedValStr!=""){
+				if(rule_id==""){
+					alert("Please select a rule to delete");
+					return false;
+				}else if(confirm("Are you sure you want to delete all associated activities with this rule?")) {
+					$.ajax({
+							type: "POST",
+							url: "ajax_common.php",
+							data: {
+								'id': rule_id,
+								'activity': activity,
+								'activityType': activityType,
+								'activityName':activityName,
+								'codeBlock': 'delete_rule_associated_activity',
+							},
+							success: function($succ){
+								if($succ==1){
+									window.location.href = 'special_activity_view.php';
+									$('.green, .red').hide();
+								}else{
+									alert('Activity can not be deleted');
+									$('input[type=checkbox][value='+rule_id+']').prop('checked', false);
+									$('.green, .red').hide();
+								}
+							}
+					});
+				}
+		  }
+		//return false;
 		}
 	 }
 		
