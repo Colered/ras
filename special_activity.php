@@ -64,6 +64,8 @@ $option_duration='<option value="">--Select--</option>
 	if(isset($_GET['edit']) && $_GET['edit']!=""){
 		$special_act_id = base64_decode($_GET['edit']);
 		$detail = $obj->specialActivityDetail($special_act_id);
+		//echo '<pre>';
+		//print_r($detail);
 	}
 	if(isset($detail['reserved_flag']) && $detail['reserved_flag']=="5" && $detail['adhoc_start_date']=="0000-00-00"){
 		$ad_hoc_act_date_dd="1";
@@ -262,15 +264,15 @@ $option_duration='<option value="">--Select--</option>
 							<div class="txtfield">
                                 <select id="slctRoom" name="slctRoom" class="select1 required" <?php echo $disabled;?>>
                                     <option value="" selected="selected">--Select Room--</option>
-									<option value="0">N/A</option>
-								<?php
+									<option value="0" <?php if($room_id==0 && $room_id!=""){echo 'selected="selected"';}?>>N/A</option>
+                                <?php
 								$roomId = "";
 								$room_qry = "select * from room";
 								$room_result = mysqli_query($db, $room_qry);
 								while ($room_data = mysqli_fetch_assoc($room_result)) {
 									$selected = (trim($room_id) == trim($room_data['id'])) ? ' selected="selected"' : '';
 									?>
-                                        <option value="<?php echo $room_data['id'] ?>" <?php echo $selected;?>><?php echo $room_data['room_name']; ?></option>
+										<option value="<?php echo $room_data['id'] ?>" <?php echo $selected;?>><?php echo $room_data['room_name']; ?></option>
 							<?php } ?>
                                 </select>
                             </div>
@@ -281,7 +283,24 @@ $option_duration='<option value="">--Select--</option>
                             <div class="txtfield">
                                 <select id="slctSubjectName" name="slctSubjectName" class="select1 required" <?php echo $disabled;?> >
                                     <option value="" selected="selected">--Select Subject--</option>
-                                    <option value="0">N/A</option>
+                                    <option value="0" <?php if($subject_id==0 &&$subject_id!="" ){echo ' selected="selected"';}?>>N/A</option>
+									<?php
+									$subjectData = $subjectNameData=array();
+									if(isset($subject_id) && $subject_id!="" && $program_year_id!="" && $cycle_id!=""){
+										$subject_query="select * from subject where program_year_id='".$program_year_id."' and cycle_no='".$cycle_id."'";
+										$subjectDataall = mysqli_query($db, $subject_query);
+											while ($subjectDatas = mysqli_fetch_assoc($subjectDataall)){
+												$subjectData[] = $subjectDatas['id'];
+												$subjectNameData[] = $subjectDatas['subject_name'];
+											}
+									}
+									if (count($subjectData) > 0) {
+                                        for ($i = 0; $i < count($subjectData); $i++) {
+										    $selected = (trim($subject_id) == trim($subjectData[$i])) ? ' selected="selected"' : '';
+                                            ?>
+                                            <option value="<?php echo $subjectData[$i]; ?>" <?php echo $selected; ?>><?php echo  $subjectNameData[$i]; ?></option>
+										<?php }
+									} ?>
                                 </select>
                             </div>
                             <div class="clear"></div>
