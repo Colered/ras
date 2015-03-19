@@ -563,7 +563,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case "addEditSpecialActivity":
 			$obj=new SpecialActivity();
-			if(isset($_POST['special_act_id']) && $_POST['special_act_id']!=''){
+			if((isset($_POST['special_act_id']) && $_POST['special_act_id']!='') || (isset($_POST['special_sp_act_name']) && $_POST['special_sp_act_name']!='')){
 				$resp = $obj->updateSpecialActivity();//update a SpecialActivity
 			}else{
 				$resp = $obj->addSpecialActivity();//add new SpecialActivity

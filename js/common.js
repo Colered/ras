@@ -2849,11 +2849,13 @@ function acceptAllocationFun(){
 
 //To the accept allocation
 $(document).ready(function() {
-	$('.rule__listed_ckb').each(function() {
-		if(!$(this).prop('checked')) {
-			$(this).prop('disabled', true);
-		}
-	});					   
+	/*if($('.special_sp_act_name').val()=="")	{				   
+		$('.rule__listed_ckb').each(function() {
+			if(!$(this).prop('checked')) {
+				$(this).prop('disabled', true);
+			}
+		});					   
+	}*/
 	//To select/deselect for selectAll checkbox when all checkbox are selected or not
 	$(document).on('click', ".activityCkb", function() {
 			var desabledCkbCnt = $(".ckbDisabled").length;
@@ -3053,25 +3055,17 @@ function specialActivity(){
 		   $('.div-ad-hoc-label,.div-ad-hoc-date-slct,.div-ad-hoc-fixed,.div-ad-hoc-range').hide();	
 		   $('.scheduleBlockSpAct').hide();	
 		   $('.spanPrgm, .spanCycle').text("*");
-		   //$('.spanCycle').text("*");
 		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'bold'});
-		   //$('.spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'bold'});
 		   $('.spanArea, .spanRoom, .spanSubject, .spanSubCode, .spanSubCode').text("");
-		   //$('.spanRoom').text("");	
-		   //$('.spanSubject').text("");	
-		   //$('.spanSubCode').text("");	
-		   //$('.spanSubCode').text("");
 		   $("#slctArea option").filter(function() {
 		    return this.text == 'N/A'; 
 			}).attr('selected', true);
 		   $("#slctRoom option").filter(function() {
 		    return this.text == 'N/A'; 
 			}).attr('selected', true);
-		   
 		   $("#slctSubjectName option").filter(function(){
 		    return this.text == 'N/A'; 
 			}).attr('selected', true);
-		   
 		   $('#txtSubjCode').val('N/A');
 		   $("#slctTeacher option").filter(function(){
 		    return this.text == 'N/A'; 
@@ -3123,12 +3117,7 @@ function specialActivity(){
 		   $('.div-ad-hoc-date-slct,.div-ad-hoc-fixed,.div-ad-hoc-range,.divDateSingle ').hide();	
 		   $('.scheduleBlockSpAct').show();	
 		   $('.spanPrgm, .spanCycle, .spanArea, .spanRoom, .spanSubject, .spanSubCode').text("");	
-		   //$('.spanCycle').text("");
 		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'normal'});
-		   //$('.spanArea').text("");
-		   //$('.spanRoom').text("");	
-		   //$('.spanSubject').text("");	
-		   //$('.spanSubCode').text("");	
 		   $('#slctArea option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
@@ -3137,87 +3126,6 @@ function specialActivity(){
 		   $('#slctTeacher option[value=""]').attr("selected",true);
 	  	}
 }
-/*function specialActivityType(){
-	listingSpecialAct();
-	   var activity=$( "#special_activity" ).val();
-	   var activity_type = $( "#special_activity_type option:selected" ).val();
-	   if(activity==3 && activity_type==1){
-		   $('.otAct').show();
-		   $('.scheduleBlockSpAct').hide();	
-		   $('.spanPrgm').text("*");	
-		   $('.spanCycle').text("*");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
-		   $("#slctArea option").filter(function() {
-		    return this.text == 'N/A'; 
-			}).attr('selected', true);
-		   $("#slctRoom option").filter(function() {
-		    return this.text == 'N/A'; 
-			}).attr('selected', true);
-		   $('#txtSubjName').val('N/A');
-		   $('#txtSubjCode').val('N/A');
-		   $("#slctTeacher option").filter(function(){
-		    return this.text == 'N/A'; 
-		}).attr('selected', true);
-	   }else if(activity==3 && activity_type==2){
-		   $('.otAct').hide();
-		   $('.scheduleBlockSpAct').show();	
-		   $('.spanPrgm').text("*");	
-		   $('.spanCycle').text("*");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
-		   $("#slctArea option").filter(function() {
-		    return this.text == 'N/A'; 
-			}).attr('selected', true);
-		   $("#slctRoom option").filter(function() {
-		    return this.text == 'N/A'; 
-			}).attr('selected', true);
-		   $('#txtSubjName').val('N/A');
-		   $('#txtSubjCode').val('N/A');
-		   $("#slctTeacher option").filter(function(){
-		    return this.text == 'N/A'; 
-		}).attr('selected', true);
-}
-	  if((activity==4 || activity==5) && activity_type==1){
-		   $('.otAct').show();
-		   $('.scheduleBlockSpAct').hide();	
-		   $('.spanPrgm').text("");	
-		   $('.spanCycle').text("");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
-		   $('#slctArea option[value=""]').attr("selected",true);
-		   $('#slctRoom option[value=""]').attr("selected",true);
-		   $('#txtSubjName').val('');
-		   $('#txtSubjCode').val('');
-		   $('#slctTeacher option[value=""]').attr("selected",true);
-	  	}
-		if((activity==4 || activity==5) && activity_type==2){
-		   $('.otAct').hide();
-		   $('.scheduleBlockSpAct').show();	
-		   $('.spanPrgm').text("");	
-		   $('.spanCycle').text("");
-		   $('.spanArea').text("");
-		   $('.spanRoom').text("");	
-		   $('.spanSubject').text("");	
-		   $('.spanSubCode').text("");	
-		   $('.spanSubCode').text("");
-		   $('#slctArea option[value=""]').attr("selected",true);
-		   $('#slctRoom option[value=""]').attr("selected",true);
-		   $('#txtSubjName').val('');
-		   $('#txtSubjCode').val('');
-		   $('#slctTeacher option[value=""]').attr("selected",true);
-	  	}
-	   
-}*/
 $(document).ready(function() {
 	$('.showotBlock').show();
 	if($('#special_act_id').val()!=""){
@@ -3232,6 +3140,25 @@ $(document).ready(function() {
 			$('.div-ad-hoc-fixed').hide();
 			$('.div-ad-hoc-range').show();
 		}
+	}
+	if($('#special_sp_act_name').val()!=""){
+		if($('#special_activity_type').val()=="2"){
+			$('.div-ad-hoc-fixed').hide();
+			$('.scheduleBlockSpAct').show();
+		}else{
+			$('.scheduleBlockSpAct').hide();
+			if($('#ad_hoc_act_date_dd').val()!="" && $('#ad_hoc_act_date_dd').val()=="1" ){
+				$('.div-ad-hoc-fixed').show();
+				$('#oneTimeDate').val('');
+				$('.divDateSingle').hide();
+				$('.div-ad-hoc-range').hide();
+			}else if($('#ad_hoc_act_date_dd').val()!=""){
+				$('.divDateSingle').hide();
+				$('.div-ad-hoc-fixed').hide();
+				$('.div-ad-hoc-range').show();
+			}
+		}
+		
 	}
 });
 //Ajax delete special activity function for the view page
@@ -3286,16 +3213,7 @@ function deleteRuleSpecialActivity($id){
 }
 //listing the special activity when selecting the activity (Recess/grup/adhoc) and activity type (onetime/periodic) 
 function listingSpecialAct(){
-	var ele = $("ul.rule").find('input[type=checkbox]');
-    if(ele.is(':checked')){
-		ele.removeAttr('checked');
-    }
 	if($('#special_activity').val()!="" && $('#special_activity_type').val()!=""){
-		$('.rule__listed_ckb').each(function() {
-			if(!$(this).prop('checked')) {
-				$(this).prop('disabled', false);
-			}
-		});	
 		var activity=$('#special_activity').val();
 		var activity_type=$('#special_activity_type').val();
 		$.ajax({
@@ -3307,45 +3225,7 @@ function listingSpecialAct(){
 					'codeBlock': 'special_activity_listing',
 				},
 				success: function($succ){
-					var ruleIdActid_str = $succ.split('-');
-					var ruleIdActid_Arr = new Array();
-					for (var i = 0; i < ruleIdActid_str.length; i++){
-						ruleIdActid_Arr.push(ruleIdActid_str[i]);
-					}
-					var checkedRuleCkb = new Array();
-					var rule_ids = ruleIdActid_Arr[0].split(',');
-					if($('#special_activity_type').val()!="1"){
-						if($succ=='-'){
-							$(".special_act_list").html("");
-						}else{
-							for (var i = 0; i < rule_ids.length; i++) {
-								$("input[name='ruleval[]']").each(function (){
-									 if(rule_ids[i]==parseInt($(this).val())){
-										 //$("input:checkbox[value='"+rule_ids[i]+"']").attr("checked", "checked");
-										$('input[type=checkbox][value='+rule_ids[i]+']').prop('checked', true);
-										checkedRuleCkb.push($(this).val());
-									 }
-								});
-							}
-					  }
-					}else{
-						checkedRuleCkb.push(0);
-					}
-					if (checkedRuleCkb.length!= 0){
-						$.ajax({
-								type: "POST",
-								url: "ajax_common.php",
-								data: {
-									'activityIdArr': ruleIdActid_Arr[1],
-									'checkedRuleidsCkb': checkedRuleCkb,
-									'codeBlock': 'special_activity_periodic',
-								},
-								success: function($succ1){
-									$(".special_act_list").html($succ1);
-								}
-						});
-					}
-					
+					$(".special_act_list").html($succ);
 				}
            });
 	}
@@ -3411,16 +3291,19 @@ $(document).ready(function() {
 });
 //deleting the special activity which are associate rule
 $(document).ready(function() {
+						   
    $('.rule__listed_ckb').click(function(){
+	 if($('#special_sp_act_name').val()!=""){
 		if($(this).is(":checked")){
 		}else if($(this).is(":not(:checked)")){
 			var activity=$('#special_activity').val();
 			var activityType=$('#special_activity_type').val();
+			var activityName=$('#txtActName').val();
 			var rule_id=$(this).val();
 			if(rule_id==""){
 				alert("Please select a rule to delete");
 				return false;
-			}else if(confirm("Are you sure you want to delete all associated activities with this rule ?")) {
+			}else if(confirm("Are you sure you want to delete all associated activities with this rule?")) {
 				$.ajax({
 						type: "POST",
 						url: "ajax_common.php",
@@ -3428,6 +3311,7 @@ $(document).ready(function() {
 							'id': rule_id,
 							'activity': activity,
 							'activityType': activityType,
+							'activityName':activityName,
 							'codeBlock': 'delete_rule_associated_activity',
 						},
 						success: function($succ){
@@ -3444,6 +3328,8 @@ $(document).ready(function() {
 			}
 			return false;
 		}
+	 }
+		
     });
 });
 //show and hide the ad-hoc fixed date and range date

@@ -2114,20 +2114,86 @@ switch ($codeBlock) {
     	break;
 		case "special_activity_listing":
 			if(isset($_POST['activity']) && $_POST['activity_type']!=""){
-			  $sql = "select ta.id,ta.reserved_flag,sam.special_activity_rule_id,sam.special_activity_type from  teacher_activity ta 
+			 	$sql = "select ta.id,ta.reserved_flag,sam.special_activity_rule_id,sam.special_activity_type from  teacher_activity ta 
 					left join  special_activity_mapping sam on(sam.teacher_activity_id = ta.id) 
 					where reserved_flag ='".$_POST['activity']."' and sam.special_activity_type='".$_POST['activity_type']."' ";
-			//$sql = "select special_activity_rule_id from  special_activity_mapping where special_activity_type ='".$_POST['activity_type']."' group by special_activity_rule_id ";				
 				$query = mysqli_query($db,$sql);
-				$ruleIdArr =$ruleIdArrNew= $actIdArr=array();
+				$actIdArr=array();
 				while ($data = mysqli_fetch_array($query)){
-					$ruleIdArr[] = $data['special_activity_rule_id'];
 					$actIdArr[] = $data['id'];
 				}
-				$ruleIdArrNew = array_unique($ruleIdArr);
-				$rule_id_str = implode(',',$ruleIdArrNew);
 				$act_id_str = implode(',',$actIdArr);
-				echo $rule_id_str.'-'.$act_id_str;
+				$objT = new Teacher();
+				$data_special_activity = array();
+				$obj_SA=new SpecialActivity();
+				//$rule_ids = implode(',', $_POST['checkedRuleidsCkb']);
+				//echo '<pre>';
+				if(count($actIdArr)>0){
+				$result = $obj_SA->getSpecialActivityDetail($act_id_str);
+				//print_r($act_id_str);die;
+				$html="";
+				$html.='<div><h>Special Activity Listing:-</h></div>';
+				$html.='<table id="datatables" class="display tblSpActivity">
+                <thead>
+                    <tr>
+					    <!--<th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" title="Select All"/></th>-->
+                        <th>ID</th>
+                        <th>Special Activity Name</th>
+						<th>Activity Name</th>
+						<th>Activity Type</th>
+                        <th>Program</th>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Class Room</th>
+                        <th>Date</th>
+                        <th>Timeslot</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>';
+					$subject_name="";
+					if($result->num_rows){
+						$timeslot_arr=array();
+						while($row = $result->fetch_assoc())
+						{
+						   $timeslot_arr=explode(',',$row['timeslot_id']);
+						   $min_ts_id = $timeslot_arr[0];
+						   $max_ts_id = $timeslot_arr[count($timeslot_arr)-1];
+						   if($row['reserved_flag']=="3"){$recess="Recess Activity";}
+						   if($row['reserved_flag']=="4"){$recess="Group Activity";}
+						   if($row['reserved_flag']=="5"){$recess="AdHoc Activity";}
+						   if($row['subject_id']=="0"){$subject_name="N/A";}else {$subject_name=$row['subject_name'];} 
+						   if($row['session_id']=="0"){$session_name="N/A";}
+						   	if($row['room_id']=="0"){
+						   		$room_id="N/A";
+							}else{
+								$room_id=$row['room_name'];
+							}
+							$teacher_id=$row['teacher_name'];
+							$html.='<tr>';
+							$html.='
+							<td>'.$row['id'].'</td>
+							<td>'.$row['special_activity_name'].'</td>
+							<td>'.$row['name'].'</td>
+							<td>'.$recess.'</td>
+							<td>'.$row['program_name'].'</td>
+							<td>'.$subject_name.'</td>
+							<td>'.$teacher_id.'</td>
+							<td>'.$room_id.'</td>
+							<td>'.$row['act_date'].'</td>
+							<td>'.$objT->getTimeslotById($min_ts_id,$max_ts_id).'</td>
+							<td id='.$row['id'].'><a href="special_activity.php?edit='.base64_encode($row['id']).'?>" class="table-icon edit" title="Edit"></a>
+								<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$row['id'].')"></a>
+							</td>';
+							$html.='</tr>';
+						} 
+						$html.='</tbody>
+						</table>';
+						echo $html;
+			 		  }
+					}else{
+						echo $html="";
+					}  
 			}else{
 				$message="Please enter activity and activity_type to listing activities";
 				$_SESSION['error_msg'] = $message;
@@ -2148,11 +2214,11 @@ switch ($codeBlock) {
                     <tr>
 					    <!--<th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" title="Select All"/></th>-->
                         <th>ID</th>
-                        <th>Activity</th>
+                        <th>Special Activity Name</th>
+						<th>Activity Name</th>
 						<th>Activity Type</th>
                         <th>Program</th>
                         <th>Subject</th>
-                        <th>Session</th>
                         <th>Teacher</th>
                         <th>Class Room</th>
                         <th>Date</th>
@@ -2172,7 +2238,7 @@ switch ($codeBlock) {
 						   if($row['reserved_flag']=="3"){$recess="Recess Activity";}
 						   if($row['reserved_flag']=="4"){$recess="Group Activity";}
 						   if($row['reserved_flag']=="5"){$recess="AdHoc Activity";}
-						   if($row['subject_id']=="0"){$subject_name="N/A";}
+						   if($row['subject_id']=="0"){$subject_name="N/A";}else {$subject_name=$row['subject_name'];} 
 						   if($row['session_id']=="0"){$session_name="N/A";}
 						   	if($row['room_id']=="0"){
 						   		$room_id="N/A";
@@ -2183,11 +2249,11 @@ switch ($codeBlock) {
 							$html.='<tr>';
 							$html.='
 							<td>'.$row['id'].'</td>
+							<td>'.$row['special_activity_name'].'</td>
 							<td>'.$row['name'].'</td>
 							<td>'.$recess.'</td>
 							<td>'.$row['program_name'].'</td>
 							<td>'.$subject_name.'</td>
-							<td>'.$session_name.'</td>
 							<td>'.$teacher_id.'</td>
 							<td>'.$room_id.'</td>
 							<td>'.$row['act_date'].'</td>
@@ -2208,7 +2274,7 @@ switch ($codeBlock) {
 	case "delete_rule_associated_activity":
 		if((isset($_POST['id']) && $_POST['id']!="") && (isset($_POST['activity']) && $_POST['activity']!="") && (isset($_POST['activityType']) && $_POST['activityType']!="")){
 			$obj_SA=new SpecialActivity();
-			$result_query = $obj_SA->deleteSpecialActivityies();
+			$result_query = $obj_SA->deleteSpecialActivities();
 			echo $result_query;
 		}else {
 			echo 0;
