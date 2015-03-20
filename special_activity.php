@@ -627,11 +627,15 @@ $option_duration='<option value="">--Select--</option>
 								if(count($exceptionDates)>0){
 									echo '<strong>Exception Date:</strong> <br>';
 									$i=0;
+									$totalVal =  count($exceptionDates)-1;
 									foreach($exceptionDates as $value){
-										if($i%2==0)
-											echo $value.' , ';
-										else
-										echo $value.'<br>';
+										if($i%2==0){
+											echo $value;
+											if($totalVal != $i)
+												echo " , ";
+										}else{
+											echo $value.'<br>';
+										}
 										$i++;
 									}
 								} ?>
