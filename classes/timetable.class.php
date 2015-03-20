@@ -2688,13 +2688,20 @@ class Timetable extends Base {
 					{
 						if($counter == '1' && array_key_exists($date,$recess_activities) && array_key_exists($program_id,$recess_activities[$date]))
 						{
-							$recess_act_detail = $recess_activities[$date][$program_id];
-							$duration = $this->getDuration($recess_act_detail['activity_id']);
-							$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
-							$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
-							if($this->checkRoomAvailability($edit_room_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$edit_room_id,$reserved_rooms))
-							{								
-								$final_room_id = $edit_room_id;
+							$act_counter = 0;
+							foreach($recess_activities[$date][$program_id] as $recess_act_id=>$recess_act_detail)
+							{
+								$duration = $this->getDuration($recess_act_detail['activity_id']);
+								$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
+								$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
+								if($this->checkRoomAvailability($edit_room_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$edit_room_id,$reserved_rooms))
+								{								
+									$act_counter++;
+								}
+							}
+							if($act_counter == count($recess_activities[$date][$program_id]))
+							{
+								$final_room_id = $edit_room_id;	
 							}
 						}else{							
 							$final_room_id = $edit_room_id;							
@@ -2707,13 +2714,20 @@ class Timetable extends Base {
 						{
 							if($counter == '1' && array_key_exists($date,$recess_activities) && array_key_exists($program_id,$recess_activities[$date]))
 							{
-								$recess_act_detail = $recess_activities[$date][$program_id];
-								$duration = $this->getDuration($recess_act_detail['activity_id']);
-								$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
-								$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
-								if($this->checkRoomAvailability($room_res_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_res_id,$reserved_rooms))
+								$act_counter = 0;
+								foreach($recess_activities[$date][$program_id] as $recess_act_id=>$recess_act_detail)
 								{
-									$final_room_id = $room_res_id;								
+									$duration = $this->getDuration($recess_act_detail['activity_id']);
+									$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
+									$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
+									if($this->checkRoomAvailability($room_res_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_res_id,$reserved_rooms))
+									{
+										$act_counter++;								
+									}
+								}
+								if($act_counter == count($recess_activities[$date][$program_id]))
+								{
+									$final_room_id = $room_res_id;	
 								}
 							}else{
 								$final_room_id = $room_res_id;							
@@ -2728,13 +2742,20 @@ class Timetable extends Base {
 					{
 						if($counter == '1' && array_key_exists($date,$recess_activities) && array_key_exists($program_id,$recess_activities[$date]))
 						{
-							$recess_act_detail = $recess_activities[$date][$program_id];
-							$duration = $this->getDuration($recess_act_detail['activity_id']);
-							$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
-							$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
-							if($this->checkRoomAvailability($room_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_id,$reserved_rooms))
+							$act_counter = 0;
+							foreach($recess_activities[$date][$program_id] as $recess_act_id=>$recess_act_detail)
 							{
-								$final_room_id = $room_id;								
+								$duration = $this->getDuration($recess_act_detail['activity_id']);
+								$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
+								$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
+								if($this->checkRoomAvailability($room_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_id,$reserved_rooms))
+								{
+									$act_counter++;																
+								}
+							}
+							if($act_counter == count($recess_activities[$date][$program_id]))
+							{
+								$final_room_id = $room_id;	
 							}
 						}else{
 							$final_room_id = $room_id;							
@@ -2757,14 +2778,20 @@ class Timetable extends Base {
 						{
 							if($counter == '1' && array_key_exists($date,$recess_activities) && array_key_exists($program_id,$recess_activities[$date]))
 							{
-								$recess_act_detail = $recess_activities[$date][$program_id];
-								$duration = $this->getDuration($recess_act_detail['activity_id']);
-								$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
-								$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
-								if($this->checkRoomAvailability($room['id'],$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room['id'],$reserved_rooms))
-								{								
+								$act_counter = 0;
+								foreach($recess_activities[$date][$program_id] as $recess_act_id=>$recess_act_detail)
+								{
+									$duration = $this->getDuration($recess_act_detail['activity_id']);
+									$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
+									$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
+									if($this->checkRoomAvailability($room['id'],$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room['id'],$reserved_rooms))
+									{
+										$act_counter++;									
+									}
+								}
+								if($act_counter == count($recess_activities[$date][$program_id]))
+								{
 									$temp_room_id = $room['id'];
-									break;
 								}
 							}else{							
 								$temp_room_id = $room['id'];
@@ -2779,13 +2806,20 @@ class Timetable extends Base {
 					{
 						if($counter == '1' && array_key_exists($date,$recess_activities) && array_key_exists($program_id,$recess_activities[$date]))
 						{
-							$recess_act_detail = $recess_activities[$date][$program_id];
-							$duration = $this->getDuration($recess_act_detail['activity_id']);
-							$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
-							$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
-							if($this->checkRoomAvailability($room_res_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_res_id,$reserved_rooms))
-							{	
-								$final_room_id = $room_res_id;							
+							$act_counter = 0;
+							foreach($recess_activities[$date][$program_id] as $recess_act_id=>$recess_act_detail)
+							{
+								$duration = $this->getDuration($recess_act_detail['activity_id']);
+								$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
+								$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
+								if($this->checkRoomAvailability($room_res_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_res_id,$reserved_rooms))
+								{
+									$act_counter++;																
+								}
+							}
+							if($act_counter == count($recess_activities[$date][$program_id]))
+							{
+								$final_room_id = $room_res_id;
 							}
 						}else{							
 								$final_room_id = $room_res_id;
@@ -2797,13 +2831,20 @@ class Timetable extends Base {
 				{
 					if($counter == '1' && array_key_exists($date,$recess_activities) && array_key_exists($program_id,$recess_activities[$date]))
 					{
-						$recess_act_detail = $recess_activities[$date][$program_id];
-						$duration = $this->getDuration($recess_act_detail['activity_id']);
-						$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
-						$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
-						if($this->checkRoomAvailability($room_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_id,$reserved_rooms))
-						{	
-							$final_room_id = $room_id;							
+						$act_counter = 0;
+						foreach($recess_activities[$date][$program_id] as $recess_act_id=>$recess_act_detail)
+						{
+							$duration = $this->getDuration($recess_act_detail['activity_id']);
+							$rec_start_time = $allTimeslots[$recess_act_detail['start_time']]['start_time'];
+							$rec_end_time = date("h:i A", strtotime($rec_start_time." +		".$duration." minutes"));
+							if($this->checkRoomAvailability($room_id,$date,$recess_act_detail['timeslot_id']) && !$this->isRoomReserved($date,$rec_start_time,$rec_end_time,$room_id,$reserved_rooms))
+							{
+								$act_counter++;															
+							}
+						}
+						if($act_counter == count($recess_activities[$date][$program_id]))
+						{
+							$final_room_id = $room_id;
 						}
 					}else{							
 							$final_room_id = $room_id;
