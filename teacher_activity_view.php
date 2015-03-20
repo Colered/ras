@@ -113,6 +113,7 @@ function activityFilter()
 				<?php
 					$result = $objT->getTeachersActFilterView($activity_filter_val);
 					$result_sess = $objT->getSessionFromTT();
+					$result_acts = $objT->getActsFromTT();
 					$session_array = array();
 					if($result->num_rows){
 						while($row = $result->fetch_assoc())
@@ -127,7 +128,7 @@ function activityFilter()
 								$tdColor = ' style="color:#FFFFFF;"';
 								$class ="out-of-range";
 							 }else{
-								if(!empty($result_sess) && (!in_array($row['session_id'],$session_array) || $row['session_id'] != '') && (!in_array($row['session_id'],$result_sess) || $row['session_id'] != ''))
+								if(!empty($result_sess) && !in_array($row['session_id'],$session_array) && !in_array($row['session_id'],$result_sess))
 								{
 								 	$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
 								 	$tdColor = ' style="color:#FFFFFF;"';
@@ -139,6 +140,13 @@ function activityFilter()
 									$class = 'floating-activity';
 									}
 							 }
+							if($row['session_id'] == '0' && !in_array($row['id'],$result_acts))
+							{
+								$trBColor1 = ' style="background-color:#FF0000; color:#FFFFFF;"';
+								$tdColor = ' style="color:#FFFFFF;"';
+								$session_array[] = $row['session_id'];
+								$class = "unallocated-activity";
+							}
 							$email = (trim($row['email'])<>"") ? '('.$row['email'].')':'';
 							$teacher_str = $row['teacher_name'].$email;
 							if($row['reason_flag'] == 'Teaching Session Jointly')

@@ -286,6 +286,17 @@ class Teacher extends Base {
 		}
 		return $sess_array;
 	}
+	public function getActsFromTT()
+	{
+		$sql = "SELECT activity_id FROM timetable_detail";
+		$result =  $this->conn->query($sql);
+		$sess_array = array();
+		while($row = mysqli_fetch_array($result))
+		{
+			$sess_array[] = $row['activity_id'];
+		}
+		return $sess_array;
+	}
 	//get all teachers availability
 	public function getTeacherAvailRule()
 	{
