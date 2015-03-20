@@ -128,8 +128,6 @@ class SpecialActivity extends Base {
 				$interval = DateInterval::createFromDateString('1 day');
 				$period = new DatePeriod($begin, $interval, $end);
 					foreach ( $period as $dt ){
-							$act_name_num = $act_name_num+1;
-							$act_name='A'.$act_name_num ;
 							$date_str=$dt->format( "Y-m-d \n" );
 							//check if the date is not added as exception for the selected rule
 							$exception_query="select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date='".$date_str."'";
@@ -141,7 +139,9 @@ class SpecialActivity extends Base {
 							$day_num=$day_of_week-1;
 							foreach($ruleTimeslot as  $key=>$val){
 							 if($key==$day_num){
-							 	$ts_durationArr=explode('-',$val);
+							 	$act_name_num = $act_name_num+1;
+								$act_name='A'.$act_name_num ;
+								$ts_durationArr=explode('-',$val);
 								$ts_id_Arr = explode(',',$ts_durationArr[0]);
 								$start_time = $ts_id_Arr['0'];	
 								$duration = $ts_durationArr[1];
@@ -243,8 +243,6 @@ class SpecialActivity extends Base {
 				$interval = DateInterval::createFromDateString('1 day');
 				$period = new DatePeriod($begin, $interval, $end);
 					foreach ( $period as $dt ){
-							$act_name_num = $act_name_num+1;
-							$act_name='A'.$act_name_num ;
 							$date_str=$dt->format( "Y-m-d \n" );
 							//check if the date is not added as exception for the selected rule
 							$exception_query="select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date='".$date_str."'";
@@ -256,7 +254,9 @@ class SpecialActivity extends Base {
 							$day_num=$day_of_week-1;
 							foreach($ruleTimeslot as  $key=>$val){
 							 if($key==$day_num){
-							 	$ts_durationArr=explode('-',$val);
+							 	$act_name_num = $act_name_num+1;
+								$act_name='A'.$act_name_num ;
+								$ts_durationArr=explode('-',$val);
 								$ts_id_Arr = explode(',',$ts_durationArr[0]);
 								$start_time = $ts_id_Arr['0'];	
 								$duration = $ts_durationArr[1];
