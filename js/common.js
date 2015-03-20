@@ -2141,7 +2141,6 @@ $(document).ready(function(){
 	   });
 });
 function showCycleDetails($week){
-	
 	if($week == "1w")
 	{
 		$("#custtd_leftc1w1").show();
@@ -2212,7 +2211,6 @@ function showCycleDetailsthree($week){
 
 $(document).ready(function(){
   if($('#programId').val()!=''){
-	 
 	 for ( var i = 0; i <= 5; i++ ){
 	    cyc1_wk1 = '#c1-w1-'+i;
 		ts_avail_cyc1_wk1 = '#ts-avail-c1-w1-'+i;
@@ -2296,18 +2294,6 @@ function getCycleByProgId($this){
 			$("#slctCycle").html("<option value=''>--Select a program first--</option>");
 		}
 }
-/*$(document).ready(function(){ 
-	$("#subSessDate").datepicker({
-			dateFormat: 'yy-mm-dd',
-			defaultDate: "+1w",
-			changeMonth: true,
-			numberOfMonths: 1,
-			changeMonth: true, 
-			changeYear: true,
-	});
-});
-*/
-
 //Ajax to check activity availability on subject session page
 function checkAvailSubSession(program_year_id,subject_id,sessionid,teacher_id,row_id)
 {
@@ -2846,16 +2832,8 @@ function acceptAllocationFun(){
 			});
 	}
 }
-
 //To the accept allocation
 $(document).ready(function() {
-	/*if($('.special_sp_act_name').val()=="")	{				   
-		$('.rule__listed_ckb').each(function() {
-			if(!$(this).prop('checked')) {
-				$(this).prop('disabled', true);
-			}
-		});					   
-	}*/
 	//To select/deselect for selectAll checkbox when all checkbox are selected or not
 	$(document).on('click', ".activityCkb", function() {
 			var desabledCkbCnt = $(".ckbDisabled").length;
@@ -2868,7 +2846,6 @@ $(document).ready(function() {
 				$("#ckbCheckAllActivity").removeAttr("checked");
 			}
 	});
-	
     //To select/deselect the all checbox when click on select all checkbox
 	$('#ckbCheckAllActivity').click(function(event) { 
 			if(this.checked) { 
@@ -2891,12 +2868,7 @@ $(document).ready(function() {
 function createSpecialAvailRule(){
 	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
 	var regx = /^[A-Za-z0-9 .]+$/;
-    /*if (!regx.test($('#txtSchd').val())) {
-        alert('Please select a valid schedule name with alphanumeric options.');
-		return false;
-    }*/
-	//$("input[name=exceptionDate[]]").val();
-	var exceptionDateArr = [];
+    var exceptionDateArr = [];
 	$("input[name='exceptionDate[]']").each(function () {
 		exceptionDateArr.push( this.value );
 	});
@@ -3291,7 +3263,6 @@ $(document).ready(function() {
 });
 //deleting the special activity which are associate rule
 $(document).ready(function() {
-						   
    $('.rule__listed_ckb').click(function(){
 	 if($('#special_sp_act_name').val()!=""){
 		if($(this).is(":checked")){
@@ -3335,12 +3306,11 @@ $(document).ready(function() {
 							}
 					});
 				}
+				return false;
 		  }
-		//return false;
 		}
 	 }
-		
-    });
+   });
 });
 //show and hide the ad-hoc fixed date and range date
 function adHocDateShowHide(){
