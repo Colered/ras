@@ -358,7 +358,7 @@ $option_duration='<option value="">--Select--</option>
 									} ?>
                                 </select>
 								<?php if($disabled!="" && isset($_GET['gp_Edit'])){?>
-									<input type="hidden" name="slctCycle" value="<?php echo $program_year_id;?>" />
+									<input type="hidden" name="slctCycle" value="<?php echo $cycle_id;?>" />
 								<?php }?>
                             </div>
                             <div class="clear"></div>
@@ -379,7 +379,7 @@ $option_duration='<option value="">--Select--</option>
 									<?php } ?>
                                 </select>
 								<?php if($disabled!="" && isset($_GET['gp_Edit'])){?>
-									<input type="hidden" name="slctCycle" value="<?php echo $area_id;?>" />
+									<input type="hidden" name="slctArea" value="<?php echo $area_id;?>" />
 								<?php }?>
                             </div>
                             <div class="clear"></div>
@@ -673,6 +673,8 @@ $option_duration='<option value="">--Select--</option>
 						 	//echo "------";
 						 	$timeslot_arr=array();
 							 while($data_grp = $detail_grp1->fetch_assoc()){
+							 	//echo '<pre>';
+								//print_r($data_grp);
 						 		$timeslot_arr=explode(',',$data_grp['timeslot_id']);
 						   		$min_ts_id = $timeslot_arr[0];
 						   		$max_ts_id = $timeslot_arr[count($timeslot_arr)-1];
@@ -689,7 +691,11 @@ $option_duration='<option value="">--Select--</option>
 								<td><?php if($data_grp['subject_id']==0){echo "N/A";}else{echo $data_grp['subject_name']; }?></td>
 								<td><?php echo $data_grp['teacher_name']; ?></td>
 								<td><?php if($data_grp['room_id']==0){echo "N/A";}else{echo $data_grp['room_name']; }?></td>
-								<td><?php echo $data_grp['act_date']; ?></td>
+								<?php if($data_grp['act_date']=='0000-00-00' && ($data_grp['adhoc_start_date']!="0000-00-00" || $data_grp['adhoc_start_date']!="")){?>
+								<td><?php echo $data_grp['adhoc_start_date'].' to '.$data_grp['adhoc_end_date']; ?></td>
+								<?php }else{ ?>
+									<td><?php echo $data_grp['act_date']; ?></td>
+								<?php }?>
 								<td><?php echo $timeslot; ?></td>
 								<td id="<?php echo $data_grp['id'];?>"><a href="special_activity.php?edit=<?php echo base64_encode($data_grp['id'])?>" class="table-icon edit" title="Edit"></a><a class="table-icon delete" onClick="deleteSpecialActivityListing('<?php echo $data_grp['id']; ?>')"></a></td>
 								</tr>
