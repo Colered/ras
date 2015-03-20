@@ -647,8 +647,6 @@ $option_duration='<option value="">--Select--</option>
                     <div class="clear"></div>
 					<div class="special_act_list">
 					<?php 
-					//echo '<pre>';
-					//print_r($detail_grp1);
 					if(isset($_GET['gp_Edit']) && $_GET['gp_Edit']!=""){?>
 					<table id="datatables" class="display tblSpActivity">
 						<thead>
@@ -670,12 +668,9 @@ $option_duration='<option value="">--Select--</option>
                 	<tbody>
 					<tbody>
 						 <?php
-						 	//echo "------";
 						 	$timeslot_arr=array();
 							 while($data_grp = $detail_grp1->fetch_assoc()){
-							 	//echo '<pre>';
-								//print_r($data_grp);
-						 		$timeslot_arr=explode(',',$data_grp['timeslot_id']);
+							 	$timeslot_arr=explode(',',$data_grp['timeslot_id']);
 						   		$min_ts_id = $timeslot_arr[0];
 						   		$max_ts_id = $timeslot_arr[count($timeslot_arr)-1];
 								$timeslot = $objTeach->getTimeslotById($min_ts_id,$max_ts_id)
