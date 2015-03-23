@@ -3091,7 +3091,6 @@ function specialActivity(){
 		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'normal'});
 		   $('#slctArea option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
-		   $('#slctRoom option[value=""]').attr("selected",true);
 		   $('#slctSubjectName option[value=""]').attr("selected",true);
 		   $('#txtSubjCode').val('');
 		   $('#slctTeacher option[value=""]').attr("selected",true);
