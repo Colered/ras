@@ -362,9 +362,7 @@ class Timetable extends Base {
 															$duration = $this->getDuration($meeting_detail['activity_id']);
 															$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
 															$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));
-															$time = explode(",",$meeting_detail['timeslot_id']);
-															$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-															if($ts_cnt == count($time))
+															if(!$this->isTimeslotReserved($date,$meet_start_time,$meet_end_time,$reserved_rooms))
 															{
 																if($meeting_detail['room_id'] != 0)
 																{
@@ -395,7 +393,7 @@ class Timetable extends Base {
 												$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
 												$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
 												//process adhoc activities only if some adhoc activities are scheduled for day
-												if(!empty($adhoc_activities) && !empty($unreserved_times))
+												if(!empty($adhoc_activities))
 												{
 													if($counter == '1' && array_key_exists($date,$adhoc_activities))
 													{
@@ -414,25 +412,23 @@ class Timetable extends Base {
 																{
 																	$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
 																	$adh_end_time = date("h:i A", strtotime($adh_start_time." +		".$duration." minutes"));
-																	$time = explode(",",$adh_act_detail['timeslot_id']);
-																	$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
-																	$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																	if($ts_cnt == count($time))
+																	$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);			
+																	if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
 																	{
 																		$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
-																			if($room_id > 0)
+																		if($room_id > 0)
+																		{
+																			$room_name = $this->getRoomName($room_id);
+																			//allocate group meeting
+																			$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
+																			$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
+																			$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
+																			$ts_array = explode(",",$adh_act_detail['timeslot_id']);
+																			foreach($ts_array as $ts_id)
 																			{
-																				$room_name = $this->getRoomName($room_id);
-																				//allocate group meeting
-																				$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
-																				$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
-																				$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
-																				$ts_array = explode(",",$adh_act_detail['timeslot_id']);
-																				foreach($ts_array as $ts_id)
-																				{
-																					$reserved_timeslots[] = trim($ts_id);
-																				}
+																				$reserved_timeslots[] = trim($ts_id);
 																			}
+																		}
 																	}else{
 																		$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																	}
@@ -442,11 +438,9 @@ class Timetable extends Base {
 																		$start_time = $timeslot_id;
 																		$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
 																		$objT = new Teacher();
-																		$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
-																		$time = explode(",",$all_ts);	
+																		$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);	
 																		$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
-																		$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																		if($ts_cnt == count($time))
+																		if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
 																		{
 																			$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
 																			if($room_id > 0)
@@ -471,7 +465,7 @@ class Timetable extends Base {
 													}													
 													$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
 													$unreserved_times = $this->getTimeSlots($unreserved_timeslots);					
-													if($counter == '1' && array_key_exists("0000-00-00",$adhoc_activities) && !empty($unreserved_times))
+													if($counter == '1' && array_key_exists("0000-00-00",$adhoc_activities))
 													{
 														foreach($adhoc_activities['0000-00-00'] as $adh_act_id=>$adh_act_detail)
 														{
@@ -487,11 +481,9 @@ class Timetable extends Base {
 																if($adh_act_detail['start_time'] != '')
 																{
 																	$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
-																	$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
-																	$time = explode(",",$adh_act_detail['timeslot_id']);
+																	$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));									
 																	$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
-																	$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																	if($ts_cnt == count($time))
+																	if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
 																	{
 																		$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
 																		if($room_id > 0)
@@ -517,10 +509,8 @@ class Timetable extends Base {
 																		$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
 																		$objT = new Teacher();
 																		$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
-																		$time = explode(",",$all_ts);
 																		$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
-																		$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																		if($ts_cnt == count($time))
+																		if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
 																		{
 																			$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
 																			if($room_id > 0)
@@ -878,7 +868,7 @@ class Timetable extends Base {
 							}
 						}
 						//process group meetings only if some unallocated timeslots left for day
-						if(!empty($unreserved_times) && !empty($group_meetings))
+						if(!empty($group_meetings))
 						{
 							if(array_key_exists($date,$group_meetings))
 							{
@@ -889,9 +879,7 @@ class Timetable extends Base {
 										$duration = $this->getDuration($meeting_detail['activity_id']);
 										$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
 										$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));
-										$time = explode(",",$meeting_detail['timeslot_id']);
-										$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-										if($ts_cnt == count($time))
+										if(!$this->isTimeslotReserved($date,$meet_start_time,$meet_end_time,$reserved_rooms))
 										{
 											if($meeting_detail['room_id'] != 0)
 											{
@@ -919,7 +907,7 @@ class Timetable extends Base {
 							}							
 						}
 						//process adhoc activities only if some unallocated timeslots left for day
-						if(!empty($unreserved_times) && !empty($adhoc_activities))
+						if(!empty($adhoc_activities))
 						{
 							if(array_key_exists($date,$adhoc_activities))
 							{
@@ -938,15 +926,13 @@ class Timetable extends Base {
 										{
 											$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
 											$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
-											$time = explode(",",$adh_act_detail['timeslot_id']);
-											$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-											if($ts_cnt == count($time))
+											if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
 											{
 												$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
 												if($room_id > 0)
 												{
 													$room_name = $this->getRoomName($room_id);
-													//allocate group meeting
+													//allocate adhoc activities
 													$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
 													$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 													$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
@@ -964,9 +950,7 @@ class Timetable extends Base {
 												$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
 												$objT = new Teacher();
 												$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
-												$time = explode(",",$all_ts);					
-												$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-												if($ts_cnt == count($time))
+												if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
 												{
 													$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
 													if($room_id > 0)
@@ -1004,9 +988,7 @@ class Timetable extends Base {
 										{
 											$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
 											$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
-											$time = explode(",",$adh_act_detail['timeslot_id']);
-											$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-											if($ts_cnt == count($time))
+											if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
 											{
 												$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
 												if($room_id > 0)
@@ -1030,9 +1012,7 @@ class Timetable extends Base {
 												$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
 												$objT = new Teacher();
 												$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
-												$time = explode(",",$all_ts);					
-												$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-												if($ts_cnt == count($time))
+												if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
 												{
 													$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
 													if($room_id > 0)
@@ -1053,7 +1033,7 @@ class Timetable extends Base {
 									}
 								}
 							}
-						}
+						}						
 					}
 				}
 			}
@@ -1961,7 +1941,7 @@ class Timetable extends Base {
 																}
 															}
 															//process group meetings only if some unallocated timeslots left for day
-															if(!empty($unreserved_times) && !empty($group_meetings))
+															if(!empty($group_meetings))
 															{
 																if($counter == '1' && array_key_exists($date,$group_meetings))
 																{
@@ -1969,10 +1949,8 @@ class Timetable extends Base {
 																	{
 																		$duration = $this->getDuration($meeting_detail['activity_id']);
 																		$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
-																		$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));
-																		$time = explode(",",$meeting_detail['timeslot_id']);
-																		$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																		if($ts_cnt == count($time))
+																		$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));							
+																		if(!$this->isTimeslotReserved($date,$meet_start_time,$meet_end_time,$reserved_rooms))
 																		{
 																			if($meeting_detail['room_id'] != 0)
 																			{
@@ -1999,7 +1977,7 @@ class Timetable extends Base {
 																}							
 															}
 															//process adhoc activities only if some unallocated timeslots left for day
-															if(!empty($unreserved_times) && !empty($adhoc_activities))
+															if(!empty($adhoc_activities))
 															{
 																if($counter == '1' && array_key_exists($date,$adhoc_activities))
 																{
@@ -2018,9 +1996,7 @@ class Timetable extends Base {
 																			{
 																				$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
 																				$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
-																				$time = explode(",",$adh_act_detail['timeslot_id']);
-																				$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																				if($ts_cnt == count($time))
+																				if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
 																				{
 																					$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
 																					if($room_id > 0)
@@ -2044,9 +2020,7 @@ class Timetable extends Base {
 																					$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
 																					$objT = new Teacher();
 																					$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
-																					$time = explode(",",$all_ts);					
-																					$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																					if($ts_cnt == count($time))
+																					if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
 																					{
 																						$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
 																						if($room_id > 0)
@@ -2084,9 +2058,7 @@ class Timetable extends Base {
 																			{
 																				$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
 																				$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
-																				$time = explode(",",$adh_act_detail['timeslot_id']);
-																				$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																				if($ts_cnt == count($time))
+																				if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
 																				{
 																					$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
 																					if($room_id > 0)
@@ -2110,9 +2082,7 @@ class Timetable extends Base {
 																					$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
 																					$objT = new Teacher();
 																					$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
-																					$time = explode(",",$all_ts);					
-																					$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																					if($ts_cnt == count($time))
+																					if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
 																					{
 																						$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
 																						if($room_id > 0)
@@ -2307,7 +2277,7 @@ class Timetable extends Base {
 																				}
 																			}
 																			//process group meetings only if some unallocated timeslots left for day
-																			if(!empty($unreserved_times) && !empty($group_meetings))
+																			if(!empty($group_meetings))
 																			{
 																				if($counter == '1' && array_key_exists($date,$group_meetings))
 																				{
@@ -2316,9 +2286,7 @@ class Timetable extends Base {
 																						$duration = $this->getDuration($meeting_detail['activity_id']);
 																						$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
 																						$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));
-																						$time = explode(",",$meeting_detail['timeslot_id']);
-																						$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																						if($ts_cnt == count($time))
+																						if(!$this->isTimeslotReserved($date,$meet_start_time,$meet_end_time,$reserved_rooms))
 																						{
 																							if($meeting_detail['room_id'] != 0)
 																							{
@@ -2346,7 +2314,7 @@ class Timetable extends Base {
 																			}
 
 																			//process adhoc activities only if some unallocated timeslots left for day
-																			if(!empty($unreserved_times) && !empty($adhoc_activities))
+																			if(!empty($adhoc_activities))
 																			{
 																				if($counter == '1' && array_key_exists($date,$adhoc_activities))
 																				{
@@ -2355,38 +2323,124 @@ class Timetable extends Base {
 																						if(!$this->search_array($adh_act_detail['name'],$reserved_array))
 																						{
 																							$duration = $this->getDuration($adh_act_detail['activity_id']);
-																							$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
-																							$adh_end_time = date("h:i A", strtotime($adh_start_time." +		".$duration." minutes"));
-																							$time = explode(",",$adh_act_detail['timeslot_id']);
-																							$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-																							if($ts_cnt == count($time))
+																							if($adh_act_detail['room_id'] != 0)
 																							{
-																								if($adh_act_detail['room_id'] != 0)
+																								$edit_room_id = $adh_act_detail['room_id'];
+																							}else{
+																								$edit_room_id = 0;
+																							}
+																							if($adh_act_detail['start_time'] != '')
+																							{
+																								$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
+																								$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
+																								if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
 																								{
-																									$edit_room_id = $adh_act_detail['room_id'];
+																									$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
+																									if($room_id > 0)
+																									{
+																										$room_name = $this->getRoomName($room_id);
+																										//allocate group meeting
+																										$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
+																										$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
+																										$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
+																										$times_array = explode(",",$adh_act_detail['timeslot_id']);
+																										$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
+																										$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+																									}
 																								}else{
-																									$edit_room_id = 0;
-																								}
-																								$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
-																								if($room_id > 0)
-																								{
-																									$room_name = $this->getRoomName($room_id);
-																									//allocate group meeting
-																									$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
-																									$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
-																									$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
-																									$times_array = explode(",",$adh_act_detail['timeslot_id']);
-																									$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
-																									$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+																									$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
 																								}
 																							}else{
-																									$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
-																							}	
+																								foreach($unreserved_times as $timeslot_id)
+																								{
+																									$start_time = $timeslot_id;
+																									$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
+																									$objT = new Teacher();
+																									$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
+																									if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
+																									{
+																										$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
+																										if($room_id > 0)
+																										{
+																											$room_name = $this->getRoomName($room_id);
+																											//allocate adhoc activity
+																											$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
+																											$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
+																											$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
+																											$times_array = explode(",",$all_ts);
+																											$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
+																											$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+																											break;
+																										}
+																									}
+																								}
+																							}
 																						}
 																					}
-																				}							
-																			}
-																			
+																				}
+																				if($counter == '1' && array_key_exists("0000-00-00",$adhoc_activities))
+																				{
+																					foreach($adhoc_activities['0000-00-00'] as $adh_act_id=>$adh_act_detail)
+																					{
+																						if(!$this->search_array($adh_act_detail['name'],$reserved_array) && $date >= $adh_act_detail['adhoc_start_date'] && $date <= $adh_act_detail['adhoc_end_date'])
+																						{
+																							$duration = $this->getDuration($adh_act_detail['activity_id']);
+																							if($adh_act_detail['room_id'] != 0)
+																							{
+																								$edit_room_id = $adh_act_detail['room_id'];
+																							}else{
+																								$edit_room_id = 0;
+																							}
+																							if($adh_act_detail['start_time'] != '')
+																							{
+																								$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
+																								$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
+																								if(!$this->isTimeslotReserved($date,$adh_start_time,$adh_end_time,$reserved_rooms))
+																								{
+																									$room_id = $this->searchRoomForGM($date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
+																									if($room_id > 0)
+																									{
+																										$room_name = $this->getRoomName($room_id);
+																										//allocate group meeting
+																										$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
+																										$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
+																										$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
+																										$times_array = explode(",",$adh_act_detail['timeslot_id']);
+																										$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
+																										$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+																									}
+																								}else{
+																									$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
+																								}
+																							}else{
+																								foreach($unreserved_times as $timeslot_id)
+																								{
+																									$start_time = $timeslot_id;
+																									$end_time = date("h:i A", strtotime($start_time." + ".$duration." minutes"));	
+																									$objT = new Teacher();
+																									$all_ts = $objT -> getTimeslotId($start_time."-".$end_time);
+																									if(!$this->isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms))
+																									{
+																										$room_id = $this->searchRoomForGM($date,$all_ts,$start_time,$end_time,$reserved_rooms,$edit_room_id);
+																										if($room_id > 0)
+																										{
+																											$room_name = $this->getRoomName($room_id);
+																											//allocate adhoc activity
+																											$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
+																											$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
+																											$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
+																											$times_array = explode(",",$all_ts);
+																											$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
+																											$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
+																											break;
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}													
 																			if(!empty($unreserved_times))
 																			{
 																				$time = explode(",",$all_ts);
@@ -3109,6 +3163,31 @@ class Timetable extends Base {
 					if($this->search_array($room_id,$reserved_rooms[$date][$key]))
 					{
 						//echo "---". $ts_array['0']."---".$ts_array['1']."---".$start_time."---".$end_time;die("if");
+						return 1;
+					}else{
+						return 0;
+					}
+				}
+			}
+		}
+	}
+
+	//Function to check if timeslot is free ir not
+	public function isTimeslotReserved($date,$start_time,$end_time,$reserved_rooms = array())
+	{
+		if(array_key_exists($date, $reserved_rooms))
+		{
+			foreach($reserved_rooms[$date] as $key => $value)
+			{											
+				$ts_array = explode("-",$key);									
+				$st = DateTime::createFromFormat('H:i a', trim($ts_array['0']));
+				$et = DateTime::createFromFormat('H:i a', trim($ts_array['1']));
+				$s_time = DateTime::createFromFormat('H:i a', $start_time);
+				$e_time = DateTime::createFromFormat('H:i a', $end_time);					
+				if(($s_time >= $st && $s_time < $et) || ($e_time > $st && $e_time <= $et))
+				{												
+					if(!empty($reserved_rooms[$date][$key]))
+					{
 						return 1;
 					}else{
 						return 0;
