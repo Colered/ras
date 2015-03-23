@@ -596,7 +596,7 @@ $option_duration='<option value="">--Select--</option>
 			<div class="clear"></div>
 			<div class="scheduleBlockSpAct" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-bottom:10px; width:1200px">
 				<div>
-					<span style="font-size:14px"><b>Select A Rule For Recess Activity / Group Meetings:</b></span>
+					<span style="font-size:14px"><b>Select A Rule For Recess Activity / Group Meetings/ Ad-hoc Activity :</b></span>
 				</div>
 				<div >
                     <ul id="rules" name="rules" class="rule">
