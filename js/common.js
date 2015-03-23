@@ -3078,8 +3078,7 @@ function specialActivity(){
 		   $('.spanPrgm, .spanCycle').closest('.custtd_left').find('h2').css({'font-weight': 'normal'});
 		   $('#slctArea option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
-		   $('#slctRoom option[value=""]').attr("selected",true);
-		   $('#txtSubjName').val('');
+		   $('#slctSubjectName option[value=""]').attr("selected",true);
 		   $('#txtSubjCode').val('');
 		   $('#slctTeacher option[value=""]').attr("selected",true);
 	  	}
@@ -3093,7 +3092,7 @@ function specialActivity(){
 		   $('#slctArea option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
 		   $('#slctRoom option[value=""]').attr("selected",true);
-		   $('#txtSubjName').val('');
+		   $('#slctSubjectName option[value=""]').attr("selected",true);
 		   $('#txtSubjCode').val('');
 		   $('#slctTeacher option[value=""]').attr("selected",true);
 	  	}
@@ -3344,6 +3343,11 @@ function getSubjectByProgIDAndCycleID(){
 				},
 				success: function(data) {
 					 $("#slctSubjectName").html(data);
+					 if($('#special_activity').val()==3){
+						$("#slctSubjectName option").filter(function() {
+							return this.text == 'N/A'; 
+						}).attr('selected', true);
+					 }
 				},
 				error: function(errorThrown) {
 					console.log(errorThrown);
