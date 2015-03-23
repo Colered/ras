@@ -59,7 +59,7 @@ $(document).ready(function(){
 							if($data['reserved_flag']!=5){
 								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th width="75">Action</th></tr></thead><tbody>';
 							}else{
-								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th >Ad-Hoc Start time</th><th >Ad-Hoc End time</th><th>Action</th></tr></thead><tbody>';
+								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th >Ad-Hoc Start time</th><th >Ad-Hoc End time</th><th width="75">Action</th></tr></thead><tbody>';
 							}
 							while($act_name_data_result = mysqli_fetch_assoc($act_name_query_result)){
 									$ts_array = explode(",",$act_name_data_result['timeslot_id']);
