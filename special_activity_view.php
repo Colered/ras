@@ -42,8 +42,6 @@ $(document).ready(function(){
                     <?php 
 					$i=1;
 					while ($data = $result->fetch_assoc()){ 
-					//echo '<pre>';
-					//print_r($data);
 					?>
 					<tr>
                         <td><?php echo $i;?></td>
@@ -59,7 +57,7 @@ $(document).ready(function(){
 						    $actHtml=''; $count=0;
 							$act_name_query_result=$obj->getSpecialActivityByActName($data['special_activity_name']);
 							if($data['reserved_flag']!=5){
-								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th >Action</th></tr></thead><tbody>';
+								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th width="75">Action</th></tr></thead><tbody>';
 							}else{
 								$actHtml.='<table id="sesssionTable"  border="1" ><thead><tr><th >Activty</th><th >Date</th><th >Timeslot</th><th >Ad-Hoc Start time</th><th >Ad-Hoc End time</th><th>Action</th></tr></thead><tbody>';
 							}
