@@ -334,6 +334,7 @@ $(document).ready(function(){
 		$("#teacher_rate_report").validate();
 		$("#timetable").validate();
 		$("#weekly_report").validate();
+		//$("#userMgmtForm").validate();
 		//$("#changePwdForm").validate();
 		$( "#forgotPwdForm" ).validate({
 			rules: {
@@ -341,6 +342,23 @@ $(document).ready(function(){
 				required: true,
 				email: true
 			}
+			}
+		});
+		$( "#userMgmtForm" ).validate({
+			rules: {
+			txtUserName: {
+				required: true,
+				},
+			txtUserPwd: {
+				required: true,
+				}	,
+			txtUserEmail: {
+				required: true,
+				email: true
+				},
+			slctUserType: {
+				required: true,
+				}
 			}
 		});
 		$( "#changePwdForm" ).validate({

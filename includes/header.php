@@ -84,6 +84,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 								<li>&#8250; <a href="holidays_view.php">Manage Holidays</a></li>
 								<li>&#8250; <a href="teacher_activity_view.php">Activity List</a></li>
 								<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
+								<li>&#8250; <a href="user_management_view.php">User Management</a></li>
                             </ul>
                         </li>
 						<li class="upp"><a href="">Data Upload</a>

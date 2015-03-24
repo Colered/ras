@@ -103,4 +103,29 @@ class Users extends Base {
 			return 1;
 		}
 	}
+	//add the user
+	public function addUser() {
+			//check if the user name aready exist
+			$currentDateTime = date("Y-m-d H:i:s");
+			$sql="select email ,username from user where email='".Base::cleanText($_POST['txtUserEmail'])."' and username='".Base::cleanText($_POST['txtUserName'])."'";
+			$q_res = mysqli_query($this->conn, $sql);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0)
+			{
+				$message="User already exists.";
+				$_SESSION['error_msg'] = $message;
+				return 0;
+			}else{
+				//add the new user
+				if ($result = mysqli_query($this->conn, "INSERT INTO user (role_id,username,password,email,date_add,date_update) VALUES ('".Base::cleanText($_POST['slctUserType'])."', '".Base::cleanText($_POST['txtUserName'])."', '".Base::cleanText(base64_encode($_POST['txtUserPwd']))."', '".$_POST['txtUserEmail']."', '".$currentDateTime."', '".$currentDateTime."');")) {
+   					$message="New user has been added successfully";
+					$_SESSION['succ_msg'] = $message;
+					return 1;
+				}else{
+					$message="User can not be added";
+					$_SESSION['error_msg'] = $message;
+					return 0;
+				}
+			}
+	}
 }
