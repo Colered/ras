@@ -588,7 +588,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if($resp==0){
 					//return back data to the form
 					echo "<html><head></head><body>";
-					echo "<form name='userMgmtForm' method='post' action='user_management.php'>";
+					echo "<form name='userMgmtForm' method='post' action='user_add.php'>";
 					reset($_POST);
 					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
@@ -599,13 +599,13 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					exit();
 					//end return back
 				}else{
-					header('Location: user_management_view.php');
+					header('Location: user_view.php');
 					exit();
 				}
 			}else{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
-				header('Location: user_management.php');
+				header('Location: user_add.php');
 			}
 		break;	
 	}

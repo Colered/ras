@@ -3440,3 +3440,29 @@ function deleteSpecialActivityListing($id){
     }
     return false;
 }
+//Ajax function to delete the user 
+function deleteUser($id){
+	if($id==""){
+		alert("Please select a user to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the user?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_user',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest('tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected User.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
+}

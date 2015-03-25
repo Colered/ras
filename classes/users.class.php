@@ -28,7 +28,7 @@ class Users extends Base {
 			}
 		}
 	}
-
+	//function to forgot the password
 	public function forgotPwd() {
 		if (isset($_POST['email'])){
 				$email = $_POST['email'];
@@ -76,6 +76,7 @@ class Users extends Base {
 				}
 		 }
    }
+   //function to chnage the password
    public function changePwd(){
         $uesr_id=$_SESSION['user_id'];
 		$sql="select * from user where id='$uesr_id'";
@@ -103,11 +104,11 @@ class Users extends Base {
 			return 1;
 		}
 	}
-	//add the user
+	//function to add the user
 	public function addUser() {
 			//check if the user name aready exist
 			$currentDateTime = date("Y-m-d H:i:s");
-			$sql="select email ,username from user where email='".Base::cleanText($_POST['txtUserEmail'])."' and username='".Base::cleanText($_POST['txtUserName'])."'";
+			$sql="select email ,username from user where email='".Base::cleanText($_POST['txtUserEmail'])."' || username='".Base::cleanText($_POST['txtUserName'])."'";
 			$q_res = mysqli_query($this->conn, $sql);
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)
@@ -126,6 +127,48 @@ class Users extends Base {
 					$_SESSION['error_msg'] = $message;
 					return 0;
 				}
+			}
+	}
+	//function to getting the user type 
+	public function getUserType()
+	{
+		$sql ="select id,name from  role order by name";
+		$q_res = mysqli_query($this->conn, $sql);
+		return $q_res;
+	}
+	//function to getting the user detail
+	public function userDetail() {
+		$sql="select * from user order by date_update DESC";
+		$q_res = mysqli_query($this->conn, $sql);
+		return $q_res;
+	}
+	//function to getting the data using user id
+	public function getDataByUserID($id) {
+		$sql="select * from user where id='".$id."' limit 1";
+		$q_res = mysqli_query($this->conn, $sql);
+		return $q_res;
+	}
+	//function to updating the detail of user by id
+	public function updateUser()
+	{
+		//check if the username or email id already exist or not 
+		$sql="select email ,username from user where (email='".Base::cleanText($_POST['txtUserEmail'])."' || username='".Base::cleanText($_POST['txtUserName'])."') && id!='".$_POST['userId']."'";
+		$q_res = mysqli_query($this->conn, $sql);
+		$dataAll = mysqli_fetch_assoc($q_res);
+		if(count($dataAll)>0){
+				$message="User already exists.";
+				$_SESSION['error_msg'] = $message;
+				header('Location: user_add.php?edit='.base64_encode($_POST['userId']));
+				return 0;
+		}elseif ($result = mysqli_query($this->conn, "Update user  Set role_id = '".Base::cleanText($_POST['slctUserType'])."', username = '".Base::cleanText($_POST['txtUserName'])."', password = '".Base::cleanText(base64_encode($_POST['txtUserPwd']))."' , email = '".$_POST['txtUserEmail']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['userId']."'")) {
+				$message="User has been updated successfully";
+				$_SESSION['succ_msg'] = $message;
+				return 1;
+			}else{
+				$message="User cannot be updated";
+				$_SESSION['error_msg'] = $message;
+				header('Location: user_add.php?edit='.base64_encode($_POST['userId']));
+				return 0;
 			}
 	}
 }

@@ -2312,5 +2312,16 @@ switch ($codeBlock) {
 			}
 		}
 	 break;
+	 case "del_user":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$del_user_query="delete from user where id='".$id."'";
+			$qry = mysqli_query($db, $del_user_query);
+			if(mysqli_affected_rows($db)>0)
+				echo 1;
+			else
+				echo 0;
+		}
+	break;
 }
 ?>
