@@ -171,4 +171,22 @@ class Users extends Base {
 				return 0;
 			}
 	}
+	//get user level with permissions by id
+	public function getUser($id,$path)
+	{
+		$user_detail = array();
+		$sql="select u.role_id,rp.page_id,rp.add_role,rp.view,rp.edit,rp.delete_role,rp.clone from user u inner join role_pages rp on rp.role_id = u.role_id inner join page p on p.id = rp.page_id where u.id='".$id."' and p.url='".$path."'";
+		$query = mysqli_query($this->conn, $sql);
+		if(mysqli_num_rows($query) > 0) {
+			$row = mysqli_fetch_array($query);
+			$user_detail['role_id'] = $row['role_id'];
+			$user_detail['page_id'] = $row['page_id'];
+			$user_detail['add_role'] = $row['add_role'];
+			$user_detail['delete_role'] = $row['delete_role'];
+			$user_detail['view'] = $row['view'];
+			$user_detail['edit'] = $row['edit'];
+			$user_detail['clone'] = $row['clone'];
+		}
+		return $user_detail;
+	}
 }

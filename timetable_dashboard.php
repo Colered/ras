@@ -10,16 +10,26 @@ $result=$obj->getTimetablesData();
             <div class="h_title">Manage Timetable</div>
             <form action="" method="post">
                 <div>
-                    <div class="custtd_left1">
-                        <a href="generate_timetable.php" class="buttonsub" >Generate Timetable</a>
-                    </div>
-                    <div class="custtd_right">
-                        <!--<a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>-->
-						<a href="month.php" class="buttonsub" >Calendar View</a>
-                    </div>
-                    <div class="custtd_right">
-                        <a href="timetable_view.php" class="buttonsub" >Table View</a>
-                    </div>
+					<?php $user = getPermissions('generate_timetable.php');
+						if(isset($user['page_id']) && $user['page_id'] != ''){?>								
+							<div class="custtd_left1">
+								<a href="generate_timetable.php" class="buttonsub" >Generate Timetable</a>
+							</div>
+					<?php } ?>
+					<?php $user = getPermissions('month.php');
+						if(isset($user['page_id']) && $user['page_id'] != ''){?>								
+							<div class="custtd_right">
+								<!--<a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>-->
+								<a href="month.php" class="buttonsub" >Calendar View</a>
+							</div>
+					<?php } ?>
+					<?php $user = getPermissions('timetable_view.php');
+						if(isset($user['page_id']) && $user['page_id'] != ''){?>								
+							 <div class="custtd_right">
+								<a href="timetable_view.php" class="buttonsub" >Table View</a>
+							 </div>
+					<?php } ?>             
+                   
                     <div class="custtd_left1">
                         <!--<a href="#"> <input type="button" name="btnTeacher" class="buttonsub" value="Save"></a>-->
                     </div>
