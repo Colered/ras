@@ -18,21 +18,21 @@ $userId="";
                         <h2>Username<span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtUserName" name="txtUserName"  maxlength="50" name="txtUname">
+                        <input type="text" class="inp_txt" id="txtUserName" name="txtUserName"  maxlength="50">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Password <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="password" class="inp_txt" id="txtUserPwd"  name="txtUserPwd" maxlength="50" name="txtPwd">
+                        <input type="password" class="inp_txt" id="txtUserPwd"  name="txtUserPwd" maxlength="50">
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Email <span class="redstar">*</span></h2>
                     </div>
                     <div class="txtfield">
-                        <input type="text" class="inp_txt" id="txtUserEmail" name="txtUserEmail" maxlength="50" name="txtEmail">
+                        <input type="text" class="inp_txt" id="txtUserEmail" name="txtUserEmail" maxlength="50" >
                     </div>
                     <div class="clear"></div>
                     <div class="custtd_left">
