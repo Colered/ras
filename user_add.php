@@ -7,10 +7,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$result_detail = $objU->getDataByUserID($userId);
 	$row = $result_detail->fetch_assoc();
 }
-$role_id = (isset($_GET['edit']) && $_GET['edit']!="") ?((isset($row['role_id']) && $row['role_id']!="")? $row['role_id']:""):"" ;
-$uname = (isset($_GET['edit']) && $_GET['edit']!="") ? ((isset($row['username']) && $row['username']!="")? $row['username']:"" ):"";
-$pwd = (isset($_GET['edit']) && $_GET['edit']!="") ? ((isset($row['password']) && $row['password']!="")? base64_decode($row['password']):"" ):"";
-$email = (isset($_GET['edit']) && $_GET['edit']!="") ?((isset($row['email']) && $row['email']!="")? $row['email'] :""):"";
+$role_id = (isset($_GET['edit']) && $_GET['edit']!="") ? $row['role_id']:(isset($_POST['slctUserType'])? $_POST['slctUserType']:'') ;
+$uname = (isset($_GET['edit']) && $_GET['edit']!="") ? $row['username']:(isset($_POST['txtUserName'])? $_POST['txtUserName']:'');
+$pwd = (isset($_GET['edit']) && $_GET['edit']!="") ? base64_decode($row['password']):(isset($_POST['txtUserPwd'])?  base64_decode($_POST['txtUserPwd']):'');
+$email = (isset($_GET['edit']) && $_GET['edit']!="") ? $row['email']:(isset($_POST['txtUserEmail'])? $_POST['txtUserEmail']:'');
 $button = (isset($_GET['edit']) && $_GET['edit']!="") ? "Update":"Save";
 ?>
 <div id="content">

@@ -588,14 +588,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if($resp==0){
 					//return back data to the form
 					echo "<html><head></head><body>";
-					echo "<form name='userMgmtForm' method='post' action='user_add.php'>";
+					echo "<form name='formuser' method='post' action='user_add.php'>";
 					reset($_POST);
 					while(list($iname,$ival) = each($_POST)) {
 						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
 					echo "</form>";
 					echo "</body></html>";
-					echo"<script language='JavaScript'>function submit_back(){ window.document.userMgmtForm.submit();}submit_back();</script>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.formuser.submit();}submit_back();</script>";
 					exit();
 					//end return back
 				}else{
