@@ -2323,5 +2323,24 @@ switch ($codeBlock) {
 				echo 0;
 		}
 	break;
+	case "set_user_status":
+		if(isset($_POST['id'])){
+			$id = $_POST['id'];
+			$sql_slct="select is_active from  user where id='".$id ."'";
+			$qry = mysqli_query($db, $sql_slct);
+			$data = mysqli_fetch_assoc($qry);
+			$status='';
+			if(count($data)>0){
+				if($data['is_active']==1){
+					$status="0";
+				}else{
+					$status="1";
+				}
+				$update="Update user  Set is_active = '".$status."' where id='".$id."'";
+				$qry_update = mysqli_query($db, $update);
+			}
+			echo $status;
+		}
+	break;
 }
 ?>

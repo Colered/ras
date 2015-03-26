@@ -31,11 +31,13 @@ $(document).ready(function(){
                         <th >Username</th>
                         <th >Email </th>
                         <th >User Type</th>
-						<th >Action</th>
+						<th width ="70">Action</th>
 					</tr>
                 </thead>
                 <tbody>
-				<?php while ($data = $result->fetch_assoc()){ ?>
+				<?php while ($data = $result->fetch_assoc()){ 
+					if($data['role_id']!=1){
+				?>
 					<tr>
                         <td class="align-center"><?php echo $data['id'] ;?></td>
                         <td><?php echo $data['username']; ?></td>
@@ -46,12 +48,18 @@ $(document).ready(function(){
 								 $userType = $q_res->fetch_assoc();
 								 echo $userType['name']; 
 						 ?></td>
-						<td class="align-center" id="<?php echo $data['id']; ?>">
-                            <a href="user_add.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
+						 <td class="align-center" id="<?php echo $data['id']; ?>">
+						   <?php if($data['is_active']==1){?>
+						 	<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-active.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Desable" /></div>
+							<?php }else{ ?>
+							<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-deactive.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Enable" /></div>
+							<?php }?>
+							<a href="user_add.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
 							<a href="#" class="table-icon delete" onClick="deleteUser(<?php echo $data['id']; ?>)"></a>
                         </td>
                     </tr>
-				<?php }?>
+				<?php } 
+				   }?>
                 </tbody>
             </table>
 			<?php if(isset($_SESSION['error_msg'])){?>

@@ -9,7 +9,7 @@ class Users extends Base {
 		{
 			//check if user account exists
 			$encPwd = base64_encode($_POST['txtPwd']);
-			$login_query="select * from user where username='".$_POST['txtUName']."' and password='".$encPwd."'";
+			$login_query="select * from user where username='".$_POST['txtUName']."' and password='".$encPwd."' and is_active='1' ";
 			$q_res = mysqli_query($this->conn, $login_query);
 			if(mysqli_num_rows($q_res)>0)
 			{
@@ -132,7 +132,7 @@ class Users extends Base {
 	//function to getting the user type 
 	public function getUserType()
 	{
-		$sql ="select id,name from  role order by name";
+		$sql ="select id,name from  role where id!='1' order by id";
 		$q_res = mysqli_query($this->conn, $sql);
 		return $q_res;
 	}

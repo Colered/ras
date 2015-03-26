@@ -485,6 +485,7 @@ table .chb{
 .delete.table-icon { background: url(../images/i_delete.png) no-repeat; }
 .clone.table-icon { background: url(../images/clone.png) no-repeat; }
 .rightmark.table-icon { background: url(../images/i_right.png) no-repeat; }
+.status-user.table-icon { background: url(../images/active.png) no-repeat; }
 
 .pagination{
 	margin: 5px auto;

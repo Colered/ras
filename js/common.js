@@ -3466,3 +3466,30 @@ function deleteUser($id){
     }
     return false;
 }
+//active and deactive user
+function setUserStatus($id){
+	if($id==""){
+		alert("Please select a user to delete");
+		return false;
+	}else {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'set_user_status',
+				},
+                success: function($succ){
+					var imageId='#status-user'+$id;
+					if($succ==1){
+						//$(imageId).css('background-image','url(./images/bar-circle.gif)');
+                       	$(imageId).attr({src: 'images/status-active.png'});
+						$(imageId).attr({title: 'Desable'});
+					}else{
+						$(imageId).attr({src: 'images/status-deactive.png'});
+						$(imageId).attr({title: 'Enable'});
+					}
+                }
+        });
+    }
+ }
