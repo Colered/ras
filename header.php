@@ -163,7 +163,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 										<?php } ?>
 										<?php $user = getPermissions('user_management_view.php');
 											  if(isset($user['page_id']) && $user['page_id'] != ''){?>	
-												<li>&#8250; <a href="user_management_view.php">User Management</a></li>
+												<li>&#8250; <a href="user_view.php">User Management</a></li>
 										<?php } ?>
 									</ul>
 								</li>
