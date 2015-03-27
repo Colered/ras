@@ -1,5 +1,10 @@
 <?php
 include('header.php');
+$user = getPermissions('program_cycles');
+if($user['add_role'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $objP = new Programs();
 $objTS = new Timeslot();
 $programId = ''; $totcycle=0;

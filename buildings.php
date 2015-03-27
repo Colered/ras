@@ -1,12 +1,22 @@
 <?php include('header.php');
+$user = getPermissions('buildings');
 $buldName=""; $buldId="";
 $obj = new Buildings();
 $locations = $obj->viewLocation();
 
 if(isset($_GET['edit']) && $_GET['edit']!=""){
+	if($user['edit'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 	$buldId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByBuldID($buldId);
 	$row = $result->fetch_assoc();
+}else{
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 }
 $buldName = isset($_GET['edit']) ? $row['building_name'] : (isset($_POST['txtBname'])? $obj->cleanText($_POST['txtBname']):'');
 $location = isset($_GET['edit']) ? $row['locationId'] : (isset($_POST['txtBlocation'])? $obj->cleanText($_POST['txtBlocation']):'');

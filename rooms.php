@@ -1,10 +1,20 @@
 <?php include('header.php');
+$user = getPermissions('rooms');
 $room_type=""; $room_name=""; $building_name=""; $roomId="";
 $obj = new Classroom();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
+	if($user['edit'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 	$roomId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByRoomID($roomId);
 	$row = $result->fetch_assoc();
+}else{
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 }
 $roomData = $obj->getAllRoomType();
 $objBuld = new Buildings();

@@ -1,10 +1,20 @@
 <?php include('header.php');
+$user = getPermissions('locations');
 $locName=""; $locId="";
 $obj = new locations();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
+	if($user['edit'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 	$locId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByLocID($locId);
 	$row = $result->fetch_assoc();
+}else{
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 }
 $locName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtLname'])? $obj->cleanText($_POST['txtLname']):'');
 ?>

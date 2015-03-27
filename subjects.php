@@ -1,6 +1,7 @@
 <?php
 ob_start();
 include('header.php');
+$user = getPermissions('subjects');
 $subjectName = "";
 $subjectCode = "";
 $sessionNum = "";
@@ -32,13 +33,21 @@ $room_dropDwn = $objB->getRoomsDropDwn();
 //timeslot dropdown
 $tslot_dropDwn = $objTS->getTimeSlotStartDateDropDwn();
 
-if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $_GET['clone'] != "")) {
+if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $_GET['clone'] != "")) {	
     if(isset($_GET['edit']) && $_GET['edit'] != ""){
+		if($user['edit'] != '1')
+		{
+			header("location:page_not_found.php");
+		}
 		$disTest = "disabled";
     	$disFDivCss = "style='opacity:.5; pointer-event:none'";
 		$subIdEncrypt = $_GET['edit'];
     	$subjectId = base64_decode($_GET['edit']);
 	}else if(isset($_GET['clone']) && $_GET['clone'] != ""){
+		if($user['clone'] != '1')
+		{
+			header("location:page_not_found.php");
+		}
 		$disSession = "disabled";
    		$disDivCss = "style='opacity:.5; pointer-event:none'";
 		$subIdEncrypt = $_GET['clone'];
@@ -62,6 +71,10 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
         exit();
     }
 } else {
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
     $disSession = "disabled";
     $disDivCss = "style='opacity:.5; pointer-event:none'";
 }

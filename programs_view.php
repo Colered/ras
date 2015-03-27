@@ -1,4 +1,9 @@
 <?php include('header.php');
+$user = getPermissions('programs');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $objP = new Programs();
 $pTypeArr = array('1'=>'One Year','2'=>'Two Year','3'=>'Three Year');
 $pUnitArr = array('1'=>'Executive Education','2'=>'Master Programs','3'=>'Tailored Programs','4'=>'Activity');
@@ -23,7 +28,11 @@ $(document).ready(function(){
 		<div id="main">
 			<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";} ?>
 			<div class="full_w">
-				<div class="h_title">Programs View<a href="programs.php" class="gird-addnew" title="Add New Program">Add new</a></div>
+				<div class="h_title">Programs View
+				<?php if($user['add_role'] != '0'){?>
+				<a href="programs.php" class="gird-addnew" title="Add New Program">Add new</a>
+				<?php } ?>
+				</div>
 				<table id="datatables" class="display">
 					<thead>
 						<tr>
@@ -33,8 +42,9 @@ $(document).ready(function(){
 							<th>Unit</th>
 							<th>Company</th>
 							<th>Program Type</th>
-							<!--<th>Program Duration</th>-->
+							<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
 							<th>Action</th>
+							<?php } ?>
 						</tr>
 					</thead>
 					<tbody>
@@ -58,10 +68,16 @@ $(document).ready(function(){
 							<td class="align-center"><?php echo ($row['company']<>"") ? $row['company']: 'N/A';?></td>
 							<td class="align-center"><?php echo $pTypeArr[$row['program_type']];?></td>
 							<!--<td class="align-center"><?php echo $objP->formatDate($row['start_date']);?> - <?php echo $objP->formatDate($row['end_date']);?></td>-->
-							<td class="align-center" id="<?php echo $row['id'] ?>">
-								<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" onClick="deleteProgram(<?php echo $row['id'] ?>)"></a>
-							</td>
+							<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
+								<td class="align-center" id="<?php echo $row['id'] ?>">
+									<?php if($user['edit'] != '0'){?>
+										<a href="programs.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
+									<?php } ?>
+									<?php if($user['delete_role'] != '0'){?>
+										<a href="#" class="table-icon delete" onClick="deleteProgram(<?php echo $row['id'] ?>)"></a>
+									<?php } ?>
+								</td>
+						<?php } ?>
 						</tr>
 				<?php }?>
 				</tbody>

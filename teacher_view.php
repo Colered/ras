@@ -1,5 +1,10 @@
 <?php
 include('header.php');
+$user = getPermissions('teachers');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $objT = new Teacher();
 $result = $objT->getTeachers();
 ?>
@@ -22,7 +27,11 @@ $(document).ready(function(){
     <div id="main">
 		<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
         <div class="full_w">
-            <div class="h_title">Teachers View<a href="professor.php" class="gird-addnew" title="Add New Teacher">Add New</a></div>
+            <div class="h_title">Teachers View
+			<?php if($user['add_role'] != '0'){?>
+			<a href="professor.php" class="gird-addnew" title="Add New Teacher">Add New</a>
+			<?php } ?>
+			</div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -38,7 +47,9 @@ $(document).ready(function(){
                         <th >Experience </th>
                         <th >Email</th>
                         <th >Username</th>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
                         <th >Action</th>
+						<?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,10 +69,16 @@ $(document).ready(function(){
                         <td><?php echo $objT->printTeacherExp($row['experience']);?></td>
                         <td><?php echo $row['email'];?></td>
                         <td><?php echo $row['username'];?></td>
-                        <td class="align-center" id="<?php echo $row['id'] ?>">
-                            <a href="professor.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
-                            <a href="#" class="table-icon delete" onClick="deleteTeacher(<?php echo $row['id'] ?>)"></a>
-                        </td>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
+							<td class="align-center" id="<?php echo $row['id'] ?>">
+								<?php if($user['edit'] != '0'){?>
+									<a href="professor.php?edit=<?php echo base64_encode($row['id']);?>" class="table-icon edit" title="Edit"></a>
+								<?php } ?>
+								<?php if($user['delete_role'] != '0'){?>
+									<a href="#" class="table-icon delete" onClick="deleteTeacher(<?php echo $row['id'] ?>)"></a>
+								<?php } ?>
+							</td>
+						<?php } ?>
                     </tr>
               <?php }?>
                 </tbody>

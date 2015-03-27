@@ -1,5 +1,10 @@
 <?php 	
 include('header.php'); 
+$user = getPermissions('teacher_availability');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $obj = new Teacher();
 $result = $obj->viewTeachAvail();
 ?>
@@ -23,7 +28,11 @@ $(document).ready(function(){
 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
 		</div>
         <div class="full_w">
-            <div class="h_title">Teacher Avalability View<a href="teacher_availability.php" class="gird-addnew" title="Add New Teacher Avalability">Add new</a></div>
+            <div class="h_title">Teacher Avalability View
+			<?php if($user['add_role'] != '0'){?>
+			<a href="teacher_availability.php" class="gird-addnew" title="Add New Teacher Avalability">Add new</a>
+			<?php } ?>
+			</div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -31,7 +40,9 @@ $(document).ready(function(){
                         <th >Teacher</th>
                         <th >Associated Rules</th>
                         <th >Exception Dates</th>
+						<?php if($user['add_role'] != '0' || $user['delete_role'] != '0'){?>
                         <th >Action</th>
+						<?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,10 +69,16 @@ $(document).ready(function(){
 							echo ($exceptionData->num_rows == $i) ? $dataExcep['exception_date']: $dataExcep['exception_date'].' , ';
 												} ?>
 					</td>
-					<td class="align-center" id="<?php echo $data['teacher_id'] ?>">
-                            <a href="teacher_availability.php?tid=<?php echo base64_encode($data['teacher_id']); ?>" class="table-icon edit" title="Edit"></a>
+					<?php if($user['add_role'] != '0' || $user['delete_role'] != '0'){?>
+						<td class="align-center" id="<?php echo $data['teacher_id'] ?>">
+							<?php if($user['add_role'] != '0'){?>
+								<a href="teacher_availability.php?tid=<?php echo base64_encode($data['teacher_id']); ?>" class="table-icon edit" title="Edit"></a>
+							<?php } ?>						
+							<?php if($user['delete_role'] != '0'){?>
 							<a href="#" class="table-icon delete" onClick="deleteTeachAvail(<?php echo $data['teacher_id']; ?>)"></a>
-                    </td>
+							<?php } ?>
+						</td>
+					<?php } ?>
 				</tr>
 				<?php }?>
             </table>

@@ -1,5 +1,10 @@
 <?php
 include('header.php');
+$user = getPermissions('buildings');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $obj = new Buildings();
 $result = $obj->viewBuld();
 ?>
@@ -23,7 +28,11 @@ $(document).ready(function(){
 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
 		</div>
         <div class="full_w">
-            <div class="h_title">Buildings View<a href="buildings.php" class="gird-addnew" title="Add New Building">Add New</a></div>
+            <div class="h_title">Buildings View
+			<?php if($user['add_role'] != '0'){?>
+			<a href="buildings.php" class="gird-addnew" title="Add New Building">Add New</a>
+			<?php } ?>
+			</div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -33,7 +42,9 @@ $(document).ready(function(){
 						<th >Is Default</th>
                         <th >Add Date</th>
 						<th >Update Date</th>
-                        <th >Action</th>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
+							<th >Action</th>
+						<?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,10 +57,16 @@ $(document).ready(function(){
 						<td class="align-center"><?php if($data['is_default']=='1'){echo 'Yes';}else{echo 'No';} ?></td>
                         <td><?php echo $data['date_add'] ?></td>
 						<td><?php echo $data['date_update'] ?></td>
-                        <td class="align-center" id="<?php echo $data['id'] ?>">
-                            <a href="buildings.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
-							<a href="#" class="table-icon delete" onClick="deleteBuld(<?php echo $data['id'] ?>)"></a>
-                        </td>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
+							<td class="align-center" id="<?php echo $data['id'] ?>">
+								<?php if($user['edit'] != '0'){?>
+									<a href="buildings.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
+								<?php } ?>
+								<?php if($user['delete_role'] != '0'){?>
+									<a href="#" class="table-icon delete" onClick="deleteBuld(<?php echo $data['id'] ?>)"></a>
+								<?php } ?>
+							</td>
+					   <?php } ?>
                     </tr>
 					<?php }?>
                 </tbody>

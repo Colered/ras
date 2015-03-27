@@ -1,12 +1,12 @@
 <?php include('header.php');
+$user = getPermissions('classroom_availability');
+if($user['add_role'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $obj = new Classroom_Availability();
 $classroomAvailData = $obj->getClassroomAvailRule();
 $roomTypedata=$obj->getRoomType();
-/*$timeslotData=$obj->getTimeslot();
-$options = "";
-while($data = $timeslotData->fetch_assoc()){
-	$options .= '<option value="'.$data['id'].'">'.$data['timeslot_range'].'</option>';
-}*/
 $options = '<option value="08:00 AM-09:00 AM">08:00 AM-09:00 AM</option>
 			<option value="09:00 AM-10:00 AM">09:00 AM-10:00 AM</option>
 			<option value="10:00 AM-11:00 AM">10:00 AM-11:00 AM</option>

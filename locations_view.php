@@ -2,6 +2,11 @@
 include('header.php');
 $obj = new Locations();
 $result = $obj->viewLoc();
+$user = getPermissions('locations');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -23,7 +28,11 @@ $(document).ready(function(){
 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
 		</div>
         <div class="full_w">
-            <div class="h_title">Locations View<a href="locations.php" class="gird-addnew" title="Add New Location">Add New</a></div>
+            <div class="h_title">Locations View
+			<?php if($user['add_role'] != '0'){?>
+			<a href="locations.php" class="gird-addnew" title="Add New Location">Add New</a>
+			<?php } ?>
+			</div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -31,7 +40,9 @@ $(document).ready(function(){
                         <th >Name</th>                        
                         <th >Add Date</th>
 						<th >Update Date</th>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
                         <th >Action</th>
+						<?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,9 +53,16 @@ $(document).ready(function(){
                         <td><?php echo $data['name'] ?></td>                        
                         <td><?php echo $data['date_add'] ?></td>
 						<td><?php echo $data['date_update'] ?></td>
-                        <td class="align-center" id="<?php echo $data['id'] ?>">
-                            <a href="locations.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
-							<a href="#" class="table-icon delete" onClick="deleteLoc(<?php echo $data['id'] ?>)"></a>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
+							<td class="align-center" id="<?php echo $data['id'] ?>">
+								<?php if($user['edit'] != '0'){?>					
+									 <a href="locations.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
+								<?php } ?>
+								<?php if($user['delete_role'] != '0'){?>					
+									 <a href="#" class="table-icon delete" onClick="deleteLoc(<?php echo $data['id'] ?>)"></a>
+								<?php } ?>
+							</td>
+					   <?php }?>						
                         </td>
                     </tr>
 					<?php }?>

@@ -1,5 +1,10 @@
 <?php 	
 include('header.php'); 
+$user = getPermissions('timeslots');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $obj = new Timeslot();
 $result = $obj->viewTimeslot();
 ?>

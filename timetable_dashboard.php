@@ -3,6 +3,11 @@ include('header.php');
 $obj=new Timetable();
 $objP=new Programs();
 $result=$obj->getTimetablesData();
+$user = getPermissions('timetable_dashboard');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 ?>
 <div id="content">
     <div id="main">
@@ -10,21 +15,21 @@ $result=$obj->getTimetablesData();
             <div class="h_title">Manage Timetable</div>
             <form action="" method="post">
                 <div>
-					<?php $user = getPermissions('generate_timetable.php');
-						if(isset($user['page_id']) && $user['page_id'] != ''){?>								
+					<?php $user = getPermissions('timetable_dashboard');
+						if($user['add_role'] != '0'){?>								
 							<div class="custtd_left1">
 								<a href="generate_timetable.php" class="buttonsub" >Generate Timetable</a>
 							</div>
 					<?php } ?>
 					<?php $user = getPermissions('month.php');
-						if(isset($user['page_id']) && $user['page_id'] != ''){?>								
+						if($user['view'] != '0'){?>								
 							<div class="custtd_right">
 								<!--<a href="#"><input type="button" name="btnArea" class="buttonsub" value="Edit"></a>-->
 								<a href="month.php" class="buttonsub" >Calendar View</a>
 							</div>
 					<?php } ?>
 					<?php $user = getPermissions('timetable_view.php');
-						if(isset($user['page_id']) && $user['page_id'] != ''){?>								
+						if($user['view'] != '0'){?>								
 							 <div class="custtd_right">
 								<a href="timetable_view.php" class="buttonsub" >Table View</a>
 							 </div>
@@ -50,7 +55,10 @@ $result=$obj->getTimetablesData();
 									<th >Date Range</th>
                                     <th >Created On</th>
                                     <th >Last Edit</th>
-                                    <th >Action</th>
+									<?php $user = getPermissions('timetable_dashboard');
+										  if($user['add_role'] != '0' || $user['delete_role'] != '0'){?>
+											<th >Action</th>
+									<?php } ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,10 +83,16 @@ $result=$obj->getTimetablesData();
 									<td class="align-center"><?php echo $data['start_date']." to ".$data['end_date']; ?></td>
                                     <td class="align-center"><?php echo $data['date_add']; ?></td>
                                     <td class="align-center"><?php echo $data['date_update']; ?></td>
-									 <td class="align-center edit-tt" id="<?php echo $data['id'] ?>">
-									 	<a href="generate_timetable.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
-										<a href="#" class="table-icon delete" onClick="deleteTimetable(<?php echo $data['id'] ?>)"></a>
-									</td>
+									<?php if($user['add_role'] != '0' || $user['delete_role'] != '0'){?>
+											<td class="align-center edit-tt" id="<?php echo $data['id'] ?>">
+												 <?php if($user['add_role'] != '0'){?>	
+														<a href="generate_timetable.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
+												<?php } ?>
+												<?php if($user['delete_role'] != '0'){?>											
+														<a href="#" class="table-icon delete" onClick="deleteTimetable(<?php echo $data['id'] ?>)"></a>	
+												<?php } ?>									 	
+											</td>
+									<?php } ?>
                                 </tr>
 								<?php $count++; } 
 								if($count==0){ ?>

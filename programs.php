@@ -1,7 +1,12 @@
 <?php
 include('header.php');
+$user = getPermissions('programs');
 $objP = new Programs();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
+	if($user['edit'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
     $programId = base64_decode($_GET['edit']);
     $result = $objP->getProgramById($programId);
     $row = $result->fetch_assoc();
@@ -11,6 +16,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $form_action = 'edit_program';
 
 }else{
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
     $button_save = 'Add Program';
     $form_action = 'add_program';
 }

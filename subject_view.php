@@ -1,5 +1,10 @@
 <?php
 include('header.php');
+$user = getPermissions('subjects');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $obj=new Subjects();
 $result=$obj->viewSubject();
 ?>
@@ -21,7 +26,11 @@ $(document).ready(function(){
     <div id="main">
 	<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
         <div class="full_w">
-            <div class="h_title">Subjects View <a href="subjects.php" class="gird-addnew" title="Add New Subject"> Add New</a></div>
+            <div class="h_title">Subjects View
+			<?php if($user['add_role'] != '0'){?>
+			<a href="subjects.php" class="gird-addnew" title="Add New Subject"> Add New</a>
+			<?php } ?>
+			</div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -36,7 +45,9 @@ $(document).ready(function(){
 -->                     <th width="350">Session</th>
 						<th >Add Date</th>
 						<th >Update Date</th>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0' || $user['clone'] != '0'){?>
                         <th width="75" >Action</th>
+						<?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,11 +102,19 @@ $(document).ready(function(){
 						<?php } ?>
 						<td class="align-center"><?php echo $data['date_add'] ?></td>
 						<td class="align-center"><?php echo $data['date_update'] ?></td>
-                        <td class="align-center" id="<?php echo $data['id'] ?>">
-                            <a href="subjects.php?edit=<?php echo base64_encode($data['id'])?>" class="table-icon edit" title="Edit"></a>
-							<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)" title="Delete"></a>
-							<a href="subjects.php?clone=<?php echo base64_encode($data['id'])?>" class="table-icon clone" title="Clone"></a>
-                        </td>
+						<?php if($user['edit'] != '0' || $user['delete_role'] != '0' || $user['clone'] != '0'){?>
+							<td class="align-center" id="<?php echo $data['id'] ?>">
+							<?php if($user['edit'] != '0'){?>
+								<a href="subjects.php?edit=<?php echo base64_encode($data['id'])?>" class="table-icon edit" title="Edit"></a>
+							<?php } ?>
+							<?php if($user['delete_role'] != '0'){?>
+								<a href="#" class="table-icon delete" onClick="deleteSubject(<?php echo $data['id'] ?>)" title="Delete"></a>
+							<?php } ?>
+							<?php if($user['clone'] != '0'){?>
+								<a href="subjects.php?clone=<?php echo base64_encode($data['id'])?>" class="table-icon clone" title="Clone"></a>
+							<?php } ?>
+							</td>
+						<?php } ?>
                     </tr>
 					<?php }?>
                 </tbody>

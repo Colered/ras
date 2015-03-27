@@ -1,7 +1,12 @@
 <?php
 include('header.php');
+$user = getPermissions('teachers');
 $objT = new Teacher();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
+	if($user['edit'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
     $result =  $db->query("select * from teacher where id='".base64_decode($_GET['edit'])."'");
 	$row_cnt = $result->num_rows;
     $row = $result->fetch_assoc();
@@ -10,6 +15,10 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $years = floor($row['experience']/12);
     $months = $row['experience']-$years*12;
 }else{
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
     $button_save = 'Add Teacher';
     $years = isset($_POST['years']) ? $_POST['years']:'';
     $months = isset($_POST['months']) ? $_POST['months']:'';

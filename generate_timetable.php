@@ -1,4 +1,9 @@
 <?php include('header.php');
+$user = getPermissions('timetable_dashboard');
+if($user['add_role'] != '1')
+{
+	header("location:page_not_found.php");
+}
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	$timetable_id = base64_decode($_GET['edit']);
 	$objTT = new Timetable();

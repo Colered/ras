@@ -1,4 +1,5 @@
-<?php include('header.php'); ?>
+<?php include('header.php'); 
+$user = getPermissions('areas');?>
 <script type="text/javascript" src="js/jquery.simple-color.js"></script>
 <script>
 	$(document).ready(function(){
@@ -8,10 +9,19 @@
 <?php
 $areaName=""; $areaCode=""; $areaColor=""; $areaId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
+	if($user['edit'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 	$areaId = base64_decode($_GET['edit']);
 	$obj = new Areas();
 	$result = $obj->getDataByAreaID($areaId);
 	$row = $result->fetch_assoc();
+}else{
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 }
 $areaName = isset($_GET['edit']) ? $row['area_name'] : (isset($_POST['txtAreaName'])? $_POST['txtAreaName']:'');
 $areaCode = isset($_GET['edit']) ? $row['area_code'] : (isset($_POST['txtAreaCode'])? $_POST['txtAreaCode']:'');

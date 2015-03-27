@@ -1,10 +1,20 @@
 <?php include('header.php'); 
+$user = getPermissions('holidays');
 $holiday_reason=""; $holidayId=""; $holiday_date="";
 $obj = new Holidays();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
+	if($user['edit'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 	$holidayId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByHolidayID($holidayId);
 	$row = $result->fetch_assoc();
+}else{
+	if($user['add_role'] != '1')
+	{
+		header("location:page_not_found.php");
+	}
 }
 $holiday_date = isset($_GET['edit']) ? $row['holiday_date'] : (isset($_POST['holiday_date'])? $obj->cleanText($_POST['holiday_date']):'');
 $holiday_reason = isset($_GET['edit']) ? $row['holiday_reason'] : (isset($_POST['holiday_reason'])? $obj->cleanText($_POST['holiday_reason']):'');

@@ -1,4 +1,9 @@
 <?php include('header.php');
+$user = getPermissions('program_cycles');
+if($user['view'] != '1')
+{
+	header("location:page_not_found.php");
+}
 $objP = new Programs();
 $pTypeArr = array('1'=>'One Year','2'=>'Two Year','3'=>'Three Year');
 $pUnitArr = array('1'=>'Executive Education','2'=>'Master Programs','3'=>'Tailored Programs','4'=>'Activity');
@@ -23,14 +28,20 @@ $(document).ready(function(){
 		<div id="main">
 			<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";} ?>
 			<div class="full_w">
-				<div class="h_title">Program Cycles View<a href="program_cycles.php" class="gird-addnew" title="Add New Cycles">Add new</a></div>
+				<div class="h_title">Program Cycles View
+				<?php if($user['add_role'] != '0'){?>
+				<a href="program_cycles.php" class="gird-addnew" title="Add New Cycles">Add new</a>
+				<?php } ?>
+				</div>
 				<table id="datatables" class="display">
 					<thead>
 						<tr>
 							<th>ID</th>
 							<th>Program Name</th>
 							<th>Cycle Info</th>
+							<?php if($user['add_role'] != '0' || $user['delete_role'] != '0'){?>
 							<th>Action</th>
+							<?php } ?>
 						</tr>
 					</thead>
 					<tbody>
@@ -55,10 +66,16 @@ $(document).ready(function(){
 							      }
 							?>
 							</td>
-							<td class="align-center" id="<?php echo $row['progid'] ?>">
-								<a href="program_cycles.php?edit=<?php echo base64_encode($row['progid']);?>" class="table-icon edit" title="Edit"></a>
-								<a href="#" class="table-icon delete" onclick="deleteCycle(<?php echo $row['progid'];?>)"></a>
-							</td>
+							<?php if($user['add_role'] != '0' || $user['delete_role'] != '0'){?>
+								<td class="align-center" id="<?php echo $row['progid'] ?>">
+								<?php if($user['add_role'] != '0'){?>
+									<a href="program_cycles.php?edit=<?php echo base64_encode($row['progid']);?>" class="table-icon edit" title="Edit"></a>
+								<?php } ?>
+								<?php if($user['delete_role'] != '0'){?>
+									<a href="#" class="table-icon delete" onclick="deleteCycle(<?php echo $row['progid'];?>)"></a>
+								<?php } ?>
+								</td>
+							<?php } ?>
 						</tr>
 				<?php } ?>
 				</tbody>
