@@ -3493,3 +3493,71 @@ function setUserStatus($id){
         });
     }
  }
+ 
+$(document).ready(function() {
+	$('.cls-permission').click(function(){
+	 	if($('#slctUserType').val()!=""){
+		var ckbVal = $(this).val();
+		 var allCkbVal = ckbVal.split("-");
+		 if(allCkbVal[0]=='all'){
+			 //alert('all');
+			 var add_current = '#add'+allCkbVal[1];
+			 var edit_current = '#edit'+allCkbVal[1];
+			 var del_current = '#delete'+allCkbVal[1];
+			 var view_current = '#view'+allCkbVal[1];
+			 var clone_current = '#clone'+allCkbVal[1];
+			 //alert(add_current+edit_current+del_current+view_current+clone_current);
+			 if(this.checked) { 
+				// alert('checked');
+				 $(add_current).prop('checked', true);
+			 	 $(edit_current).prop('checked', true);
+			 	 $(del_current).prop('checked', true);
+			 	 $(view_current).prop('checked', true);
+			 	 $(clone_current).prop('checked', true);
+			 }else{
+				 //alert('unchecked');
+				 $(add_current).prop('checked', false);
+				 $(edit_current).prop('checked', false);
+				 $(del_current).prop('checked', false);
+				 $(view_current).prop('checked', false);
+				 $(clone_current).prop('checked', false);    
+			 }
+		  }
+		var roleType = $('#slctUserType').val();
+		var status='';
+		if($(this).is(":checked")){
+			status=1;
+		}else if($(this).is(":not(:checked)")){
+			status=0;
+		}
+		$.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'roleType': roleType,
+					'ckbVal': ckbVal,
+					'status':status,
+					'codeBlock': 'set_user_permission',
+				},
+                success: function($succ){
+					if($succ==1){
+                       // alert('Yes');
+					}else{
+						//alert('No');
+					}
+                }
+        });
+	  }else{
+		alert('Please select the role type');
+		return false;
+	  }
+   });
+});
+
+function setAllPermission(){
+		var id='';;
+		if($('#slctUserType').val()!=""){
+			id = '?rid='+$('#slctUserType').val();
+		}
+		window.location.href = 'role.php'+id+'';
+}
