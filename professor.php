@@ -5,7 +5,7 @@ $objT = new Teacher();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
 	if($user['edit'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
     $result =  $db->query("select * from teacher where id='".base64_decode($_GET['edit'])."'");
 	$row_cnt = $result->num_rows;
@@ -17,7 +17,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 }else{
 	if($user['add_role'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
     $button_save = 'Add Teacher';
     $years = isset($_POST['years']) ? $_POST['years']:'';

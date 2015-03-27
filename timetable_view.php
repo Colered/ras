@@ -1,5 +1,10 @@
 <?php
 include('header.php');
+$user = getPermissions('timetable_view');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
 $obj=new Timetable();
 $result=$obj->viewTimetable();
 $daysArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');

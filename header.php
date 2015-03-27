@@ -47,182 +47,153 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                     <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ ?>
 					<ul>
 						<li class="upp"><a href="timetable_dashboard.php">Dashboard</a></li>
-                        <li class="upp"><a href="">Timetable</a>
+						<li class="upp"><a href="">Timetable</a>
 						   <ul>
 						   		<li>&#8250; <a href="timetable_dashboard.php">List</a></li>
-								<?php $user = getPermissions('timetable_dashboard');
+								<?php $user = getPermissions('generate_timetable');
 									  if($user['add_role'] != '0'){?>								
 										<li>&#8250; <a href="generate_timetable.php">Generate</a></li>
 								<?php } ?>
-
-                                <?php $user = getPermissions('timetable_view.php');
+                                <?php $user = getPermissions('timetable_view');
 									  if($user['view'] != '0'){?>	
 										<li>&#8250; <a href="timetable_view.php">Table View</a></li>
 								<?php } ?>
-								<?php $user = getPermissions('month.php');
+								<?php $user = getPermissions('calendar_view');
 									  if($user['view'] != '0'){?>	
 										<li>&#8250; <a href="month.php">Calendar View</a></li>
 								<?php } ?>                                
                            </ul>
-						</li>						
-						<?php $user = getPermissions('view');
-							  if($user['view'] != '0'){?>	
-								<li class="upp"><a href="">View</a>
-									<ul>
-										<?php $user = getPermissions('program_cycles_view.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('classroom_availability_view.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('teacher_availability_view.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('teacher_activity_view.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="teacher_activity_view.php">Activities</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('special_activity_view.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('timetable_view.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="timetable_view.php">Timetable</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('month.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="month.php">Calendar</a></li>
-										<?php } ?>                             
-								   </ul>
-								</li>								
+						</li>
+						<?php $user1 = getPermissions('program_cycles');$user2 = getPermissions('classroom_availability');$user3 = getPermissions('teacher_availability');$user4 = getPermissions('teacher_activity');$user5 = getPermissions('special_activity');$user6 = getPermissions('timetable_view');$user7 = getPermissions('calendar_view');
+						if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0' || $user4['view'] != '0' || $user5['view'] != '0' || $user6['view'] != '0' || $user7['view'] != '0'){?>
+							<li class="upp"><a href="">View</a>
+								<ul>
+									<?php if($user1['view'] != '0'){?>	
+											<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
+									<?php } ?>
+									<?php if($user2['view'] != '0'){?>	
+											<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
+									<?php } ?>
+									<?php if($user3['view'] != '0'){?>	
+											<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
+									<?php } ?>
+									<?php if($user4['view'] != '0'){?>	
+											<li>&#8250; <a href="teacher_activity_view.php">Activities</a></li>
+									<?php } ?>
+									<?php if($user5['view'] != '0'){?>	
+											<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
+									<?php } ?>
+									<?php if($user6['view'] != '0'){?>	
+											<li>&#8250; <a href="timetable_view.php">Timetable</a></li>
+									<?php } ?>
+									<?php if($user7['view'] != '0'){?>	
+											<li>&#8250; <a href="month.php">Calendar</a></li>
+									<?php } ?>                             
+							   </ul>
+							</li>
 						<?php } ?>
-						<?php $user = getPermissions('resources');
-							  if($user['view'] != '0'){?>	
-								<li class="upp"><a href="">Resources</a>
-									<ul>
-										<?php $user = getPermissions('locations');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="locations_view.php">Locations</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('buildings');
-											  if($user['view'] != '0'){?>	
-												 <li>&#8250; <a href="buildings_view.php">Buildings</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('rooms');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="rooms_view.php">Classrooms</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('classroom_availability');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('programs');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="programs_view.php">Programs</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('program_cycles');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('areas');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="areas_view.php">Areas</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('subjects');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="subject_view.php">Subjects</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('timeslots');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="timeslots.php">Timeslots</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('teachers');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="teacher_view.php">Teachers</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('teacher_availability');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('holidays');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="holidays_view.php">Manage Holidays</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('teacher_activity');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="teacher_activity_view.php">Activity List</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('special_activity');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('user_management_view.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="user_view.php">User Management</a></li>					  
-										<?php } ?>
-									</ul>
-								</li>
+						<?php $user1 = getPermissions('locations');$user2 = getPermissions('buildings');$user3 = getPermissions('rooms');$user4 = getPermissions('classroom_availability');$user5 = getPermissions('programs');$user6 = getPermissions('program_cycles');$user7 = getPermissions('areas');$user8 = getPermissions('subjects');$user9 = getPermissions('timeslots');$user10 = getPermissions('teachers');$user11 = getPermissions('teacher_availability');$user12 = getPermissions('holidays');$user13 = getPermissions('teacher_activity');$user14 = getPermissions('special_activity');$user15 = getPermissions('users');$user16 = getPermissions('roles');
+						if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0' || $user4['view'] != '0' || $user5['view'] != '0' || $user6['view'] != '0' || $user7['view'] != '0' || $user8['view'] != '0' || $user9['view'] != '0' || $user10['view'] != '0' || $user11['view'] != '0' || $user12['view'] != '0' || $user13['view'] != '0' || $user14['view'] != '0' || $user15['view'] != '0' || $user16['view'] != '0'){?>
+							<li class="upp"><a href="#">Resources</a>
+								<ul>
+									<?php if($user1['view'] != '0'){?>	
+											<li>&#8250; <a href="locations_view.php">Locations</a></li>
+									<?php } ?>
+									<?php if($user2['view'] != '0'){?>	
+											 <li>&#8250; <a href="buildings_view.php">Buildings</a></li>
+									<?php } ?>
+									<?php if($user3['view'] != '0'){?>	
+											<li>&#8250; <a href="rooms_view.php">Classrooms</a></li>
+									<?php } ?>
+									<?php if($user4['view'] != '0'){?>	
+											<li>&#8250; <a href="classroom_availability_view.php">Classrooms Availabilty</a></li>
+									<?php } ?>
+									<?php if($user5['view'] != '0'){?>	
+											<li>&#8250; <a href="programs_view.php">Programs</a></li>
+									<?php } ?>
+									<?php if($user6['view'] != '0'){?>	
+											<li>&#8250; <a href="program_cycles_view.php">Program Cycles</a></li>
+									<?php } ?>
+									<?php if($user7['view'] != '0'){?>	
+											<li>&#8250; <a href="areas_view.php">Areas</a></li>
+									<?php } ?>
+									<?php if($user8['view'] != '0'){?>	
+											<li>&#8250; <a href="subject_view.php">Subjects</a></li>
+									<?php } ?>
+									<?php if($user9['view'] != '0'){?>	
+											<li>&#8250; <a href="timeslots.php">Timeslots</a></li>
+									<?php } ?>
+									<?php if($user10['view'] != '0'){?>	
+											<li>&#8250; <a href="teacher_view.php">Teachers</a></li>
+									<?php } ?>
+									<?php if($user11['view'] != '0'){?>	
+											<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
+									<?php } ?>
+									<?php if($user12['view'] != '0'){?>	
+											<li>&#8250; <a href="holidays_view.php">Manage Holidays</a></li>
+									<?php } ?>
+									<?php if($user13['view'] != '0'){?>	
+											<li>&#8250; <a href="teacher_activity_view.php">Activity List</a></li>
+									<?php } ?>
+									<?php if($user14['view'] != '0'){?>	
+											<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
+									<?php } ?>
+									<?php if($user15['view'] != '0'){?>	
+											<li>&#8250; <a href="user_view.php">User Management</a></li>
+									<?php } ?>
+									<?php if($user16['view'] != '0'){?>	
+											<li>&#8250; <a href="role.php">Role Management</a></li>
+									<?php } ?>
+								</ul>
+							</li>
 						<?php } ?>
-						<?php $user = getPermissions('data upload');
+						<?php $user = getPermissions('session_upload');
 							  if($user['view'] != '0'){?>	
 								<li class="upp"><a href="">Data Upload</a>
-									<ul>
-										<?php $user = getPermissions('session_upload.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="session_upload.php">Session Data</a></li>
-										<?php } ?>								
+									<ul>							
+										<li>&#8250; <a href="session_upload.php">Session Data</a></li>								
 									</ul>
 								</li>
 						<?php } ?>
-						<?php $user = getPermissions('reports');
-							  if($user['view'] != '0'){?>	
-								<li class="upp"><a href="">Reports</a>
-									<ul>
-										<?php $user = getPermissions('teacher_rate_report.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="teacher_rate_report.php">Rate and Pay Totals</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('teacher_report.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="teacher_report.php">Timetable Activities</a></li>
-										<?php } ?>
-										<?php $user = getPermissions('weekly_report.php');
-											  if($user['view'] != '0'){?>	
-												<li>&#8250; <a href="weekly_report.php">Calender Weekly Report</a></li>
-										<?php } ?>
-									</ul>
-								</li>	
+						<?php $user1 = getPermissions('teacher_rate_report');
+							  $user2 = getPermissions('teacher_report');
+							  $user3 = getPermissions('weekly_report');
+							  if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0')
+							  {?>
+									<li class="upp"><a href="#">Reports</a>
+										<ul>
+											<?php if($user1['view'] != '0'){?>	
+													 <li>&#8250; <a href="teacher_rate_report.php">Rate and Pay Totals</a></li>
+											<?php } ?>
+											<?php if($user2['view'] != '0'){?>	
+													<li>&#8250; <a href="teacher_report.php">Timetable Activities</a></li>
+											<?php } ?>
+											<?php if($user3['view'] != '0'){?>	
+													<li>&#8250; <a href="weekly_report.php">Calender Weekly Report</a></li>
+											<?php } ?>
+										</ul>
+									</li>									
 						<?php } ?>
-						<?php $user = getPermissions('help.php');
+						<?php $user = getPermissions('help');
 							  if($user['view'] != '0'){?>	
 								<li class="upp right"  style="float:right"><a href="help.php"><img src="images/help.png" class="help-img"/></a></li>	
-						<?php } ?>										
+						<?php } ?>
 						<li class="upp right"  style="float:right"><a href="logout.php">Logout</a></li>
-						<?php $user = getPermissions('change_password.php');
+						<?php $user = getPermissions('change_password');
 							  if($user['view'] != '0'){?>	
 								<li class="upp right"  style="float:right"><a href="change_password.php">Change Password</a></li>
 						<?php } ?>
-						
                     </ul>
 					<?php } ?>
-                </div>
+					</div>
             </div>
 <?php
 function getPermissions($filename='')
 {
 	if($filename != '')
 		$path = $filename;
-	else{
-		$script_name = $_SERVER['SCRIPT_NAME'];
-		$pathinfo = explode("ras/",$script_name);
-		$path = $pathinfo['1'];
-	}
 	$obj = new Users();
-	$user = $obj->getUser($_SESSION['user_id'],$path);
-	return $user;
+	$user_details = $obj->getUser($_SESSION['user_id'],$path);
+	return $user_details;
 }
 ?>

@@ -1,4 +1,10 @@
-<?php include('header.php');?>
+<?php include('header.php');
+$user = getPermissions('change_password');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
+?>
 <div id="content">
     <div id="main">
         <div class="full_w">

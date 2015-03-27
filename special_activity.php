@@ -4,12 +4,12 @@ $user = getPermissions('special_activity');
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	if($user['edit'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
 }else{
 	if($user['add_role'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
 }
 $obj = new SpecialActivity();

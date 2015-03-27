@@ -11,7 +11,7 @@ $areaName=""; $areaCode=""; $areaColor=""; $areaId="";
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	if($user['edit'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
 	$areaId = base64_decode($_GET['edit']);
 	$obj = new Areas();
@@ -20,7 +20,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 }else{
 	if($user['add_role'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
 }
 $areaName = isset($_GET['edit']) ? $row['area_name'] : (isset($_POST['txtAreaName'])? $_POST['txtAreaName']:'');

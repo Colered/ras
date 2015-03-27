@@ -5,7 +5,7 @@ $obj = new Holidays();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	if($user['edit'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
 	$holidayId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByHolidayID($holidayId);
@@ -13,7 +13,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 }else{
 	if($user['add_role'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
 }
 $holiday_date = isset($_GET['edit']) ? $row['holiday_date'] : (isset($_POST['holiday_date'])? $obj->cleanText($_POST['holiday_date']):'');

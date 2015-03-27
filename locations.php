@@ -5,7 +5,8 @@ $obj = new locations();
 if(isset($_GET['edit']) && $_GET['edit']!=""){
 	if($user['edit'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+
 	}
 	$locId = base64_decode($_GET['edit']);
 	$result = $obj->getDataByLocID($locId);
@@ -13,7 +14,8 @@ if(isset($_GET['edit']) && $_GET['edit']!=""){
 }else{
 	if($user['add_role'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+
 	}
 }
 $locName = isset($_GET['edit']) ? $row['name'] : (isset($_POST['txtLname'])? $obj->cleanText($_POST['txtLname']):'');

@@ -5,7 +5,7 @@ $objP = new Programs();
 if(isset($_GET['edit']) && $_GET['edit']!=''){
 	if($user['edit'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
     $programId = base64_decode($_GET['edit']);
     $result = $objP->getProgramById($programId);
@@ -18,7 +18,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 }else{
 	if($user['add_role'] != '1')
 	{
-		header("location:page_not_found.php");
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 	}
     $button_save = 'Add Program';
     $form_action = 'add_program';

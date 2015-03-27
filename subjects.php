@@ -37,7 +37,7 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
     if(isset($_GET['edit']) && $_GET['edit'] != ""){
 		if($user['edit'] != '1')
 		{
-			header("location:page_not_found.php");
+			echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 		}
 		$disTest = "disabled";
     	$disFDivCss = "style='opacity:.5; pointer-event:none'";
@@ -46,7 +46,7 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
 	}else if(isset($_GET['clone']) && $_GET['clone'] != ""){
 		if($user['clone'] != '1')
 		{
-			header("location:page_not_found.php");
+			echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 		}
 		$disSession = "disabled";
    		$disDivCss = "style='opacity:.5; pointer-event:none'";

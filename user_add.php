@@ -1,11 +1,21 @@
-<?php include('header.php'); 
+<?php include('header.php');
+$user = getPermissions('users');
 $userId="";
 $objU=new Users();
 $result = $objU->getUserType();
-if(isset($_GET['edit']) && $_GET['edit']!=""){
+if(isset($_GET['edit']) && $_GET['edit']!=""){	
+	if($user['edit'] != '1')
+	{
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+	}
 	$userId = base64_decode($_GET['edit']);
 	$result_detail = $objU->getDataByUserID($userId);
 	$row = $result_detail->fetch_assoc();
+}else{
+	if($user['add_role'] != '1')
+	{
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+	}
 }
 $role_id = (isset($_GET['edit']) && $_GET['edit']!="") ? $row['role_id']:(isset($_POST['slctUserType'])? $_POST['slctUserType']:'') ;
 $uname = (isset($_GET['edit']) && $_GET['edit']!="") ? $row['username']:(isset($_POST['txtUserName'])? $_POST['txtUserName']:'');

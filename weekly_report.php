@@ -1,4 +1,9 @@
 <?php include('header.php');
+$user = getPermissions('weekly_report');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
 	$fromGenrtWR=isset($_SESSION['from']) ? $_SESSION['from'] : "";
 	$toGenrtWR=isset($_SESSION['to']) ? $_SESSION['to'] : "";
 	unset($_SESSION['from']);unset($_SESSION['to']);

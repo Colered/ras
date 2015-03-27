@@ -1,4 +1,9 @@
 <?php include('header.php');
+$user = getPermissions('session_upload');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
 $locName=""; $locId="";
 $obj = new locations();
 if(isset($_GET['edit']) && $_GET['edit']!=""){

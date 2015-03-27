@@ -2,7 +2,7 @@
 $user = getPermissions('teacher_availability');
 if($user['add_role'] != '1')
 {
-	header("location:page_not_found.php");
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 }
 $obj = new Teacher();
 $teacherData = $obj->getTeachers();

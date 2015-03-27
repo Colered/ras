@@ -2,7 +2,7 @@
 $user = getPermissions('program_cycles');
 if($user['view'] != '1')
 {
-	header("location:page_not_found.php");
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 }
 $objP = new Programs();
 $pTypeArr = array('1'=>'One Year','2'=>'Two Year','3'=>'Three Year');

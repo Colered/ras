@@ -1,5 +1,10 @@
 <?php 	
 include('header.php'); 
+$user = getPermissions('users');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
 $objU = new Users();
 $result = $objU->userDetail();
 ?>
@@ -23,7 +28,11 @@ $(document).ready(function(){
 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
 		</div>
         <div class="full_w">
-            <div class="h_title">Users<a href="user_add.php" class="gird-addnew" title="Add New User">Add New</a></div>
+            <div class="h_title">Users
+			<?php if($user['add_role'] != '0'){?>
+			<a href="user_add.php" class="gird-addnew" title="Add New User">Add New</a>
+			<?php } ?>
+			</div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
@@ -54,8 +63,12 @@ $(document).ready(function(){
 							<?php }else{ ?>
 							<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-deactive.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Enable" /></div>
 							<?php }?>
+							<?php if($user['edit'] != '0'){?>
 							<a href="user_add.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
+							<?php }?>
+							<?php if($user['delete_role'] != '0'){?>
 							<a href="#" class="table-icon delete" onClick="deleteUser(<?php echo $data['id']; ?>)"></a>
+							<?php }?>
                         </td>
                     </tr>
 				<?php } 

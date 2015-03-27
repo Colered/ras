@@ -1,4 +1,10 @@
-<?php include('header.php');?>
+<?php include('header.php');
+$user = getPermissions('about_us');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
+?>
 <style type="text/css">
 .fontstyles p, .fontstyle span, ul.team li {font-size: 14px; line-height:22px!important;}
 </style>

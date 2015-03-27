@@ -5,6 +5,19 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 }elseif(!isset($_SESSION['user_id'])){
 		header('Location: index.php');
 }
+$user_profiles = getPermissions('calendar_view');
+if($user_profiles['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
+function getPermissions($filename='')
+{
+	if($filename != '')
+		$path = $filename;
+	$obj = new Users();
+	$user_details = $obj->getUser($_SESSION['user_id'],$path);
+	return $user_details;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">

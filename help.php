@@ -1,4 +1,9 @@
 <?php include('header.php');
+$user = getPermissions('help');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
 $name = isset($_GET['name']) ? $_GET['name'] : '';
 $fromGenrtTmtbl = isset($_GET['fromGenrtTmtbl']) ? $_GET['fromGenrtTmtbl'] : '';
 $toGenrtTmtbl = isset($_GET['toGenrtTmtbl']) ? $_GET['toGenrtTmtbl'] : '';

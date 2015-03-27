@@ -3,7 +3,7 @@ include('header.php');
 $user = getPermissions('areas');
 if($user['view'] != '1')
 {
-	header("location:page_not_found.php");
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 }
 $obj = new Areas();
 $result = $obj->viewArea();

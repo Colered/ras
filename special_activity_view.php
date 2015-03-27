@@ -3,7 +3,7 @@ include('header.php');
 $user = getPermissions('special_activity');
 if($user['view'] != '1')
 {
-	header("location:page_not_found.php");
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 }
 $obj=new SpecialActivity();
 $objT = new Teacher();

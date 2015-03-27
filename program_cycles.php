@@ -3,7 +3,7 @@ include('header.php');
 $user = getPermissions('program_cycles');
 if($user['add_role'] != '1')
 {
-	header("location:page_not_found.php");
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 }
 $objP = new Programs();
 $objTS = new Timeslot();

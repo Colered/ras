@@ -1,5 +1,10 @@
 <?php
 include('header.php');
+$user = getPermissions('teacher_rate_report');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
 $result = '';
 $teachers_result = '';
 if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
