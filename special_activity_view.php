@@ -88,12 +88,14 @@ $(document).ready(function(){
 																<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$act_name_data_result['id'].')"></a></td>
 												  </tr> ';
 									}else{
+										$startDate = (isset($act_name_data_result['adhoc_start_date']) && $act_name_data_result['adhoc_start_date'] != '0000-00-00')? $act_name_data_result['adhoc_start_date']:'';
+										$endDate = ($act_name_data_result['adhoc_end_date'] != '0000-00-00')? $act_name_data_result['adhoc_start_date']:'';
 										$actHtml.='<tr>
 															<td>'.$act_name_data_result['name'].'</td>
 															<td>'.$act_name_data_result['act_date'].'</td>
 															<td>'.$timeslot.'</td>
-															<td>'.$act_name_data_result['adhoc_start_date'].'</td>
-															<td>'.$act_name_data_result['adhoc_end_date'].'</td>
+															<td>'.$startDate.'</td>
+															<td>'.$endDate.'</td>
 															<td id="'.$act_name_data_result['id'].'" width="30">
 																<a href="special_activity.php?edit='.base64_encode($act_name_data_result['id']).'?>" class="table-icon edit" title="Edit"></a>
 																<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$act_name_data_result['id'].')"></a>
