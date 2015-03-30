@@ -3500,22 +3500,18 @@ $(document).ready(function() {
 		var ckbVal = $(this).val();
 		 var allCkbVal = ckbVal.split("-");
 		 if(allCkbVal[0]=='all'){
-			 //alert('all');
 			 var add_current = '#add'+allCkbVal[1];
 			 var edit_current = '#edit'+allCkbVal[1];
 			 var del_current = '#delete'+allCkbVal[1];
 			 var view_current = '#view'+allCkbVal[1];
 			 var clone_current = '#clone'+allCkbVal[1];
-			 //alert(add_current+edit_current+del_current+view_current+clone_current);
 			 if(this.checked) { 
-				// alert('checked');
 				 $(add_current).prop('checked', true);
 			 	 $(edit_current).prop('checked', true);
 			 	 $(del_current).prop('checked', true);
 			 	 $(view_current).prop('checked', true);
 			 	 $(clone_current).prop('checked', true);
 			 }else{
-				 //alert('unchecked');
 				 $(add_current).prop('checked', false);
 				 $(edit_current).prop('checked', false);
 				 $(del_current).prop('checked', false);
@@ -3523,6 +3519,33 @@ $(document).ready(function() {
 				 $(clone_current).prop('checked', false);    
 			 }
 		  }
+		if((allCkbVal[0]=='add' || allCkbVal[0]=='edit') && (allCkbVal[1]==8 || allCkbVal[1]==10|| allCkbVal[1]==15)){
+				if(allCkbVal[0]=='add'){
+					var edit_current = '#edit'+allCkbVal[1];
+					if(this.checked) { 
+						 $(edit_current).prop('checked', true);
+					 }else{
+						$(edit_current).prop('checked', false);
+					 }
+				}else if(allCkbVal[0]=='edit'){
+					var add_current = '#add'+allCkbVal[1];
+					if(this.checked) { 
+						 $(add_current).prop('checked', true);
+					 }else{
+						$(add_current).prop('checked', false);
+					 }
+				}
+		}
+		if(allCkbVal[1]!=""){
+			var page_name = 'page'+allCkbVal[1];
+			var page_all='#all'+allCkbVal[1];
+			if($('[name="'+page_name+'[]"]:checked').length==5){
+				$(page_all).prop('checked', true);
+					
+			}else{
+				$(page_all).prop('checked', false);
+			}
+		}
 		var roleType = $('#slctUserType').val();
 		var status='';
 		if($(this).is(":checked")){
@@ -3541,9 +3564,15 @@ $(document).ready(function() {
 				},
                 success: function($succ){
 					if($succ==1){
-                       // alert('Yes');
-					}else{
-						//alert('No');
+						$('#msg').html("Permission has been updated successfully");
+						 setTimeout(function() {
+        					$("#msg").html('', {}, 500)
+    					}, 5000);
+				}else{
+						$('#msg').html("Permission has not been updated successfully");
+						 setTimeout(function() {
+        					$("#msg").html('', {}, 500)
+    					}, 5000);
 					}
                 }
         });

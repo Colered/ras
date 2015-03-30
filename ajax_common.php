@@ -2356,29 +2356,35 @@ switch ($codeBlock) {
 			$data = mysqli_fetch_assoc($qry);
 			$add_sts=$edit_sts=$del_sts=$view_sts=$clone_sts=0;
 			if(count($data)>0){
-					if($page_aceess_txt=="add"){
-					 $add_sts=($status==1)? $status:0;
-					$update="Update role_pages  Set add_role = '".$add_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
-					}
-					if($page_aceess_txt=="edit"){
+				if(($page_aceess_txt=='add' || $page_aceess_txt=='edit') && ($page_id==8 || $page_id==10|| $page_id==15)){
+						$add_sts=($status==1)? $status:0;
 						$edit_sts=($status==1)? $status:0;
-				    $update="Update role_pages  Set edit = '".$edit_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
-					}
-					if($page_aceess_txt=="delete" ){
-						$del_sts=($status==1)? $status:0;
-					 $update="Update role_pages  Set delete_role = '".$del_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
-					}
-					if($page_aceess_txt=="view" ){
-						$view_sts=($status==1)? $status:0;
-					$update="Update role_pages  Set view = '".$view_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
-					}
-					if($page_aceess_txt=="clone"){
-						$clone_sts=($status==1)? $status:0;
-					$update="Update role_pages  Set clone = '".$clone_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
-					}
-					if($page_aceess_txt=="all"){
-						$add_sts=$edit_sts=$del_sts=$view_sts=$clone_sts=($status==1)? $status:0;
-					$update="Update role_pages  Set add_role = '".$add_sts."',edit = '".$edit_sts."',delete_role = '".$del_sts."',view = '".$view_sts."',clone = '".$clone_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						$update="Update role_pages  Set add_role = '".$add_sts."',edit = '".$edit_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+					}else{
+						if($page_aceess_txt=="add"){
+						 $add_sts=($status==1)? $status:0;
+						$update="Update role_pages  Set add_role = '".$add_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						}
+						if($page_aceess_txt=="edit"){
+							$edit_sts=($status==1)? $status:0;
+						$update="Update role_pages  Set edit = '".$edit_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						}
+						if($page_aceess_txt=="delete" ){
+							$del_sts=($status==1)? $status:0;
+						 $update="Update role_pages  Set delete_role = '".$del_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						}
+						if($page_aceess_txt=="view" ){
+							$view_sts=($status==1)? $status:0;
+						$update="Update role_pages  Set view = '".$view_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						}
+						if($page_aceess_txt=="clone"){
+							$clone_sts=($status==1)? $status:0;
+						$update="Update role_pages  Set clone = '".$clone_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						}
+						if($page_aceess_txt=="all"){
+							$add_sts=$edit_sts=$del_sts=$view_sts=$clone_sts=($status==1)? $status:0;
+						$update="Update role_pages  Set add_role = '".$add_sts."',edit = '".$edit_sts."',delete_role = '".$del_sts."',view = '".$view_sts."',clone = '".$clone_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						}
 					}
 					$qry_update = mysqli_query($db, $update);
 					if($qry_update){
@@ -2386,33 +2392,9 @@ switch ($codeBlock) {
 					}else{
 						echo 0;
 					}
-			}else{
-					if($page_aceess_txt=="add"){
-						$add_sts=($status==1)? $status:0;
-					}
-					if($page_aceess_txt=="edit"){
-						$edit_sts=($status==1)? $status:0;
-					}
-					if($page_aceess_txt=="delete"){
-						$del_sts=($status==1)? $status:0;
-					}
-					if($page_aceess_txt=="view"){
-						$view_sts=($status==1)? $status:0;
-					}
-					if($page_aceess_txt=="clone"){
-						$clone_sts=($status==1)? $status:0;
-					}
-					if($page_aceess_txt=="all"){
-						$add_sts=$edit_sts=$del_sts=$view_sts=$clone_sts=($status==1)? $status:0;
-					}
-					 $sql_insert="INSERT INTO  role_pages (role_id,page_id,view,add_role,edit,delete_role,clone,date_add,date_update) VALUES ('".$role_type_id."','".$page_id."','".$view_sts."','".$add_sts."','".$edit_sts."','".$del_sts."','".$clone_sts."','".$currentDateTime."','".$currentDateTime."')";
-					$insert_qry = mysqli_query($db, $sql_insert);
-					if($insert_qry){
-						echo 1;
-					}else{
-						echo 0;
-					}
-				}
+			}else{		
+				echo 0;	
+			}
 		}else{
 			echo 0;
 		}

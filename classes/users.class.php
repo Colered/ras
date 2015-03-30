@@ -189,10 +189,8 @@ class Users extends Base {
 		}
 		return $user_detail;
 	}
-	
-	//get role detail true permissions by id
 	function getRoleData($roleId){
-		$sql ="select * from role_pages where role_id='".$roleId."' order by id";
+		$sql ="select * from page p left join role_pages rp on p.id=rp.page_id where role_id='".$roleId."' order by p.id";
 		$q_res = mysqli_query($this->conn, $sql);
 		return $q_res;
 	}
