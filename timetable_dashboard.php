@@ -3,6 +3,11 @@ include('header.php');
 $obj=new Timetable();
 $objP=new Programs();
 $result=$obj->getTimetablesData();
+$user = getPermissions('timetable_dashboard');
+if($user['view'] != '1')
+{
+	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+}
 ?>
 <div id="content">
     <div id="main">
