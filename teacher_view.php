@@ -43,7 +43,9 @@ $(document).ready(function(){
                         <th >DOJ</th>
                         <th >Desigation</th>
                         <th >Qualification </th>
+						<?php if($user['role_id'] != '3') {?>
 						<th >Pay Rate </th>
+						<?php } ?>
                         <th >Experience </th>
                         <th >Email</th>
                         <th >Username</th>
@@ -65,7 +67,9 @@ $(document).ready(function(){
                         <td><?php echo $objT->formatDate($row['doj']);?></td>
                         <td><?php echo $row['designation'];?></td>
                         <td><?php echo $row['qualification'];?></td>
+						<?php if($user['role_id'] != '3') {?>
 						<td><?php echo $row['payrate'];?></td>
+						<?php } ?>
                         <td><?php echo $objT->printTeacherExp($row['experience']);?></td>
                         <td><?php echo $row['email'];?></td>
                         <td><?php echo $row['username'];?></td>
