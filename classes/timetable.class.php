@@ -121,7 +121,6 @@ class Timetable extends Base {
 		}
 
 		$teacher_sql .= " order by td.teacher_id";
-		//echo $teacher_sql;die;
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
@@ -163,7 +162,6 @@ class Timetable extends Base {
 			$teacher_sql .= " and p.unit = '".$module."'";
 		}
 		$teacher_sql .= " group by td.teacher_id order by td.teacher_id";
-		//echo $teacher_sql;die;
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
@@ -196,9 +194,11 @@ class Timetable extends Base {
 	//Main Function to generate the timetable
 	public function generateTimetable($date, $end_date,$programs)
 	{
-		//function call to get maximum number of sessions of each area allowed for a day
+		//get list of Adhoc Activity dates
 		$special_adh_dates = $this->getSpecialAdhActDate($date,$end_date,'5');
+		//get list of group meeting dates
 		$special_gm_dates = $this->getSpecialGMActDate($date,$end_date,'4');
+		//function call to get maximum number of sessions of each area allowed for a day		
 		$program_data = $this->getProgramSessionCount($programs);
 		$program_session_area = $program_data['0'];
 		$total_program_session = $program_data['1'];
@@ -419,7 +419,7 @@ class Timetable extends Base {
 																		if($room_id > 0)
 																		{
 																			$room_name = $this->getRoomName($room_id);
-																			//allocate group meeting
+																			//allocate adhoc activity
 																			$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
 																			$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 																			$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
@@ -489,7 +489,7 @@ class Timetable extends Base {
 																		if($room_id > 0)
 																		{
 																			$room_name = $this->getRoomName($room_id);
-																			//allocate group meeting
+																			//allocate adhoc activity
 																			$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
 																			$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 																			$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
@@ -994,7 +994,7 @@ class Timetable extends Base {
 												if($room_id > 0)
 												{
 													$room_name = $this->getRoomName($room_id);
-													//allocate group meeting
+													//allocate adhoc activity
 													$activities_array = $this->makeArray($date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
 													$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 													$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
@@ -1072,7 +1072,7 @@ class Timetable extends Base {
 								if($room_id > 0)
 								{
 									$room_name = $this->getRoomName($room_id);
-									//allocate group meeting
+									//allocate adhoc activity
 									$activities_array = $this->makeArray($adh_date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
 									$reserved_array[$adh_date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 									$reserved_rooms[$adh_date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
@@ -1230,57 +1230,7 @@ class Timetable extends Base {
 			return $err;
 		}			
 		return array($reserved_array,$reasons);		
-	}
-
-	public function getSpecialAdhActDate($start_date,$end_date,$flag)
-	{
-		$special_dates = array();
-		$sql_special_act = $this->conn->query("select ta.act_date,sap.adhoc_start_date,sap.adhoc_end_date
-		from teacher_activity ta 
-		left join special_activity_mapping sap on sap.teacher_activity_id = ta.id
-		where reserved_flag = '".$flag."' and (ta.act_date >= '".$start_date."' and ta.act_date <= '".$end_date."') || (sap.adhoc_start_date >= '".$start_date."' and sap.adhoc_end_date <= '".$end_date."') || (sap.adhoc_start_date >= '".$start_date."' and sap.adhoc_start_date <= '".$end_date."') || (sap.adhoc_end_date >= '".$start_date."' and sap.adhoc_end_date <= '".$end_date."')");
-		while($result = mysqli_fetch_array($sql_special_act))
-		{
-			if($result['act_date'] != '0000-00-00')
-			{
-				$special_dates[] = $result['act_date'];
-			}else{
-				if($result['adhoc_start_date'] >= $start_date)
-				{
-					$s_date = $result['adhoc_start_date'];
-				}else{
-					$s_date = $start_date;
-				}
-				if($result['adhoc_end_date'] >= $end_date)
-				{
-					$e_date = $end_date;
-				}else{
-					$e_date = $result['adhoc_end_date'];
-				}
-				 while (strtotime($s_date) <= strtotime($e_date)) 
-				 {
-					$special_dates[] = $s_date;
-					$s_date = date ("Y-m-d", strtotime("+1 day", strtotime($s_date)));
-				 }
-			}
-		}
-		$special_dates = array_unique($special_dates);
-		return $special_dates;		
-	}
-
-	public function getSpecialGMActDate($start_date,$end_date,$flag)
-	{
-		$special_dates = array();
-		$sql_special_act = $this->conn->query("select ta.act_date
-		from teacher_activity ta 
-		where reserved_flag = '".$flag."'");
-		while($result = mysqli_fetch_array($sql_special_act))
-		{
-			$special_dates[] = $result['act_date'];
-		}
-		$special_dates = array_unique($special_dates);
-		return $special_dates;		
-	}
+	}	
 
 	//Function to get all the programs, which lies in the duration of timetable generation period with their date and timeslot list
 	public function search_programs($start_date,$end_date,$programs = array())
@@ -1823,6 +1773,56 @@ class Timetable extends Base {
 			$adhoc_activities[$result_free_act['act_date']][$result_free_act['activity_id']]['adhoc_end_date'] = $result_free_act['adhoc_end_date'];
 		}
 		return $adhoc_activities;
+	}
+
+	public function getSpecialAdhActDate($start_date,$end_date,$flag)
+	{
+		$special_dates = array();
+		$sql_special_act = $this->conn->query("select ta.act_date,sap.adhoc_start_date,sap.adhoc_end_date
+		from teacher_activity ta 
+		left join special_activity_mapping sap on sap.teacher_activity_id = ta.id
+		where reserved_flag = '".$flag."' and (ta.act_date >= '".$start_date."' and ta.act_date <= '".$end_date."') || (sap.adhoc_start_date >= '".$start_date."' and sap.adhoc_end_date <= '".$end_date."') || (sap.adhoc_start_date >= '".$start_date."' and sap.adhoc_start_date <= '".$end_date."') || (sap.adhoc_end_date >= '".$start_date."' and sap.adhoc_end_date <= '".$end_date."')");
+		while($result = mysqli_fetch_array($sql_special_act))
+		{
+			if($result['act_date'] != '0000-00-00')
+			{
+				$special_dates[] = $result['act_date'];
+			}else{
+				if($result['adhoc_start_date'] >= $start_date)
+				{
+					$s_date = $result['adhoc_start_date'];
+				}else{
+					$s_date = $start_date;
+				}
+				if($result['adhoc_end_date'] >= $end_date)
+				{
+					$e_date = $end_date;
+				}else{
+					$e_date = $result['adhoc_end_date'];
+				}
+				 while (strtotime($s_date) <= strtotime($e_date)) 
+				 {
+					$special_dates[] = $s_date;
+					$s_date = date ("Y-m-d", strtotime("+1 day", strtotime($s_date)));
+				 }
+			}
+		}
+		$special_dates = array_unique($special_dates);
+		return $special_dates;		
+	}
+
+	public function getSpecialGMActDate($start_date,$end_date,$flag)
+	{
+		$special_dates = array();
+		$sql_special_act = $this->conn->query("select ta.act_date
+		from teacher_activity ta 
+		where reserved_flag = '".$flag."'");
+		while($result = mysqli_fetch_array($sql_special_act))
+		{
+			$special_dates[] = $result['act_date'];
+		}
+		$special_dates = array_unique($special_dates);
+		return $special_dates;		
 	}
 
 	//Function to process semi reserved activities

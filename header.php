@@ -51,7 +51,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 						   <ul>
 						   		<li>&#8250; <a href="timetable_dashboard.php">List</a></li>
 								<?php $user = getPermissions('generate_timetable');
-									  if($user['add_role'] != '0'){?>								
+									  if($user['view'] != '0'){?>								
 										<li>&#8250; <a href="generate_timetable.php">Generate</a></li>
 								<?php } ?>
                                 <?php $user = getPermissions('timetable_view');
