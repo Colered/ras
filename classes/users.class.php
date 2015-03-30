@@ -171,7 +171,7 @@ class Users extends Base {
 				return 0;
 			}
 	}
-	//get user level with permissions by id
+	//getting user level with permissions by id
 	public function getUser($id,$path)
 	{
 		$user_detail = array();
@@ -189,9 +189,16 @@ class Users extends Base {
 		}
 		return $user_detail;
 	}
+	//getting role type and page detail
 	function getRoleData($roleId){
 		$sql ="select * from page p left join role_pages rp on p.id=rp.page_id where role_id='".$roleId."' order by p.id";
 		$q_res = mysqli_query($this->conn, $sql);
 		return $q_res;
+	}
+	function getUserName($Id){
+	    $sql="select username from user where id='".$_SESSION['user_id']."'";
+		$q_res = mysqli_query($this->conn, $sql);
+		$data = mysqli_fetch_assoc($q_res);
+		return $data;
 	}
 }
