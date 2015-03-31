@@ -45,12 +45,12 @@ if($user_profiles['view'] != '1')
                     </div>
                     <div class="right" style="float:right;">
                         <div class="align-right">
-							<h>Welcome:- <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ 
-										$objU = new Users();
-										$user_name = $objU->getUserName($_SESSION['user_id']);
-										echo $user_name['username'];
-									} ?>
-							</h>
+							Welcome:-<B> <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ 
+											$objU = new Users();
+											$user_name = $objU->getUserName($_SESSION['user_id']);
+											echo $user_name['username'];
+										} ?>
+									  </B>
 						</div>                     
                     </div>
                 </div>
