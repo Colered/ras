@@ -17,6 +17,10 @@ while($data = $role_rows->fetch_assoc())
 {
 	$check_arr[] = $data;
 }
+$add_desable_arr=array('1','2','3','4','13','17','20','21','22','23','24','25','26','27');
+$edit_desable_arr=array('1','2','3','4','13','17','20','21','22','23','24','25','26','27');
+$del_desable_arr=array('1','3','4','13','20','21','22','23','24','25','26','27');
+
 //echo '<pre>';
 //print_r($check_arr);
 ?>
@@ -62,13 +66,12 @@ while($data = $role_rows->fetch_assoc())
 							 <tbody>
 							 <?php for($i=0;$i<count($check_arr);$i++)
 							 {
-							 	$j=1;
 							 ?>
 								  <tr>
 									<td align="center"><?php echo $check_arr[$i]['page_name'];?></td>
-									<td align="center"><input type="checkbox" id="add<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]" value="add-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['add_role']==1){echo "checked";}  ?> <?php if($check_arr[$i]['page_id']==3 || $check_arr[$i]['page_id']==4 || $check_arr[$i]['page_id']==13 || $check_arr[$i]['page_id']==17 || $check_arr[$i]['page_id']==1 || $check_arr[$i]['page_id']==24 || $check_arr[$i]['page_id']==25 || $check_arr[$i]['page_id']==26 || $check_arr[$i]['page_id']==20 || $check_arr[$i]['page_id']==2 || $check_arr[$i]['page_id']==21  || $check_arr[$i]['page_id']==22 || $check_arr[$i]['page_id']==23 || $check_arr[$i]['page_id']==27){echo "disabled";}  ?>/></td>
-									<td align="center"><input type="checkbox" id="edit<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]"  value="edit-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['edit']==1){echo "checked";} ?>  <?php if($check_arr[$i]['page_id']==3 || $check_arr[$i]['page_id']==4 || $check_arr[$i]['page_id']==13 || $check_arr[$i]['page_id']==17 || $check_arr[$i]['page_id']==1 || $check_arr[$i]['page_id']==24 || $check_arr[$i]['page_id']==25 || $check_arr[$i]['page_id']==26 || $check_arr[$i]['page_id']==20 || $check_arr[$i]['page_id']==2 || $check_arr[$i]['page_id']==21  || $check_arr[$i]['page_id']==22 || $check_arr[$i]['page_id']==23 || $check_arr[$i]['page_id']==27){echo "disabled";}  ?>/></td>
-									<td align="center"><input type="checkbox" id="delete<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]"  value="delete-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['delete_role']==1){echo "checked";} ?> <?php if($check_arr[$i]['page_id']==3 || $check_arr[$i]['page_id']==4 || $check_arr[$i]['page_id']==13 || $check_arr[$i]['page_id']==1 || $check_arr[$i]['page_id']==24 || $check_arr[$i]['page_id']==25 || $check_arr[$i]['page_id']==26 || $check_arr[$i]['page_id']==20 || $check_arr[$i]['page_id']==21  || $check_arr[$i]['page_id']==22 || $check_arr[$i]['page_id']==23 || $check_arr[$i]['page_id']==27){echo "disabled";}  ?>/></td>
+									<td align="center"><input type="checkbox" id="add<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]" value="add-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['add_role']==1){echo "checked";}  ?> <?php if(in_array($check_arr[$i]['page_id'],$add_desable_arr)){echo 'disabled';} ?>/></td>
+									<td align="center"><input type="checkbox" id="edit<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]"  value="edit-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['edit']==1){echo "checked";} ?>  <?php if(in_array($check_arr[$i]['page_id'],$edit_desable_arr)){echo "disabled";}  ?>/></td>
+									<td align="center"><input type="checkbox" id="delete<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]"  value="delete-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['delete_role']==1){echo "checked";} ?> <?php if(in_array($check_arr[$i]['page_id'],$del_desable_arr)){echo "disabled";}  ?>/></td>
 									<td align="center"><input type="checkbox" id="view<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]"  value="view-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['view']==1){echo "checked";} ?>  /></td>
 									<td align="center"><input type="checkbox" id="clone<?php echo $check_arr[$i]['page_id']?>" name="page<?php echo $check_arr[$i]['page_id']?>[]" value="clone-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['clone']==1){echo "checked";} ?> <?php if($check_arr[$i]['page_id']!='12'){echo "disabled";} ?>  /></td>
 									<td align="center"><input type="checkbox" id="all<?php echo $check_arr[$i]['page_id']?>" name="all<?php echo $check_arr[$i]['page_id']?>" value="all-<?php echo $check_arr[$i]['page_id']?>" class="cls-permission" <?php if($check_arr[$i]['add_role']==1 && $check_arr[$i]['edit']==1 && $check_arr[$i]['delete_role']==1 && $check_arr[$i]['view']==1 && $check_arr[$i]['clone']==1){echo "checked";} ?>  /></td>
