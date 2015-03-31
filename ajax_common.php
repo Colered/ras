@@ -2351,6 +2351,8 @@ switch ($codeBlock) {
 			$page_aceess_txt =trim($ckbValArr['0']);
 			$page_id=trim($ckbValArr['1']);
 			$status = trim($_POST['status']);
+			
+			//echo $_POST['selVal'][1];
 			$sql_slct="select * from  role_pages where page_id='".$page_id ."' and role_id='".$role_type_id."'";
 			$qry = mysqli_query($db, $sql_slct);
 			$data = mysqli_fetch_assoc($qry);
@@ -2359,31 +2361,43 @@ switch ($codeBlock) {
 				if(($page_aceess_txt=='add' || $page_aceess_txt=='edit') && ($page_id==8 || $page_id==10|| $page_id==15)){
 						$add_sts=($status==1)? $status:0;
 						$edit_sts=($status==1)? $status:0;
-						$update="Update role_pages  Set add_role = '".$add_sts."',edit = '".$edit_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						$all_check = ($add_sts==0 || $edit_sts==0 )?0:1;
+						$update="Update role_pages  Set add_role = '".$add_sts."', all_check = '".$all_check."', edit = '".$edit_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
 					}else{
 						if($page_aceess_txt=="add"){
 						 $add_sts=($status==1)? $status:0;
-						$update="Update role_pages  Set add_role = '".$add_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+						 $all_check = ($add_sts==0)?0:1;
+						$update="Update role_pages  Set add_role = '".$add_sts."', all_check = '".$all_check."', date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
 						}
 						if($page_aceess_txt=="edit"){
 							$edit_sts=($status==1)? $status:0;
-						$update="Update role_pages  Set edit = '".$edit_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+							$all_check = ($edit_sts==0 )?0:1;
+						$update="Update role_pages  Set edit = '".$edit_sts."', all_check = '".$all_check."', date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
 						}
 						if($page_aceess_txt=="delete" ){
 							$del_sts=($status==1)? $status:0;
-						 $update="Update role_pages  Set delete_role = '".$del_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+							$all_check = ($del_sts==0 )?0:1;
+						 $update="Update role_pages  Set delete_role = '".$del_sts."', all_check = '".$all_check."', date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
 						}
 						if($page_aceess_txt=="view" ){
 							$view_sts=($status==1)? $status:0;
-						$update="Update role_pages  Set view = '".$view_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+							$all_check = ($view_sts==0 )?0:1;
+						$update="Update role_pages  Set view = '".$view_sts."', all_check = '".$all_check."', date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
 						}
 						if($page_aceess_txt=="clone"){
 							$clone_sts=($status==1)? $status:0;
-						$update="Update role_pages  Set clone = '".$clone_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+							$all_check = ($clone_sts==0 )?0:1;
+						$update="Update role_pages  Set clone = '".$clone_sts."', all_check = '".$all_check."', date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
 						}
 						if($page_aceess_txt=="all"){
-							$add_sts=$edit_sts=$del_sts=$view_sts=$clone_sts=($status==1)? $status:0;
-						$update="Update role_pages  Set add_role = '".$add_sts."',edit = '".$edit_sts."',delete_role = '".$del_sts."',view = '".$view_sts."',clone = '".$clone_sts."',date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
+							//$add_sts=$edit_sts=$del_sts=$view_sts=$clone_sts=($status==1)? $status:0;
+							$add_sts = ($status==1 && (isset($_POST['selVal'][0]) && $_POST['selVal'][0]!=""))? $status:0;
+							$edit_sts = ($status==1 && (isset($_POST['selVal'][1]) && $_POST['selVal'][1]!=""))? $status:0;
+							$del_sts = ($status==1 && (isset($_POST['selVal'][2]) && $_POST['selVal'][2]!=""))? $status:0;
+							$view_sts = ($status==1 && (isset($_POST['selVal'][3]) && $_POST['selVal'][3]!=""))? $status:0;
+							$clone_sts = ($status==1 && (isset($_POST['selVal'][4]) && $_POST['selVal'][4]!=""))? $status:0;
+							$all_check = ($add_sts == 1 || $edit_sts == 1 || $del_sts == 1 || $view_sts == 1 || $clone_sts == 1 )? 1:0;
+							$update="Update role_pages  Set add_role = '".$add_sts."',edit = '".$edit_sts."',delete_role = '".$del_sts."',view = '".$view_sts."',clone = '".$clone_sts."',all_check = '".$all_check."', date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_type_id."'";
 						}
 					}
 					$qry_update = mysqli_query($db, $update);

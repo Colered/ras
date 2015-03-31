@@ -3499,24 +3499,22 @@ $(document).ready(function() {
 	 	if($('#slctUserType').val()!=""){
 		var ckbVal = $(this).val();
 		 var allCkbVal = ckbVal.split("-");
+		 var selVal = [];
 		 if(allCkbVal[0]=='all'){
-			 var add_current = '#add'+allCkbVal[1];
-			 var edit_current = '#edit'+allCkbVal[1];
-			 var del_current = '#delete'+allCkbVal[1];
-			 var view_current = '#view'+allCkbVal[1];
-			 var clone_current = '#clone'+allCkbVal[1];
-			 if(this.checked) { 
-				 $(add_current).prop('checked', true);
-			 	 $(edit_current).prop('checked', true);
-			 	 $(del_current).prop('checked', true);
-			 	 $(view_current).prop('checked', true);
-			 	 $(clone_current).prop('checked', true);
+			if(this.checked) { 
+				if(!$('#add'+allCkbVal[1]).prop('disabled')){ $('#add'+allCkbVal[1]).prop('checked', true); selVal[0] = 'add'+allCkbVal[1]; };
+				if(!$('#edit'+allCkbVal[1]).prop('disabled')){ $('#edit'+allCkbVal[1]).prop('checked', true); selVal[1] = 'edit'+allCkbVal[1]; };
+				if(!$('#delete'+allCkbVal[1]).prop('disabled')){ $('#delete'+allCkbVal[1]).prop('checked', true); selVal[2] = 'delete'+allCkbVal[1]; };
+				if(!$('#view'+allCkbVal[1]).prop('disabled')){ $('#view'+allCkbVal[1]).prop('checked', true); selVal[3] = 'view'+allCkbVal[1]; };
+				if(!$('#clone'+allCkbVal[1]).prop('disabled')){ $('#clone'+allCkbVal[1]).prop('checked', true); selVal[4] = 'clone'+allCkbVal[1]; };
+			 	
 			 }else{
-				 $(add_current).prop('checked', false);
-				 $(edit_current).prop('checked', false);
-				 $(del_current).prop('checked', false);
-				 $(view_current).prop('checked', false);
-				 $(clone_current).prop('checked', false);    
+				if(!$('#add'+allCkbVal[1]).prop('disabled')){ $('#add'+allCkbVal[1]).prop('checked', false); selVal[0] = 'add'+allCkbVal[1]; };
+				if(!$('#edit'+allCkbVal[1]).prop('disabled')){ $('#edit'+allCkbVal[1]).prop('checked', false); selVal[1] = 'edit'+allCkbVal[1]; };
+				if(!$('#delete'+allCkbVal[1]).prop('disabled')){ $('#delete'+allCkbVal[1]).prop('checked', false); selVal[2] = 'delete'+allCkbVal[1]; };
+				if(!$('#view'+allCkbVal[1]).prop('disabled')){ $('#view'+allCkbVal[1]).prop('checked', false); selVal[3] = 'view'+allCkbVal[1]; };
+				if(!$('#clone'+allCkbVal[1]).prop('disabled')){ $('#clone'+allCkbVal[1]).prop('checked', false); selVal[4] = 'clone'+allCkbVal[1]; };
+  
 			 }
 		  }
 		if((allCkbVal[0]=='add' || allCkbVal[0]=='edit') && (allCkbVal[1]==8 || allCkbVal[1]==10|| allCkbVal[1]==15)){
@@ -3539,9 +3537,8 @@ $(document).ready(function() {
 		if(allCkbVal[1]!=""){
 			var page_name = 'page'+allCkbVal[1];
 			var page_all='#all'+allCkbVal[1];
-			if($('[name="'+page_name+'[]"]:checked').length==5){
+			if($('[name="'+page_name+'[]"]:checked').length == $('[name="'+page_name+'[]"]:enabled').length){
 				$(page_all).prop('checked', true);
-					
 			}else{
 				$(page_all).prop('checked', false);
 			}
@@ -3559,6 +3556,7 @@ $(document).ready(function() {
                 data: {
 					'roleType': roleType,
 					'ckbVal': ckbVal,
+					'selVal': selVal,
 					'status':status,
 					'codeBlock': 'set_user_permission',
 				},
