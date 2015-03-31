@@ -40,12 +40,12 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
                     </div>
                     <div class="right">
                         <div class="align-right">
-						Welcome:-<B> <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ 
-										$objU = new Users();
-										$user_name = $objU->getUserName($_SESSION['user_id']);
-										echo $user_name['username'];
-									} ?>
-								</B>	
+						Welcome <B> <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ 
+											$objU = new Users();
+											$user_name = $objU->getUserName($_SESSION['user_id']);
+											echo ucfirst($user_name['username']);
+										} ?>
+									  </B>
 						
                         </div>
                     </div>
