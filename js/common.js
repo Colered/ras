@@ -3534,16 +3534,31 @@ $(document).ready(function() {
 					 }
 				}
 		}
+		var roleType = $('#slctUserType').val();
 		if(allCkbVal[1]!=""){
 			var page_name = 'page'+allCkbVal[1];
 			var page_all='#all'+allCkbVal[1];
 			if($('[name="'+page_name+'[]"]:checked').length == $('[name="'+page_name+'[]"]:enabled').length){
 				$(page_all).prop('checked', true);
+				//send an ajax to update the DB
+				$.ajax({
+						type: "POST",
+						url: "ajax_common.php",
+						data: {
+							'roleType': roleType,
+							'ckbVal': ckbVal,
+							'codeBlock': 'updateAllField',
+						},
+						success: function($succ){
+							// do nothing
+						}
+				});
+				
 			}else{
 				$(page_all).prop('checked', false);
 			}
 		}
-		var roleType = $('#slctUserType').val();
+		
 		var status='';
 		if($(this).is(":checked")){
 			status=1;
