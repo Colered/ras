@@ -40,12 +40,18 @@ if($user_profiles['view'] != '1')
         <div class="wrap">
             <div id="header">
                 <div id="top">
-                    <div class="left">
+                    <div class="left" style="float:left;">
                         <a href="index.php"><img src="images/logo.png"  border="0" class="logo-img"/></a>
                     </div>
-                    <div class="right">
+                    <div class="right" style="float:right;">
                         <div class="align-right">
-                     </div>
+							<h>Welcome:- <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id']!=""){ 
+										$objU = new Users();
+										$user_name = $objU->getUserName($_SESSION['user_id']);
+										echo $user_name['username'];
+									} ?>
+							</h>
+						</div>                     
                     </div>
                 </div>
                 <div id="nav">
