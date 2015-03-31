@@ -59,7 +59,7 @@ $(document).ready(function(){
 						 ?></td>
 						 <td class="align-center" id="<?php echo $data['id']; ?>">
 						   <?php if($data['is_active']==1){?>
-						 	<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-active.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Desable" /></div>
+						 	<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-active.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Disable" /></div>
 							<?php }else{ ?>
 							<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-deactive.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Enable" /></div>
 							<?php }?>

@@ -28,7 +28,7 @@ $del_desable_arr=array('1','3','4','13','20','21','22','23','24','25','26','27')
     <div id="main">
 	   <div id="msg" class="green center" style="height:18px"></div>
 		<div class="full_w">
-            <div class="h_title">Administrator Permissions</div>
+            <div class="h_title">Manage Permissions</div>
             <form name="roleForm" id="roleForm" action="postdata.php" method="post">
 			    <div class="">
 					<div class="custtd_left">
@@ -47,7 +47,7 @@ $del_desable_arr=array('1','3','4','13','20','21','22','23','24','25','26','27')
                     <div class="clear"></div>
 					<?php if($role_id!=""){ ?>
 					<div class="custtd_left">
-                        <h2>Administrator Permission</h2>
+                        <h2>Permissions</h2>
                     </div>
                     <div class="">
 						<div style="width:700px;float:left;" >
