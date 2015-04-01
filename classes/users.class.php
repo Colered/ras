@@ -9,7 +9,7 @@ class Users extends Base {
 		{
 			//check if user account exists
 			$encPwd = base64_encode($_POST['txtPwd']);
-			$login_query="select * from user where username='".$_POST['txtUName']."' and password='".$encPwd."' and is_active='1' ";
+			$login_query="select * from user where username='".$_POST['txtUName']."' and password='".$encPwd."' and is_active='1' and role_id!='0' ";
 			$q_res = mysqli_query($this->conn, $login_query);
 			if(mysqli_num_rows($q_res)>0)
 			{
@@ -191,14 +191,103 @@ class Users extends Base {
 	}
 	//getting role type and page detail
 	function getRoleData($roleId){
-		$sql ="select * from page p left join role_pages rp on p.id=rp.page_id where role_id='".$roleId."' order by p.id";
+		$sql ="select * from page p left join role_pages rp on p.id=rp.page_id where role_id='".$roleId."' and  p.id!='1' order by p.id";
 		$q_res = mysqli_query($this->conn, $sql);
 		return $q_res;
 	}
+	//getting the username
 	function getUserName($Id){
 	    $sql="select username from user where id='".$_SESSION['user_id']."'";
 		$q_res = mysqli_query($this->conn, $sql);
 		$data = mysqli_fetch_assoc($q_res);
 		return $data;
+	}
+	/*function for adding role*/
+	public function addRole() {
+			if(Base::cleanText($_POST['txtRname']) !=""){
+				//check if the Role name exists
+				$role_query="select id, name from role where name='".Base::cleanText($_POST['txtRname'])."'";
+				$q_res = mysqli_query($this->conn, $role_query);
+				$dataAll = mysqli_fetch_assoc($q_res);
+				if(count($dataAll)>0)
+				{
+					$message="Role Name already exists.";
+					$_SESSION['error_msg'] = $message;
+					return 0;
+				}else{
+					//add the new Role
+					$currentDateTime = date("Y-m-d H:i:s");					
+					//add the new value
+					$sql_role_qry="INSERT INTO role(name,date_add,date_update) VALUES ('".Base::cleanText($_POST['txtRname'])."', '".$currentDateTime."', '".$currentDateTime."');";
+					$result = mysqli_query($this->conn,$sql_role_qry);
+					$last_inserted_id = mysqli_insert_id($this->conn);
+					if ($last_inserted_id!="") {
+						$sql_page_qry="select id from page";	
+						$rslt_page = mysqli_query($this->conn,$sql_page_qry);
+						if($rslt_page->num_rows >0 ){
+							while($data = mysqli_fetch_assoc($rslt_page)){
+								$all=$view=($data['id']=='1')?'1':'0';
+								$add=$edit=$del=$clone='0';
+								$sql_role_page_qry="INSERT INTO role_pages(role_id,page_id,view,add_role,edit,delete_role ,clone,all_check,date_add,date_update) VALUES ('".Base::cleanText($last_inserted_id)."','".Base::cleanText($data['id'])."','".$view."','".$add."','".$edit."','".$del."','".$clone."','".$all."','".$currentDateTime."', '".$currentDateTime."');";
+								$rslt_role_page = mysqli_query($this->conn,$sql_role_page_qry);
+							}
+						$message="New Role has been added successfully";
+						$_SESSION['succ_msg'] = $message;
+						return 1;
+					  }else{echo "hello1";die;}
+					}else{
+						$message="Cannot add the Role";
+						$_SESSION['error_msg'] = $message;
+						return 0;
+					}
+				}
+			}else{
+					$message="Please enter a valid Role name";
+					$_SESSION['error_msg'] = $message;
+					return 0;
+			}
+	}
+	/*function for updating role*/
+	public function updateRole() {
+			//echo '<pre>';
+			//print_r($_POST);
+			//check if the Location name exists
+			$role_query="select id, name from role where name='".Base::cleanText($_POST['txtRname'])."' and id !='".$_POST['role_id']."'";
+			$q_res = mysqli_query($this->conn, $role_query);
+			$dataAll = mysqli_fetch_assoc($q_res);
+			if(count($dataAll)>0) {
+				$message="Role Name already exists.";
+				$_SESSION['error_msg'] = $message;
+				header('Location: role_add.php?edit='.base64_encode($_POST['role_id']));
+				return 0;
+			}else{
+			    $update_query="Update role set name = '".Base::cleanText($_POST['txtRname'])."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['role_id']."'";
+				$result = mysqli_query($this->conn,$update_query);
+				if($result){
+					$message="Role has been updated successfully";
+					$_SESSION['succ_msg'] = $message;
+					return 1;
+				}else{
+					$message="Cannot update the Role";
+					$_SESSION['error_msg'] = $message;
+					header('Location: role_add.php?edit='.base64_encode($_POST['role_id']));
+					return 0;
+				}
+			}	
+    }
+	/*function for view roles except he super admin*/
+	public function roleData() {
+			$role_query="select * from role  where id!='1' order by id ASC";
+			$q_res = mysqli_query($this->conn, $role_query);
+			return $q_res;
+	}
+	/*function for fetch data using Location ID*/
+	public function getDataByRoleID($id) {
+			$role_query="select * from role where id='".$id."' limit 1";
+			$q_res = mysqli_query($this->conn, $role_query);
+			if(mysqli_num_rows($q_res)<=0)
+				return 0;
+			else
+				return $q_res;
 	}
 }

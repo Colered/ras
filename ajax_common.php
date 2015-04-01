@@ -2351,8 +2351,6 @@ switch ($codeBlock) {
 			$page_aceess_txt =trim($ckbValArr['0']);
 			$page_id=trim($ckbValArr['1']);
 			$status = trim($_POST['status']);
-			
-			//echo $_POST['selVal'][1];
 			$sql_slct="select * from  role_pages where page_id='".$page_id ."' and role_id='".$role_type_id."'";
 			$qry = mysqli_query($db, $sql_slct);
 			$data = mysqli_fetch_assoc($qry);
@@ -2421,6 +2419,30 @@ switch ($codeBlock) {
 				$page_id=trim($ckbValArr['1']);
 				$updatedata="Update role_pages Set all_check = '1', date_update = '".$currentDateTime."'  where page_id='".$page_id."' and role_id='".$role_id."'";
 				$qry_update = mysqli_query($db, $updatedata);
+			}
+	break;
+	case "del_role":
+			if(isset($_POST['id']) && $_POST['id']!=""){
+				$id = $_POST['id'];
+				$currentDateTime = date("Y-m-d H:i:s");
+				//delete the role
+				$del_query="delete from role where id='".$id."'";
+				$qry = mysqli_query($db, $del_query);
+				if(mysqli_affected_rows($db)>0){
+					// delete all pages asscoiate rows related to role 
+					$del_pages_query="delete from  role_pages where role_id ='".$id."'";
+					mysqli_query($db, $del_pages_query);
+					$sql_user_role_qry = "select * from  user where role_id='".$id."' ";
+					$rslt_user_role = mysqli_query($db, $sql_user_role_qry);
+					if($rslt_user_role->num_rows >0){
+					   //updating the status of user which are associated with this role id 
+						$update="Update user Set role_id = '0',is_active='0', date_update = '".$currentDateTime."'  where role_id='".$id."' ";
+						mysqli_query($db, $update);
+					}
+					echo 1;
+				}else{
+					echo 0;
+				}
 			}
 	break;
 }

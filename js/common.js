@@ -314,7 +314,7 @@ $(function() {
 	});
 });
 });
-//validate form for area
+//validate form 
 $(document).ready(function(){
 		$('.periodicAct').hide();
 		$('.otAct').hide();
@@ -334,6 +334,7 @@ $(document).ready(function(){
 		$("#teacher_rate_report").validate();
 		$("#timetable").validate();
 		$("#weekly_report").validate();
+		$("#roleAdd").validate();
 		//$("#userMgmtForm").validate();
 		//$("#changePwdForm").validate();
 		$( "#forgotPwdForm" ).validate({
@@ -3595,11 +3596,37 @@ $(document).ready(function() {
 	  }
    });
 });
-
+//redirect the user at role permission page
 function setAllPermission(){
 		var id='';;
 		if($('#slctUserType').val()!=""){
 			id = '?rid='+$('#slctUserType').val();
 		}
 		window.location.href = 'role.php'+id+'';
+}
+//Ajax delete function the roles like as admin/readonly etc.  
+function deleteRole($id){
+	if($id==""){
+		alert("Please select a role to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the role?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'id': $id,
+					'codeBlock': 'del_role',
+				},
+                success: function($succ){
+					if($succ==1){
+                        $('#'+$id).closest('tr').remove();
+						$('.green, .red').hide();
+					}else{
+						alert("Cannot delete the selected Role.");
+						$('.green, .red').hide();
+					}
+                }
+        });
+    }
+    return false;
 }
