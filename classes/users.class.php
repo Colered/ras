@@ -234,7 +234,7 @@ class Users extends Base {
 						$message="New Role has been added successfully";
 						$_SESSION['succ_msg'] = $message;
 						return 1;
-					  }else{echo "hello1";die;}
+					  }
 					}else{
 						$message="Cannot add the Role";
 						$_SESSION['error_msg'] = $message;
@@ -249,9 +249,7 @@ class Users extends Base {
 	}
 	/*function for updating role*/
 	public function updateRole() {
-			//echo '<pre>';
-			//print_r($_POST);
-			//check if the Location name exists
+			//check if the role name exists
 			$role_query="select id, name from role where name='".Base::cleanText($_POST['txtRname'])."' and id !='".$_POST['role_id']."'";
 			$q_res = mysqli_query($this->conn, $role_query);
 			$dataAll = mysqli_fetch_assoc($q_res);
@@ -281,7 +279,7 @@ class Users extends Base {
 			$q_res = mysqli_query($this->conn, $role_query);
 			return $q_res;
 	}
-	/*function for fetch data using Location ID*/
+	/*function for fetch data using Role ID*/
 	public function getDataByRoleID($id) {
 			$role_query="select * from role where id='".$id."' limit 1";
 			$q_res = mysqli_query($this->conn, $role_query);
