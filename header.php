@@ -99,8 +99,8 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 							   </ul>
 							</li>
 						<?php } ?>
-						<?php $user1 = getPermissions('locations');$user2 = getPermissions('buildings');$user3 = getPermissions('rooms');$user4 = getPermissions('classroom_availability');$user5 = getPermissions('programs');$user6 = getPermissions('program_cycles');$user7 = getPermissions('areas');$user8 = getPermissions('subjects');$user9 = getPermissions('timeslots');$user10 = getPermissions('teachers');$user11 = getPermissions('teacher_availability');$user12 = getPermissions('holidays');$user13 = getPermissions('teacher_activity');$user14 = getPermissions('special_activity');$user15 = getPermissions('users');$user16 = getPermissions('roles');
-						if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0' || $user4['view'] != '0' || $user5['view'] != '0' || $user6['view'] != '0' || $user7['view'] != '0' || $user8['view'] != '0' || $user9['view'] != '0' || $user10['view'] != '0' || $user11['view'] != '0' || $user12['view'] != '0' || $user13['view'] != '0' || $user14['view'] != '0' || $user15['view'] != '0' || $user16['view'] != '0'){?>
+						<?php $user1 = getPermissions('locations');$user2 = getPermissions('buildings');$user3 = getPermissions('rooms');$user4 = getPermissions('classroom_availability');$user5 = getPermissions('programs');$user6 = getPermissions('program_cycles');$user7 = getPermissions('areas');$user8 = getPermissions('subjects');$user9 = getPermissions('timeslots');$user10 = getPermissions('teachers');$user11 = getPermissions('teacher_availability');$user12 = getPermissions('holidays');$user13 = getPermissions('teacher_activity');$user14 = getPermissions('special_activity');
+						if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0' || $user4['view'] != '0' || $user5['view'] != '0' || $user6['view'] != '0' || $user7['view'] != '0' || $user8['view'] != '0' || $user9['view'] != '0' || $user10['view'] != '0' || $user11['view'] != '0' || $user12['view'] != '0' || $user13['view'] != '0' || $user14['view'] != '0'){?>
 							<li class="upp"><a href="#">Resources</a>
 								<ul>
 									<?php if($user1['view'] != '0'){?>	
@@ -144,15 +144,28 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 									<?php } ?>
 									<?php if($user14['view'] != '0'){?>	
 											<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
-									<?php } ?>
-									<?php if($user15['view'] != '0'){?>	
-											<li>&#8250; <a href="user_view.php">User Management</a></li>
-									<?php } ?>
-									<?php if($user16['view'] != '0'){?>	
-											<li>&#8250; <a href="role.php">Role Management</a></li>
-									<?php } ?>
+									<?php } ?>									
 								</ul>
 							</li>
+						<?php } ?>
+						<?php $user1 = getPermissions('users');
+							  $user2 = getPermissions('roles');
+							  $user3 = getPermissions('permissions');
+							  if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0')
+							  {?>
+								<li class="upp"><a href="#">User Management</a>
+									<ul>
+										<?php if($user1['view'] != '0'){?>	
+												 <li>&#8250; <a href="user_view.php">Users</a></li>
+										<?php } ?>
+										<?php if($user2['view'] != '0'){?>	
+												<li>&#8250; <a href="role_view.php">Roles</a></li>
+										<?php } ?>
+										<?php if($user3['view'] != '0'){?>	
+												<li>&#8250; <a href="role.php">Permissions</a></li>
+										<?php } ?>
+									</ul>
+								</li>
 						<?php } ?>
 						<?php $user = getPermissions('session_upload');
 							  if($user['view'] != '0'){?>	

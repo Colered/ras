@@ -103,8 +103,8 @@ if($user_profiles['view'] != '1')
 							   </ul>
 							</li>
 						<?php } ?>
-						<?php $user_profiles1 = getPermissions('locations');$user_profiles2 = getPermissions('buildings');$user_profiles3 = getPermissions('rooms');$user_profiles4 = getPermissions('classroom_availability');$user_profiles5 = getPermissions('programs');$user_profiles6 = getPermissions('program_cycles');$user_profiles7 = getPermissions('areas');$user_profiles8 = getPermissions('subjects');$user_profiles9 = getPermissions('timeslots');$user_profiles10 = getPermissions('teachers');$user_profiles11 = getPermissions('teacher_availability');$user_profiles12 = getPermissions('holidays');$user_profiles13 = getPermissions('teacher_activity');$user_profiles14 = getPermissions('special_activity');$user_profiles15 = getPermissions('users');$user_profiles16 = getPermissions('roles');
-						if($user_profiles1['view'] != '0' || $user_profiles2['view'] != '0' || $user_profiles3['view'] != '0' || $user_profiles4['view'] != '0' || $user_profiles5['view'] != '0' || $user_profiles6['view'] != '0' || $user_profiles7['view'] != '0' || $user_profiles8['view'] != '0' || $user_profiles9['view'] != '0' || $user_profiles10['view'] != '0' || $user_profiles11['view'] != '0' || $user_profiles12['view'] != '0' || $user_profiles13['view'] != '0' || $user_profiles14['view'] != '0' || $user_profiles15['view'] != '0' || $user_profiles16['view'] != '0'){?>
+						<?php $user_profiles1 = getPermissions('locations');$user_profiles2 = getPermissions('buildings');$user_profiles3 = getPermissions('rooms');$user_profiles4 = getPermissions('classroom_availability');$user_profiles5 = getPermissions('programs');$user_profiles6 = getPermissions('program_cycles');$user_profiles7 = getPermissions('areas');$user_profiles8 = getPermissions('subjects');$user_profiles9 = getPermissions('timeslots');$user_profiles10 = getPermissions('teachers');$user_profiles11 = getPermissions('teacher_availability');$user_profiles12 = getPermissions('holidays');$user_profiles13 = getPermissions('teacher_activity');$user_profiles14 = getPermissions('special_activity');
+						if($user_profiles1['view'] != '0' || $user_profiles2['view'] != '0' || $user_profiles3['view'] != '0' || $user_profiles4['view'] != '0' || $user_profiles5['view'] != '0' || $user_profiles6['view'] != '0' || $user_profiles7['view'] != '0' || $user_profiles8['view'] != '0' || $user_profiles9['view'] != '0' || $user_profiles10['view'] != '0' || $user_profiles11['view'] != '0' || $user_profiles12['view'] != '0' || $user_profiles13['view'] != '0' || $user_profiles14['view'] != '0'){?>
 							<li class="upp"><a href="#">Resources</a>
 								<ul>
 									<?php if($user_profiles1['view'] != '0'){?>	
@@ -148,15 +148,28 @@ if($user_profiles['view'] != '1')
 									<?php } ?>
 									<?php if($user_profiles14['view'] != '0'){?>	
 											<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
-									<?php } ?>
-									<?php if($user_profiles15['view'] != '0'){?>	
-											<li>&#8250; <a href="user_view.php">User Management</a></li>
-									<?php } ?>
-									<?php if($user_profiles16['view'] != '0'){?>	
-											<li>&#8250; <a href="role.php">Role Management</a></li>
-									<?php } ?>
+									<?php } ?>									
 								</ul>
 							</li>
+						<?php } ?>
+						<?php $user1 = getPermissions('users');
+							  $user2 = getPermissions('roles');
+							  $user3 = getPermissions('permissions');
+							  if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0')
+							  {?>
+								<li class="upp"><a href="#">User Management</a>
+									<ul>
+										<?php if($user1['view'] != '0'){?>	
+												 <li>&#8250; <a href="user_view.php">Users</a></li>
+										<?php } ?>
+										<?php if($user2['view'] != '0'){?>	
+												<li>&#8250; <a href="role_view.php">Roles</a></li>
+										<?php } ?>
+										<?php if($user3['view'] != '0'){?>	
+												<li>&#8250; <a href="role.php">Permissions</a></li>
+										<?php } ?>
+									</ul>
+								</li>
 						<?php } ?>
 						<?php $user_profiles = getPermissions('session_upload');
 							  if($user_profiles['view'] != '0'){?>	

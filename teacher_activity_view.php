@@ -5,6 +5,7 @@ if($user['view'] != '1')
 {
 	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 }
+$user1 = getPermissions('accept_allocation');
 $objT = new Teacher();
 $objB = new Buildings();
 $objTime = new Timetable();
@@ -93,12 +94,16 @@ function activityFilter()
 						</select>
 					</form>
 				</div>
+				<?php if($user1['view'] != '0'){?>
 				<div class="btnAcceptAllocation"> <input  type="button" <?php echo $readonly;?> value="Accept Allocation" name="btnacceptallo" id="btnacceptallo" onclick="acceptAllocationFun();"/></div>
+				<?php } ?>
 			</div>
             <table id="datatables" class="display tblActivity">
                 <thead>
                     <tr>
+					<?php if($user1['view'] != '0'){?>
 					    <th><input type="checkbox" id="ckbCheckAllActivity" value="Select all" title="Select All"/></th>
+					<?php } ?>
                         <th>ID</th>
                         <th>Activity</th>
                         <th>Program</th>
@@ -176,7 +181,9 @@ function activityFilter()
 						?>
 						
 						<tr<?php echo $trBColor;echo $trBColor1;?> class=<?php if($trBColor == ''){echo $class;}else{echo $class_allocated ;}?>>
+						<?php if($user1['view'] != '0'){?>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td>
+						<?php } ?>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo $row['id'];?></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['name'];?></a></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="program_cycles.php?edit=<?php echo base64_encode($row['program_year_id']);?>" target="_blank"><?php echo $row['program_name'];?></a></td>

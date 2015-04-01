@@ -1,5 +1,5 @@
 <?php include('header.php');
-$user = getPermissions('roles');
+$user = getPermissions('permissions');
 if($user['view'] != '1')
 {
  echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
