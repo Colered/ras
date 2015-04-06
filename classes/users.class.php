@@ -191,7 +191,7 @@ class Users extends Base {
 	}
 	//getting role type and page detail
 	function getRoleData($roleId){
-		$sql ="select * from page p left join role_pages rp on p.id=rp.page_id where role_id='".$roleId."' and  p.id!='1' order by p.id";
+		$sql ="select * from page p left join role_pages rp on p.id=rp.page_id where role_id='".$roleId."' and  p.id!='1' order by p.page_name";
 		$q_res = mysqli_query($this->conn, $sql);
 		return $q_res;
 	}

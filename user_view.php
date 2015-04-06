@@ -1,6 +1,7 @@
 <?php 	
 include('header.php'); 
 $user = getPermissions('users');
+$user_profile = getPermissions('user_enable_disable');
 if($user['view'] != '1')
 {
 	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
@@ -58,11 +59,14 @@ $(document).ready(function(){
 								 echo $userType['name']; 
 						 ?></td>
 						 <td class="align-center" id="<?php echo $data['id']; ?>">
-						   <?php if($data['is_active']==1){?>
-						 	<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-active.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Disable" /></div>
-							<?php }else{ ?>
-							<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-deactive.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Enable" /></div>
-							<?php }?>
+						   <?php 
+						   if($user_profile['view'] != '0'){
+							   if($data['is_active']==1){?>
+								<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-active.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Disable" /></div>
+								<?php }else{ ?>
+								<div style="float:left; width:20px;"><img id="status-user<?php echo $data['id'];?>" src="images/status-deactive.png"  class="status-user-cls" onClick="setUserStatus(<?php echo $data['id']; ?>)" title="Enable" /></div>
+								<?php }
+							}?>
 							<?php if($user['edit'] != '0'){?>
 							<a href="user_add.php?edit=<?php echo base64_encode($data['id']) ?>" class="table-icon edit" title="Edit"></a>
 							<?php }?>
