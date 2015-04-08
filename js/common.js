@@ -3712,9 +3712,9 @@ function PrgmSubSessCloning(){
 							'codeBlock': 'cloneSubjectSessionProgram'
 						 },
 						success: function($succ){
-							alert($succ);
 							if($succ==1){
 								alert('cloning has been done sucussfully');
+								window.location.href = 'programs_view.php';
 							}else{
 								 alert('subject code already exist');	
 							}

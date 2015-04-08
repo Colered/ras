@@ -2507,7 +2507,7 @@ switch ($codeBlock) {
 									$dRow = $result->fetch_assoc();
 									$actCnt = substr($dRow['name'],1);
 									$actName = 'A'.($actCnt+1);
-									$SQLact = mysqli_query($db, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, session_id, teacher_id, reserved_flag, date_add, forced_flag) VALUES ('".$actName."', '".$dataAct['program_year_id']."', '".$dataAct['cycle_id']."', '".$newSubID."', '".$lastInsertedId."', '".$dataAct['teacher_id']."', 0, '".date("Y-m-d H:i:s")."', 1)");
+									$SQLact = mysqli_query($db, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, session_id, teacher_id, reserved_flag, date_add, forced_flag) VALUES ('".$actName."', '".$make_arr[$i]['program_year_id']."', '".$dataAct['cycle_id']."', '".$newSubID."', '".$lastInsertedId."', '".$dataAct['teacher_id']."', 0, '".date("Y-m-d H:i:s")."', 1)");
 								}
 							}
 						}
