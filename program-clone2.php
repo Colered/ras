@@ -1,10 +1,5 @@
 <?php
 	include('header.php');
-	$user = getPermissions('subjects');
-	if($user['view'] != '1')
-	{
-		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
-	}
 	$prgm_clone_old_id=base64_decode($_GET['clone']);
 	$prgm_clone_new_id=base64_decode($_GET['id']);
 	$obj=new Programs();
@@ -37,9 +32,7 @@ $(document).ready(function(){
 	<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
         <div class="full_w">
             <div class="h_title">Program and Subject View
-			<?php if($user['add_role'] != '0'){?>
-			<div style="float:right"><input  type="button"  value="Save All" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/></div>
-			<?php } ?>
+				<div style="float:right"><input  type="button"  value="Save All" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/></div>
 			</div>
             <table id="datatables" class="display">
                 <thead>
