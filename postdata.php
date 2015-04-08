@@ -692,7 +692,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					}
 				$k++;
 				}
-				header('Location: program-clone2.php?clone='.$_POST['programId'].'&id='.$result[0]);
+				header('Location: program-clone2.php?clone='.$_POST['programId'].'&id='.base64_encode($result[0]));
 			}
 		break;
 	}
