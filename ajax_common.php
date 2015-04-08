@@ -2465,6 +2465,7 @@ switch ($codeBlock) {
 						$subj_code_arr[]=trim($data_sub['subject_code']);
 						if(in_array(trim($data_sub['subject_code']),$subjectCode_arr)){
 						    $subj_code_exist=true;
+							$subject_code_match=$data_sub['subject_code'];
 							break;
 						}
 					}
@@ -2515,8 +2516,10 @@ switch ($codeBlock) {
 				}
 					echo 1;
 				}else{
-					echo 0;
+					echo $subject_code_match;
 				}
+			}else{
+				echo 0;
 			}
 	break;
 }

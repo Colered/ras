@@ -7,7 +7,7 @@ if($user['view'] != '1')
 $objP = new Programs();
 $pTypeArr = array('1'=>'One Year','2'=>'Two Year','3'=>'Three Year');
 $pUnitArr = array('1'=>'Executive Education','2'=>'Master Programs','3'=>'Tailored Programs','4'=>'Activity');
-
+if(isset($_GET['status']) && $_GET['status']=='Y'){$_SESSION['succ_msg']="Program cloning has been done successfully";} 
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -26,7 +26,7 @@ $(document).ready(function(){
 </style>
 	<div id="content">
 		<div id="main">
-			<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";} ?>
+			<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; $_SESSION['succ_msg']="";unset($_SESSION['succ_msg']);} ?>
 			<div class="full_w">
 				<div class="h_title">Programs View
 				<?php if($user['add_role'] != '0'){?>

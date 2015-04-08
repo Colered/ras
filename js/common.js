@@ -3713,10 +3713,12 @@ function PrgmSubSessCloning(){
 						 },
 						success: function($succ){
 							if($succ==1){
-								alert('cloning has been done sucussfully');
-								window.location.href = 'programs_view.php';
+								var sts='Y';
+								window.location.href = 'programs_view.php?status='+sts;
+							}else if($succ==0){
+								 alert('please select all feild');	
 							}else{
-								 alert('subject code already exist');	
+								 alert('Subject code '+$succ+' already exist');
 							}
 						}
 				});

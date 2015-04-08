@@ -17,6 +17,7 @@ $(document).ready(function(){
 		"sPaginationType":"full_numbers",
 		"aaSorting":[[0, "asc"]],
 		"bJQueryUI":true,
+		"bPaginate": false,
 		"aoColumnDefs": [
 			  { 'bSortable': false, 'aTargets': [ 0 ] }
 			],
