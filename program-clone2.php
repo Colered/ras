@@ -1,7 +1,7 @@
 <?php
 	include('header.php');
-	$prgm_clone_old_id=base64_decode($_GET['clone']);
-	$prgm_clone_new_id=base64_decode($_GET['id']);
+	$prgm_clone_old_id=(isset($_GET['clone']) && $_GET['clone']!="")? base64_decode($_GET['clone']):'';
+	$prgm_clone_new_id=(isset($_GET['id']) && $_GET['id']!="")? base64_decode($_GET['id']):'';
 	$obj=new Programs();
 	$result=$obj->getProgramYearsById($prgm_clone_old_id);
 	$result_new=$obj->getProgramYearsById($prgm_clone_new_id);
@@ -52,7 +52,7 @@ $(document).ready(function(){
         <div class="full_w">
             <div class="h_title">Program and Subject View</div>		
 			<div style="float:right;padding:5px 5px;"><input  type="button" class="buttonsub" value="Save & Finish" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/></div>
-            <table id="datatables" class="display">
+			 <table id="datatables" class="display">
                 <thead>
                     <tr>
 					    <th><input type="checkbox" id="ckbAllSub" value="Select all" title="Select All"/></th>
