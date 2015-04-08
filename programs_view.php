@@ -76,7 +76,9 @@ $(document).ready(function(){
 									<?php if($user['delete_role'] != '0'){?>
 										<a href="#" class="table-icon delete" onClick="deleteProgram(<?php echo $row['id'] ?>)"></a>
 									<?php } ?>
-									<a href="programs_clone-1.php?clone=<?php echo base64_encode($row['id'])?>" class="table-icon clone" title="Clone"></a>
+									<?php if($user['clone'] != '0'){?>
+										<a href="programs_clone-1.php?clone=<?php echo base64_encode($row['id'])?>" class="table-icon clone" title="Clone"></a>
+									<?php } ?>
 								</td>
 						<?php } ?>
 						</tr>

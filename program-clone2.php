@@ -1,5 +1,10 @@
 <?php
 	include('header.php');
+	$user = getPermissions('programs');
+	if($user['clone'] != '1')
+	{
+		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+	}
 	$prgm_clone_old_id=(isset($_GET['clone']) && $_GET['clone']!="")? base64_decode($_GET['clone']):'';
 	$prgm_clone_new_id=(isset($_GET['id']) && $_GET['id']!="")? base64_decode($_GET['id']):'';
 	$obj=new Programs();

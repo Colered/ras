@@ -3,10 +3,10 @@ include('header.php');
 $user = getPermissions('programs');
 $objP = new Programs();
 if(isset($_GET['clone']) && $_GET['clone']!=''){
-	/*if($user['clone'] != '1')
+	if($user['clone'] != '1')
 	{
 		echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
-	}*/
+	}
     $programId = base64_decode($_GET['clone']);
     $result = $objP->getProgramById($programId);
     $row = $result->fetch_assoc();
