@@ -31,7 +31,10 @@ $(document).ready(function() {
 });
 </script>
 <style>
-.custtd_left{ width:320px;}
+.custtd_left{ width:320px;padding:5px;}
+.h_title{padding:5px;}
+.additionTbl{ width:75%;}
+.custtable_left{padding:15px;}
 </style>
 <div id="content">
     <div id="main">
@@ -43,9 +46,11 @@ $(document).ready(function() {
 			  	<input type="hidden" name="programId" value="<?php echo $_GET['clone'];?>" />
 				<?php } ?>
                 <div class="custtable_left">
+				<?php if(isset($_SESSION['error_msg'])) {?>
                     <div class="custtd_left red">
-						<?php if(isset($_SESSION['error_msg'])) echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
+						 <?php echo $_SESSION['error_msg']; unset($_SESSION['error_msg']); ?>
 					</div>
+				<?php } ?>
 					<div class="clear"></div>
                     <div class="custtd_left">
                         <h2>Program Name <span class="redstar">*</span></h2>
@@ -171,6 +176,9 @@ $(document).ready(function() {
 						<script type="text/javascript">
 							jQuery('#slctPrgmType').val("<?php echo $program_type;?>");
 						</script>
+						<?php if($disabled!="") {?>         
+						<input type="hidden" name="slctPrgmType" value="<?php echo $program_type;?>"/>
+						<?php } ?>
                     </div>
                     <div class="clear"></div>                 
                 </div>
@@ -218,6 +226,8 @@ $(document).ready(function() {
 		<div class="full_w">		
 			<div class="h_title">Program Cycles <?php echo $row['name'];?></div>			
 				<input type="hidden" name="form_action" value="clone_program" />
+				<div class="custtd_left red"></div>
+				<div class="clear"></div>
 				<div class="custtd_left"><h2>No. of Cycles<span class="redstar">*</span></h2></div>                   
 				<div class="txtfield">
 					<select id="slctNumCycle" name="programcycles[<?php echo $program_year_id;?>][slctNumcycle]" class="select" <?php if(isset($cycleIdsArr) && count($cycleIdsArr)>0){ echo "readonly"; }?> onchange="show_hide_cycle_clone(this.value,<?php echo $program_year_id;?>)">
@@ -398,7 +408,7 @@ $(document).ready(function() {
 					<div class="addbtnException"><input type="button" name="btnAddMore" class="btnProgCycleAvailExcep1-<?php echo $program_year_id;?>" value="Add" onclick="addExceptionDate(<?php echo $program_year_id; ?>)"></div>
 					<div class="clear"></div>
 					<div class="custtd_left"></div>
-					<div class="divException1">
+					<div class="divException1-<?php echo $program_year_id;?>">
 						<?php
 						if($programId!=""){
 							$objP->getProgExceptionsClone($program_year_id,1);
@@ -419,7 +429,7 @@ $(document).ready(function() {
 					<div class="addbtnAddition">
 						<input type="button" name="btnAddMore" class="additionalDayButt1-<?php echo $program_year_id; ?>" value="Add" onclick="addAdditionDates(<?php echo $program_year_id; ?>)">
 					</div>
-					<div class="divAddition1">
+					<div class="divAddition1" id="divAddition1-<?php echo $program_year_id;?>">
 						<?php
 						if($programId!=""){
 							$objP->getProgAdditionClone($program_year_id,1);
@@ -608,7 +618,7 @@ $(document).ready(function() {
 					</div>
 					<div class="clear"></div>
 					<div class="custtd_left"></div>
-					<div class="divException2">
+					<div class="divException2-<?php echo $program_year_id;?>">
 						<?php
 						if($programId!=""){
 							 $objP->getProgExceptionsClone($program_year_id,2);
@@ -626,7 +636,7 @@ $(document).ready(function() {
 						</select>
 					</div>
 					<div class="addbtnAddition"><input type="button" name="btnAddMore" class="additionalDayButt2-<?php echo $program_year_id;?>" value="Add" onclick="addAdditionDatesCycleTwo(<?php echo $program_year_id; ?>)"></div>
-					<div class="divAddition2">
+					<div class="divAddition2" id="divAddition2-<?php echo $program_year_id;?>">
 						<?php
 						if($programId!=""){
 							$objP->getProgAdditionClone($program_year_id,2);
@@ -815,7 +825,7 @@ $(document).ready(function() {
 						</div>
 						<div class="clear"></div>
 						<div class="custtd_left"></div>
-						<div class="divException3">
+						<div class="divException3-<?php echo $program_year_id;?>">
 							<?php
 							if($programId!=""){
 								 $objP->getProgExceptionsClone($program_year_id,3);
@@ -837,7 +847,7 @@ $(document).ready(function() {
 						<div class="addbtnAddition">
 							<input type="button" name="btnAddMore" class="additionalDayButt3-<?php echo $program_year_id;?>" value="Add" onclick="addAdditionDatesCycleThree(<?php echo $program_year_id; ?>)">
 						</div>
-						<div class="divAddition3">
+						<div class="divAddition3" id="divAddition3-<?php echo $program_year_id;?>">
 							<?php
 							if($programId!=""){
 								$objP->getProgAdditionClone($program_year_id,3);

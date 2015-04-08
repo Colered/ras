@@ -4036,7 +4036,7 @@ function addExceptionDate(programId) {
 		var maxSerialNumVal=maxSerialNum + 1;
 		$('#maxSessionListVar-1-'+programId).val(maxSerialNumVal);
 		if(maxSerialNum==0){
-			$(".divException1").append('<div class="exceptionList1"><table id="datatables1" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+			$(".divException1-"+programId).append('<div class="exceptionList1"><table id="datatables1" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
 		}
 		if(exception_date!=''){
 			$('#datatables1').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate1[]" id="exceptnDate'+maxSerialNumVal+'" value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteExcepProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
@@ -4054,7 +4054,7 @@ function addExceptionDateTwo(programId) {
 		var maxSerialNumVal=maxSerialNum + 1;
 		$('#maxSessionListVal-2-'+programId).val(maxSerialNumVal);
 		if(maxSerialNum==0){
-			$(".divException2").append('<div class="exceptionList2"><table id="datatables2" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+			$(".divException2-"+programId).append('<div class="exceptionList2"><table id="datatables2" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
 		}
 		if(exception_date!=''){
 			$('#datatables2').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate2[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteExcepProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
@@ -4072,7 +4072,7 @@ function addExceptionDateThree(programId) {
 		var maxSerialNumVal=maxSerialNum + 1;
 		$('#maxSessionListVar-3-'+programId).val(maxSerialNumVal);
 		if(maxSerialNum==0){
-			$(".divException3").append('<div class="exceptionList3"><table id="datatables3" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
+			$(".divException3-"+programId).append('<div class="exceptionList3"><table id="datatables3" class="exceptionTbl"><thead><tr><th>Sr. No.</th><th>Exception Date</th><th>Remove</th></tr></thead><tbody>');	
 		}
 		if(exception_date!=''){
 			$('#datatables3').append('<tr><td>'+maxSerialNumVal+'</td><td>'+exception_date+'</td><td style="display:none"><input type="hidden" name="exceptionDate3[]" id="exceptnDate'+maxSerialNumVal+'"  value="'+exception_date+'"/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteExcepProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
@@ -4110,7 +4110,7 @@ function addAdditionDates(programId) {
 		if(programId!=""){
 			$('#maxSessListVar-1-'+programId).val(maxSerialNumVal);
 			if(maxSerialNum==0){
-				$(".divAddition1").append('<div class="additionList1"><table id="dataaddtables1" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
+				$("#divAddition1-"+programId).append('<div class="additionList1"><table id="dataaddtables1" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
 			}
 			if(additional_date!=''){
 				$('#dataaddtables1').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate1[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot1[]" id="timeslot'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot1[]" id="act_timeslot'+maxSerialNumVal+'" value=""/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
@@ -4147,7 +4147,7 @@ function addAdditionDatesCycleTwo(programId) {
 		if(programId!=""){
 			$('#maxSessListVar-2-'+programId).val(maxSerialNumVal);
 			if(maxSerialNum==0){
-				$(".divAddition2").append('<div class="additionList2"><table id="dataaddtables2" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
+				$("#divAddition2-"+programId).append('<div class="additionList2"><table id="dataaddtables2" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
 			}
 			if(additional_date!=''){
 				$('#dataaddtables2').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate2[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot2'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot2[]" id="timeslot2'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot2[]" id="act_timeslot2'+maxSerialNumVal+'" value=""/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
@@ -4184,7 +4184,7 @@ function addAdditionDatesCycleThree(programId) {
 		if(programId!=""){
 			$('#maxSessListVar-3-'+programId).val(maxSerialNumVal);
 			if(maxSerialNum==0){
-				$(".divAddition3").append('<div class="additionList3"><table id="dataaddtables3" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
+				$("#divAddition3-"+programId).append('<div class="additionList3"><table id="dataaddtables3" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
 			}
 			if(additional_date!=''){
 				$('#dataaddtables3').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate3[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot3'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot3[]" id="timeslot3'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot3[]" id="act_timeslot3'+maxSerialNumVal+'" value=""/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
