@@ -909,6 +909,20 @@ class Programs extends Base {
 			$prgm_query="select pg.name, cl.id as cycleId, pg.id as program_year_id, cl.no_of_cycle from program_years as pg JOIN cycle as cl ON pg.id = cl.program_year_id";
 			$q_res = mysqli_query($this->conn, $prgm_query);
 			return $q_res;
-	}   
+	}  
+	public function getProgramYearsById($id){
+	   $prgm_query="select pg.id,pg.name from program p left join program_years pg on pg.program_id=p.id where p.id='".$id."' order by pg.id";
+  	   $q_res = mysqli_query($this->conn, $prgm_query);
+  	   return $q_res;
+	}
+	//getting subject data using prgram id 
+	public function getSubjectByPrgmId($id){
+	   $prgm_query="select s.id,s.subject_name,s.subject_code,s.cycle_no,an.area_name,an.id area_id,py.id program_year_id ,py.name program_name from subject s 
+	   								left join area an on an.id=s.area_id
+									left join program_years py on py.id=s.program_year_id
+									where s.program_year_id='".$id."'";
+  	   $q_res = mysqli_query($this->conn, $prgm_query);
+  	   return $q_res;
+	} 
 }
 

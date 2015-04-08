@@ -3630,3 +3630,100 @@ function deleteRole($id){
     }
     return false;
 }
+$(document).ready(function() {
+	$(".ipt").hide();
+	$(document).on('click', ".ckbSubjEdit", function() {
+		var ID=$(this).val();
+		if($(this).is(":checked")){
+			$("#subject_cd_txt"+ID).hide();
+			$("#subject_nm_txt"+ID).hide();
+			$("#subject_name"+ID).show();
+			$("#subject_code"+ID).show();
+		}else if($(this).is(":not(:checked)")){
+			$("#subject_cd_txt"+ID).show();
+			$("#subject_nm_txt"+ID).show();
+			$("#subject_name"+ID).hide();
+			$("#subject_code"+ID).hide();
+		}
+		var allCkbPageCnt =$(".ckbSubjEdit").length;
+		var ckbCheckedCnt=$(".ckbSubjEdit:checked").length;
+		if(allCkbPageCnt == ckbCheckedCnt) {
+				$("#ckbAllSub").prop("checked", "checked");
+		} else {
+				$("#ckbAllSub").removeAttr("checked");
+		}
+	});
+	$('#ckbAllSub').click(function(event) { 
+			if(this.checked) { 
+				$('.ckbSubjEdit').each(function() { 
+					this.checked = true; 
+					$(".txt-sub").hide()
+					$(".ipt").show();
+				});
+			}else{
+				$('.ckbSubjEdit').each(function() { 
+					this.checked = false;  
+					$(".txt-sub").show()
+					$(".ipt").hide();
+				});         
+			}
+	});
+		
+});
+function PrgmSubSessCloning(){
+	var cntSubCkb = $(".ckbSubjEdit").length;
+	var ckbCheckedSubCnt=$(".ckbSubjEdit:checked").length;
+	if(cntSubCkb == ckbCheckedSubCnt) {
+		var subjectId = new Array();
+		$.each($("input[name='prgm_clone[]']:checked"), function() {
+  			subjectId.push($(this).val());
+    	});
+		var subjectName = new Array();
+		$.each($("input[name='subject_name[]']"), function() {
+  			subjectName.push($(this).val());
+    	});
+		var subjectCode = new Array();
+		$.each($("input[name='subject_code[]']"), function() {
+  			subjectCode.push($(this).val());
+    	});
+		var areaId = new Array();
+		$.each($("input[name='area_id[]']"), function() {
+  			areaId.push($(this).val());
+    	});
+		var cycleNum = new Array();
+		$.each($("input[name='cycle_num[]']"), function() {
+  			cycleNum.push($(this).val());
+    	});
+		var programYearId = new Array();
+		$.each($("input[name='program_yr_new_id[]']"), function() {
+  			programYearId.push($(this).val());
+    	});
+		if(confirm("Are you sure ,you want clone all subject and session?")){
+			$.ajax({
+				   type: "POST",
+				   url: "ajax_common.php",
+				   data: {
+							'subjectId': subjectId,
+							'subjectName': subjectName,
+							'subjectCode': subjectCode,
+							'areaId': areaId,
+							'cycleNum': cycleNum,
+							'programYearId': programYearId,
+							'codeBlock': 'cloneSubjectSessionProgram'
+						 },
+						success: function($succ){
+							alert($succ);
+							if($succ==1){
+								alert('cloning has been done sucussfully');
+							}else{
+								 alert('subject code already exist');	
+							}
+						}
+				});
+		}
+		return false;
+	} else {
+		alert('All subject code and name should be in edit mode');
+	}
+
+}

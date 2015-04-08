@@ -2445,5 +2445,79 @@ switch ($codeBlock) {
 				}
 			}
 	break;
+	case "cloneSubjectSessionProgram":
+			if(isset($_POST['subjectId']) && isset($_POST['subjectName']) && isset($_POST['subjectCode']) &&  isset($_POST['areaId']) &&  isset($_POST['cycleNum']))
+			{
+				$activityArr=array();
+				$objT = new Teacher();
+				$subj_code_exist=false;
+				$objTime = new Timetable();
+				$subjectId_arr = (isset($_POST['subjectId'])) ? $_POST['subjectId'] : '';
+				$subjectName_arr = (isset($_POST['subjectName'])) ? $_POST['subjectName'] : '';
+				$subjectCode_arr = (isset($_POST['subjectCode'])) ? $_POST['subjectCode'] : '';
+				$areaId_arr = (isset($_POST['areaId'])) ? $_POST['areaId'] : '';
+				$cycleNum_arr = (isset($_POST['cycleNum'])) ? $_POST['cycleNum'] : '';
+				$programYearId_arr = (isset($_POST['programYearId'])) ? $_POST['programYearId'] : '';
+				$subj_sql="select subject_code from subject";
+				$subj_qry=mysqli_query($db,$subj_sql);
+				if(mysqli_num_rows($subj_qry)>0){
+					while($data_sub = mysqli_fetch_array($subj_qry)){
+						$subj_code_arr[]=trim($data_sub['subject_code']);
+						if(in_array(trim($data_sub['subject_code']),$subjectCode_arr)){
+						    $subj_code_exist=true;
+							break;
+						}
+					}
+				}
+				if(!$subj_code_exist){
+					for($i=0;$i<count($subjectId_arr);$i++){
+					    $make_arr[$i]['subject_id']=$subjectId_arr[$i];
+						$make_arr[$i]['name']=$subjectName_arr[$i];
+						$make_arr[$i]['code']=$subjectCode_arr[$i];
+						$make_arr[$i]['area_id']=$areaId_arr[$i];
+						$make_arr[$i]['cycle_no']=$cycleNum_arr[$i];
+						$make_arr[$i]['program_year_id']=$programYearId_arr[$i];
+					}
+				$currentDateTime = date("Y-m-d H:i:s");	
+				for($i=0;$i<count($make_arr);$i++){
+					$SQL = "INSERT INTO subject(area_id,program_year_id,cycle_no,subject_name,subject_code,date_add,date_update) VALUES ('".$make_arr[$i]['area_id']."', '".$make_arr[$i]['program_year_id']."', '".$make_arr[$i]['cycle_no']."', '".$make_arr[$i]['name']."','".$make_arr[$i]['code']."','".$currentDateTime."', '".$currentDateTime."')";
+					$result = $db->query($SQL);
+					$last_ins_id = $db->insert_id;
+					if($last_ins_id){
+						//if new subject is being added through clone then copy new session and activities:
+						$oldSubID = $make_arr[$i]['subject_id'];
+						$newSubID = $last_ins_id;
+						//add the sessions
+						$session_data_query="select * from subject_session where subject_id =".$oldSubID;
+						$q_res = mysqli_query($db, $session_data_query);
+						while($data = $q_res->fetch_assoc()){
+							$lastInsertedId = ""; 
+							$SQLSess ="INSERT INTO subject_session(subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update ) VALUES ('".$newSubID."', '".$data['cycle_no']."', '".$data['session_name']."','".$data['order_number']."','".$data['description']."','".$data['case_number']."','".$data['technical_notes']."','".$data['duration']."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')";
+							$result = $db->query($SQLSess);
+							$lastInsertedId = $db->insert_id;
+							if($lastInsertedId)
+							{
+								//check in activity table if any activity exist for above session
+								$activity_data_query="select * from teacher_activity where subject_id ='".$oldSubID."' and session_id = '".$data['id']."'";
+								$q_resAct = mysqli_query($db, $activity_data_query);
+								//check if data found then add activity
+								while($dataAct = $q_resAct->fetch_assoc()){ 
+									//fetch latest ativity name
+									$result = $db->query("SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+									$dRow = $result->fetch_assoc();
+									$actCnt = substr($dRow['name'],1);
+									$actName = 'A'.($actCnt+1);
+									$SQLact = mysqli_query($db, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, session_id, teacher_id, reserved_flag, date_add, forced_flag) VALUES ('".$actName."', '".$dataAct['program_year_id']."', '".$dataAct['cycle_id']."', '".$newSubID."', '".$lastInsertedId."', '".$dataAct['teacher_id']."', 0, '".date("Y-m-d H:i:s")."', 1)");
+								}
+							}
+						}
+					}
+				}
+					echo 1;
+				}else{
+					echo 0;
+				}
+			}
+	break;
 }
 ?>
