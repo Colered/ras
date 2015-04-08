@@ -12,7 +12,7 @@ if(isset($_GET['clone']) && $_GET['clone']!=''){
     $row = $result->fetch_assoc();
     $unitArr[]= explode(',',$row['unit']);
     // set the value
-    $button_save = 'Clone Program';
+    $button_save = 'Save & Continue';
     $form_action = 'clone_program';
 }
 $program_name = isset($_GET['clone']) ? $row['program_name'] : (isset($_POST['txtPrgmName'])? $_POST['txtPrgmName']:'');
@@ -35,11 +35,29 @@ $(document).ready(function() {
 .h_title{padding:5px;}
 .additionTbl{ width:75%;}
 .custtable_left{padding:15px;}
+.clearfix ul li{
+float:left;
+color:#fff;
+padding: 5px;
+min-width: 120px;
+margin: 5px 10px;
+border:1px solid black;
+}
+.clearfix ul{
+margin-left:6px !important;
+}
 </style>
 <div id="content">
     <div id="main">
-	<form name="frmProgram" id="frmProgram" action="postdata.php" method="post">
+	<div class="steps clearfix">
+		<ul>
+			<li style="background-color: #00923f;color:#fff;"><span class="number">Step-1</span><br/> Saving Program & cycles</li>
+			<li style="background-color: #eee;color:#aaa;"><span class="number">Step-2</span><br/> Saving Subjects</li>
+		</ul>
+	</div>
+	<form name="frmProgram" id="frmProgram" action="postdata.php" method="post">	
 	<div class="full_w">
+	
             <div class="h_title">Clone of Program "<?php echo $program_name; ?>"</div>			
 			    <input type="hidden" name="form_action" value="<?php echo $form_action;?>" />
 				<?php if(isset($_GET['clone'])){?>

@@ -1050,7 +1050,12 @@ class Programs extends Base {
     }
 	public function addCycles($new_pgm_id,$slctNumcycle,$start_date,$end_date,$chweek,$week1,$week2)
 	{
-		$sql = "INSERT INTO cycle (program_year_id, no_of_cycle,start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$new_pgm_id."', '".$slctNumcycle."','".$start_date."', '".$end_date."', '".$chweek."', '".serialize($week1)."','".serialize($week2)."', now(), now())";
+		if($chweek == '1w')
+		{
+			$sql = "INSERT INTO cycle (program_year_id, no_of_cycle,start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$new_pgm_id."', '".$slctNumcycle."','".$start_date."', '".$end_date."', '".$chweek."', '".serialize($week1)."','', now(), now())";
+		}else{
+			$sql = "INSERT INTO cycle (program_year_id, no_of_cycle,start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$new_pgm_id."', '".$slctNumcycle."','".$start_date."', '".$end_date."', '".$chweek."', '".serialize($week1)."','".serialize($week2)."', now(), now())";
+		}
 		$rel = $this->conn->query($sql);
 	}
 	public function addException($py_id,$cycle_no,$exceptionDate,$currentDateTime)

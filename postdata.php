@@ -644,7 +644,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		case "clone_program":
 			//adding cloned programs
 			//print"<pre>";print_r($_POST['programcycles'][5]['slctNumcycle']);DIE("here");
-			$week1 = '';$week2 = '';
+			//$week1 = '';$week2 = '';
 			if(isset($_POST) && $_POST['form_action'] == 'clone_program'){
 				$obj = new Programs();
 				$result = $obj->addClonedProgram();
@@ -664,15 +664,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							{
 								$obj->addCycles($result[$k],$value['slctNumcycle'],$start_date,$end_date,$chweek,$value['cycle'.$i]['week1'],'');
 							}else{
-								if(isset($value['cycle'.$i]['week1']))
-								{
-									$week1 = $value['cycle'.$i]['week1'];
-								}
-								if(isset($value['cycle'.$i]['week2']))
-								{
-									$week2 = $value['cycle'.$i]['week2'];
-								}
-								$obj->addCycles($result[$k],$value['slctNumcycle'],$start_date,$end_date,$chweek,$week1,$week2);
+								$obj->addCycles($result[$k],$value['slctNumcycle'],$start_date,$end_date,$chweek,$value['cycle'.$i]['week1'],$value['cycle'.$i]['week2']);
 							}
 							foreach($value['exceptionDate'.$i] as $exceptionDate)
 							{

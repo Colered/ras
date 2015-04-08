@@ -27,14 +27,31 @@ $(document).ready(function(){
 <style type="text/css">
 	@import "css/demo_table_jui.css";
 	@import "css/jquery-ui-1.8.4.custom.css";
+	.clearfix ul li
+	{
+		float:left;
+		color:#fff;
+		padding: 5px;
+		min-width: 120px;
+		margin: 5px 10px;
+		border:1px solid black;
+	}
+	.clearfix ul{
+	margin-left:6px !important;
+	}
 </style>
 <div id="content">
     <div id="main">
 	<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
+	<div class="steps clearfix">
+		<ul>
+			<li style="background-color: #eee;color:#aaa;"><span class="number">Step-1</span><br/> Saving Program & cycles</li>
+			<li style="background-color: #00923f;color:#fff;"><span class="number">Step-2</span><br/> Saving Subjects</li>
+		</ul>
+	</div>
         <div class="full_w">
-            <div class="h_title">Program and Subject View
-				<div style="float:right"><input  type="button"  value="Save All" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/></div>
-			</div>
+            <div class="h_title">Program and Subject View</div>		
+			<div style="float:right;padding:5px 5px;"><input  type="button" class="buttonsub" value="Save & Finish" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/></div>
             <table id="datatables" class="display">
                 <thead>
                     <tr>
