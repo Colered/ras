@@ -40,7 +40,6 @@ class Programs extends Base {
 			$_SESSION['succ_msg'] = $message;
 			return 1;
 		}
-
 	}
 
 	/*function for add program*/
@@ -506,7 +505,7 @@ class Programs extends Base {
 		$x=0;
 		$html='';
 		$query="select * from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
-		$result= $this->conn->query($query);
+		$result= $this->conn->query($query);		
 		while($data = $result->fetch_assoc()){
 			$x++;
 			if($x==1){
@@ -530,7 +529,7 @@ class Programs extends Base {
 		}
 		$html .='<input type="hidden" name="maxSessionListVal'.$cycle_num.'" id="maxSessionListVal'.$cycle_num.'"  value="'.$x.'"/>';
 		$html .='</tbody></table></div>';
-		echo $html;
+		echo $html;		
     }
 	//function to add row of the program additional date
     public function getProgAddition($py_id,$cycle_num)
@@ -538,7 +537,7 @@ class Programs extends Base {
 		$x=0;
 		$html='';
 		$query="select * from program_cycle_additional_day_time where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
-		$result= $this->conn->query($query);
+		$result= $this->conn->query($query);		
 		while($data = $result->fetch_assoc()){
 			$x++;
 			if($x==1){
@@ -567,6 +566,7 @@ class Programs extends Base {
 		$html .='<input type="hidden" name="maxSessListVal'.$cycle_num.'" id="maxSessListVal'.$cycle_num.'"  value="'.$x.'"/>';
 		$html .='</tbody></table></div>';
 		echo $html;
+		
     }
 
     //function to add program exception
@@ -909,12 +909,8 @@ class Programs extends Base {
 			$prgm_query="select pg.name, cl.id as cycleId, pg.id as program_year_id, cl.no_of_cycle from program_years as pg JOIN cycle as cl ON pg.id = cl.program_year_id";
 			$q_res = mysqli_query($this->conn, $prgm_query);
 			return $q_res;
-	}  
-	public function getProgramYearsById($id){
-	   $prgm_query="select pg.id,pg.name from program p left join program_years pg on pg.program_id=p.id where p.id='".$id."' order by pg.id";
-  	   $q_res = mysqli_query($this->conn, $prgm_query);
-  	   return $q_res;
-	}
+}  
+	
 	//getting subject data using prgram id 
 	public function getSubjectByPrgmId($id){
 	   $prgm_query="select s.id,s.subject_name,s.subject_code,s.cycle_no,an.area_name,an.id area_id,py.id program_year_id ,py.name program_name from subject s 
@@ -924,5 +920,149 @@ class Programs extends Base {
   	   $q_res = mysqli_query($this->conn, $prgm_query);
   	   return $q_res;
 	} 
+
+	/***************Program Clonning Function************************/
+	public function getProgramYearsById($id){
+	   $prgm_query="select pg.id,pg.name from program p left join program_years pg on pg.program_id=p.id where p.id='".$id."' order by pg.id";
+  	   $q_res = mysqli_query($this->conn, $prgm_query);
+  	   return $q_res;
+	}
+	public function addClonedProgram()
+	{
+		$last_insert_id =array();
+     	$txtPrgmName = Base::cleanText($_POST['txtPrgmName']);
+     	$txtCompanyName = Base::cleanText($_POST['txtCompanyName']);
+		$slctPrgmType = $_POST['slctPrgmType'];
+		//$slctNumcycle = trim($_POST['slctNumcycle']);
+		$slctUnit = implode(',',$_POST['slctUnit']);
+		$maxNoSess = implode('-', $_POST['maxSessNo']);
+		$maxTotSessNo = implode('-', $_POST['maxTotSessNo']);
+
+		$result =  $this->conn->query("SELECT program_name FROM program WHERE program_name='".$txtPrgmName."'");
+		$row_cnt = $result->num_rows;
+		if($row_cnt > 0){
+			$this->conn->close();
+			$message="'".$txtPrgmName."' program already exist in database.";
+			$_SESSION['error_msg'] = $message;
+			return 0;
+		}
+		$sql = "INSERT INTO program (program_name,unit,company, program_type, max_no_session, max_tot_no_session, date_add) VALUES ('".$txtPrgmName."','".$slctUnit."','".$txtCompanyName."', '".$slctPrgmType."', '".$maxNoSess."', '".$maxTotSessNo."', NOW())";
+		$rel = $this->conn->query($sql);
+		$last_ins_id = $this->conn->insert_id;
+		if(!$rel){
+			$_SESSION['error_msg'] = $this->conn->error;
+			return 0;
+		}else{
+			//INSERT PROGRAM YEARS  DATA
+			for($j=1; $j<=$slctPrgmType; $j++){
+				$progName = $txtPrgmName.'-'.$j;
+				$sql = "INSERT INTO program_years (program_id, name) VALUES ('".$last_ins_id."', '".$progName."')";
+				$rel = $this->conn->query($sql);
+				$last_insert_id[0] = $last_ins_id;
+				$last_insert_id[$j] = $this->conn->insert_id;
+			}
+			//END HERE
+			$message="New program has been added successfully";
+			$_SESSION['succ_msg'] = $message;
+			return $last_insert_id;
+		}
+	}
+	//function to add row of the program exception
+    public function getProgExceptionsClone($py_id,$cycle_num)
+    {
+		$x=0;
+		$html='';
+		$query="select * from program_cycle_exception where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
+		$result= $this->conn->query($query);
+		$row_cnt = $result->num_rows;
+		if($row_cnt)
+		{
+			while($data = $result->fetch_assoc()){
+				$x++;
+				if($x==1){
+					$html .='<div class="exceptionList'.$cycle_num.'">
+						<table id="datatables'.$cycle_num.'" class="exceptionTbl">
+						  <thead>
+						   <tr>
+							<th>Sr. No.</th>
+							<th>Exception Date</th>
+							<th>Remove</th>
+						   </tr>
+						  </thead>
+						  <tbody>';
+				 }
+				$html .='<tr>
+						<td>'.$x.'</td>
+						<td>'.date('d-m-Y',strtotime($data['exception_date'])).'</td>
+						<td style="display:none"><input type="hidden" name="programcycles['.$py_id.'][exceptionDate'.$cycle_num.'][]" id="exceptnDate'.$x.'" value="'.$data['exception_date'].'" />
+						<input type="hidden" name="program_cycleRowId'.$cycle_num.'[]" id="program_cycleRowId'.$x.'"  value="'.$data['id'].'"/></td>
+						<td id="'.$data['id'].'"><a class="remove_field" onclick="deleteExcepProgCycle('.$data['id'].', 0);">Remove</a></td></tr>';
+			}
+			$html .='<input type="hidden" name="maxSessionListVal'.$cycle_num.'" id="maxSessionListVal'.$cycle_num.'"  value="'.$x.'"/>';
+			$html .='<input type="hidden" name="maxSessionListVar'.$cycle_num.'" id="maxSessionListVar-'.$cycle_num.'-'.$py_id.'"  value="'.$x.'"/>';
+			$html .='</tbody></table></div>';			
+		}
+		$html .='<input type="hidden" name="maxSessionListVar'.$cycle_num.'" id="maxSessionListVar-'.$cycle_num.'-'.$py_id.'"  value="0"/>';
+		echo $html;
+    }
+	//function to add row of the program additional date
+    public function getProgAdditionClone($py_id,$cycle_num)
+    {
+		$x=0;
+		$html='';
+		$query="select * from program_cycle_additional_day_time where program_year_id='".$py_id."' AND cycle_id='".$cycle_num."'";
+		$result= $this->conn->query($query);
+		$row_cnt = $result->num_rows;
+		if($row_cnt)
+		{
+			while($data = $result->fetch_assoc()){
+				$x++;
+				if($x==1){
+					$html .='<div class="additionList'.$cycle_num.'">
+						<table id="dataaddtables'.$cycle_num.'" class="additionTbl">
+						  <thead>
+						   <tr>
+							<th>Sr. No.</th>
+							<th>Additional Date</th>
+							<th>Timeslots</th>
+							<th>Remove</th>
+						   </tr>
+						  </thead>
+						  <tbody>';
+				 }
+				$html .='<tr>
+						<td>'.$x.'</td>
+						<td>'.date('d-m-Y',strtotime($data['additional_date'])).'</td>
+						<td style="display:none"><input type="hidden" name="programcycles['.$py_id.'][additionDate'.$cycle_num.'][]" id="additionDate'.$x.'" value="'.$data['additional_date'].'" />
+						<input type="hidden" name="program_cycleRowId'.$cycle_num.'[]" id="program_cycleRowId'.$x.'"  value="'.$data['id'].'"/></td>
+						<td>'.$data['timeslot_id'].'</td>
+						<td style="display:none"><input type="hidden" name="programcycles['.$py_id.'][time_slot'.$cycle_num.'][]" id="time_slot'.$x.'" value="'.$data['timeslot_id'].'" />
+						<input type="hidden" name="programcycles['.$py_id.'][actual_time_slot'.$cycle_num.'][]" id="actual_time_slot'.$x.'" value="'.$data['actual_timeslot_id'].'" /></td>
+						<td id="'.$data['id'].'"><a class="remove_field" onclick="deleteAddProgCycle('.$data['id'].', 0);">Remove</a></td></tr>';
+			}
+			$html .='<input type="hidden" name="maxSessListVal'.$cycle_num.'" id="maxSessListVal'.$cycle_num.'"  value="'.$x.'"/>';
+			$html .='<input type="hidden" name="maxSessListVar'.$cycle_num.'" id="maxSessListVar-'.$cycle_num.'-'.$py_id.'"  value="'.$x.'"/>';
+			$html .='</tbody></table></div>';
+			
+		}
+		$html .='<input type="hidden" name="maxSessListVar'.$cycle_num.'" id="maxSessListVar-'.$cycle_num.'-'.$py_id.'"  value="0"/>';
+		echo $html;
+    }
+	public function addCycles($new_pgm_id,$slctNumcycle,$start_date,$end_date,$chweek,$week1,$week2)
+	{
+		$sql = "INSERT INTO cycle (program_year_id, no_of_cycle,start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$new_pgm_id."', '".$slctNumcycle."','".$start_date."', '".$end_date."', '".$chweek."', '".serialize($week1)."','".serialize($week2)."', now(), now())";
+		$rel = $this->conn->query($sql);
+	}
+	public function addException($py_id,$cycle_no,$exceptionDate,$currentDateTime)
+	{
+		$sql = "INSERT INTO program_cycle_exception(program_year_id,cycle_id,exception_date,date_add,date_update) VALUES ('".$py_id."','".$cycle_no."', '".$exceptionDate."', '".$currentDateTime."', '".$currentDateTime."');";
+		$rel = $this->conn->query($sql);
+	}
+	public function addAddition($py_id,$cycle_no,$additionDate,$timeslot_id,$actual_timeslot_id,$currentDateTime)
+	{
+		$sql = "INSERT INTO program_cycle_additional_day_time(program_year_id,cycle_id,additional_date,timeslot_id,actual_timeslot_id,date_add,date_update) VALUES ('".$py_id."','".$cycle_no."', '".$additionDate."', '".$timeslot_id."','".$actual_timeslot_id."','".$currentDateTime."', '".$currentDateTime."');";
+		$rel = $this->conn->query($sql);
+	}
+	/***************Program Clonning Function************************/
 }
 

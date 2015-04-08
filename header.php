@@ -19,7 +19,12 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
         <script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui.js"></script>
 		<script src="js/jquery.validate.js"></script>
+		<?php $pos = strpos($_SERVER['SCRIPT_NAME'], 'programs_clone-1');
+		if ($pos === false) {?>		
 		<script src="js/common.js"></script>
+		<?php } else{?>
+		<script src="js/common_new.js"></script>
+		<?php } ?>
 		<script type="text/javascript" src="js/jquery.tablednd.0.7.min.js"></script>
 		<script type="text/javascript">
             $(function() {

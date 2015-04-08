@@ -641,6 +641,60 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: role_add.php');
 			}
 		break;
+		case "clone_program":
+			//adding cloned programs
+			//print"<pre>";print_r($_POST['programcycles'][5]['slctNumcycle']);DIE("here");
+			$week1 = '';$week2 = '';
+			if(isset($_POST) && $_POST['form_action'] == 'clone_program'){
+				$obj = new Programs();
+				$result = $obj->addClonedProgram();
+				$k=1;
+				foreach($_POST['programcycles'] as $key=>$value)
+				{
+					//print"<pre>";print_r($value);
+					//echo $value['slctNumcycle'];die;
+					if($value['slctNumcycle'] != '')
+					{
+						for($i=1; $i<=$value['slctNumcycle']; $i++)
+						{
+							$start_date = date("Y-m-d", strtotime($value['startweek'.$i]));
+							$end_date = date("Y-m-d", strtotime($value['endweek'.$i]));
+							$chweek = $value['c1chWeek'.$i];
+							if($chweek == '1w')
+							{
+								$obj->addCycles($result[$k],$value['slctNumcycle'],$start_date,$end_date,$chweek,$value['cycle'.$i]['week1'],'');
+							}else{
+								if(isset($value['cycle'.$i]['week1']))
+								{
+									$week1 = $value['cycle'.$i]['week1'];
+								}
+								if(isset($value['cycle'.$i]['week2']))
+								{
+									$week2 = $value['cycle'.$i]['week2'];
+								}
+								$obj->addCycles($result[$k],$value['slctNumcycle'],$start_date,$end_date,$chweek,$week1,$week2);
+							}
+							foreach($value['exceptionDate'.$i] as $exceptionDate)
+							{
+								$exceptionDate = date("Y-m-d",strtotime($exceptionDate));
+								$currentDateTime = date("Y-m-d H:i:s");
+								$obj->addException($result[$k],$i,$exceptionDate,$currentDateTime);								
+							}
+							for($j=0; $j<count($value['additionDate'.$i]); $j++)
+							{
+								$additionDate = date("Y-m-d",strtotime($value['additionDate'.$i][$j]));
+								$timeslot_id = $value['time_slot'.$i][$j];
+								$actual_timeslot_id = $value['actual_time_slot'.$i][$j];
+								$currentDateTime = date("Y-m-d H:i:s");
+								$obj->addAddition($result[$k],$i,$additionDate,$timeslot_id,$actual_timeslot_id,$currentDateTime);
+							}
+						}
+					}
+				$k++;
+				}
+				header('Location: program-clone2.php?clone='.$_POST['programId'].'&id='.$result[0]);
+			}
+		break;
 	}
 }
 ?>
