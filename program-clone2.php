@@ -51,7 +51,7 @@ $(document).ready(function(){
 	<div class="steps clearfix">
 		<ul>
 			<li style="background-color: #eee;color:#aaa; list-style:none;"><span style="font-size:14px;"><strong>Step-1  </strong></span>Cloning Program &amp; Cycles</li>
-			<li style="background-color: #0092B0;color:#fff; list-style:none;"><span><span style="font-size:14px;"><strong>Step-2  </strong></span>Cloning Subjects</li>
+			<li style="background-color: #1c478e;color:#fff; list-style:none;"><span><span style="font-size:14px;"><strong>Step-2  </strong></span>Cloning Subjects</li>
 		</ul>
 	</div>
 	<div style="float:right;padding:5px 5px;"><input  type="button" class="buttonsub" value="Save & Finish" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/>		</div>

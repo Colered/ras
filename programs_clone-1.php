@@ -51,7 +51,7 @@ margin-left:6px !important;
     <div id="main">
 	<div class="steps clearfix">
 		<ul>
-			<li style="background-color: #0092B0;color:#fff; list-style:none;"><span style="font-size:14px;"><strong>Step-1  </strong></span>Cloning Program &amp; Cycles</li>
+			<li style="background-color: #1c478e;color:#fff; list-style:none;"><span style="font-size:14px;"><strong>Step-1  </strong></span>Cloning Program &amp; Cycles</li>
 			<li style="background-color: #eee;color:#aaa; list-style:none;"><span style="font-size:14px;"><strong>Step-2  </strong></span>Cloning Subjects</li>
 		</ul>
 	</div>
