@@ -899,9 +899,12 @@ margin-left:6px !important;
 		</div>
 		<div class="txtfield">
 			<input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href='programs_view.php';">
+<<<<<<< Updated upstream
 		</div>-->
+=======
 		</div>
 		<input type="hidden" name="program_year_id" id="program_year_id" value="<?php echo rtrim($pgm_year_id,',');?>">
+>>>>>>> Stashed changes
 		<!-- add program cycles-->
 		<div class="clear"></div>
 		</form>

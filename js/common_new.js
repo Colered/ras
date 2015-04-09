@@ -4196,5 +4196,63 @@ function addAdditionDatesCycleThree(programId) {
 }
 function addClonedProgram()
 {
+	var pgm_year_id = $('#program_year_id').val().split(',');	
+	for (var i = 0; i < pgm_year_id.length; i++)
+	{
+		var cycle = $('#slctNumCycle-'+pgm_year_id[i]).val();
+		if(cycle == '1')
+		{
+			var occ1 = $('#c1chWeek1-'+pgm_year_id[i]).val();
+			if(occ1 == '1w' || occ1 == '2w')
+			{
+				if($('.tmSlotc1w1-'+pgm_year_id[i]+' input:checked').length <= 0 && $('.tmSlotc1w2-'+pgm_year_id[i]+' input:checked').length <= 0){
+					alert('Please select atleast one day and timeslot for first week of cycle-1.');
+					return false;
+				}
+			}
+		}else if(cycle == '2'){
+			var occ1 = $('#c1chWeek1-'+pgm_year_id[i]).val();
+			if(occ1 == '1w' || occ1 == '2w')
+			{
+				if($('.tmSlotc1w1-'+pgm_year_id[i]+' input:checked').length <= 0 && $('.tmSlotc1w2-'+pgm_year_id[i]+' input:checked').length <= 0){
+					alert('Please select atleast one day and timeslot for first week of cycle-1.');
+					return false;
+				}
+			}
+			var occ2 = $('#c1chWeek2-'+pgm_year_id[i]).val();
+			if(occ2 == '1w' || occ2 == '2w')
+			{
+				if($('.tmSlotc2w1-'+pgm_year_id[i]+' input:checked').length <= 0 && $('.tmSlotc2w2-'+pgm_year_id[i]+' input:checked').length <= 0){
+					alert('Please select atleast one day and timeslot for first week of cycle-2.');
+					return false;
+				}
+			}
+		}else if(cycle == '3'){
+			var occ1 = $('#c1chWeek1-'+pgm_year_id[i]).val();
+			if(occ1 == '1w' || occ1 == '2w')
+			{
+				if($('.tmSlotc1w1-'+pgm_year_id[i]+' input:checked').length <= 0 && $('.tmSlotc1w2-'+pgm_year_id[i]+' input:checked').length <= 0){
+					alert('Please select atleast one day and timeslot for first week of cycle-1.');
+					return false;
+				}
+			}
+			var occ2 = $('#c1chWeek2-'+pgm_year_id[i]).val();
+			if(occ2 == '1w' || occ2 == '2w')
+			{
+				if($('.tmSlotc2w1-'+pgm_year_id[i]+' input:checked').length <= 0 && $('.tmSlotc2w2-'+pgm_year_id[i]+' input:checked').length <= 0){
+					alert('Please select atleast one day and timeslot for first week of cycle-2.');
+					return false;
+				}
+			}
+			var occ3 = $('#c1chWeek3-'+pgm_year_id[i]).val();
+			if(occ3 == '1w' || occ3 == '2w')
+			{
+				if($('.tmSlotc3w1-'+pgm_year_id[i]+' input:checked').length <= 0 && $('.tmSlotc3w2-'+pgm_year_id[i]+' input:checked').length <= 0){
+					alert('Please select atleast one day and timeslot for first week of cycle-3.');
+					return false;
+				}
+			}
+		}			
+	}
 	$('#frmProgram').submit();	
 }
