@@ -691,3 +691,7 @@ line-height: 27px; margin-left:20px; margin-top:10px;}
 table tr:hover td a{color: #000000!important;}
 .removeWKRErr{padding-bottom:10px;height:15px;}
 h2.blod-text{font-weight:bold;}
+.ipt{
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}

@@ -3631,51 +3631,11 @@ function deleteRole($id){
     return false;
 }
 $(document).ready(function() {
-	$(".ipt").hide();
-	$(document).on('click', ".ckbSubjEdit", function() {
-		var ID=$(this).val();
-		if($(this).is(":checked")){
-			$("#subject_cd_txt"+ID).hide();
-			$("#subject_nm_txt"+ID).hide();
-			$("#subject_name"+ID).show();
-			$("#subject_code"+ID).show();
-		}else if($(this).is(":not(:checked)")){
-			$("#subject_cd_txt"+ID).show();
-			$("#subject_nm_txt"+ID).show();
-			$("#subject_name"+ID).hide();
-			$("#subject_code"+ID).hide();
-		}
-		var allCkbPageCnt =$(".ckbSubjEdit").length;
-		var ckbCheckedCnt=$(".ckbSubjEdit:checked").length;
-		if(allCkbPageCnt == ckbCheckedCnt) {
-				$("#ckbAllSub").prop("checked", "checked");
-		} else {
-				$("#ckbAllSub").removeAttr("checked");
-		}
-	});
-	$('#ckbAllSub').click(function(event) { 
-			if(this.checked) { 
-				$('.ckbSubjEdit').each(function() { 
-					this.checked = true; 
-					$(".txt-sub").hide()
-					$(".ipt").show();
-				});
-			}else{
-				$('.ckbSubjEdit').each(function() { 
-					this.checked = false;  
-					$(".txt-sub").show()
-					$(".ipt").hide();
-				});         
-			}
-	});
-		
+	$(".txt-sub").hide();	
 });
 function PrgmSubSessCloning(){
-	var cntSubCkb = $(".ckbSubjEdit").length;
-	var ckbCheckedSubCnt=$(".ckbSubjEdit:checked").length;
-	if(cntSubCkb == ckbCheckedSubCnt) {
 		var subjectId = new Array();
-		$.each($("input[name='prgm_clone[]']:checked"), function() {
+		$.each($("input[name='prgm_clone[]']"), function() {
   			subjectId.push($(this).val());
     	});
 		var subjectName = new Array();
@@ -3698,7 +3658,7 @@ function PrgmSubSessCloning(){
 		$.each($("input[name='program_yr_new_id[]']"), function() {
   			programYearId.push($(this).val());
     	});
-		if(confirm("Are you sure ,you want clone all subject and session?")){
+		if(confirm("Are you sure ,you want to clone all subject and session?")){
 			$.ajax({
 				   type: "POST",
 				   url: "ajax_common.php",
@@ -3716,7 +3676,7 @@ function PrgmSubSessCloning(){
 								var sts='Y';
 								window.location.href = 'programs_view.php?status='+sts;
 							}else if($succ==0){
-								 alert('please select all feild');	
+								 alert('Data is not corrected');	
 							}else{
 								 alert('Subject code '+$succ+' already exist');
 							}
@@ -3724,8 +3684,4 @@ function PrgmSubSessCloning(){
 				});
 		}
 		return false;
-	} else {
-		alert('All subject code and name should be in edit mode');
-	}
-
 }

@@ -61,7 +61,7 @@ $(document).ready(function(){
 			 <table id="datatables" class="display">
                 <thead>
                     <tr>
-					    <th><input type="checkbox" id="ckbAllSub" value="Select all" title="Select All"/></th>
+					    <!--<th><input type="checkbox" id="ckbAllSub" value="Select all" title="Select All"/></th>-->
                         <th >ID</th>
 						<th >Program</th>
                         <th >Subject Name</th>
@@ -78,18 +78,19 @@ $(document).ready(function(){
 							while ($data1 = $result_subject->fetch_assoc()){  
 					 ?>
 						<tr id="<?php echo $data1['id']; ?>">
-							<td class="align-center"><input type="checkbox" value="<?php echo $data1['id']; ?>" name="prgm_clone[]"  class="ckbSubjEdit"/></td>
-							<td class="align-center"><?php echo $data1['id']; ?></td>
+							<td class="align-center"><?php echo $data1['id']; ?> 
+							</td>
 							<td class="align-center"><?php echo $data1['program_name']; ?>
-							<input type="hidden" id="program_yr_new_id<?php echo $prgm_yr_new_arr[$j]; ?>" name="program_yr_new_id[]" value="<?php echo $prgm_yr_new_arr[$j]; ?>" />
+								<input type="hidden" name="prgm_clone[]" value="<?php echo $data1['id']; ?>"/>
+								<input type="hidden" id="program_yr_new_id<?php echo $prgm_yr_new_arr[$j]; ?>" name="program_yr_new_id[]" value="<?php echo $prgm_yr_new_arr[$j]; ?>" />
 							</td>
 							<td class="align-center">
 								<span id="subject_nm_txt<?php echo $data1['id']; ?>" class="txt-sub"><?php echo $data1['subject_name']; ?> </span>
-								<input type="text" class="ipt" id="subject_name<?php echo $data1['id']; ?>" name="subject_name[]" value="<?php echo $data1['subject_name']; ?>" />
+								<input type="text" class="ipt" id="subject_name<?php echo $data1['id']; ?>" name="subject_name[]" value="<?php echo $data1['subject_name']; ?>" size="50px" />
 							</td>
 							<td class="align-center">
 								<span id="subject_cd_txt<?php echo $data1['id']; ?>" class="txt-sub"><?php echo $data1['subject_code']; ?> </span>
-								<input type="text" class="ipt" id="subject_code<?php echo $data1['id']; ?>" name="subject_code[]" value="<?php echo $data1['subject_code']; ?>" />
+								<input type="text" class="ipt" id="subject_code<?php echo $data1['id']; ?>" name="subject_code[]" value="<?php echo $data1['subject_code']; ?>"  />
 							</td>
 							<td class="align-center"><?php echo $data1['area_name'];?>
 							<input type="hidden"  id="area<?php echo $data1['area_id']; ?>" name="area_id[]" value="<?php echo $data1['area_id']; ?>" />
