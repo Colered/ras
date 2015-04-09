@@ -50,13 +50,14 @@ $(document).ready(function(){
 	<?php if(isset($_SESSION['succ_msg'])){ echo '<div class="full_w green center">'.$_SESSION['succ_msg'].'</div>'; unset($_SESSION['succ_msg']);} ?>
 	<div class="steps clearfix">
 		<ul>
-			<li style="background-color: #eee;color:#aaa;"><span class="number">Step-1</span><br/> Saving Program & cycles</li>
-			<li style="background-color: #00923f;color:#fff;"><span class="number">Step-2</span><br/> Saving Subjects</li>
+			<li style="background-color: #eee;color:#aaa; list-style:none;"><span style="font-size:14px;"><strong>Step-1  </strong></span>Cloning Program &amp; Cycles</li>
+			<li style="background-color: #0092B0;color:#fff; list-style:none;"><span><span style="font-size:14px;"><strong>Step-2  </strong></span>Cloning Subjects</li>
 		</ul>
 	</div>
+	<div style="float:right;padding:5px 5px;"><input  type="button" class="buttonsub" value="Save & Finish" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/>		</div>
         <div class="full_w">
             <div class="h_title">Program and Subject View</div>		
-			<div style="float:right;padding:5px 5px;"><input  type="button" class="buttonsub" value="Save & Finish" name="btnPrgmClone" id="btnPrgmClone" onclick="PrgmSubSessCloning();"/></div>
+			
 			 <table id="datatables" class="display">
                 <thead>
                     <tr>

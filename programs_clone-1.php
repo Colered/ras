@@ -51,14 +51,19 @@ margin-left:6px !important;
     <div id="main">
 	<div class="steps clearfix">
 		<ul>
-			<li style="background-color: #00923f;color:#fff;"><span class="number">Step-1</span><br/> Saving Program & cycles</li>
-			<li style="background-color: #eee;color:#aaa;"><span class="number">Step-2</span><br/> Saving Subjects</li>
+			<li style="background-color: #0092B0;color:#fff; list-style:none;"><span style="font-size:14px;"><strong>Step-1  </strong></span>Cloning Program &amp; Cycles</li>
+			<li style="background-color: #eee;color:#aaa; list-style:none;"><span style="font-size:14px;"><strong>Step-2  </strong></span>Cloning Subjects</li>
 		</ul>
 	</div>
+	<div style="float:right;padding:5px 5px;">
+			<input type="button" name="btnAdd" id="btnAdd" class="buttonsub" value="<?php echo $button_save;?>" onclick="addClonedProgram();">
+			<input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href='programs_view.php';">
+	</div>	
 	<form name="frmProgram" id="frmProgram" action="postdata.php" method="post">	
 	<div class="full_w">
 	
-            <div class="h_title">Clone of Program "<?php echo $program_name; ?>"</div>			
+            <div class="h_title">Clone of Program "<?php echo $program_name; ?>"</div>	
+				
 			    <input type="hidden" name="form_action" value="<?php echo $form_action;?>" />
 				<?php if(isset($_GET['clone'])){?>
 			  	<input type="hidden" name="programId" value="<?php echo $_GET['clone'];?>" />
@@ -887,12 +892,12 @@ margin-left:6px !important;
 			});
 		</script>
 		<?php } ?>		
-		 <div class="txtfield">
+		 <!--<div class="txtfield">
 			<input type="button" name="btnAdd" id="btnAdd" class="buttonsub" value="<?php echo $button_save;?>" onclick="addClonedProgram();">
 		</div>
 		<div class="txtfield">
 			<input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href='programs_view.php';">
-		</div>
+		</div>-->
 		<!-- add program cycles-->
 		<div class="clear"></div>
 		</form>
