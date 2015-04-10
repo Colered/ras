@@ -95,5 +95,17 @@ abstract class Base
 		return $allWeeks;
 	}
 
+	//function to calculate timeslots from start time and duration
+	public function getTimeslotsFromTimeDur($duartion,$start_time)
+	{
+		$noOfslots = $duartion / 15;
+		$startTS = $start_time;
+		$endTS = $startTS + $noOfslots;
+		for ($i = $startTS; $i < $endTS; $i++) {
+			$timeslotIdsArray[] = $i;
+		}
+		return $timeslotIdsArray;
+	}
+
 
 }

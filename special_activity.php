@@ -23,6 +23,7 @@ $tslot_dropDwn = $objTS->getTimeSlotStartDateDropDwn();
 $disFDivCss = "style=''";
 $special_act_id=$detail_grp=$act_date=$act_ad_hoc_fix_date=$special_act_name=$special_activity=$special_activity_type=$program_year_id=$cycle_id=$area_id=$room_id=$subject_id=$subject_val=$teacher_id=$start_time_id=$duration=$adhoc_start_date=$adhoc_end_date=$disabled=$ad_hoc_act_date_dd=$readonly=$special_sp_act_name=$one_time_edit=$rule_id_grp_str="";
 $btnSubmit="Save";
+$daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
 $options = '<option value="08:00 AM-09:00 AM">08:00 AM-09:00 AM</option>
 			<option value="09:00 AM-10:00 AM">09:00 AM-10:00 AM</option>
@@ -494,100 +495,201 @@ $option_duration='<option value="">--Select--</option>
                         To:<input type="text" size="12" id="toSpcialAval" name="toSpcialAval" />
                     </div>
                     <div class="clear"></div>
-                    <div class="custtd_left">
-                        <h2>Days and Timeslot<span class="redstar">*</span></h2>
+					<div class="custtd_left">
+                        <h2>Occurring<span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+                        <select id="c1chWeek1" name="c1chWeek1" class="select1 required" onchange="showCycleDetails(this.value);">
+                            <option value="">--Select Week--</option>
+                            <option value="1w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '1w') echo 'selected = "selected"';?>>Weekly</option>
+                            <option value="2w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '2w') echo 'selected = "selected"';?>>Bi Weekly</option>
+                        </select>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="custtd_left" id="custtd_leftc1w1" style="display:none;">
+                        <h2>Days and Timeslot 1st<span class="redstar">*</span></h2>
                     </div>
 					<div class="txtfield" >
-					    <div class="tmSlot">
-                        <input type="checkbox" id="Mon" name="day[]"  value="Mon" class="days"/><span class="dayName"> Mon </span>
-							<div class="sp-act-ts-mon">
-								<div>Duration</div>
-								<select name="duration-sp-mon" id="duration-sp-mon" class="cls-duration-sp-mon" >
-								   <?php echo $option_duration;?>
-								</select>
-								<div>Start Time</div>
-								<select id="ts-sp-mon" name="Mon[]" class="slctSpTs">
-									  <option value="">--Select--</option>
-									  <?php echo $tslot_dropDwn;?>
-								</select>
+						<div id="c1week1" style="display:none;">
+							<div class="tmSlotc1w1">
+								<input type="checkbox" id="Mon1C1W1" name="day[]"  value="Mon1C1W1" class="special_days"/><span class="dayName"> Mon </span>
+								<div id="sp-act-ts-mon-w1">
+									<div>Duration</div>
+									<select name="duration-sp-mon" id="duration-sp-mon-w1" class="cls-duration-sp-mon" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-mon-w1" name="Mon[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w1">
+							<input type="checkbox" id="Tue1C1W1" name="day[]"  value="Tue1C1W1" class="special_days"/><span class="dayName"> Tue </span>
+								<div id="sp-act-ts-tue-w1">
+									<div>Duration</div>
+									<select name="duration-sp-tue" id="duration-sp-tue-w1" class="cls-duration-sp-tue" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-tue-w1" name="Tue[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w1">
+							<input type="checkbox" id="Wed1C1W1" name="day[]"  value="Wed1C1W1" class="special_days"/><span class="dayName"> Wed </span>
+								<div id="sp-act-ts-wed-w1">
+									<div>Duration</div>
+									<select name="duration-sp-wed" id="duration-sp-wed-w1" class="cls-duration-sp-wed" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-wed-w1" name="Wed[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w1">
+							<input type="checkbox" id="Thu1C1W1" name="day[]"  value="Thu1C1W1" class="special_days"/><span class="dayName"> Thu </span>
+								<div id="sp-act-ts-thu-w1">
+									<div>Duration</div>
+									<select name="duration-sp-thu" id="duration-sp-thu-w1" class="cls-duration-sp-thu" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-thu-w1" name="Thu[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w1">
+							<input type="checkbox" id="Fri1C1W1" name="day[]"  value="Fri1C1W1" class="special_days"/><span class="dayName"> Fri </span>
+								<div id="sp-act-ts-fri-w1">
+									<div>Duration</div>
+									<select name="duration-sp-fri" id="duration-sp-fri-w1" class="cls-duration-sp-fri" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-fri-w1" name="Fri[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w1">
+							<input type="checkbox" id="Sat1C1W1" name="day[]"  value="Sat1C1W1" class="special_days"/><span class="dayName"> Sat </span>
+								<div id="sp-act-ts-sat-w1">
+									<div>Duration</div>
+									<select name="duration-sp-sat" id="duration-sp-sat-w1" class="cls-duration-sp-sat" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-sat-w1" name="Sat[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>		
 							</div>
 						</div>
-						<div class="tmSlot">
-                        <input type="checkbox" id="Tue" name="day[]"  value="Tue" class="days"/><span class="dayName"> Tue </span>
-							<div class="sp-act-ts-tue">
-								<div>Duration</div>
-								<select name="duration-sp-tue" id="duration-sp-tue" class="cls-duration-sp-tue" >
-								   <?php echo $option_duration;?>
-								</select>
-								<div>Start Time</div>
-								<select id="ts-sp-tue" name="Tue[]" class="slctSpTs">
-									  <option value="">--Select--</option>
-									  <?php echo $tslot_dropDwn;?>
-								</select>
-							</div>
-						</div>
-						<div class="tmSlot">
-                        <input type="checkbox" id="Wed" name="day[]"  value="Wed" class="days"/><span class="dayName"> Wed </span>
-							<div class="sp-act-ts-wed">
-								<div>Duration</div>
-								<select name="duration-sp-wed" id="duration-sp-wed" class="cls-duration-sp-wed" >
-								   <?php echo $option_duration;?>
-								</select>
-								<div>Start Time</div>
-								<select id="ts-sp-wed" name="Wed[]" class="slctSpTs">
-									  <option value="">--Select--</option>
-									  <?php echo $tslot_dropDwn;?>
-								</select>
-							</div>
-						</div>
-						<div class="tmSlot">
-                        <input type="checkbox" id="Thu" name="day[]"  value="Thu" class="days"/><span class="dayName"> Thu </span>
-							<div class="sp-act-ts-thu">
-								<div>Duration</div>
-								<select name="duration-sp-thu" id="duration-sp-thu" class="cls-duration-sp-thu" >
-								   <?php echo $option_duration;?>
-								</select>
-								<div>Start Time</div>
-								<select id="ts-sp-thu" name="Thu[]" class="slctSpTs">
-									  <option value="">--Select--</option>
-									  <?php echo $tslot_dropDwn;?>
-								</select>
-							</div>
-						</div>
-						<div class="tmSlot">
-                        <input type="checkbox" id="Fri" name="day[]"  value="Fri" class="days"/><span class="dayName"> Fri </span>
-							<div class="sp-act-ts-fri">
-								<div>Duration</div>
-								<select name="duration-sp-fri" id="duration-sp-fri" class="cls-duration-sp-fri" >
-								   <?php echo $option_duration;?>
-								</select>
-								<div>Start Time</div>
-								<select id="ts-sp-fri" name="Fri[]" class="slctSpTs">
-									  <option value="">--Select--</option>
-									  <?php echo $tslot_dropDwn;?>
-								</select>
-							</div>
-						</div>
-						<div class="tmSlot">
-						<input type="checkbox" id="Sat" name="day[]"  value="Sat" class="days"/><span class="dayName"> Sat </span>
-							<div class="sp-act-ts-sat">
-								<div>Duration</div>
-								<select name="duration-sp-sat" id="duration-sp-sat" class="cls-duration-sp-sat" >
-								   <?php echo $option_duration;?>
-								</select>
-								<div>Start Time</div>
-								<select id="ts-sp-sat" name="Sat[]" class="slctSpTs">
-									  <option value="">--Select--</option>
-									  <?php echo $tslot_dropDwn;?>
-								</select>
-							</div>		
-						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="custtd_left" id="custtd_leftc1w2" style="display:none;">
+                        <h2>Days and Timeslot 2nd<span class="redstar">*</span></h2>
                     </div>
-					<div class="custtable_left div-arrow-img" style="cursor:pointer">
-					<input type="button" name="saveRule" class="buttonsub" value="Create Rule" onclick="createSpecialAvailRule();">
-                   <!-- <img src="images/arrow.png" id="arrow-img" class="arrow-img"  onclick="createTeachAvailRule();"/>-->
-                	</div>
-                    <div class="clear"></div>
+					<div class="txtfield" >
+						<div id="c1week2" style="display:none;">
+							<div class="tmSlotc1w2">
+								<input type="checkbox" id="Mon2C1W2" name="day[]"  value="Mon2C1W2" class="special_days"/><span class="dayName"> Mon </span>
+								<div id="sp-act-ts-mon-w2">
+									<div>Duration</div>
+									<select name="duration-sp-mon" id="duration-sp-mon-w2" class="cls-duration-sp-mon" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-mon-w2" name="Mon[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w2">
+							<input type="checkbox" id="Tue2C1W2" name="day[]"  value="Tue2C1W2" class="special_days"/><span class="dayName"> Tue </span>
+								<div id="sp-act-ts-tue-w2">
+									<div>Duration</div>
+									<select name="duration-sp-tue" id="duration-sp-tue-w2" class="cls-duration-sp-tue" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-tue-w2" name="Tue[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w2">
+							<input type="checkbox" id="Wed2C1W2" name="day[]"  value="Wed2C1W2" class="special_days"/><span class="dayName"> Wed </span>
+								<div id="sp-act-ts-wed-w2">
+									<div>Duration</div>
+									<select name="duration-sp-wed" id="duration-sp-wed-w2" class="cls-duration-sp-wed" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-wed-w2" name="Wed[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w2">
+							<input type="checkbox" id="Thu2C1W2" name="day[]"  value="Thu2C1W2" class="special_days"/><span class="dayName"> Thu </span>
+								<div id="sp-act-ts-thu-w2">
+									<div>Duration</div>
+									<select name="duration-sp-thu" id="duration-sp-thu-w2" class="cls-duration-sp-thu" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-thu-w2" name="Thu[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w2">
+							<input type="checkbox" id="Fri2C1W2" name="day[]"  value="Fri2C1W2" class="special_days"/><span class="dayName"> Fri </span>
+								<div id="sp-act-ts-fri-w2">
+									<div>Duration</div>
+									<select name="duration-sp-fri" id="duration-sp-fri-w2" class="cls-duration-sp-fri" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-fri-w2" name="Fri[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>
+							</div>
+							<div class="tmSlotc1w2">
+							<input type="checkbox" id="Sat2C1W2" name="day[]"  value="Sat2C1W2" class="special_days"/><span class="dayName"> Sat </span>
+								<div id="sp-act-ts-sat-w2">
+									<div>Duration</div>
+									<select name="duration-sp-sat" id="duration-sp-sat-w2" class="cls-duration-sp-sat" >
+									   <?php echo $option_duration;?>
+									</select>
+									<div>Start Time</div>
+									<select id="ts-sp-sat-w2" name="Sat[]" class="slctSpTs">
+										  <option value="">--Select--</option>
+										  <?php echo $tslot_dropDwn;?>
+									</select>
+								</div>		
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
 					<div class="custtd_left">
                         <h2>Add Exception</h2>
                     </div>
@@ -597,11 +699,13 @@ $option_duration='<option value="">--Select--</option>
 					<div class="addbtnException">
 					    <input type="button" name="btnAddMore" class="btnSpecialActAvailExcep" value="Add">
                      </div>
-                    <div class="clear"></div>
-					 <div class="custtd_left">
-                    </div>
-					<div class="divException">
+                    <div class="clear"></div>					 
+					<div class="divException" style="margin-left: 200px;">
 					</div>
+					<div class="custtable_left div-arrow-img" style="cursor:pointer">
+					<input type="button" name="saveRule" class="buttonsub" value="Create Rule" onclick="createSpecialAvailRule();">
+                   <!-- <img src="images/arrow.png" id="arrow-img" class="arrow-img"  onclick="createTeachAvailRule();"/>-->
+                	</div>
 					<div class="clear"></div>
 					</div>
                 </div>
@@ -621,17 +725,35 @@ $option_duration='<option value="">--Select--</option>
 								<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 140px;"><li style="min-height:20px;" class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>"  class="rule__listed_ckb" <?php if(in_array($data['id'], $rule_id_gr_uni_arr)) { echo "checked"; } ?>  /><b>&nbsp;<?php echo $data['rule_name']; ?></b>
 								<span style="padding-left:10px; cursor:pointer; padding-top:5px;"><img alt="Delete Rule" style="margin-bottom:-3px;" onclick="deleteRuleSpecialActivity(<?php echo $rule_id; ?>);" src="images/delete-rule.png" /></span>
 								</li>
-								<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span>
+								<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span><br/>
+								<span>Occurrence: <?php if($data['occurrence'] == '1w') echo 'Weekly';else echo 'Biweekly'; ?></span>
 								<ul class="listing">
 									<?php //get the day and timeslot
-									$dayData = $obj->getSpecialAvailDay($data['id']);
-									while($ddata = $dayData->fetch_assoc()){
-										$tempData  = explode(',', $ddata['actual_timeslot_id']);
-										$start_time = $obj->getStartTime($tempData['0']);
-										?>
-										<li><span style="text-decoration:underline"><?php echo $ddata['day_name'].'</span>:&nbsp;'.$start_time['start_time'].'  ( Duration : '.$ddata['duration'].' Min)' ;
-											?>
-										</li>
+									$week1=$week2='';
+									$tsobj = new Timeslot();
+									if($data['week1']!='' &&  count(unserialize($data['week1']))>0){
+										foreach(unserialize($data['week1']) as $key=> $value)
+										{
+											$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
+											$week1 = $week1." ".'<span style="text-decoration: underline;">'.$daysDBArr[$key].'</span>'.":&nbsp;".implode(',',$timeslotVal)."<br/>";
+										}
+									}
+									if(count(unserialize($data['week2']))>0)
+									{
+										if($data['occurrence'] == '2w'){
+											foreach(unserialize($data['week2']) as $key=> $value)
+											{
+												$tsobj = new Timeslot();
+												$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
+												$week2 = $week2." ".'<span style="text-decoration: underline;">'.$daysDBArr[$key].'</span>'.":&nbsp;".implode(',',$timeslotVal)."<br/>";
+											}
+										}
+									}
+									?>
+									<?php if($data['week1']!=''){?>
+									<li><b>Week1:</b><br/><?php echo $week1;?></li>
+									<?php } if($data['occurrence'] == '2w'){?>
+									<li><b>Week2:</b><br/><?php echo $week2;?></li>
 									<?php } ?>
 								</ul>
 								<?php 

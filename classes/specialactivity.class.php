@@ -11,12 +11,12 @@ class SpecialActivity extends Base {
 	}
 	public function getSpecialAvailRule()
 	{
-		$specia_act_query="select id, rule_name, start_date, end_date from special_activity_rule WHERE rule_name<>'Always Available' ORDER BY id DESC";
+		$specia_act_query="select id, rule_name,occurrence,week1,week2, start_date, end_date from special_activity_rule WHERE rule_name<>'Always Available' ORDER BY id DESC";
 		$q_res = mysqli_query($this->conn, $specia_act_query);
 		return $q_res;
 	}
 	public function ruleStartEndDate($rule_id){
-		$query = mysqli_query ($this->conn, "SELECT start_date , end_date FROM  special_activity_rule WHERE  id='".$rule_id."' ");
+		$query = mysqli_query ($this->conn, "SELECT start_date , end_date,occurrence,week1,week2 FROM  special_activity_rule WHERE  id='".$rule_id."' ");
 		$data = $query->fetch_assoc();
 		return $data;
 	}
@@ -114,47 +114,125 @@ class SpecialActivity extends Base {
 				}	
 				return 1;
 		   	}else{
+				$objtime = new Timetable();
+				$last_day = '5';
 				$rulesIds= (isset($_POST['ruleval']) && $_POST['ruleval']!="") ?  $_POST['ruleval']:"";
 				$rulesIds_str = implode(',',$rulesIds);
 				//inserting new mapping
-				foreach($_POST['ruleval'] as $ruleId){
-				$ruleStartEnddate = $obj_SA->ruleStartEndDate($ruleId);
-				$ruleTimeslot = $obj_SA->ruleTimeslotandDay($ruleId);
-				$startPADate=$ruleStartEnddate['start_date'];
-				$endPADate=$ruleStartEnddate['end_date'];
-				$endPADate = date('Y-m-d',strtotime($endPADate . "+1 days"));
-				$begin = new DateTime($startPADate);
-				$end = new DateTime($endPADate);
-				$interval = DateInterval::createFromDateString('1 day');
-				$period = new DatePeriod($begin, $interval, $end);
-					foreach ( $period as $dt ){
-							$date_str=$dt->format( "Y-m-d \n" );
-							//check if the date is not added as exception for the selected rule
-							$exception_query="select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date='".$date_str."'";
-							$q_res = mysqli_query($this->conn, $exception_query);
-							$dataAll = mysqli_fetch_assoc($q_res);
-							if(count($dataAll)==0){
-							$date_wk_day=date('l', strtotime($date_str));
-							$day_of_week = date('N', strtotime($date_wk_day));
-							$day_num=$day_of_week-1;
-							foreach($ruleTimeslot as  $key=>$val){
-							 if($key==$day_num){
-							 	$act_name_num = $act_name_num+1;
-								$act_name='A'.$act_name_num ;
-								$ts_durationArr=explode('-',$val);
-								$ts_id_Arr = explode(',',$ts_durationArr[0]);
-								$start_time = $ts_id_Arr['0'];	
-								$duration = $ts_durationArr[1];
-								$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ts_durationArr[0]."','".$start_time."','".$date_str."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
-								$last_id = mysqli_insert_id($this->conn);
-								if($last_id!=''){
-									$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+				foreach($_POST['ruleval'] as $ruleId)
+				{
+					$ruleStartEnddate = $obj_SA->ruleStartEndDate($ruleId);
+					$startPADate=$ruleStartEnddate['start_date'];
+					$endPADate=$ruleStartEnddate['end_date'];
+					$occurrence=$ruleStartEnddate['occurrence'];
+					$start_date = $startPADate;
+					$end_date = $endPADate;
+								
+					if($occurrence == '1w')
+					{
+						$week1 = unserialize($ruleStartEnddate['week1']);
+						foreach($week1 as $day=>$time)
+						{
+							$duration = count($time)*15;
+							$day = $day + 1;
+							$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate, $endPADate,$day);
+							foreach($dateArr as $val)
+							{
+								$sql_pgm_exp = $this->conn->query("select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date = '".$val."'");
+								if(mysqli_num_rows($sql_pgm_exp) == 0)
+								{
+									$act_name_num = $act_name_num+1;
+									$act_name='A'.$act_name_num ;
+									$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".implode(',',$time)."','".$time[0]."','".$val."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
+									$last_id = mysqli_insert_id($this->conn);
+									if($last_id!=''){
+										$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+									}								
 								}
-							  }
-					   	    }
-						  }  
-					  }
-				  }
+							}
+						}
+					}else if($occurrence == '2w')
+					{
+						$weeks = $objtime->countWeeksBetweenDates($startPADate, $endPADate);
+						for($j=0; $j < $weeks; $j++)
+						{						
+							if($j%2 == 0)
+							{
+								$day = date("w", strtotime($startPADate));
+								$day = $day-1;
+								$rem_days = $last_day-$day;
+								$date = new DateTime($startPADate);
+								$date->modify('+'.$rem_days.' day');
+								$endPADate = $date->format('Y-m-d');
+								$week1 = unserialize($ruleStartEnddate['week1']);
+								foreach($week1 as $day=> $time)
+								{
+									$day = $day + 1;
+									if($endPADate > $end_date)
+									{
+										$endPADate = $end_date;
+									}
+									$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate,$endPADate,$day);
+									foreach($dateArr as $val)
+									{
+										$sql_pgm_exp = $this->conn->query("select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date = '".$val."'");
+										if(mysqli_num_rows($sql_pgm_exp) == 0)
+										{
+											$act_name_num = $act_name_num+1;
+											$act_name='A'.$act_name_num ;
+											$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".implode(',',$time)."','".$time[0]."','".$val."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
+											$last_id = mysqli_insert_id($this->conn);
+											if($last_id!=''){
+												$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+											}
+										}
+									}														
+								}
+								$date = new DateTime($endPADate);
+								$date->modify('+2 day');
+								$startPADate = $date->format('Y-m-d');						
+							}else{
+								$day = date("w", strtotime($startPADate));
+								$day = $day-1;
+								$rem_days = $last_day-$day;
+								$date = new DateTime($startPADate);
+								$date->modify('+'.$rem_days.' day');
+								$endPADate = $date->format('Y-m-d');	
+								if(count(unserialize($ruleStartEnddate['week2'])) > 0)
+								{
+									$week2 = unserialize($ruleStartEnddate['week2']);
+									foreach($week2 as $day=> $time)
+									{
+										$day = $day + 1;
+										echo $startPADate."--".$endPADate."--".$day;
+										if($endPADate > $end_date)
+										{
+											$endPADate = $end_date;
+										}
+										$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate,$endPADate,$day);
+										foreach($dateArr as $val)
+										{
+											$sql_pgm_exp = $this->conn->query("select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date = '".$val."'");
+											if(mysqli_num_rows($sql_pgm_exp) == 0)
+											{
+												$act_name_num = $act_name_num+1;
+												$act_name='A'.$act_name_num ;
+												$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".implode(',',$time)."','".$time[0]."','".$val."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
+												$last_id = mysqli_insert_id($this->conn);
+												if($last_id!=''){
+													$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+												}
+											}
+										}														
+									}
+								}
+								$date = new DateTime($endPADate);
+								$date->modify('+2 day');
+								$startPADate = $date->format('Y-m-d');							
+							}
+						}					
+					}
+				}
 				$message="Activities have been inserted successfully";
 				$_SESSION['succ_msg'] = $message;
 				header('Location: special_activity_view.php');
@@ -218,6 +296,8 @@ class SpecialActivity extends Base {
 				}	
 		}else{
 			$obj_SA=new SpecialActivity();
+			$objtime = new Timetable();
+			$last_day = '5';
 			$currentDateTime = date("Y-m-d H:i:s");
 			$rule_id_Arr=array();
 			$sql = "select special_activity_rule_id from special_activity_mapping where special_activity_name='".trim($_POST['special_sp_act_name'])."' "; 
@@ -232,44 +312,119 @@ class SpecialActivity extends Base {
 				//inserting new mapping
 				$last_activity_record=$obj_SA->activityLastReocrd();
 				$act_name_num= ltrim ($last_activity_record['name'],'A');
-				foreach($actual_rule_ids as $ruleId){
-				$ruleStartEnddate = $obj_SA->ruleStartEndDate($ruleId);
-				$ruleTimeslot = $obj_SA->ruleTimeslotandDay($ruleId);
-				$startPADate=$ruleStartEnddate['start_date'];
-				$endPADate=$ruleStartEnddate['end_date'];
-				$endPADate = date('Y-m-d',strtotime($endPADate . "+1 days"));
-				$begin = new DateTime($startPADate);
-				$end = new DateTime($endPADate);
-				$interval = DateInterval::createFromDateString('1 day');
-				$period = new DatePeriod($begin, $interval, $end);
-					foreach ( $period as $dt ){
-							$date_str=$dt->format( "Y-m-d \n" );
-							//check if the date is not added as exception for the selected rule
-							$exception_query="select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date='".$date_str."'";
-							$q_res = mysqli_query($this->conn, $exception_query);
-							$dataAll = mysqli_fetch_assoc($q_res);
-							if(count($dataAll)==0){
-							$date_wk_day=date('l', strtotime($date_str));
-							$day_of_week = date('N', strtotime($date_wk_day));
-							$day_num=$day_of_week-1;
-							foreach($ruleTimeslot as  $key=>$val){
-							 if($key==$day_num){
-							 	$act_name_num = $act_name_num+1;
-								$act_name='A'.$act_name_num ;
-								$ts_durationArr=explode('-',$val);
-								$ts_id_Arr = explode(',',$ts_durationArr[0]);
-								$start_time = $ts_id_Arr['0'];	
-								$duration = $ts_durationArr[1];
-								$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".$ts_durationArr[0]."','".$start_time."','".$date_str."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
-								$last_id = mysqli_insert_id($this->conn);
-								if($last_id!=''){
-									$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+				foreach($actual_rule_ids as $ruleId)
+				{
+					$ruleStartEnddate = $obj_SA->ruleStartEndDate($ruleId);
+					$startPADate=$ruleStartEnddate['start_date'];
+					$endPADate=$ruleStartEnddate['end_date'];
+					$occurrence=$ruleStartEnddate['occurrence'];
+					$start_date = $startPADate;
+					$end_date = $endPADate;
+					if($occurrence == '1w')
+					{
+						$week1 = unserialize($ruleStartEnddate['week1']);
+						foreach($week1 as $day=>$time)
+						{
+							$duration = count($time)*15;
+							$day = $day + 1;
+							$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate, $endPADate,$day);
+							foreach($dateArr as $val)
+							{
+								$sql_pgm_exp = $this->conn->query("select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date = '".$val."'");
+								if(mysqli_num_rows($sql_pgm_exp) == 0)
+								{
+									$act_name_num = $act_name_num+1;
+									$act_name='A'.$act_name_num ;
+									$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".implode(',',$time)."','".$time[0]."','".$val."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
+									$last_id = mysqli_insert_id($this->conn);
+									if($last_id!=''){
+										$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+									}								
 								}
-							  }
-					   	    }
-						  }  
-					  }
-				  }
+							}
+						}
+					}else if($occurrence == '2w')
+					{
+						$weeks = $objtime->countWeeksBetweenDates($startPADate, $endPADate);
+						for($j=0; $j < $weeks; $j++)
+						{						
+							if($j%2 == 0)
+							{
+								$day = date("w", strtotime($startPADate));
+								$day = $day-1;
+								$rem_days = $last_day-$day;
+								$date = new DateTime($startPADate);
+								$date->modify('+'.$rem_days.' day');
+								$endPADate = $date->format('Y-m-d');
+								$week1 = unserialize($ruleStartEnddate['week1']);
+								foreach($week1 as $day=> $time)
+								{
+									$day = $day + 1;
+									if($endPADate > $end_date)
+									{
+										$endPADate = $end_date;
+									}
+									$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate,$endPADate,$day);
+									foreach($dateArr as $val)
+									{
+										$sql_pgm_exp = $this->conn->query("select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date = '".$val."'");
+										if(mysqli_num_rows($sql_pgm_exp) == 0)
+										{
+											$act_name_num = $act_name_num+1;
+											$act_name='A'.$act_name_num ;
+											$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".implode(',',$time)."','".$time[0]."','".$val."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
+											$last_id = mysqli_insert_id($this->conn);
+											if($last_id!=''){
+												$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+											}
+										}
+									}														
+								}
+								$date = new DateTime($endPADate);
+								$date->modify('+2 day');
+								$startPADate = $date->format('Y-m-d');						
+							}else{
+								$day = date("w", strtotime($startPADate));
+								$day = $day-1;
+								$rem_days = $last_day-$day;
+								$date = new DateTime($startPADate);
+								$date->modify('+'.$rem_days.' day');
+								$endPADate = $date->format('Y-m-d');	
+								if(count(unserialize($ruleStartEnddate['week2'])) > 0)
+								{
+									$week2 = unserialize($ruleStartEnddate['week2']);
+									foreach($week2 as $day=> $time)
+									{
+										$day = $day + 1;
+										echo $startPADate."--".$endPADate."--".$day;
+										if($endPADate > $end_date)
+										{
+											$endPADate = $end_date;
+										}
+										$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate,$endPADate,$day);
+										foreach($dateArr as $val)
+										{
+											$sql_pgm_exp = $this->conn->query("select id from special_activity_exception where special_activity_rule_id='".$ruleId."' AND exception_date = '".$val."'");
+											if(mysqli_num_rows($sql_pgm_exp) == 0)
+											{
+												$act_name_num = $act_name_num+1;
+												$act_name='A'.$act_name_num ;
+												$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('".$act_name."', '".$_POST['slctProgram']."','".$_POST['slctCycle']."', '".$_POST['slctSubjectName']."','".$_POST['slctTeacher']."','','".$_POST['slctRoom']."','".implode(',',$time)."','".$time[0]."','".$val."', '".$_POST['special_activity']."' ,'".$currentDateTime."','".$currentDateTime."','') ");
+												$last_id = mysqli_insert_id($this->conn);
+												if($last_id!=''){
+													$result_mapping = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_rule_id, area_id, special_activity_type, duration,special_activity_name, date_add, date_update) VALUES ('".$last_id."','".$ruleId."','".$_POST['slctArea']."','".$_POST['special_activity_type']."','".$duration."','".$_POST['txtActName']."','".$currentDateTime."','".$currentDateTime."') ");
+												}
+											}
+										}														
+									}
+								}
+								$date = new DateTime($endPADate);
+								$date->modify('+2 day');
+								$startPADate = $date->format('Y-m-d');							
+							}
+						}					
+					}
+				}
 				$message="Activities have been updated successfully";
 				$_SESSION['succ_msg'] = $message;
 				header('Location: special_activity_view.php');

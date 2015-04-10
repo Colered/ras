@@ -2885,49 +2885,86 @@ $(document).ready(function() {
 });
 //function to show subjects by program
 function createSpecialAvailRule(){
-	var timeslotMon = ""; var timeslotTue=""; var timeslotWed=""; var timeslotThu=""; var timeslotFri=""; var timeslotSat="";
+	var timeslotMon1 = ""; var timeslotTue1=""; var timeslotWed1=""; var timeslotThu1=""; var timeslotFri1=""; var timeslotSat1="";
+	var timeslotMon2 = ""; var timeslotTue2=""; var timeslotWed2=""; var timeslotThu2=""; var timeslotFri2=""; var timeslotSat2="";
 	var regx = /^[A-Za-z0-9 .]+$/;
     var exceptionDateArr = [];
 	$("input[name='exceptionDate[]']").each(function () {
 		exceptionDateArr.push( this.value );
 	});
+
 	if($('#txtSchd').val()==""){
 		alert('Please select a valid Schedule Name.');
 		return false;
 	}else if($('#fromSpecialAval').val()==""){
 			alert('Please select a valid From Time.');
+			return false;
 	}else if($('#toSpcialAval').val()==""){ 
 			alert('Please select a valid To Time.');
-	}else if($('.tmSlot input:checked').length <= 0){
+			return false;
+	}else if($('#c1chWeek1').val()==""){ 
+			alert('Please select the occurrence.');
+			return false;
+	}
+	var occ1 = $('#c1chWeek1').val();
+	if(occ1 == '1w' || occ1 == '2w')
+	{
+		if($('.tmSlotc1w1 input:checked').length <= 0 && $('.tmSlotc1w2 input:checked').length <= 0){
 			alert('Please select atleast one day and timeslot.');
-	}else{
-		//get the selected values on each days
-		if(($('#Mon:checked').length > 0)  && ($('#duration-sp-mon').val() != null) && ($('#ts-sp-mon').val() != null)){
-				var durationMon = $('select#duration-sp-mon').val();
-				var timeslotMon = $('select#ts-sp-mon').val();
+			return false;
 		}
-		if(($('#Tue:checked').length > 0)  && ($('#duration-sp-tue').val() != null) && ($('#ts-sp-tue').val() != null)){
-				var durationTue = $('select#duration-sp-tue').val();
-				var timeslotTue = $('select#ts-sp-tue').val();
-		}
-		if(($('#Wed:checked').length > 0) && ($('#duration-sp-wed').val() != null) && ($('#ts-sp-wed').val() != null)){
-				var durationWed = $('select#duration-sp-wed').val();
-				var timeslotWed = $('select#ts-sp-wed').val();
-		}
-		if(($('#Thu:checked').length > 0)  && ($('#duration-sp-thu').val() != null) && ($('#ts-sp-thu').val() != null)){
-				var durationThu = $('select#duration-sp-thu').val();
-				var timeslotThu = $('select#ts-sp-thu').val();
-		}
-		if(($('#Fri:checked').length > 0) && ($('#duration-sp-fri').val() != null) && ($('#ts-sp-fri').val() != null)){
-				var durationFri = $('select#duration-sp-fri').val();
-				var timeslotFri = $('select#ts-sp-fri').val();
-		}
-		if(($('#Sat:checked').length > 0) && ($('#duration-sp-sat').val() != null) && ($('#ts-sp-sat').val() != null)){
-				var durationSat = $('select#duration-sp-sat').val();
-				var timeslotSat = $('select#ts-sp-sat').val();
-		}
+	}
+	//get the selected values on each days
+	if(($('#Mon1C1W1:checked').length > 0)  && ($('#duration-sp-mon-w1').val() != null) && ($('#ts-sp-mon-w1').val() != null)){
+			var durationMon1 = $('select#duration-sp-mon-w1').val();
+			var timeslotMon1 = $('select#ts-sp-mon-w1').val();
+	}
+	if(($('#Tue1C1W1:checked').length > 0)  && ($('#duration-sp-tue-w1').val() != null) && ($('#ts-sp-tue-w1').val() != null)){
+			var durationTue1 = $('select#duration-sp-tue-w1').val();
+			var timeslotTue1 = $('select#ts-sp-tue-w1').val();			
+	}
+	if(($('#Wed1C1W1:checked').length > 0) && ($('#duration-sp-wed-w1').val() != null) && ($('#ts-sp-wed-w1').val() != null)){
+			var durationWed1= $('select#duration-sp-wed-w1').val();
+			var timeslotWed1 = $('select#ts-sp-wed-w1').val();
+	}
+	if(($('#Thu1C1W1:checked').length > 0)  && ($('#duration-sp-thu-w1').val() != null) && ($('#ts-sp-thu-w1').val() != null)){
+			var durationThu1 = $('select#duration-sp-thu-w1').val();
+			var timeslotThu1 = $('select#ts-sp-thu-w1').val();
+	}
+	if(($('#Fri1C1W1:checked').length > 0) && ($('#duration-sp-fri-w1').val() != null) && ($('#ts-sp-fri-w1').val() != null)){
+			var durationFri1 = $('select#duration-sp-fri-w1').val();
+			var timeslotFri1 = $('select#ts-sp-fri-w1').val();
+	}
+	if(($('#Sat1C1W1:checked').length > 0) && ($('#duration-sp-sat-w1').val() != null) && ($('#ts-sp-sat-w1').val() != null)){
+			var durationSat1 = $('select#duration-sp-sat-w1').val();
+			var timeslotSat1 = $('select#ts-sp-sat-w1').val();
+	}
+	if(($('#Mon2C1W2:checked').length > 0)  && ($('#duration-sp-mon-w2').val() != null) && ($('#ts-sp-mon-w2').val() != null)){
+			var durationMon2 = $('select#duration-sp-mon-w2').val();
+			var timeslotMon2 = $('select#ts-sp-mon-w2').val();
+	}
+	if(($('#Tue2C1W2:checked').length > 0)  && ($('#duration-sp-tue-w2').val() != null) && ($('#ts-sp-tue-w2').val() != null)){
+			var durationTue2 = $('select#duration-sp-tue-w2').val();
+			var timeslotTue2 = $('select#ts-sp-tue-w2').val();
+	}
+	if(($('#Wed2C1W2:checked').length > 0) && ($('#duration-sp-wed-w2').val() != null) && ($('#ts-sp-wed-w2').val() != null)){
+			var durationWed2= $('select#duration-sp-wed-w2').val();
+			var timeslotWed2 = $('select#ts-sp-wed-w2').val();
+	}
+	if(($('#Thu2C1W2:checked').length > 0)  && ($('#duration-sp-thu-w2').val() != null) && ($('#ts-sp-thu-w2').val() != null)){
+			var durationThu2 = $('select#duration-sp-thu-w2').val();
+			var timeslotThu2 = $('select#ts-sp-thu-w2').val();
+	}
+	if(($('#Fri2C1W2:checked').length > 0) && ($('#duration-sp-fri-w2').val() != null) && ($('#ts-sp-fri-w2').val() != null)){
+			var durationFri2 = $('select#duration-sp-fri-w2').val();
+			var timeslotFri2 = $('select#ts-sp-fri-w2').val();
+	}
+	if(($('#Sat2C1W2:checked').length > 0) && ($('#duration-sp-sat-w2').val() != null) && ($('#ts-sp-sat-w2').val() != null)){
+			var durationSat2 = $('select#duration-sp-sat-w2').val();
+			var timeslotSat2 = $('select#ts-sp-sat-w2').val();
+	}
+	
 		//send ajax request to insert values into DB		
-		if((durationMon!="" && timeslotMon!="" )|| (durationTue!="" && timeslotTue!="" ) || (durationWed!="" && timeslotWed!="" ) || (durationThu!="" && timeslotThu!="" )|| (durationFri!="" && timeslotFri!="" ) || (durationSat!="" && timeslotSat!="" )){
 			$.ajax({
 				url: "./ajax_common.php",
 				type: "POST",
@@ -2937,18 +2974,31 @@ function createSpecialAvailRule(){
 					'end_date': $('#toSpcialAval').val(),
 					'codeBlock': 'createSpecialAvaRule',
 					'exceptionSpecialActDates': exceptionDateArr,
-					'durationMon': durationMon,
-					'timeslotMon': timeslotMon,
-					'durationTue': durationTue,
-					'timeslotTue': timeslotTue,
-					'durationWed': durationWed,
-					'timeslotWed': timeslotWed,
-					'durationThu': durationThu,
-					'timeslotThu': timeslotThu,
-					'durationFri': durationFri,
-					'timeslotFri': timeslotFri,
-					'durationSat': durationSat,
-					'timeslotSat': timeslotSat,
+					'occurrence':occ1,
+					'durationMon1': durationMon1,
+					'timeslotMon1': timeslotMon1,
+					'durationTue1': durationTue1,
+					'timeslotTue1': timeslotTue1,
+					'durationWed1': durationWed1,
+					'timeslotWed1': timeslotWed1,
+					'durationThu1': durationThu1,
+					'timeslotThu1': timeslotThu1,
+					'durationFri1': durationFri1,
+					'timeslotFri1': timeslotFri1,
+					'durationSat1': durationSat1,
+					'timeslotSat1': timeslotSat1,
+					'durationMon2': durationMon2,
+					'timeslotMon2': timeslotMon2,
+					'durationTue2': durationTue2,
+					'timeslotTue2': timeslotTue2,
+					'durationWed2': durationWed2,
+					'timeslotWed2': timeslotWed2,
+					'durationThu2': durationThu2,
+					'timeslotThu2': timeslotThu2,
+					'durationFri2': durationFri2,
+					'timeslotFri2': timeslotFri2,
+					'durationSat2': durationSat2,
+					'timeslotSat2': timeslotSat2
 					},
 				success: function($succ){
 					if($succ==1){
@@ -2961,12 +3011,8 @@ function createSpecialAvailRule(){
 					console.log(errorThrown);
 				}
 			});
-		}else{
-			alert('Please select atleast one timeslot.');
-			}
+		
 	}
-}	
-
 $(document).ready(function() {
 	var max_fields = 10; 
     var wrapper = $(".divException"); 
@@ -3665,3 +3711,41 @@ function PrgmSubSessCloning(){
 		}
 		return false;
 }
+//function to show hide time slot at program cycle page
+$(document).ready(function(){
+	$("#sp-act-ts-mon-w1,#sp-act-ts-tue-w1,#sp-act-ts-wed-w1,#sp-act-ts-thu-w1,#sp-act-ts-fri-w1,#sp-act-ts-sat-w1").hide();
+	$("#sp-act-ts-mon-w2,#sp-act-ts-tue-w2,#sp-act-ts-wed-w2,#sp-act-ts-thu-w2,#sp-act-ts-fri-w2,#sp-act-ts-sat-w2").hide();
+		
+	   $('input[class=special_days]').click(function(){
+            if($(this).attr("value")=="Mon1C1W1"){
+				$("#sp-act-ts-mon-w1").toggle();
+			}else if($(this).attr("value")=="Mon2C1W2"){
+				$("#sp-act-ts-mon-w2").toggle();
+			}
+            if($(this).attr("value")=="Tue1C1W1"){
+				$("#sp-act-ts-tue-w1").toggle();
+            }else if($(this).attr("value")=="Tue2C1W2"){
+				$("#sp-act-ts-tue-w2").toggle();
+            }
+            if($(this).attr("value")=="Wed1C1W1"){
+				$("#sp-act-ts-wed-w1").toggle();
+            }else if($(this).attr("value")=="Wed2C1W2"){
+				$("#sp-act-ts-wed-w2").toggle();
+            }
+			if($(this).attr("value")=="Thu1C1W1"){
+				$("#sp-act-ts-thu-w1").toggle();
+            }else if($(this).attr("value")=="Thu2C1W2"){
+				$("#sp-act-ts-thu-w2").toggle();
+            }
+			if($(this).attr("value")=="Fri1C1W1"){
+				$("#sp-act-ts-fri-w1").toggle();
+            }else if($(this).attr("value")=="Fri2C1W2"){
+				$("#sp-act-ts-fri-w2").toggle();
+            }
+			if($(this).attr("value")=="Sat1C1W1"){
+				$("#sp-act-ts-sat-w1").toggle();
+            }else if($(this).attr("value")=="Sat2C1W2"){
+				$("#sp-act-ts-sat-w2").toggle();
+            }        
+	   });
+});
