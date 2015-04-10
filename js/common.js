@@ -3037,7 +3037,6 @@ function removeSpecialActException($exceptionId, $serialId){
 }
 //showing optional,required field and rule blocks
 function specialActivity(){
-		 listingSpecialAct();
 		 var activity = $( "#special_activity option:selected" ).val();
 		 var activity_type = $( "#special_activity_type" ).val();
 		 if(activity==3 && activity_type==1){
@@ -3199,25 +3198,6 @@ function deleteRuleSpecialActivity($id){
         });
     }
     return false;
-}
-//listing the special activity when selecting the activity (Recess/grup/adhoc) and activity type (onetime/periodic) 
-function listingSpecialAct(){
-	if($('#special_activity').val()!="" && $('#special_activity_type').val()!=""){
-		var activity=$('#special_activity').val();
-		var activity_type=$('#special_activity_type').val();
-		$.ajax({
-				type: "POST",
-				url: "ajax_common.php",
-				data: {
-					'activity': activity,
-					'activity_type': activity_type,
-					'codeBlock': 'special_activity_listing',
-				},
-				success: function($succ){
-					$(".special_act_list").html($succ);
-				}
-           });
-	}
 }
 //validation for the special activity
 $(document).ready(function() {

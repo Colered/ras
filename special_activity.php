@@ -660,7 +660,15 @@ $option_duration='<option value="">--Select--</option>
                 </div>
 			</div>
 			<div class="clear"></div>
-                    <div class="clear"></div>
+			<div style="float:right;">
+					<div class="txtfield" >
+                        <input type="submit" name="btnSave" class="buttonsub" value="<?php echo $btnSubmit;?>">
+                    </div>
+                    <div class="txtfield">
+                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'special_activity_view.php';">
+                    </div>
+			</div>		
+			<div class="clear"></div>
 					<div class="special_act_list">
 					<?php 
 					if(isset($_GET['gp_Edit']) && $_GET['gp_Edit']!=""){?>
@@ -715,12 +723,7 @@ $option_duration='<option value="">--Select--</option>
             	</table>
 					<?php }?>
 					 </div>
-					<div class="txtfield" style="margin-left:500px;">
-                        <input type="submit" name="btnSave" class="buttonsub" value="<?php echo $btnSubmit;?>">
-                    </div>
-                    <div class="txtfield">
-                        <input type="button" name="btnCancel" class="buttonsub" value="Cancel" onclick="location.href = 'special_activity_view.php';">
-                    </div>
+					
 			 </form>
         </div>
         <div class="clear"></div>
