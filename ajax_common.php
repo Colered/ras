@@ -2025,9 +2025,6 @@ switch ($codeBlock) {
 	 break;
 	 case "del_rule_special_activity":
 		if(isset($_POST['rule_id']) && $_POST['rule_id']!=""){
-				//then delete the days associate with rule from table special_activity_rule_day_map
-				$delRuleDay="delete from special_activity_rule_day_map where special_activity_rule_id='".$_POST['rule_id']."'";
-				$qry = mysqli_query($db, $delRuleDay);
 				//delete the rule
 				$delRule="delete from  special_activity_rule where id='".$_POST['rule_id']."'";
 				$qry = mysqli_query($db, $delRule);
