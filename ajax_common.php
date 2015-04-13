@@ -598,6 +598,13 @@ switch ($codeBlock) {
 				$del_pgm_exp_query="delete from program_cycle_exception where program_year_id='".$id."'";
 				$qry_pgm_exp = mysqli_query($db,$del_pgm_exp_query);
 			}
+			//delete the related additional time if exists
+			$slct_qry_add = "select * from program_cycle_additional_day_time where program_year_id='".$id."'";
+			$qry_slct_add = mysqli_query($db,$slct_qry_add);
+			if(mysqli_num_rows($qry_slct_add)>0){
+				$del_pgm_exp_query_add="delete from program_cycle_additional_day_time where program_year_id='".$id."'";
+				$qry_pgm_exp_add = mysqli_query($db,$del_pgm_exp_query_add);
+			}
 			echo 1;
 		}else{
 			echo 0;
