@@ -2547,7 +2547,7 @@ $(document).ready(function() {
 					$(".divAddition1").append('<div class="additionList1"><table id="dataaddtables1" class="additionTbl"><thead><tr><th>Sr. No.</th><th>Additional Date</th><th>Additional Timeslots</th><th>Remove</th></tr></thead><tbody>');	
 				}
 				if(additional_date!=''){
-					$('#dataaddtables1').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate1[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot1[]" id="timeslot'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot1[]" id="act_timeslot'+maxSerialNumVal+'" value=""/></td><td id='+maxSerialNumVal+'><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
+					$('#dataaddtables1').append('<tr><td>'+maxSerialNumVal+'</td><td>'+additional_date+'</td><td style="display:none"><input type="hidden" name="additionDate1[]" id="additionDate'+maxSerialNumVal+'" value="'+additional_date+'"/></td><td id="time_slot'+maxSerialNumVal+'"></td><td style="display:none"><input type="hidden" name="time_slot1[]" id="timeslot'+maxSerialNumVal+'" value=""/><input type="hidden" name="actual_time_slot1[]" id="act_timeslot'+maxSerialNumVal+'" value=""/></td><td id="add_'+maxSerialNumVal+'"><a class="remove_field" onclick="deleteAddProgCycle(0,'+maxSerialNumVal+')">Remove</a></td></tr></tbody></table></div>');
 					$('#additionalDayCal1').val('');
 					$('#timeSlot1').val('');
 				}
@@ -2643,7 +2643,7 @@ $(document).ready(function() {
 function deleteAddProgCycle($sessionId, $serialId){
 	if(confirm("Are you sure you want to delete the Additional Date?")) {
 		if($sessionId == 0){
-			$('#'+$serialId).closest('tr').remove();
+			$('#add_'+$serialId).closest('tr').remove();
 			$('.green, .red').hide();
 		}else{
 			$.ajax({
