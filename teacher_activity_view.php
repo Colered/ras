@@ -146,10 +146,12 @@ function activityFilter()
 								 	$tdColor = ' style="color:#FFFFFF;"';
 								 	$session_array[] = $row['session_id'];
 									$class = "unallocated-activity";
+									$row['reason'] = '';
 								}else{
 								 	$trBColor1 = '';
 								 	$tdColor = '';
 									$class = 'floating-activity';
+									$row['reason'] = '';
 									}
 							 }
 							if($row['session_id'] == '0' && !in_array($row['id'],$result_acts))

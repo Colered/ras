@@ -1974,7 +1974,7 @@ switch ($codeBlock) {
 				$week2[5] = $obj->getTimeslotsFromTimeDur($_POST['durationSat2'],$_POST['timeslotSat2']);			
 			}
 			//print"<pre>";print_r($week1);print_r($week2);die("here");
-			if ($result = mysqli_query($db, "INSERT INTO special_activity_rule VALUES ('', '".$_POST['rule_name']."', '".$_POST['start_date']."', '".$_POST['end_date']."','".$_POST['occurrence']."', '".$weeksDataVal."', '".serialize($week1)."','".serialize($week2)."','".$currentDateTime."', '".$currentDateTime."');")){
+			if ($result = mysqli_query($db, "INSERT INTO special_activity_rule(id,rule_name,start_date,end_date,occurrence,week1,week2,weeks,date_add,date_update) VALUES ('', '".$_POST['rule_name']."', '".$_POST['start_date']."', '".$_POST['end_date']."','".$_POST['occurrence']."','".serialize($week1)."','".serialize($week2)."', '".$weeksDataVal."' ,'".$currentDateTime."', '".$currentDateTime."');")){
 				$special_activity_rule_id = $db->insert_id;
 				if($special_activity_rule_id!=""){
 						if(isset($_POST['exceptionSpecialActDates']) && $_POST['exceptionSpecialActDates']!=""){
