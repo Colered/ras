@@ -726,7 +726,7 @@ $option_duration='<option value="">--Select--</option>
 								<span style="padding-left:10px; cursor:pointer; padding-top:5px;"><img alt="Delete Rule" style="margin-bottom:-3px;" onclick="deleteRuleSpecialActivity(<?php echo $rule_id; ?>);" src="images/delete-rule.png" /></span>
 								</li>
 								<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span><br/>
-								<span>Occurrence: <?php if($data['occurrence'] == '1w') echo 'Weekly';else echo 'Biweekly'; ?></span>
+								<span>Occurrence: <?php if($data['occurrence'] == '1w') echo 'Weekly';else if($data['occurrence'] == '2w') echo 'Biweekly';else echo 'N/A'; ?></span>
 								<ul class="listing">
 									<?php //get the day and timeslot
 									$week1=$week2='';

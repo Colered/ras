@@ -605,6 +605,15 @@ switch ($codeBlock) {
 				$del_pgm_exp_query_add="delete from program_cycle_additional_day_time where program_year_id='".$id."'";
 				$qry_pgm_exp_add = mysqli_query($db,$del_pgm_exp_query_add);
 			}
+			//delete associated sessions
+			$del_sess_query="delete from subject_session where subject_id in(select id from subject where program_year_id ='".$id."')";
+			mysqli_query($db, $del_sess_query);
+			//delete associated subjects
+			$del_sub_query="delete from subject where program_year_id ='".$id."'";
+		    mysqli_query($db, $del_sub_query);
+			//delete associated activities
+			$del_act_query="delete from teacher_activity where program_year_id ='".$id."'";
+		    mysqli_query($db, $del_act_query);
 			echo 1;
 		}else{
 			echo 0;

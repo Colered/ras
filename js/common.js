@@ -2269,7 +2269,7 @@ function deleteCycle($id){
 	if($id==""){
 		alert("Please select a row to delete");
 		return false;
-	}else if(confirm("Are you sure you want to delete this Program Cycles?")) {
+	}else if(confirm("Are you sure you want to delete this Program Cycle? This will delete all the related subjects, sessions and activities")) {
 	    $.ajax({
                 type: "POST",
                 url: "ajax_common.php",
