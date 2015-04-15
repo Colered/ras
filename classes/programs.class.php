@@ -1069,5 +1069,10 @@ class Programs extends Base {
 		$rel = $this->conn->query($sql);
 	}
 	/***************Program Clonning Function************************/
+	public function getMinMaxCyclesInProgram($prog_id){
+    	$result =  $this->conn->query("SELECT min(id) as min_id,max(id) as max_id FROM cycle WHERE program_year_id ='".$prog_id."'");
+		$row = $result->fetch_assoc();
+		return $row['min_id']."-".$row['max_id'];
+    }
 }
 

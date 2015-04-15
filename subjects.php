@@ -89,7 +89,7 @@ if(isset($_GET['edit']) && $_GET['edit'] != ""){
 }else if(isset($_GET['clone']) && $_GET['clone'] != ""){
 	//code while creating the clone
 	$subjectName = isset($_GET['clone']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');
-	$subjectCode = isset($_GET['clone']) ? $row['subject_code'] : (isset($_POST['txtSubjCode']) ? $_POST['txtSubjCode'] : '');
+	//$subjectCode = isset($_GET['clone']) ? $row['subject_code'] : (isset($_POST['txtSubjCode']) ? $_POST['txtSubjCode'] : '');
 	$areaId = isset($_GET['clone']) ? $row['area_id'] : (isset($_POST['slctArea']) ? $_POST['slctArea'] : '');
 	$progId = isset($_GET['clone']) ? $row['program_year_id'] : (isset($_POST['slctProgram']) ? $_POST['slctProgram'] : '');
 }
@@ -226,14 +226,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 <input type="text" class="inp_txt required" id="txtSubjName" maxlength="50" name="txtSubjName" value="<?php echo $subjectName; ?>" <?php echo $disTest; ?>>
                             </div>
                             <div class="clear"></div>
-                            <div class="custtd_left">
-                                <h2>Subject Code <span class="redstar">*</span></h2>
-                            </div>
-                            <div class="txtfield">
-                                <input type="text" class="inp_txt required" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subjectCode; ?>" <?php if (($subjectId != "") && (isset($_GET['clone']) && $_GET['clone'] == "")) {
-    echo "readonly";
-} ?> <?php echo $disTest; ?>>
-                            </div>
+                            <input type="hidden" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php if($subjectCode != "") echo $subjectCode;else{$auto_code = $objTS->subCodeGen(5,'NO_NUMERIC'); echo $auto_code;}?>">
                             <div class="sessionboxSub btnSessiondiv">
                                 <div style="float:left; width:175px;"><input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
 								<input type="button" name="btnCancel" class="buttonsub" <?php echo $disTest; ?> value="Cancel" onclick="location.href = 'subject_view.php';"></div>

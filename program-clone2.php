@@ -10,11 +10,13 @@
 	$obj=new Programs();
 	$result=$obj->getProgramYearsById($prgm_clone_old_id);
 	$result_new=$obj->getProgramYearsById($prgm_clone_new_id);
-	$prgm_yr_new_arr=$prgm_yr_new_name_arr=array();
+	$prgm_yr_new_arr=$prgm_yr_new_name_arr=$prgm_yr_new_cycle_arr=array();
 	while ($data_new = $result_new->fetch_assoc()){
 			$prgm_yr_new_arr[] = $data_new['id'];
 			$prgm_yr_new_name_arr[] = $data_new['name'];
+			//$prgm_yr_new_cycle_arr[] = $data_new['name'];
 	}
+//print"<pre>";	print_r($prgm_yr_new_arr);die;
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
@@ -66,18 +68,43 @@ $(document).ready(function(){
                         <th >ID</th>
 						<th >Program</th>
                         <th >Subject Name</th>
-						<th >Subject Code </th>
+						<th style="display:none;">Subject Code </th>
                         <th >Area</th>
                         <th width="350">Session</th>
 					</tr>
                 </thead>
                 <tbody>
                     <?php
-					 $j=0;$i=1;
+					 $j=0;$cyc_arr1 = array();
 					 while ($data = $result->fetch_assoc()){
-						 $result_subject=$obj->getSubjectByPrgmId($data['id']);
-							while ($data1 = $result_subject->fetch_assoc()){  
-							
+						$cycles = $obj->getProgramCycleList($prgm_yr_new_arr[$j]);
+						while($cyc_arr = $cycles->fetch_assoc())
+						 {
+							$cyc_arr1[] = $cyc_arr['id'];
+						 }
+						$result_subject=$obj->getSubjectByPrgmId($data['id']);
+						while ($data1 = $result_subject->fetch_assoc()){
+							$data_cycle = $obj->getCyclesInProgram($data1['program_year_id']);
+							if($data_cycle == 1)
+							{
+								$cycle_id = 0;
+							}elseif($data_cycle == 2){
+								$cycle_details = $obj->getMinMaxCyclesInProgram($data1['program_year_id']);
+								$cycles_data = explode("-",$cycle_details);
+								if($data1['cycle_no'] == $cycles_data[0])
+									$cycle_id = 0;
+								else
+									$cycle_id = 1;
+							}elseif($data_cycle == 3){
+								$cycle_details = $obj->getMinMaxCyclesInProgram($data1['program_year_id']);
+								$cycles_data = explode("-",$cycle_details);								
+								if($data1['cycle_no'] == $cycles_data[0])
+									$cycle_id = 0;
+								elseif($data1['cycle_no'] == $cycles_data[1])
+									$cycle_id = 2;
+								else
+									$cycle_id = 1;
+							}							
 					 ?>
 						<tr id="<?php echo $data1['id']; ?>">
 							<td class="align-center"><?php echo $data1['id']; ?> 
@@ -90,13 +117,13 @@ $(document).ready(function(){
 								<span id="subject_nm_txt<?php echo $data1['id']; ?>" class="txt-sub"><?php echo $data1['subject_name']; ?> </span>
 								<input type="text" class="ipt" id="subject_name<?php echo $data1['id']; ?>" name="subject_name[]" value="<?php echo $data1['subject_name']; ?>" size="50px" />
 							</td>
-							<td class="align-center">
+							<td class="align-center" style="display:none;">
 								<span id="subject_cd_txt<?php echo $data1['id']; ?>" class=""><?php echo $data1['subject_code'].'-'.$i; ?> </span>
-								<input type="hidden" class="ipt" id="subject_code<?php echo $data1['id']; ?>" name="subject_code[]" value="<?php echo $data1['subject_code'].'-'.$i; ?>"  />
+								<input type="hidden" class="ipt" id="subject_code<?php echo $data1['id']; ?>" name="subject_code[]" value="<?php $auto_code = $obj->subCodeGen(5,'NO_NUMERIC'); echo $auto_code; ?>"  />
 							</td>
 							<td class="align-center"><?php echo $data1['area_name'];?>
 							<input type="hidden"  id="area<?php echo $data1['area_id']; ?>" name="area_id[]" value="<?php echo $data1['area_id']; ?>" />
-							<input type="hidden" id="cycle<?php echo $data1['cycle_no']; ?>" name="cycle_num[]" value="<?php echo $data1['cycle_no']; ?>" />
+							<input type="hidden" id="cycle<?php echo $cyc_arr1[$cycle_id]; ?>" name="cycle_num[]" value="<?php echo $cyc_arr1[$cycle_id]; ?>" />
 							</td>
 							<?php
 								$sessionHtml=''; $count=0;
@@ -123,7 +150,7 @@ $(document).ready(function(){
 							<td class="align-center" width="200">N/A</td>
 							<?php } ?>
 					   </tr>
-					<?php $i++; }?>
+					<?php }?>
 				<?php $j++;}?>
                 </tbody>
             </table>
