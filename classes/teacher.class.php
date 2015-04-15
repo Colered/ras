@@ -19,6 +19,9 @@ class Teacher extends Base {
 		$totalmonthExp = $years*12+$months;
 		$txtEmail = Base::cleanText($_POST['txtEmail']);
 		$txtUname = Base::cleanText($_POST['txtUname']);
+		$teacher_code = Base::cleanText($_POST['txtteacher_code']);
+		$result1 =  $this->conn->query("select email from teacher where teacher_code='".$teacher_code."'");
+        $row_teacher_code = $result1->num_rows;
 		$result =  $this->conn->query("select email from teacher where email='".$txtEmail."'");
         $row_cnt_email = $result->num_rows;
         $result =  $this->conn->query("select username from teacher where username='".$txtUname."'");
@@ -33,8 +36,13 @@ class Teacher extends Base {
             $message="'".$txtUname."' username already exist in database.";
 			$_SESSION['error_msg'] = $message;
 			return 0;
+        }elseif($row_teacher_code > 0){
+            $this->conn->close();
+            $message="'".$txtteacher_code."' Teacher Code already exist in database.";
+			$_SESSION['error_msg'] = $message;
+			return 0;
         }else{
-           $sql = "INSERT INTO teacher (teacher_name,teacher_type, address, dob, doj, gender, designation, qualification, payrate, experience, email, username, date_add, date_update) VALUES ('".$txtPname."','".$proftype."', '".$txtAreaAddress."', '".$dob."', '".$doj."', '".$sex."', '".$txtDegination."', '".$txtQualification."', '".$txtPayrate."', '".$totalmonthExp."', '".$txtEmail."', '".$txtUname."', now(), '')";
+           $sql = "INSERT INTO teacher (teacher_name, teacher_code, teacher_type, address, dob, doj, gender, designation, qualification, payrate, experience, email, username, date_add, date_update) VALUES ('".$txtPname."', '".$teacher_code."', '".$proftype."', '".$txtAreaAddress."', '".$dob."', '".$doj."', '".$sex."', '".$txtDegination."', '".$txtQualification."', '".$txtPayrate."', '".$totalmonthExp."', '".$txtEmail."', '".$txtUname."', now(), '')";
            $rel = $this->conn->query($sql);
            if(!$rel){
               printf("%s\n", $this->conn->error);
@@ -52,6 +60,7 @@ class Teacher extends Base {
 		$edit_id = base64_decode($_POST['form_edit_id']);
 		$proftype = $_POST['proftype'];
 		$txtPname = Base::cleanText($_POST['txtPname']);
+		$teacher_code = Base::cleanText($_POST['txtteacher_code']);
 		$txtAreaAddress = Base::cleanText($_POST['txtAreaAddress']);
 		$dob = ($_POST['dob']<>'')? date("Y-m-d h:i:s", strtotime($_POST['dob'])) : '0000:00:00 00:00:00';
 		$doj = ($_POST['doj']<>'')? date("Y-m-d h:i:s", strtotime($_POST['doj'])) : '0000:00:00 00:00:00';
@@ -62,27 +71,38 @@ class Teacher extends Base {
 		$years = $_POST['years'];
 		$months = $_POST['months'];
 		$totalmonthExp = $years*12+$months;
-		$sql = "UPDATE teacher SET
-						teacher_name='".$txtPname."',
-						teacher_type='".$proftype."',
-						address='".$txtAreaAddress."',
-						dob='".$dob."',
-						doj='".$doj."',
-						gender='".$sex."',
-						designation='".$txtDegination."',
-						qualification='".$txtQualification."',
-						payrate='".$txtPayrate."',
-						experience='".$totalmonthExp."',
-						date_update=now() WHERE id=$edit_id";
-		$rel = $this->conn->query($sql);
-		if(!$rel){
-		  printf("%s\n", $this->conn->error);
-		  exit();
-		}else{
-		 $this->conn->close();
-		 $message="Record has been updated successfully.";
-		 $_SESSION['succ_msg'] = $message;
-		 return 1;
+		//check for the unique teacher code
+		$result1 =  $this->conn->query("select email from teacher where teacher_code='".$teacher_code."' and id!='".$edit_id."'");
+        $row_teacher_code = $result1->num_rows;
+		if($row_teacher_code > 0){
+            $this->conn->close();
+            $message="'".$teacher_code."' Teacher Code already exist in database.";
+			$_SESSION['error_msg'] = $message;
+			return 0;
+        }else{
+			$sql = "UPDATE teacher SET
+							teacher_name='".$txtPname."',
+							teacher_code='".$teacher_code."',
+							teacher_type='".$proftype."',
+							address='".$txtAreaAddress."',
+							dob='".$dob."',
+							doj='".$doj."',
+							gender='".$sex."',
+							designation='".$txtDegination."',
+							qualification='".$txtQualification."',
+							payrate='".$txtPayrate."',
+							experience='".$totalmonthExp."',
+							date_update=now() WHERE id=$edit_id";
+			$rel = $this->conn->query($sql);
+			if(!$rel){
+			  printf("%s\n", $this->conn->error);
+			  exit();
+			}else{
+			 $this->conn->close();
+			 $message="Record has been updated successfully.";
+			 $_SESSION['succ_msg'] = $message;
+			 return 1;
+			}
 		}
 	}
     //funtion to formate teacher experiance

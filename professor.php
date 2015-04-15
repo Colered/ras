@@ -34,6 +34,7 @@ $qualification = isset($_GET['edit'])? $row['qualification'] : (isset($_POST['tx
 $email = isset($_GET['edit'])? $row['email'] : (isset($_POST['txtEmail'])? $_POST['txtEmail'] : '');
 $username = isset($_GET['edit'])? $row['username'] : (isset($_POST['txtUname'])? $_POST['txtUname'] : '');
 $payrate = isset($_GET['edit'])? $row['payrate'] : (isset($_POST['txtPayrate'])? $_POST['txtPayrate'] : '');
+$teacher_code = isset($_GET['edit'])? (isset($row['teacher_code'])? $row['teacher_code'] : ''): (isset($_POST['txtteacher_code'])? $_POST['txtteacher_code'] : '');
 
 $result_type = $objT->getTeachersType();
 
@@ -73,6 +74,14 @@ $(document).ready(function () {
                     </div>
                     <div class="txtfield">
                         <input type="text" class="inp_txt required" id="txtPname" maxlength="50" name="txtPname" value="<?php echo $teachername;?>">
+                    </div>
+                    <div class="clear"></div>
+					
+					 <div class="custtd_left">
+                        <h2>Teacher Code<span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+                        <input type="text" class="inp_txt required" id="txtteacher_code" maxlength="50" name="txtteacher_code" value="<?php echo $teacher_code;?>">
                     </div>
                     <div class="clear"></div>
 

@@ -122,27 +122,26 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$obj = new Teacher();
 				if(isset($_POST['form_edit_id']) && $_POST['form_edit_id']!=''){
 					$resp = $obj->editProfessor();
-					header('Location: teacher_view.php');
-					exit();
+					$action = 'professor.php?edit='.$_POST['form_edit_id'];
 				}else{
 					$resp = $obj->addProfessor();
-					if($resp==0){
-						//return back data to the form
-						echo "<html><head></head><body>";
-						echo "<form name='form55' method='post' action='professor.php'>";
-						reset($_POST);
-						while(list($iname,$ival) = each($_POST)) {
-							echo "<input type='hidden' name='$iname' value='$ival'>";
-						}
-						echo "</form>";
-						echo "</body></html>";
-						echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
-						exit();
-					//end return back
-					}else{
-						header('Location: teacher_view.php');
-						exit();
+				}
+				if($resp==0){
+					//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='form55' method='post' action='$action'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
 					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.form55.submit();}submit_back();</script>";
+					exit();
+				//end return back
+				}else{
+					header('Location: teacher_view.php');
+					exit();
 				}
 		   }else{
 				$message="Please enter all required fields";
