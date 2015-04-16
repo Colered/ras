@@ -195,6 +195,9 @@ if($user_profiles['view'] != '1')
 									<?php if($user_profiles3['view'] != '0'){?>
 										<li>&#8250; <a href="weekly_report.php">Calender Weekly Report</a></li>
 									<?php } ?>
+									<?php //if($user_profiles3['view'] != '0'){?>
+										<li>&#8250; <a href="teacher_activity_report.php">Teacher Ativity Report</a></li>
+									<?php //} ?>
 									</ul>
 								</li>
 						<?php } ?>
