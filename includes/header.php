@@ -182,7 +182,8 @@ if($user_profiles['view'] != '1')
 						<?php $user_profiles1 = getPermissions('teacher_rate_report');
 							  $user_profiles2 = getPermissions('teacher_report');
 							  $user_profiles3 = getPermissions('weekly_report');
-							  if($user_profiles1['view'] != '0' || $user_profiles2['view'] != '0' || $user_profiles3['view'] != '0')
+							  $user_profiles4 = getPermissions('export_session_activity');
+							  if($user_profiles1['view'] != '0' || $user_profiles2['view'] != '0' || $user_profiles3['view'] != '0' || $user_profiles4['view'] != '0')
 							  {?>
 								<li class="upp"><a href="">Reports</a>
 									<ul>
@@ -195,7 +196,7 @@ if($user_profiles['view'] != '1')
 									<?php if($user_profiles3['view'] != '0'){?>
 										<li>&#8250; <a href="weekly_report.php">Calender Weekly Report</a></li>
 									<?php } ?>
-									<?php if($user_profiles2['view'] != '0'){?>
+									<?php if($user_profiles4['view'] != '0'){?>
 										<li>&#8250; <a href="teacher_activity_report.php">Export All Session Activity</a></li>
 									<?php } ?>
 									</ul>

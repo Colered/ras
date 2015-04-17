@@ -183,7 +183,8 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 						<?php $user1 = getPermissions('teacher_rate_report');
 							  $user2 = getPermissions('teacher_report');
 							  $user3 = getPermissions('weekly_report');
-							  if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0')
+							  $user4 = getPermissions('export_session_activity');
+							  if($user1['view'] != '0' || $user2['view'] != '0' || $user3['view'] != '0' || $user4['view'] != '0')
 							  {?>
 									<li class="upp"><a href="#">Reports</a>
 										<ul>
@@ -196,7 +197,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 											<?php if($user3['view'] != '0'){?>	
 													<li>&#8250; <a href="weekly_report.php">Calender Weekly Report</a></li>
 											<?php } ?>
-											<?php if($user2['view'] != '0'){?>	
+											<?php if($user4['view'] != '0'){?>	
 													<li>&#8250; <a href="teacher_activity_report.php">Export All Session Activity</a></li>
 											<?php } ?>
 										</ul>
