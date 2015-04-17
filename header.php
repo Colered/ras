@@ -196,9 +196,9 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 											<?php if($user3['view'] != '0'){?>	
 													<li>&#8250; <a href="weekly_report.php">Calender Weekly Report</a></li>
 											<?php } ?>
-											<?php //if($user3['view'] != '0'){?>	
-													<li>&#8250; <a href="teacher_activity_report.php">Teacher Ativity Report</a></li>
-											<?php //} ?>
+											<?php if($user2['view'] != '0'){?>	
+													<li>&#8250; <a href="teacher_activity_report.php">Export All Session Activity</a></li>
+											<?php } ?>
 										</ul>
 									</li>									
 						<?php } ?>

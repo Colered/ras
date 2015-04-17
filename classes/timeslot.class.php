@@ -84,9 +84,10 @@ class Timeslot extends Base {
 	}
 	//get ts by ts ids
 	public function getTSbyIDs($tsids) {
+		$allTSVal = array();
+		if($tsids!="()"){
 			$tsbyids_query="select * from timeslot where id IN $tsids; ";
 			$q_res = mysqli_query($this->conn, $tsbyids_query);
-			$allTSVal = array();
 			while($tsdata= mysqli_fetch_array($q_res)){
 				//$allTSVal[] = $tsdata['start_time'].'-'.$tsdata['end_time'];
 				$startArr[] = $tsdata['start_time'];
@@ -103,6 +104,7 @@ class Timeslot extends Base {
 			for($i=0;$i<count($startTmpArr);$i++){
                $allTSVal[] = $startTmpArr[$i].'-'.$endTmpArr[$i];
 			}
+		}
 			return $allTSVal;
 	}
 	//function to get time slot start date
