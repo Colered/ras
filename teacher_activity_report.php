@@ -3,10 +3,9 @@ include('header.php');
 $user = getPermissions('export_session_activity');
 if($user['view'] != '1')
 {
-	echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
-	die;
+	  echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
+      die;
 }
-
 $result = '';
 $teachers_result = '';
 $objTime = new Timetable();
