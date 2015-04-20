@@ -43,7 +43,7 @@ $(document).ready(function(){
 			</form>
 				<button onclick="printDiv('printing-div')" class="btn-export" ><span class="btn-export-text" >Print</span></button>
 		</div>
-		<div id="printing-div">
+		<div id="printing-div" class="teach-excel-report-tbl">
             <table id="datatables" class="display printable">
                 <thead>
                     <tr>
