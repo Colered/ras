@@ -2361,7 +2361,7 @@ switch ($codeBlock) {
 						$q_res = mysqli_query($db, $session_data_query);
 						while($data = $q_res->fetch_assoc()){
 							$lastInsertedId = ""; 
-							$SQLSess ="INSERT INTO subject_session(subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update ) VALUES ('".$newSubID."', '".$data['cycle_no']."', '".$data['session_name']."','".$data['order_number']."','".$data['description']."','".$data['case_number']."','".$data['technical_notes']."','".$data['duration']."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')";
+							$SQLSess ="INSERT INTO subject_session(subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update ) VALUES ('".$newSubID."', '".$make_arr[$i]['cycle_no']."', '".$data['session_name']."','".$data['order_number']."','".$data['description']."','".$data['case_number']."','".$data['technical_notes']."','".$data['duration']."','".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')";
 							$result = $db->query($SQLSess);
 							$lastInsertedId = $db->insert_id;
 							if($lastInsertedId)
@@ -2376,7 +2376,7 @@ switch ($codeBlock) {
 									$dRow = $result->fetch_assoc();
 									$actCnt = substr($dRow['name'],1);
 									$actName = 'A'.($actCnt+1);
-									$SQLact = mysqli_query($db, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, session_id, teacher_id, reserved_flag, date_add, forced_flag) VALUES ('".$actName."', '".$make_arr[$i]['program_year_id']."', '".$dataAct['cycle_id']."', '".$newSubID."', '".$lastInsertedId."', '".$dataAct['teacher_id']."', 0, '".date("Y-m-d H:i:s")."', 1)");
+									$SQLact = mysqli_query($db, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id, session_id, teacher_id, reserved_flag, date_add, forced_flag) VALUES ('".$actName."', '".$make_arr[$i]['program_year_id']."', '".$make_arr[$i]['cycle_no']."', '".$newSubID."', '".$lastInsertedId."', '".$dataAct['teacher_id']."', 0, '".date("Y-m-d H:i:s")."', 1)");
 								}
 							}
 						}
