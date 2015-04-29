@@ -226,8 +226,8 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 <input type="text" class="inp_txt required" id="txtSubjName" maxlength="50" name="txtSubjName" value="<?php echo $subjectName; ?>" <?php echo $disTest; ?>>
                             </div>
                             <div class="clear"></div>
-                            <input type="hidden" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php if($subjectCode != "") echo $subjectCode;else{$auto_code = $objTS->subCodeGen(5,'NO_NUMERIC'); echo $auto_code;}?>">
-                            <div class="sessionboxSub btnSessiondiv">
+                            <input type="hidden" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php if($subjectCode != "") echo $subjectCode;?>">
+							<div class="sessionboxSub btnSessiondiv">
                                 <div style="float:left; width:175px;"><input type="submit" name="saveSubject" class="buttonsub" <?php echo $disTest; ?> value="Save Subject">
 								<input type="button" name="btnCancel" class="buttonsub" <?php echo $disTest; ?> value="Cancel" onclick="location.href = 'subject_view.php';"></div>
                             </div>

@@ -239,7 +239,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 		break;
 		case 'addEditSubject':
 		//adding new subject
-			if($_POST['txtSubjName']!="" && $_POST['txtSubjCode']!="" && $_POST['slctProgram']!="" && $_POST['slctCycle']!="" && $_POST['slctArea']!="" ){
+			if($_POST['txtSubjName']!="" && $_POST['slctProgram']!="" && $_POST['slctCycle']!="" && $_POST['slctArea']!="" ){
 				$obj = new Subjects();
 				
 				if(isset($_POST['cloneId']) && $_POST['cloneId']!=''){

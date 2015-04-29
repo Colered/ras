@@ -108,7 +108,7 @@ abstract class Base
 	}
 
 	//function to generate unique subject code
-	public function subCodeGen($length = 8, $flag = 'ALPHANUMERIC')
+	public function subCodeGen($length = 8, $flag = 'ALPHANUMERIC',$area_code,$cycle_no,$pgm_name)
 	{
 		switch ($flag)
 		{
@@ -125,6 +125,8 @@ abstract class Base
 
 		for ($i = 0, $passwd = ''; $i < $length; $i++)
 			$passwd .= substr($str, mt_rand(0, strlen($str) - 1), 1);
-		return $passwd;
+
+		$newpasswd = $area_code." C".$cycle_no." ".$pgm_name." ".$passwd;
+		return $newpasswd;
 	}
 }

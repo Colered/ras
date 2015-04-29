@@ -5,6 +5,16 @@ class Subjects extends Base {
    	}
 	/*function for adding Subject*/
 	public function addSubject() {
+			//generate subject code
+			if($_POST['txtSubjCode'] == '')
+			{
+				$area_code = $this->getAreaCode($_POST['slctArea']);
+				$pgm_name = $this->getProgramName($_POST['slctProgram']);
+				$pgm_data = explode(" ",$pgm_name);
+				$cycle_id = $this->getCycleId($_POST['slctProgram'],$_POST['slctCycle']);
+				$auto_code = $this->subCodeGen(5,'NO_NUMERIC',$area_code,$cycle_id,$pgm_data[0]); 
+				$_POST['txtSubjCode'] = $auto_code;
+			}
 			//check if the subject code already exists
 			$subject_query="select subject_name, subject_code from  subject where subject_code='".Base::cleanText($_POST['txtSubjCode'])."'";
 			$q_res = mysqli_query($this->conn, $subject_query);
@@ -190,6 +200,20 @@ class Subjects extends Base {
 			$_SESSION['error_msg'] = $message;
 		}
 	}
+	public function getAreaCode($area_id){
+		$area_query="select area_code from area where id='".$area_id."'";
+		$area_result= mysqli_query($this->conn, $area_query);
+		$area_data = mysqli_fetch_assoc($area_result);
+		if(count($area_data)>0){
+			return $area_data['area_code'];
+		}
+	}
+	 public function getProgramName($id){
+        $program_query="select * from  program_years where id='".$id."'";
+	    $program_result= mysqli_query($this->conn, $program_query);
+	    $program_data = mysqli_fetch_assoc($program_result);
+		return $program_data['name'];
+	}
 	public function formingArray($dataArr){
 		 $newArr = array();
 			foreach ($dataArr as $key => $val) {
@@ -308,5 +332,35 @@ class Subjects extends Base {
 		$result = $this->conn->query($query);
 		return $result;
 	}
-
+	public function getCycleId($program_id,$cycle_no)
+	{
+		$cycle_id = '';
+		$cyc_sql = "SELECT * FROM cycle WHERE program_year_id ='".$program_id."'";
+		$q_res = mysqli_query($this->conn, $cyc_sql);
+		$data = mysqli_fetch_array($q_res);
+		if($data['no_of_cycle'] == 1)
+		{
+			$cycle_id = 1;
+		}elseif($data['no_of_cycle'] == 2){
+			$cyc_sql_no = "SELECT min(id) as min_id,max(id) as max_id FROM cycle WHERE program_year_id ='".$program_id."'";
+			$q_res_no = mysqli_query($this->conn, $cyc_sql_no);
+			$row = mysqli_fetch_array($q_res_no);
+			if($cycle_no == $row['min_id'])
+				$cycle_id = 1;
+			else
+				$cycle_id = 2;
+		}elseif($data['no_of_cycle'] == 3){
+			$cyc_sql_no = "SELECT min(id) as min_id,max(id) as max_id FROM cycle WHERE program_year_id ='".$program_id."'";
+			$q_res_no = mysqli_query($this->conn, $cyc_sql_no);
+			$row = mysqli_fetch_array($q_res_no);
+			if($cycle_no == $row['min_id'])
+				$cycle_id = 1;
+			elseif($cycle_no == $row['max_id'])
+				$cycle_id = 3;
+			else
+				$cycle_id = 2;
+		}
+		//$cycle_id=isset($cycle_id)?$cycle_id:'';
+		return $cycle_id;
+	}
 }

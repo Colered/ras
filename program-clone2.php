@@ -88,22 +88,35 @@ $(document).ready(function(){
 							if($data_cycle == 1)
 							{
 								$cycle_id = 0;
+								$new_cycle_id = 1;
 							}elseif($data_cycle == 2){
 								$cycle_details = $obj->getMinMaxCyclesInProgram($data1['program_year_id']);
 								$cycles_data = explode("-",$cycle_details);
 								if($data1['cycle_no'] == $cycles_data[0])
+								{
 									$cycle_id = 0;
-								else
+									$new_cycle_id = 1;
+								}
+								else{
 									$cycle_id = 1;
+									$new_cycle_id = 2;
+								}
 							}elseif($data_cycle == 3){
 								$cycle_details = $obj->getMinMaxCyclesInProgram($data1['program_year_id']);
 								$cycles_data = explode("-",$cycle_details);								
 								if($data1['cycle_no'] == $cycles_data[0])
+								{
 									$cycle_id = 0;
-								elseif($data1['cycle_no'] == $cycles_data[1])
+									$new_cycle_id = 1;
+								}
+								elseif($data1['cycle_no'] == $cycles_data[1]){
 									$cycle_id = 2;
-								else
+									$new_cycle_id = 3;
+								}
+								else{
 									$cycle_id = 1;
+									$new_cycle_id = 2;
+								}
 							}							
 					 ?>
 						<tr id="<?php echo $data1['id']; ?>">
@@ -116,14 +129,16 @@ $(document).ready(function(){
 							<td class="align-center">
 								<span id="subject_nm_txt<?php echo $data1['id']; ?>" class="txt-sub"><?php echo $data1['subject_name']; ?> </span>
 								<input type="text" class="ipt" id="subject_name<?php echo $data1['id']; ?>" name="subject_name[]" value="<?php echo $data1['subject_name']; ?>" size="50px" />
-							</td>
-							<td class="align-center" style="display:none;">
-								<span id="subject_cd_txt<?php echo $data1['id']; ?>" class=""><?php echo $data1['subject_code'].'-'.$i; ?> </span>
-								<input type="hidden" class="ipt" id="subject_code<?php echo $data1['id']; ?>" name="subject_code[]" value="<?php $auto_code = $obj->subCodeGen(5,'NO_NUMERIC'); echo $auto_code; ?>"  />
-							</td>
+							</td>							
 							<td class="align-center"><?php echo $data1['area_name'];?>
 							<input type="hidden"  id="area<?php echo $data1['area_id']; ?>" name="area_id[]" value="<?php echo $data1['area_id']; ?>" />
 							<input type="hidden" id="cycle<?php echo $cyc_arr1[$cycle_id]; ?>" name="cycle_num[]" value="<?php echo $cyc_arr1[$cycle_id]; ?>" />
+							</td>
+							<?php $pgm_data = explode(" ",$prgm_yr_new_name_arr[$j]);
+							$pgm_name = $pgm_data['0'];?>
+							<td class="align-center" style="display:none;">
+								<span id="subject_cd_txt<?php echo $data1['id']; ?>" class=""><?php echo $data1['subject_code'].'-'.$i; ?> </span>
+								<input type="hidden" class="ipt" id="subject_code<?php echo $data1['id']; ?>" name="subject_code[]" value="<?php $auto_code = $obj->subCodeGen(5,'NO_NUMERIC',$data1['area_code'],$new_cycle_id,$pgm_name); echo $auto_code; ?>"  />
 							</td>
 							<?php
 								$sessionHtml=''; $count=0;

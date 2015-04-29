@@ -913,7 +913,7 @@ class Programs extends Base {
 	
 	//getting subject data using prgram id 
 	public function getSubjectByPrgmId($id){
-	   $prgm_query="select s.id,s.subject_name,s.subject_code,s.cycle_no,an.area_name,an.id area_id,py.id program_year_id ,py.name program_name from subject s 
+	   $prgm_query="select s.id,s.subject_name,s.subject_code,s.cycle_no,an.area_name,an.id area_id,an.area_code,py.id program_year_id ,py.name program_name from subject s 
 	   								left join area an on an.id=s.area_id
 									left join program_years py on py.id=s.program_year_id
 									where s.program_year_id='".$id."'";
