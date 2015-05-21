@@ -281,28 +281,24 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 								<input type="button" name="btnCancel" class="buttonsub" <?php echo $disTest; ?> value="Cancel" onclick="location.href = 'subject_view.php';"></div>
                             </div>
                             <div class="clear"></div>
-                        </div>
-						<?php if(isset($_GET['edit']) && $_GET['edit'] != "") { ?>
-						<div class="custtd_left" style="margin-left:29px;margin-top:20px;">
-							<h2><strong>Select Allocation Style</strong></h2>
+                        </div>						
+						<div class="custtd_left" <?php echo $disDivCss; ?>>
+							<h2 style="margin-top:20px;"><strong>Create Sessions By</strong></h2>
                         </div>
 						<div>
-							<select name="allocation_style" id="allocation_style" style="height:27px;margin-top:20px; width:150px;margin-left:13px;" onchange="setAllocation(this.value);">
-								<option value="">--Select--</option>
-								<option value="Allocation by Rule">Allocation by Rule</option>
-								<option value="Allocation by Individual">Allocation by Individual</option>
+							<select name="allocation_style" id="allocation_style" style="height:27px;margin-top:20px; width:150px;margin-left:13px;" onchange="setAllocation(this.value);" <?php echo $disSession; ?>>
+								<option value="Allocation by Individual">Individual</option>
+								<option value="Allocation by Rule">Rule</option>								
 							</select>
-						</div>
-						<?php } ?>
-						<div id="rule_div" style="padding:20px; 20px 20px 20px; margin:10px; width:1200px;display:none;" class="sessionData" <?php echo $disDivCss; ?>>
-							<div class="custtd_left">
+						</div>					
+						<div id="rule_div" style="padding-top:20px;margin-top:10px;width:1200px;display:none;" class="sessionData" <?php echo $disDivCss; ?>>
+							<div class="custtd_left" style="width:95px;">
                                 <h2>Session Name<span class="redstar">*</span></h2>
                             </div>
                             <div class="txtfield">
-                                <input type="text" class="inp_txt" id="txtSessName" maxlength="50" name="txtSessName">
+                                <input type="text" class="inp_txt" id="txtSessName" maxlength="50" name="txtSessName" style="width:151px;">
                             </div>
-                            <div class="clear"></div>
-							<div class="custtd_left">
+                            <div class="custtd_left" style="width:65px;margin-left:20px;">
                                 <h2>Teacher<span class="redstar">*</span></h2>
                             </div>
                             <div class="txtfield">
@@ -325,12 +321,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 										?>                       
 								</select>
                             </div>
-                            <div class="clear"></div>
-							<div class="custtd_left">
+                            <div class="custtd_left" style="width:152px;margin-left:20px;">
                                 <h2>Multiple Teacher Reason<span class="redstar">*</span></h2>
                             </div>
 							<div class="txtfield">
-								<select id="reasonRule" name="reasonRule" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
+								<select id="reasonRule" name="reasonRule" class="required" <?php echo $disSession; ?> style="height:27px; width:151px;">
 								 <option value="">--Select--</option>
 								 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Alternate Choices for Session') echo 'selected';?> value="Alternate Choices for Session">Alternate Choices for Session</option>
 								 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Teaching Session Jointly') echo 'selected';?> value="Teaching Session Jointly">Teaching Session Jointly</option>
@@ -342,37 +337,35 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 									<h2><strong>Create A New Rule:-</strong></h2>
 								</div>
 								<div class="clear"></div>
-								<div class="custtd_left">
+								<div class="custtd_left" style="width:180px;">
 									<h2>Schedule Name <span class="redstar">*</span></h2>
 								</div>
 								<div class="txtfield">
 									<input type="text" class="inp_txt" id="txtSchd" maxlength="50" name="txtSchd">
-								</div>
-								<div class="clear"></div>							
-								 <div class="custtd_left">
+								</div>												
+								 <div class="custtd_left" style="margin-left:20px;width:150px;">
 									<h2>Time Interval <span class="redstar">*</span></h2>
 								 </div>
-								<div class="txtfield">
+								<div class="txtfield"style="padding-top:7px;">
 									From:<input type="text" size="12" id="fromSpecialAval" name="fromSpecialAval" />
 									To:<input type="text" size="12" id="toSpcialAval" name="toSpcialAval" />
 								</div>
 								<div class="clear"></div>
-								<div class="custtd_left">
+								<div class="custtd_left" style="width:180px;">
 									<h2>Occurring<span class="redstar">*</span></h2>
 								</div>
 								<div class="txtfield">
 									<select id="c1chWeek1" name="c1chWeek1" class="select1 required" onchange="showCycleDetails(this.value);">
-										<option value="">--Select Week--</option>
 										<option value="1w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '1w') echo 'selected = "selected"';?>>Weekly</option>
 										<option value="2w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '2w') echo 'selected = "selected"';?>>Bi Weekly</option>
 									</select>
 								</div>
 								<div class="clear"></div>
-								<div class="custtd_left" id="custtd_leftc1w1" style="display:none;">
+								<div class="custtd_left" id="custtd_leftc1w1" style="width:180px;">
 									<h2>Days and Timeslot 1st<span class="redstar">*</span></h2>
 								</div>
 								<div class="txtfield" >
-									<div id="c1week1" style="display:none;">
+									<div id="c1week1">
 										<div class="tmSlotc1w1">
 											<input type="checkbox" id="Mon1C1W1" name="day[]"  value="Mon1C1W1" class="special_days"/><span class="dayName"> Mon </span>
 											<div id="sp-act-ts-mon-w1">
@@ -460,7 +453,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 									</div>
 								</div>
 								<div class="clear"></div>
-								<div class="custtd_left" id="custtd_leftc1w2" style="display:none;">
+								<div class="custtd_left" id="custtd_leftc1w2" style="display:none;width:180px;">
 									<h2>Days and Timeslot 2nd<span class="redstar">*</span></h2>
 								</div>
 								<div class="txtfield" >
@@ -559,7 +552,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 							</div>
 							<div class="scheduleBlockAct" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-top:10px;">
 								<div>
-									<span style="font-size:14px"><b>Select A Rule for Creating Sessions :</b></span>
+									<span style="font-size:14px"><b>OR Select A Pre-defined Rule for Creating Sessions :</b></span>
 								</div>
 								<div>
 									<ul id="rules" name="rules" class="rule">
@@ -613,11 +606,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 							</div>
 							<div class="clear"></div>
 							<div class="txtfield" style="margin-top:15px;">
-								<input type="submit" name="btnSave" class="buttonsub" value="Save">
+								<input type="button" name="btnSave" class="buttonsub" value="Save" onclick="checkSubjectForm();">
 							</div>
 							<div class="clear"></div>
 						</div>
-                        <div id="individual_div" style="display:none;" class="sessionData" <?php echo $disDivCss; ?>>
+                        <div id="individual_div" class="sessionData" <?php echo $disDivCss; ?>>
                             <div class="custtd_left">
                                 <h2><strong>Manage Sessions:-</strong></h2>
                             </div>

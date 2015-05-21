@@ -386,17 +386,36 @@ class Subjects extends Base {
 				$timeslotIdsArray = array();
 				$objtime = new Timetable();
 				$last_day = '5';
-				$rulesIds= (isset($_POST['ruleval']) && $_POST['ruleval']!="") ?  $_POST['ruleval']:"";
-				$rulesIds_str = implode(',',$rulesIds);
-				foreach($_POST['ruleval'] as $ruleId)
+				$sql = "select id from subject_session where subject_id ='".$_POST['subjectId']."' and session_name = '".$_POST['txtSessName']."-1"."'";
+				$query = mysqli_query($this->conn,$sql);
+				if(mysqli_affected_rows($this->conn)<=0)
+				{
+					$k=1;
+				}else{
+					$sql_cnt = "select count(id) as total from subject_session where subject_id ='".$_POST['subjectId']."'";
+					$q_cnt = mysqli_query($this->conn, $sql_cnt);
+					$sessCount = mysqli_fetch_assoc($q_cnt);
+					$k = $sessCount['total'] + 1;
+				}
+				$sql = "select subject_rule_id from subject_rule_mapping srm inner join subject_session ss on ss.id = srm.session_id where ss.subject_id='".$_POST['subjectId']."'";
+				$query = mysqli_query($this->conn,$sql);
+				while($ruleIdData = $query->fetch_assoc()){
+					$rule_id_Arr[] = $ruleIdData['subject_rule_id'];
+				}
+				$ruleIdSelected = $_POST['ruleval'];
+				if(!empty($rule_id_Arr))
+					$actual_rule_ids=array_diff($ruleIdSelected,$rule_id_Arr);
+				else
+					$actual_rule_ids=$ruleIdSelected;
+				//print"<pre>";print_r($actual_rule_ids);die;
+				foreach($actual_rule_ids as $ruleId)
 				{
 					$ruleStartEnddate = $this->ruleStartEndDate($ruleId);
 					$startPADate=$ruleStartEnddate['start_date'];
 					$endPADate=$ruleStartEnddate['end_date'];
 					$occurrence=$ruleStartEnddate['occurrence'];
 					$start_date = $startPADate;
-					$end_date = $endPADate;
-					$k=1;			
+					$end_date = $endPADate;										
 					if($occurrence == '1w')
 					{
 						$week1 = unserialize($ruleStartEnddate['week1']);

@@ -687,9 +687,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}
 		break;
 		case "addSessions":
-			//print"<pre>";print_r($_POST);die;
+			if($_POST['txtSessName']=="" || $_POST['slctTeacherRule'] == "" || $_POST['reasonRule'] == "" || $_POST['ruleval'] == "")
+			{
+				$message="Please enter all required fields";
+				$_SESSION['error_msg'] = $message;
+			}else{
 			$obj=new Subjects();
-			$resp = $obj->createSessions();//add new SpecialActivity
+			$resp = $obj->createSessions();
+			}
 			header('Location: subjects.php?edit='.$_POST['subIdEncrypt']);
 		break;
 	}

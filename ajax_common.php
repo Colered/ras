@@ -2460,34 +2460,22 @@ switch ($codeBlock) {
 		}
 	break;
 	case "del_rule_activity":
-		if(isset($_POST['rule_id']) && $_POST['rule_id']!=""){
+		if(isset($_POST['rule_id']) && $_POST['rule_id']!="")
+		{
+			$sql = "select session_id from  subject_rule_mapping where subject_rule_id ='".$_POST['rule_id']."' ";
+			$query = mysqli_query($db,$sql);
+			if(mysqli_affected_rows($db)<=0)
+			{
 				//delete the rule
 				$delRule="delete from subject_rule where id='".$_POST['rule_id']."'";
-				$qry = mysqli_query($db, $delRule);	
-				
-				//getting the session id's
-				$sql = "select session_id from  subject_rule_mapping where subject_rule_id ='".$_POST['rule_id']."' ";
-				$query = mysqli_query($db,$sql);
-				$session_id_arr = array();
-				while($data_session=$query->fetch_assoc()){
-					$session_id_arr[] = $data_session['session_id'];
-				}
-				//deleting the teacher activity and sessions and mapping
-				if(count($session_id_arr)>0){
-					foreach($session_id_arr as $session_id){
-						$sql_delete_teache_act = "delete from teacher_activity where session_id='".$session_id."'";
-						$query_delete = mysqli_query($db,$sql_delete_teache_act);
-						$sql_delete_mapping_act = "delete from subject_session where id='".$session_id."'";
-						$query_delete1 = mysqli_query($db,$sql_delete_mapping_act);
-					}
-				}
-				//delete the subject session mapping from subject_rule_mapping table
-				$delmapRule="delete from subject_rule_mapping where subject_rule_id='".$_POST['rule_id']."'";
-				$qry = mysqli_query($db, $delmapRule);
+				$qry = mysqli_query($db, $delRule);
 				echo 1;
+			}else{
+				echo 0;
+			}			
 		}
     	break;
-		case "delete_rule_associated_teacher_activity":
+	case "delete_rule_associated_teacher_activity":
 		if(isset($_POST['id']) && $_POST['id']!=""){
 			//getting the session id's
 			$sql = "select session_id from  subject_rule_mapping where subject_rule_id ='".$_POST['id']."' ";

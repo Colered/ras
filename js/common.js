@@ -3861,7 +3861,7 @@ function createActivityAvailRule(){
 			alert('Please select atleast one day and timeslot.');
 			return false;
 		}
-	}
+	}	
 	//get the selected values on each days
 	if(($('#Mon1C1W1:checked').length > 0)  && ($('#duration-sp-mon-w1').val() != null) && ($('#ts-sp-mon-w1').val() != null)){
 			var durationMon1 = $('select#duration-sp-mon-w1').val();
@@ -3911,6 +3911,7 @@ function createActivityAvailRule(){
 			var durationSat2 = $('select#duration-sp-sat-w2').val();
 			var timeslotSat2 = $('select#ts-sp-sat-w2').val();
 	}
+	if((timeslotMon1!="" || timeslotTue1!="" || timeslotWed1!="" || timeslotThu1!="" || timeslotFri1!="" || timeslotSat1!="" || timeslotMon2!="" || timeslotTue2!="" || timeslotWed2!="" || timeslotThu2!="" || timeslotFri2!="" || timeslotSat2!="") && (durationMon1!="" || durationTue1!="" || durationWed1!="" || durationThu1!="" || durationFri1!="" || durationSat1!="" || durationMon2!="" || durationTue2!="" || durationWed2!="" || durationThu2!="" || durationFri2!="" || durationSat2!="")){
 	
 		//send ajax request to insert values into DB		
 			$.ajax({
@@ -3958,7 +3959,10 @@ function createActivityAvailRule(){
 				error: function(errorThrown) {
 					console.log(errorThrown);
 				}
-			});		
+			});
+		}else{
+			alert('Please select atleast one duration and timeslot.');
+		}
 	}
 	//Ajax to delete the activity rule
 	function deleteActivityByRule($id){
@@ -3966,7 +3970,7 @@ function createActivityAvailRule(){
 		if($id==""){
 			alert("Please select a rule to delete");
 			return false;
-		}else if(confirm("Are you sure you want to delete rule with associated activities ?")) {
+		}else if(confirm("Are you sure you want to delete the Rule ?")) {
 			$.ajax({
 					type: "POST",
 					url: "ajax_common.php",
@@ -3978,13 +3982,14 @@ function createActivityAvailRule(){
 						if($succ==1){
 							window.location.href = 'subjects.php?edit='+subIdEncrypt;
 						}else{
-							alert("Cannot delete the selected Rule.");
+							alert("Cannot delete the selected Rule, as this rule is associated with sessions and activities.");
 						}
 					}
 			});
 		}
 		return false;
 	}
+	
 	//deleting the special activity which are associate rule
 	$(document).ready(function() {
 	   var subIdEncrypt = $('#subIdEncrypt').val();
@@ -4030,4 +4035,22 @@ function createActivityAvailRule(){
 		 
 	   });
 	});
+	function checkSubjectForm()
+	{
+		if($('#txtSessName').val()==""){
+			alert('Please select a valid Session Name.');
+			return false;
+		}else if($('#slctTeacherRule option:selected').length == 0){
+				alert('Please select a Teacher.');
+				return false;
+		}else if($('#slctTeacherRule option:selected').length > 1 && $('#reasonRule').val()==""){
+				 alert('Please select a reason.');
+				return false;
+		}else if($('.rule_checkbox:checked').length == 0){ 
+				alert('Please select atleast one rule.');
+				return false;
+		}else{
+			$("#subjectForm").submit();
+		}
+	}
 
