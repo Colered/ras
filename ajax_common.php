@@ -1318,7 +1318,7 @@ switch ($codeBlock) {
             exit;
         } else {
             $currentDateTime = date("Y-m-d H:i:s");
-            //if all fields are present CHECK ALL THE VALIDATIONS
+			//if all fields are present CHECK ALL THE VALIDATIONS
             if ((isset($_POST['txtSessionName']) && $_POST['txtSessionName'] != "") && (isset($_POST['slctTeacher']['0']) && $_POST['slctTeacher']['0'] != "") && (isset($_POST['tslot_id']) && $_POST['tslot_id'] != "") && (isset($_POST['duration']) && $_POST['duration'] != "") && (isset($_POST['room_id']) && $_POST['room_id'] != "") && (isset($_POST['subSessDate']) && $_POST['subSessDate'] != "")) {
                 //calculate all TS ids for the activity
                 $tsIdsAll = "";
@@ -2389,6 +2389,129 @@ switch ($codeBlock) {
 			}else{
 				echo 0;
 			}
+	break;
+	case "createActivities":
+		$objT = new Teacher();
+		//check if the rule name exists
+		$rule_query="select id, rule_name from subject_rule where rule_name='".$_POST['rule_name']."'";
+		$q_res = mysqli_query($db, $rule_query);
+		$dataAll = mysqli_fetch_assoc($q_res);
+		if(count($dataAll)>0)
+		{
+			echo '0';
+		}else{
+			//Add the new rule
+			$currentDateTime = date("Y-m-d H:i:s");
+			$obj = new Teacher();
+			$week1 = array();
+			$week2 = array();
+			if($_POST['occurrence'] == '1w')
+			{
+				if((isset($_POST['durationMon1']) && $_POST['durationMon1']) != "" && (isset($_POST['timeslotMon1']) && $_POST['timeslotMon1'] != ""))
+				$week1[0] = $obj->getTimeslotsFromTimeDur($_POST['durationMon1'],$_POST['timeslotMon1']);
+				if((isset($_POST['durationTue1']) && $_POST['durationTue1']) != "" && (isset($_POST['timeslotTue1']) && $_POST['timeslotTue1'] != ""))
+				$week1[1] = $obj->getTimeslotsFromTimeDur($_POST['durationTue1'],$_POST['timeslotTue1']);
+				if((isset($_POST['durationWed1']) && $_POST['durationWed1']) != "" && (isset($_POST['timeslotWed1']) && $_POST['timeslotWed1'] != ""))
+				$week1[2] = $obj->getTimeslotsFromTimeDur($_POST['durationWed1'],$_POST['timeslotWed1']);
+				if((isset($_POST['durationThu1']) && $_POST['durationThu1']) != "" && (isset($_POST['timeslotThu1']) && $_POST['timeslotThu1'] != ""))
+				$week1[3] = $obj->getTimeslotsFromTimeDur($_POST['durationThu1'],$_POST['timeslotThu1']);
+				if((isset($_POST['durationFri1']) && $_POST['durationFri1']) != "" && (isset($_POST['timeslotFri1']) && $_POST['timeslotFri1'] != ""))
+				$week1[4] = $obj->getTimeslotsFromTimeDur($_POST['durationFri1'],$_POST['timeslotFri1']);
+				if((isset($_POST['durationSat1']) && $_POST['durationSat1']) != "" && (isset($_POST['timeslotSat1']) && $_POST['timeslotSat1'] != ""))
+				$week1[5] = $obj->getTimeslotsFromTimeDur($_POST['durationSat1'],$_POST['timeslotSat1']);
+			}else{
+				if((isset($_POST['durationMon1']) && $_POST['durationMon1']) != "" && (isset($_POST['timeslotMon1']) && $_POST['timeslotMon1'] != ""))
+				$week1[0] = $obj->getTimeslotsFromTimeDur($_POST['durationMon1'],$_POST['timeslotMon1']);
+				if((isset($_POST['durationTue1']) && $_POST['durationTue1']) != "" && (isset($_POST['timeslotTue1']) && $_POST['timeslotTue1'] != ""))
+				$week1[1] = $obj->getTimeslotsFromTimeDur($_POST['durationTue1'],$_POST['timeslotTue1']);
+				if((isset($_POST['durationWed1']) && $_POST['durationWed1']) != "" && (isset($_POST['timeslotWed1']) && $_POST['timeslotWed1'] != ""))
+				$week1[2] = $obj->getTimeslotsFromTimeDur($_POST['durationWed1'],$_POST['timeslotWed1']);
+				if((isset($_POST['durationThu1']) && $_POST['durationThu1']) != "" && (isset($_POST['timeslotThu1']) && $_POST['timeslotThu1'] != ""))
+				$week1[3] = $obj->getTimeslotsFromTimeDur($_POST['durationThu1'],$_POST['timeslotThu1']);
+				if((isset($_POST['durationFri1']) && $_POST['durationFri1']) != "" && (isset($_POST['timeslotFri1']) && $_POST['timeslotFri1'] != ""))
+				$week1[4] = $obj->getTimeslotsFromTimeDur($_POST['durationFri1'],$_POST['timeslotFri1']);
+				if((isset($_POST['durationSat1']) && $_POST['durationSat1']) != "" && (isset($_POST['timeslotSat1']) && $_POST['timeslotSat1'] != ""))
+				$week1[5] = $obj->getTimeslotsFromTimeDur($_POST['durationSat1'],$_POST['timeslotSat1']);
+
+				if((isset($_POST['durationMon2']) && $_POST['durationMon2']) != "" && (isset($_POST['timeslotMon2']) && $_POST['timeslotMon2'] != ""))
+				$week2[0] = $obj->getTimeslotsFromTimeDur($_POST['durationMon2'],$_POST['timeslotMon2']);
+				if((isset($_POST['durationTue2']) && $_POST['durationTue2']) != "" && (isset($_POST['timeslotTue2']) && $_POST['timeslotTue2'] != ""))
+				$week2[1] = $obj->getTimeslotsFromTimeDur($_POST['durationTue2'],$_POST['timeslotTue2']);
+				if((isset($_POST['durationWed2']) && $_POST['durationWed2']) != "" && (isset($_POST['timeslotWed2']) && $_POST['timeslotWed2'] != ""))
+				$week2[2] = $obj->getTimeslotsFromTimeDur($_POST['durationWed2'],$_POST['timeslotWed2']);
+				if((isset($_POST['durationThu2']) && $_POST['durationThu2']) != "" && (isset($_POST['timeslotThu2']) && $_POST['timeslotThu2'] != ""))
+				$week2[3] = $obj->getTimeslotsFromTimeDur($_POST['durationThu2'],$_POST['timeslotThu2']);
+				if((isset($_POST['durationFri2']) && $_POST['durationFri2']) != "" && (isset($_POST['timeslotFri2']) && $_POST['timeslotFri2'] != ""))
+				$week2[4] = $obj->getTimeslotsFromTimeDur($_POST['durationFri2'],$_POST['timeslotFri2']);
+				if((isset($_POST['durationSat2']) && $_POST['durationSat2']) != "" && (isset($_POST['timeslotSat2']) && $_POST['timeslotSat2'] != ""))
+				$week2[5] = $obj->getTimeslotsFromTimeDur($_POST['durationSat2'],$_POST['timeslotSat2']);			
+			}
+			//print"<pre>";print_r($week1);print_r($week2);die("here");
+			if ($result = mysqli_query($db, "INSERT INTO subject_rule(subject_id,rule_name,start_date,end_date,occurrence,week1,week2,date_add,date_update) VALUES ('".$_POST['subject_id']."', '".$_POST['rule_name']."', '".$_POST['start_date']."', '".$_POST['end_date']."','".$_POST['occurrence']."','".serialize($week1)."','".serialize($week2)."', '".$currentDateTime."', '".$currentDateTime."');")){
+				$subject_rule_id = $db->insert_id;
+				if($subject_rule_id!=""){						
+						echo '1';
+				}else{
+						echo '0';
+				}
+			}else{
+				echo '0';
+			}
+		}
+	break;
+	case "del_rule_activity":
+		if(isset($_POST['rule_id']) && $_POST['rule_id']!=""){
+				//delete the rule
+				$delRule="delete from subject_rule where id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delRule);	
+				
+				//getting the session id's
+				$sql = "select session_id from  subject_rule_mapping where subject_rule_id ='".$_POST['rule_id']."' ";
+				$query = mysqli_query($db,$sql);
+				$session_id_arr = array();
+				while($data_session=$query->fetch_assoc()){
+					$session_id_arr[] = $data_session['session_id'];
+				}
+				//deleting the teacher activity and sessions and mapping
+				if(count($session_id_arr)>0){
+					foreach($session_id_arr as $session_id){
+						$sql_delete_teache_act = "delete from teacher_activity where session_id='".$session_id."'";
+						$query_delete = mysqli_query($db,$sql_delete_teache_act);
+						$sql_delete_mapping_act = "delete from subject_session where id='".$session_id."'";
+						$query_delete1 = mysqli_query($db,$sql_delete_mapping_act);
+					}
+				}
+				//delete the subject session mapping from subject_rule_mapping table
+				$delmapRule="delete from subject_rule_mapping where subject_rule_id='".$_POST['rule_id']."'";
+				$qry = mysqli_query($db, $delmapRule);
+				echo 1;
+		}
+    	break;
+		case "delete_rule_associated_teacher_activity":
+		if(isset($_POST['id']) && $_POST['id']!=""){
+			//getting the session id's
+			$sql = "select session_id from  subject_rule_mapping where subject_rule_id ='".$_POST['id']."' ";
+			$query = mysqli_query($db,$sql);
+			$session_id_arr = array();
+			while($data_session=$query->fetch_assoc()){
+				$session_id_arr[] = $data_session['session_id'];
+			}
+			//deleting the teacher activity and sessions and mapping
+			if(count($session_id_arr)>0){
+				foreach($session_id_arr as $session_id){
+					$sql_delete_teache_act = "delete from teacher_activity where session_id='".$session_id."'";
+					$query_delete = mysqli_query($db,$sql_delete_teache_act);
+					$sql_delete_mapping_act = "delete from subject_session where id='".$session_id."'";
+					$query_delete1 = mysqli_query($db,$sql_delete_mapping_act);
+				}
+			}
+			//delete the subject session mapping from subject_rule_mapping table
+			$delmapRule="delete from subject_rule_mapping where subject_rule_id='".$_POST['id']."'";
+			$qry = mysqli_query($db, $delmapRule);
+			echo 1;			
+		}else {
+			echo 0;
+		}
 	break;
 }
 ?>

@@ -692,20 +692,38 @@ function checkAvailability($forcing) {
 			$('#txtSessionName').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if($('#slctTeacher').val()=="" || $('#slctTeacher').val()==null){
-			$('#slctTeacher').css('border', 'solid 1px red');
-			var formValid = 1; 
+		if($('#allocation_style').val()=="Allocation by Rule")
+		{
+			if($('#slctTeacherRule').val()=="" || $('#slctTeacherRule').val()==null){
+				$('#slctTeacherRule').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#slctTeacherRule').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
+			if($('#slctTeacherRule option:selected').length > 1 && $('#reasonRule').val()==""){
+				$('#reasonRule').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#reasonRule').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
 		}else{
-			$('#slctTeacher').css('border', '1px solid #C0C0C0');
-			var formValid = 0;
-		}
-		if($('#slctTeacher option:selected').length > 1 && $('#reason').val()==""){
-			$('#reason').css('border', 'solid 1px red');
-			var formValid = 1; 
-		}else{
-			$('#reason').css('border', '1px solid #C0C0C0');
-			var formValid = 0;
-		}
+			if($('#slctTeacherInd').val()=="" || $('#slctTeacherInd').val()==null){
+				$('#slctTeacherInd').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#slctTeacherInd').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
+			if($('#slctTeacherInd option:selected').length > 1 && $('#reasonInd').val()==""){
+				$('#reasonInd').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#reasonInd').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
+		}		
 		if($('#room_id').val()==""){
 			$('#room_id').css('border', 'solid 1px red');
 			var formValid = 1; 
@@ -734,10 +752,19 @@ function checkAvailability($forcing) {
 			$('#subSessDate').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#tslot_id').val()=="") || ($('#subSessDate').datepicker().val()=="") || ($('#slctTeacher option:selected').length > 1 && $('#reason').val()=="")){
+		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#allocation_style').val()=="Allocation by Individual") && ($('#slctTeacherInd').val()=="") || ($('#allocation_style').val()=="Allocation by Rule") && ($('#slctTeacherRule').val()=="") || ($('#subSessDate').datepicker().val()=="") || ($('#slctTeacherInd option:selected').length > 1 && $('#reasonInd').val()=="") || ($('#slctTeacherRule option:selected').length > 1 && $('#reasonRule').val()=="")){
 			var formValid = 1; 
 			return false;
 			}
+		if($('#allocation_style').val()=="Allocation by Rule")
+		{
+			slctTeacher = $('#slctTeacherRule').val();
+			reason = $('#reasonRule').val();
+		}
+		else{
+			slctTeacher = $('#slctTeacherInd').val();
+			reason = $('#reasonInd').val();
+		}
 		//sending an ajax request to check the availability of an activity
 		if(formValid==0){
 			$.ajax({
@@ -754,14 +781,14 @@ function checkAvailability($forcing) {
 						'room_id': $('#room_id').val(),
 						'programId': $('#slctProgram').val(),
 						'areaId': $('#slctArea').val(),
-						'slctTeacher': $('#slctTeacher').val(),
+						'slctTeacher': slctTeacher,
+						'reason':reason,
 						'tslot_id': $('#tslot_id').val(),
 						'duration': $('#duration').val(),
 						'subSessDate': $('#subSessDate').val(),
 						'sess_hidden_id': $('#sess_hidden_id').val(),
 						'act_hidden_id': $('#act_hidden_id').val(),
-						'check_avail_force_entry':$forcing,
-						'reason':$('#reason').val(),
+						'check_avail_force_entry':$forcing,						
 						'codeBlock': 'checkAvailabilitySession',
 					},
 					success: function($succ){
@@ -871,29 +898,56 @@ function addSubjectSession($forcing,$force_flag){
 			$('#duration').css('border', '1px solid #C0C0C0');
 			var formValid = 0;
 		}
-		if($('#slctTeacher').val()=="" || $('#slctTeacher').val()==null){
-			$('#slctTeacher').css('border', 'solid 1px red');
-			var formValid = 1; 
+		if($('#allocation_style').val()=="Allocation by Rule")
+		{
+			if($('#slctTeacherRule').val()=="" || $('#slctTeacherRule').val()==null){
+				$('#slctTeacherRule').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#slctTeacherRule').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
+			if($('#slctTeacherRule option:selected').length > 1 && $('#reasonRule').val()==""){
+				$('#reasonRule').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#reasonRule').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
 		}else{
-			$('#slctTeacher').css('border', '1px solid #C0C0C0');
-			var formValid = 0;
-		}
-		if($('#slctTeacher option:selected').length > 1 && $('#reason').val()==""){
-			$('#reason').css('border', 'solid 1px red');
-			var formValid = 1; 
-		}else{
-			$('#reason').css('border', '1px solid #C0C0C0');
-			var formValid = 0;
-		}
+			if($('#slctTeacherInd').val()=="" || $('#slctTeacherInd').val()==null){
+				$('#slctTeacherInd').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#slctTeacherInd').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
+			if($('#slctTeacherInd option:selected').length > 1 && $('#reasonInd').val()==""){
+				$('#reasonInd').css('border', 'solid 1px red');
+				var formValid = 1; 
+			}else{
+				$('#reasonInd').css('border', '1px solid #C0C0C0');
+				var formValid = 0;
+			}
+		}		
 		if($('#subjectId').val()==""){
 			var formValid = 1;
 			alert('Please save subject info before add to session.');
 			return false;
 		}
-		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher').val()=="") || ($('#slctTeacher option:selected').length > 1 && $('#reason').val()=="")){
+		if(($('#txtSessionName').val()=="") || ($('#duration').val()=="") || ($('#allocation_style').val()=="Allocation by Individual") && ($('#slctTeacherInd').val()=="") || ($('#allocation_style').val()=="Allocation by Rule") && ($('#slctTeacherRule').val()=="") || ($('#slctTeacherInd option:selected').length > 1 && $('#reasonInd').val()=="") || ($('#slctTeacherRule option:selected').length > 1 && $('#reasonRule').val()=="")) {
 			var formValid = 1; 
 			return false;
 			}
+		if($('#allocation_style').val()=="Allocation by Rule")
+		{
+			slctTeacher = $('#slctTeacherRule').val();
+			reason = $('#reasonRule').val();
+		}
+		else{
+			slctTeacher = $('#slctTeacherInd').val();
+			reason = $('#reasonInd').val();
+		}
 		//sending an ajax request to save the session and creating a teacher activity
 		if(formValid==0){
 			$.ajax({
@@ -910,7 +964,7 @@ function addSubjectSession($forcing,$force_flag){
 						'room_id': $('#room_id').val(),
 						'programId': $('#slctProgram').val(),
 						'areaId': $('#slctArea').val(),
-						'slctTeacher': $('#slctTeacher').val(),
+						'slctTeacher': slctTeacher,
 						'tslot_id': $('#tslot_id').val(),
 						'duration': $('#duration').val(),
 						'subSessDate': $('#subSessDate').val(),
@@ -918,7 +972,7 @@ function addSubjectSession($forcing,$force_flag){
 						'act_hidden_id': $('#act_hidden_id').val(),
 						'force_var':$forcing,
 						'force_flag':$force_flag,
-						'reason':$('#reason').val(),
+						'reason':reason,
 						'codeBlock': 'add_sub_session',
 					},
 					success: function($succ){
@@ -3403,24 +3457,43 @@ function getSubjectByProgIDAndCycleID(){
 	}
 }
 $(document).ready(function() {
-	var count = $('#slctTeacher option:selected').length;
+	var count = $('#slctTeacherRule option:selected').length;
 	if(count == 1)
 	{
-		$("#reason").prop('disabled', 'disabled');
+		$("#reasonRule").prop('disabled', 'disabled');
+	}
+	var count = $('#slctTeacherInd option:selected').length;
+	if(count == 1)
+	{
+		$("#reasonInd").prop('disabled', 'disabled');
 	}
 });
-function processSelectBox()
+function processSelectBoxRule()
 {
-	var count = $('#slctTeacher option:selected').length;
+	var count = $('#slctTeacherRule option:selected').length;
 	if(count>1)
 	{
-		 $("#reason").removeAttr("disabled");
-		 $("#reason option:selected").prop("selected", false);
-		 $('#reason option[value="Alternate Choices for Session"]').prop("selected", "selected");
+		 $("#reasonRule").removeAttr("disabled");
+		 $("#reasonRule option:selected").prop("selected", false);
+		 $('#reasonRule option[value="Alternate Choices for Session"]').prop("selected", "selected");
 	}else{
-		$("#reason").attr('disabled', 'disabled');
-		$("#reason option:selected").prop("selected", false);
-		$("#reason option:first").prop("selected", "selected");		
+		$("#reasonRule").attr('disabled', 'disabled');
+		$("#reasonRule option:selected").prop("selected", false);
+		$("#reasonRule option:first").prop("selected", "selected");		
+	}	
+}
+function processSelectBoxInd()
+{
+	var count = $('#slctTeacherInd option:selected').length;
+	if(count>1)
+	{
+		 $("#reasonInd").removeAttr("disabled");
+		 $("#reasonInd option:selected").prop("selected", false);
+		 $('#reasonInd option[value="Alternate Choices for Session"]').prop("selected", "selected");
+	}else{
+		$("#reasonInd").attr('disabled', 'disabled');
+		$("#reasonInd option:selected").prop("selected", false);
+		$("#reasonInd option:first").prop("selected", "selected");		
 	}
 }
 
@@ -3749,3 +3822,212 @@ $(document).ready(function(){
             }        
 	   });
 });
+function setAllocation($allocation)
+{
+	if($allocation == 'Allocation by Rule')
+	{
+		$('#rule_div').show();
+		$('#individual_div').hide();
+	}
+	else
+	{
+		$('#rule_div').hide();
+		$('#individual_div').show();
+	}
+}
+//function to show subjects by program
+function createActivityAvailRule(){
+	var timeslotMon1 = ""; var timeslotTue1=""; var timeslotWed1=""; var timeslotThu1=""; var timeslotFri1=""; var timeslotSat1="";
+	var subIdEncrypt = $('#subIdEncrypt').val();
+	var timeslotMon2 = ""; var timeslotTue2=""; var timeslotWed2=""; var timeslotThu2=""; var timeslotFri2=""; var timeslotSat2="";
+	
+	if($('#txtSchd').val()==""){
+		alert('Please select a valid Schedule Name.');
+		return false;
+	}else if($('#fromSpecialAval').val()==""){
+			alert('Please select a valid From Time.');
+			return false;
+	}else if($('#toSpcialAval').val()==""){ 
+			alert('Please select a valid To Time.');
+			return false;
+	}else if($('#c1chWeek1').val()==""){ 
+			alert('Please select the occurrence.');
+			return false;
+	}
+	var occ1 = $('#c1chWeek1').val();
+	if(occ1 == '1w' || occ1 == '2w')
+	{
+		if($('.tmSlotc1w1 input:checked').length <= 0 && $('.tmSlotc1w2 input:checked').length <= 0){
+			alert('Please select atleast one day and timeslot.');
+			return false;
+		}
+	}
+	//get the selected values on each days
+	if(($('#Mon1C1W1:checked').length > 0)  && ($('#duration-sp-mon-w1').val() != null) && ($('#ts-sp-mon-w1').val() != null)){
+			var durationMon1 = $('select#duration-sp-mon-w1').val();
+			var timeslotMon1 = $('select#ts-sp-mon-w1').val();
+	}
+	if(($('#Tue1C1W1:checked').length > 0)  && ($('#duration-sp-tue-w1').val() != null) && ($('#ts-sp-tue-w1').val() != null)){
+			var durationTue1 = $('select#duration-sp-tue-w1').val();
+			var timeslotTue1 = $('select#ts-sp-tue-w1').val();			
+	}
+	if(($('#Wed1C1W1:checked').length > 0) && ($('#duration-sp-wed-w1').val() != null) && ($('#ts-sp-wed-w1').val() != null)){
+			var durationWed1= $('select#duration-sp-wed-w1').val();
+			var timeslotWed1 = $('select#ts-sp-wed-w1').val();
+	}
+	if(($('#Thu1C1W1:checked').length > 0)  && ($('#duration-sp-thu-w1').val() != null) && ($('#ts-sp-thu-w1').val() != null)){
+			var durationThu1 = $('select#duration-sp-thu-w1').val();
+			var timeslotThu1 = $('select#ts-sp-thu-w1').val();
+	}
+	if(($('#Fri1C1W1:checked').length > 0) && ($('#duration-sp-fri-w1').val() != null) && ($('#ts-sp-fri-w1').val() != null)){
+			var durationFri1 = $('select#duration-sp-fri-w1').val();
+			var timeslotFri1 = $('select#ts-sp-fri-w1').val();
+	}
+	if(($('#Sat1C1W1:checked').length > 0) && ($('#duration-sp-sat-w1').val() != null) && ($('#ts-sp-sat-w1').val() != null)){
+			var durationSat1 = $('select#duration-sp-sat-w1').val();
+			var timeslotSat1 = $('select#ts-sp-sat-w1').val();
+	}
+	if(($('#Mon2C1W2:checked').length > 0)  && ($('#duration-sp-mon-w2').val() != null) && ($('#ts-sp-mon-w2').val() != null)){
+			var durationMon2 = $('select#duration-sp-mon-w2').val();
+			var timeslotMon2 = $('select#ts-sp-mon-w2').val();
+	}
+	if(($('#Tue2C1W2:checked').length > 0)  && ($('#duration-sp-tue-w2').val() != null) && ($('#ts-sp-tue-w2').val() != null)){
+			var durationTue2 = $('select#duration-sp-tue-w2').val();
+			var timeslotTue2 = $('select#ts-sp-tue-w2').val();
+	}
+	if(($('#Wed2C1W2:checked').length > 0) && ($('#duration-sp-wed-w2').val() != null) && ($('#ts-sp-wed-w2').val() != null)){
+			var durationWed2= $('select#duration-sp-wed-w2').val();
+			var timeslotWed2 = $('select#ts-sp-wed-w2').val();
+	}
+	if(($('#Thu2C1W2:checked').length > 0)  && ($('#duration-sp-thu-w2').val() != null) && ($('#ts-sp-thu-w2').val() != null)){
+			var durationThu2 = $('select#duration-sp-thu-w2').val();
+			var timeslotThu2 = $('select#ts-sp-thu-w2').val();
+	}
+	if(($('#Fri2C1W2:checked').length > 0) && ($('#duration-sp-fri-w2').val() != null) && ($('#ts-sp-fri-w2').val() != null)){
+			var durationFri2 = $('select#duration-sp-fri-w2').val();
+			var timeslotFri2 = $('select#ts-sp-fri-w2').val();
+	}
+	if(($('#Sat2C1W2:checked').length > 0) && ($('#duration-sp-sat-w2').val() != null) && ($('#ts-sp-sat-w2').val() != null)){
+			var durationSat2 = $('select#duration-sp-sat-w2').val();
+			var timeslotSat2 = $('select#ts-sp-sat-w2').val();
+	}
+	
+		//send ajax request to insert values into DB		
+			$.ajax({
+				url: "./ajax_common.php",
+				type: "POST",
+				data: {
+					'subject_id': $('#subjectId').val(),
+					'rule_name': $('#txtSchd').val(),
+					'start_date': $('#fromSpecialAval').val(),
+					'end_date': $('#toSpcialAval').val(),
+					'codeBlock': 'createActivities',
+					'occurrence':occ1,
+					'durationMon1': durationMon1,
+					'timeslotMon1': timeslotMon1,
+					'durationTue1': durationTue1,
+					'timeslotTue1': timeslotTue1,
+					'durationWed1': durationWed1,
+					'timeslotWed1': timeslotWed1,
+					'durationThu1': durationThu1,
+					'timeslotThu1': timeslotThu1,
+					'durationFri1': durationFri1,
+					'timeslotFri1': timeslotFri1,
+					'durationSat1': durationSat1,
+					'timeslotSat1': timeslotSat1,
+					'durationMon2': durationMon2,
+					'timeslotMon2': timeslotMon2,
+					'durationTue2': durationTue2,
+					'timeslotTue2': timeslotTue2,
+					'durationWed2': durationWed2,
+					'timeslotWed2': timeslotWed2,
+					'durationThu2': durationThu2,
+					'timeslotThu2': timeslotThu2,
+					'durationFri2': durationFri2,
+					'timeslotFri2': timeslotFri2,
+					'durationSat2': durationSat2,
+					'timeslotSat2': timeslotSat2
+					},
+				success: function($succ){
+					if($succ==1){
+						window.location.href = 'subjects.php?edit='+subIdEncrypt;
+					}else{
+						alert("Rule name already exists.");
+					}
+				},
+				error: function(errorThrown) {
+					console.log(errorThrown);
+				}
+			});		
+	}
+	//Ajax to delete the activity rule
+	function deleteActivityByRule($id){
+		var subIdEncrypt = $('#subIdEncrypt').val();
+		if($id==""){
+			alert("Please select a rule to delete");
+			return false;
+		}else if(confirm("Are you sure you want to delete rule with associated activities ?")) {
+			$.ajax({
+					type: "POST",
+					url: "ajax_common.php",
+					data: {
+						'rule_id': $id,
+						'codeBlock': 'del_rule_activity',
+					},
+					success: function($succ){
+						if($succ==1){
+							window.location.href = 'subjects.php?edit='+subIdEncrypt;
+						}else{
+							alert("Cannot delete the selected Rule.");
+						}
+					}
+			});
+		}
+		return false;
+	}
+	//deleting the special activity which are associate rule
+	$(document).ready(function() {
+	   var subIdEncrypt = $('#subIdEncrypt').val();
+	   $('.rule_checkbox').click(function(){		 
+			if($(this).is(":checked")){
+			}else if($(this).is(":not(:checked)")){
+				var rule_id=$(this).val();
+				var ruleIdActid_str = $('#rule_id_grp').val().split(',');
+				var ruleCheckedValStr="";
+				for (var i = 0; i < ruleIdActid_str.length; i++){
+						if(rule_id===ruleIdActid_str[i]){
+							ruleCheckedValStr="matched";
+							break;
+						}
+				}
+				if(ruleCheckedValStr!=""){
+					if(rule_id==""){
+						alert("Please select a rule to delete");
+						return false;
+					}else if(confirm("Are you sure you want to delete all associated activities with this rule?")) {
+						$.ajax({
+								type: "POST",
+								url: "ajax_common.php",
+								data: {
+									'id': rule_id,
+									'codeBlock': 'delete_rule_associated_teacher_activity',
+								},
+								success: function($succ){
+									if($succ==1){
+										window.location.href = 'subjects.php?edit='+subIdEncrypt;
+										$('.green, .red').hide();
+									}else{
+										alert('Activity can not be deleted');
+										$('input[type=checkbox][value='+rule_id+']').prop('checked', false);
+										$('.green, .red').hide();
+									}
+								}
+						});
+					}
+					return false;
+			  }
+			}
+		 
+	   });
+	});
+

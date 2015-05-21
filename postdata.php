@@ -686,6 +686,12 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				header('Location: program-clone2.php?clone='.$_POST['programId'].'&id='.base64_encode($result[0]));
 			}
 		break;
+		case "addSessions":
+			//print"<pre>";print_r($_POST);die;
+			$obj=new Subjects();
+			$resp = $obj->createSessions();//add new SpecialActivity
+			header('Location: subjects.php?edit='.$_POST['subIdEncrypt']);
+		break;
 	}
 }
 ?>

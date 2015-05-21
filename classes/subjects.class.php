@@ -363,4 +363,222 @@ class Subjects extends Base {
 		//$cycle_id=isset($cycle_id)?$cycle_id:'';
 		return $cycle_id;
 	}
+	public function getActivityAvailRule()
+	{
+		$specia_act_query="select id, rule_name,occurrence,week1,week2, start_date, end_date from subject_rule WHERE rule_name!= '' ORDER BY id DESC";
+		$q_res = mysqli_query($this->conn, $specia_act_query);
+		return $q_res;
+	}
+	public function ruleStartEndDate($rule_id){
+		$query = mysqli_query ($this->conn, "SELECT start_date,end_date,occurrence,week1,week2,subject_id,rule_name FROM  subject_rule WHERE  id='".$rule_id."' ");
+		$data = $query->fetch_assoc();
+		return $data;
+	}
+	public function createSessions()
+	{
+		//print"<pre>";print_r($_POST);die;
+		if($_POST['form_action'] == "addSessions"){
+				$currentDateTime = date("Y-m-d H:i:s");
+				$obj_SA = new SpecialActivity();
+				$last_activity_record=$obj_SA->activityLastReocrd();
+				$act_name_num= ltrim ($last_activity_record['name'],'A');
+				$objTeach = new Teacher();
+				$timeslotIdsArray = array();
+				$objtime = new Timetable();
+				$last_day = '5';
+				$rulesIds= (isset($_POST['ruleval']) && $_POST['ruleval']!="") ?  $_POST['ruleval']:"";
+				$rulesIds_str = implode(',',$rulesIds);
+				foreach($_POST['ruleval'] as $ruleId)
+				{
+					$ruleStartEnddate = $this->ruleStartEndDate($ruleId);
+					$startPADate=$ruleStartEnddate['start_date'];
+					$endPADate=$ruleStartEnddate['end_date'];
+					$occurrence=$ruleStartEnddate['occurrence'];
+					$start_date = $startPADate;
+					$end_date = $endPADate;
+					$k=1;			
+					if($occurrence == '1w')
+					{
+						$week1 = unserialize($ruleStartEnddate['week1']);
+						foreach($week1 as $day=>$time)
+						{
+							$duration = count($time)*15;
+							$day = $day + 1;
+							$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate, $endPADate,$day);
+							//print"<pre>";print_r($dateArr);die;							
+							foreach($dateArr as $val)
+							{
+								//add session data
+								$session_name = $_POST['txtSessName']."-".$k;
+
+								//check the total no of values in subject session to make a new order no
+								$sessCount_query = "select count(id) as total from subject_session";
+								$sessCount_res = mysqli_query($this->conn, $sessCount_query);
+								$sessCount_data = mysqli_fetch_assoc($sessCount_res);
+								$txtOrderNum = $sessCount_data['total'] + 1;
+
+								$result = mysqli_query($this->conn, "INSERT INTO subject_session (subject_id, cycle_no, session_name,order_number,description, case_number, technical_notes, duration, date_add, date_update) VALUES ('".$_POST['subjectId']."', '".$_POST['cycle_id']."','".$session_name."', '".$txtOrderNum."','','','','".$duration."','".$currentDateTime."','".$currentDateTime."') ");
+								$last_session_id = mysqli_insert_id($this->conn);
+								if($last_session_id!=''){
+									$result_mapping = mysqli_query($this->conn, "INSERT INTO subject_rule_mapping(subject_rule_id, session_id, date_add, date_update) VALUES ('".$ruleId."','".$last_session_id."','".$currentDateTime."','".$currentDateTime."') ");
+								}
+								if($_POST['reasonRule'] == 'Teaching Session Jointly')
+								{
+									//add activity data
+									$act_name_num = $act_name_num+1;
+									$act_name='A'.$act_name_num ;
+									$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".implode(',',$_POST['slctTeacherRule'])."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
+									$last_id = mysqli_insert_id($this->conn);
+								}else{
+									foreach($_POST['slctTeacherRule'] as $teacher_id)
+									{
+										//add activity data
+										$act_name_num = $act_name_num+1;
+										$act_name='A'.$act_name_num ;
+										$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".$teacher_id."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
+										$last_id = mysqli_insert_id($this->conn);
+									}
+								}
+								$k++;
+							}
+						}
+					}else if($occurrence == '2w')
+					{
+						$weeks = $objtime->countWeeksBetweenDates($startPADate, $endPADate);
+						for($j=0; $j < $weeks; $j++)
+						{						
+							if($j%2 == 0)
+							{
+								$day = date("w", strtotime($startPADate));
+								$day = $day-1;
+								$rem_days = $last_day-$day;
+								$date = new DateTime($startPADate);
+								$date->modify('+'.$rem_days.' day');
+								$endPADate = $date->format('Y-m-d');
+								$week1 = unserialize($ruleStartEnddate['week1']);
+								foreach($week1 as $day=> $time)
+								{
+									$duration = count($time)*15;
+									$day = $day + 1;
+									if($endPADate > $end_date)
+									{
+										$endPADate = $end_date;
+									}
+									$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate,$endPADate,$day);
+									foreach($dateArr as $val)
+									{
+										//add session data
+										$session_name = $_POST['txtSessName']."-".$k;
+
+										//check the total no of values in subject session to make a new order no
+										$sessCount_query = "select count(id) as total from subject_session";
+										$sessCount_res = mysqli_query($this->conn, $sessCount_query);
+										$sessCount_data = mysqli_fetch_assoc($sessCount_res);
+										$txtOrderNum = $sessCount_data['total'] + 1;
+
+										$result = mysqli_query($this->conn, "INSERT INTO subject_session (subject_id, cycle_no, session_name,order_number,description, case_number, technical_notes, duration, date_add, date_update) VALUES ('".$_POST['subjectId']."', '".$_POST['cycle_id']."','".$session_name."', '".$txtOrderNum."','','','','".$duration."','".$currentDateTime."','".$currentDateTime."') ");
+										$last_session_id = mysqli_insert_id($this->conn);
+										if($last_session_id!=''){
+											$result_mapping = mysqli_query($this->conn, "INSERT INTO subject_rule_mapping(subject_rule_id, session_id, date_add, date_update) VALUES ('".$ruleId."','".$last_session_id."','".$currentDateTime."','".$currentDateTime."') ");
+										}
+										if($_POST['reasonRule'] == 'Teaching Session Jointly')
+										{
+											//add activity data
+											$act_name_num = $act_name_num+1;
+											$act_name='A'.$act_name_num ;
+											$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".implode(',',$_POST['slctTeacherRule'])."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
+											$last_id = mysqli_insert_id($this->conn);
+										}else{
+											foreach($_POST['slctTeacherRule'] as $teacher_id)
+											{
+												//add activity data
+												$act_name_num = $act_name_num+1;
+												$act_name='A'.$act_name_num ;
+												$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".$teacher_id."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
+												$last_id = mysqli_insert_id($this->conn);
+											}
+										}
+									$k++;
+									}														
+								}
+								$date = new DateTime($endPADate);
+								$date->modify('+2 day');
+								$startPADate = $date->format('Y-m-d');						
+							}else{
+								$day = date("w", strtotime($startPADate));
+								$day = $day-1;
+								$rem_days = $last_day-$day;
+								$date = new DateTime($startPADate);
+								$date->modify('+'.$rem_days.' day');
+								$endPADate = $date->format('Y-m-d');	
+								if(count(unserialize($ruleStartEnddate['week2'])) > 0)
+								{
+									$week2 = unserialize($ruleStartEnddate['week2']);
+									foreach($week2 as $day=> $time)
+									{
+										$duration = count($time)*15;
+										$day = $day + 1;
+										if($endPADate > $end_date)
+										{
+											$endPADate = $end_date;
+										}
+										$dateArr = $objtime->getDateForSpecificDayBetweenDates($startPADate,$endPADate,$day);
+										foreach($dateArr as $val)
+										{
+											//add session data
+											$session_name = $_POST['txtSessName']."-".$k;
+
+											//check the total no of values in subject session to make a new order no
+											$sessCount_query = "select count(id) as total from subject_session";
+											$sessCount_res = mysqli_query($this->conn, $sessCount_query);
+											$sessCount_data = mysqli_fetch_assoc($sessCount_res);
+											$txtOrderNum = $sessCount_data['total'] + 1;
+
+											$result = mysqli_query($this->conn, "INSERT INTO subject_session (subject_id, cycle_no, session_name,order_number,description, case_number, technical_notes, duration, date_add, date_update) VALUES ('".$_POST['subjectId']."', '".$_POST['cycle_id']."','".$session_name."', '".$txtOrderNum."','','','','".$duration."','".$currentDateTime."','".$currentDateTime."') ");
+											$last_session_id = mysqli_insert_id($this->conn);
+											if($last_session_id!=''){
+												$result_mapping = mysqli_query($this->conn, "INSERT INTO subject_rule_mapping(subject_rule_id, session_id, date_add, date_update) VALUES ('".$ruleId."','".$last_session_id."','".$currentDateTime."','".$currentDateTime."') ");
+											}
+											if($_POST['reasonRule'] == 'Teaching Session Jointly')
+											{
+												//add activity data
+												$act_name_num = $act_name_num+1;
+												$act_name='A'.$act_name_num ;
+												$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".implode(',',$_POST['slctTeacherRule'])."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
+												$last_id = mysqli_insert_id($this->conn);
+											}else{
+												foreach($_POST['slctTeacherRule'] as $teacher_id)
+												{
+													//add activity data
+													$act_name_num = $act_name_num+1;
+													$act_name='A'.$act_name_num ;
+													$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".$teacher_id."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
+													$last_id = mysqli_insert_id($this->conn);
+												}
+											}
+										$k++;
+										}														
+									}
+								}
+								$date = new DateTime($endPADate);
+								$date->modify('+2 day');
+								$startPADate = $date->format('Y-m-d');							
+							}
+						}					
+					}
+				}			
+			
+		}else{
+			$message="There is some problem while creating sessions. Please try again.";
+			$_SESSION['error_msg'] = $message;
+			header('Location: subjects.php?edit='.$_POST['subIdEncrypt']);
+			return 0;
+		}
+	}
+	public function getRulesBySubjectId($subject_id)
+	{
+		$specia_act_query="select subject_rule_id from subject_rule_mapping srm inner join subject_session ss on ss.id = srm.session_id where ss.subject_id='".$subject_id."'";
+		$q_res = mysqli_query($this->conn, $specia_act_query);
+		return $q_res;
+	}
 }

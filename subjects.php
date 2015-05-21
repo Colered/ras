@@ -2,6 +2,7 @@
 ob_start();
 include('header.php');
 $user = getPermissions('subjects');
+$action="addEditSubject";
 $subjectName = "";
 $subjectCode = "";
 $sessionNum = "";
@@ -28,10 +29,46 @@ $objB = new Buildings();
 $objTS = new Timeslot();
 $activities = array();
 $teachers = array();
+$rule_id_gr_arr=array();
 //room dropdown
 $room_dropDwn = $objB->getRoomsDropDwn();
+$ActivityAvailData = $objS->getActivityAvailRule();
 //timeslot dropdown
 $tslot_dropDwn = $objTS->getTimeSlotStartDateDropDwn();
+$daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
+$option_duration='<option value="">--Select--</option>
+                  <option value="15">00:15</option>
+                  <option value="30">00:30</option>
+                  <option value="45">00:45</option>
+                  <option value="60">01:00</option>
+                  <option value="75">01:15</option>
+                  <option value="90">01:30</option>
+                  <option value="105">01:45</option>
+                  <option value="120">02:00</option>
+                  <option value="135">02:15</option>
+                  <option value="150">02:30</option>
+                  <option value="165">02:45</option>
+                  <option value="180">03:00</option>
+                  <option value="195">03:15</option>
+                  <option value="210">03:30</option>
+                  <option value="225">03:45</option>
+                  <option value="240">04:00</option>
+                  <option value="255">04:15</option>
+                  <option value="270">04:30</option>
+                  <option value="285">04:45</option>
+                  <option value="300">05:00</option>
+                  <option value="315">05:15</option>
+                  <option value="330">05:30</option>
+                  <option value="345">05:45</option>
+                  <option value="300">06:00</option>
+                  <option value="315">06:15</option>
+                  <option value="330">06:30</option>
+                  <option value="345">06:45</option>
+                  <option value="300">07:00</option>
+                  <option value="315">07:15</option>
+                  <option value="330">07:30</option>
+                  <option value="345">07:45</option>
+                  <option value="345">08:00</option>';	
 
 if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $_GET['clone'] != "")) {	
     if(isset($_GET['edit']) && $_GET['edit'] != ""){
@@ -40,9 +77,18 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
 			echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 		}
 		$disTest = "disabled";
+		$action="addSessions";
     	$disFDivCss = "style='opacity:.5; pointer-event:none'";
 		$subIdEncrypt = $_GET['edit'];
     	$subjectId = base64_decode($_GET['edit']);
+		$detail_grp2 = $objS->getRulesBySubjectId($subjectId);		
+		while($data_grp_rule_id = $detail_grp2->fetch_assoc()){
+		 		$rule_id_gr_arr[]=$data_grp_rule_id['subject_rule_id'];
+		}
+		if(count($rule_id_gr_arr)>0){
+		 	$rule_id_gr_uni_arr = array_unique($rule_id_gr_arr);
+			$rule_id_grp_str=implode(',',$rule_id_gr_uni_arr);
+		}
 	}else if(isset($_GET['clone']) && $_GET['clone'] != ""){
 		if($user['clone'] != '1')
 		{
@@ -79,7 +125,7 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
     $disDivCss = "style='opacity:.5; pointer-event:none'";
 }
 //$objT = new Teacher();
-//$rel_teacher = $objT->getTeachers();
+$rel_teacher1 = $objT->getTeachers();
 if(isset($_GET['edit']) && $_GET['edit'] != ""){
 	//code for edit mode
 	$subjectName = isset($_GET['edit']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');
@@ -159,12 +205,15 @@ $sess_description_edit = isset($_GET['edit_actid']) ? $dataSessArr['description'
 				 		<div class="h_title">Subject</div>
 				 <?php } ?>
                 <form name="subjectForm" id="subjectForm" action="postdata.php" method="post">
-                    <input type="hidden" name="form_action" value="addEditSubject" />
+                    <input type="hidden" name="form_action" value="<?php echo $action;?>" />
                     <input type="hidden" id="subjectId" name="subjectId" value="<?php echo $subjectId; ?>" />
                     <input type="hidden" id="subIdEncrypt" name="subIdEncrypt" value="<?php echo $subIdEncrypt; ?>" />
                     <input type="hidden" id="act_hidden_id" name="act_hidden_id" value="<?php echo $act_hidden_id; ?>" />
                     <input type="hidden" id="sess_hidden_id" name="sess_hidden_id" value="<?php echo $sess_hidden_id; ?>" />
 					<input type="hidden" id="cloneId" name="cloneId" value="<?php echo $subIdEncrypt; ?>" />
+					<input type="hidden" id="program_year_id" name="program_year_id" value="<?php echo $progId; ?>" />
+					<input type="hidden" id="cycle_id" name="cycle_id" value="<?php echo $cycle_no; ?>" />
+					<input type="hidden" id="rule_id_grp" name="rule_id_grp" value="<?php echo $rule_id_grp_str; ?>" />
                     <div class="custtable_left">
                         <div class="addSubDiv" <?php echo $disFDivCss; ?>>
                             <div class="custtd_left">
@@ -233,7 +282,342 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                             </div>
                             <div class="clear"></div>
                         </div>
-                        <div class="sessionData" <?php echo $disDivCss; ?>>
+						<?php if(isset($_GET['edit']) && $_GET['edit'] != "") { ?>
+						<div class="custtd_left" style="margin-left:29px;margin-top:20px;">
+							<h2><strong>Select Allocation Style</strong></h2>
+                        </div>
+						<div>
+							<select name="allocation_style" id="allocation_style" style="height:27px;margin-top:20px; width:150px;margin-left:13px;" onchange="setAllocation(this.value);">
+								<option value="">--Select--</option>
+								<option value="Allocation by Rule">Allocation by Rule</option>
+								<option value="Allocation by Individual">Allocation by Individual</option>
+							</select>
+						</div>
+						<?php } ?>
+						<div id="rule_div" style="padding:20px; 20px 20px 20px; margin:10px; width:1200px;display:none;" class="sessionData" <?php echo $disDivCss; ?>>
+							<div class="custtd_left">
+                                <h2>Session Name<span class="redstar">*</span></h2>
+                            </div>
+                            <div class="txtfield">
+                                <input type="text" class="inp_txt" id="txtSessName" maxlength="50" name="txtSessName">
+                            </div>
+                            <div class="clear"></div>
+							<div class="custtd_left">
+                                <h2>Teacher<span class="redstar">*</span></h2>
+                            </div>
+                            <div class="txtfield">
+                                <select id="slctTeacherRule" name="slctTeacherRule[]" class="required" onchange="processSelectBoxRule();" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
+										<?php
+										while ($row = $rel_teacher->fetch_assoc()) {
+											if(in_array($row['id'],$teachers))
+											{
+												$selected = 'selected="selected"';
+											}else{
+												$selected = '';
+											}
+											$teacherName="";
+											$teacherName = $row['teacher_name'];
+											if($row['email'] !=""){
+												$teacherName = $row['teacher_name'] . ' (' . $row['email'] . ')';
+											}
+											echo '<option '.$selected.' value="' . $row['id'] . '">' . $teacherName. '</option>';
+										}
+										?>                       
+								</select>
+                            </div>
+                            <div class="clear"></div>
+							<div class="custtd_left">
+                                <h2>Multiple Teacher Reason<span class="redstar">*</span></h2>
+                            </div>
+							<div class="txtfield">
+								<select id="reasonRule" name="reasonRule" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
+								 <option value="">--Select--</option>
+								 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Alternate Choices for Session') echo 'selected';?> value="Alternate Choices for Session">Alternate Choices for Session</option>
+								 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Teaching Session Jointly') echo 'selected';?> value="Teaching Session Jointly">Teaching Session Jointly</option>
+							   </select>									  
+                             </div>
+							 <div class="clear"></div>
+							 <div style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-top:10px; width:1200px;">
+								<div class="custtd_left">
+									<h2><strong>Create A New Rule:-</strong></h2>
+								</div>
+								<div class="clear"></div>
+								<div class="custtd_left">
+									<h2>Schedule Name <span class="redstar">*</span></h2>
+								</div>
+								<div class="txtfield">
+									<input type="text" class="inp_txt" id="txtSchd" maxlength="50" name="txtSchd">
+								</div>
+								<div class="clear"></div>							
+								 <div class="custtd_left">
+									<h2>Time Interval <span class="redstar">*</span></h2>
+								 </div>
+								<div class="txtfield">
+									From:<input type="text" size="12" id="fromSpecialAval" name="fromSpecialAval" />
+									To:<input type="text" size="12" id="toSpcialAval" name="toSpcialAval" />
+								</div>
+								<div class="clear"></div>
+								<div class="custtd_left">
+									<h2>Occurring<span class="redstar">*</span></h2>
+								</div>
+								<div class="txtfield">
+									<select id="c1chWeek1" name="c1chWeek1" class="select1 required" onchange="showCycleDetails(this.value);">
+										<option value="">--Select Week--</option>
+										<option value="1w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '1w') echo 'selected = "selected"';?>>Weekly</option>
+										<option value="2w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '2w') echo 'selected = "selected"';?>>Bi Weekly</option>
+									</select>
+								</div>
+								<div class="clear"></div>
+								<div class="custtd_left" id="custtd_leftc1w1" style="display:none;">
+									<h2>Days and Timeslot 1st<span class="redstar">*</span></h2>
+								</div>
+								<div class="txtfield" >
+									<div id="c1week1" style="display:none;">
+										<div class="tmSlotc1w1">
+											<input type="checkbox" id="Mon1C1W1" name="day[]"  value="Mon1C1W1" class="special_days"/><span class="dayName"> Mon </span>
+											<div id="sp-act-ts-mon-w1">
+												<div>Duration</div>
+												<select name="duration-sp-mon" id="duration-sp-mon-w1" class="cls-duration-sp-mon" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-mon-w1" name="Mon[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w1">
+										<input type="checkbox" id="Tue1C1W1" name="day[]"  value="Tue1C1W1" class="special_days"/><span class="dayName"> Tue </span>
+											<div id="sp-act-ts-tue-w1">
+												<div>Duration</div>
+												<select name="duration-sp-tue" id="duration-sp-tue-w1" class="cls-duration-sp-tue" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-tue-w1" name="Tue[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w1">
+										<input type="checkbox" id="Wed1C1W1" name="day[]"  value="Wed1C1W1" class="special_days"/><span class="dayName"> Wed </span>
+											<div id="sp-act-ts-wed-w1">
+												<div>Duration</div>
+												<select name="duration-sp-wed" id="duration-sp-wed-w1" class="cls-duration-sp-wed" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-wed-w1" name="Wed[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w1">
+										<input type="checkbox" id="Thu1C1W1" name="day[]"  value="Thu1C1W1" class="special_days"/><span class="dayName"> Thu </span>
+											<div id="sp-act-ts-thu-w1">
+												<div>Duration</div>
+												<select name="duration-sp-thu" id="duration-sp-thu-w1" class="cls-duration-sp-thu" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-thu-w1" name="Thu[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w1">
+										<input type="checkbox" id="Fri1C1W1" name="day[]"  value="Fri1C1W1" class="special_days"/><span class="dayName"> Fri </span>
+											<div id="sp-act-ts-fri-w1">
+												<div>Duration</div>
+												<select name="duration-sp-fri" id="duration-sp-fri-w1" class="cls-duration-sp-fri" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-fri-w1" name="Fri[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w1">
+										<input type="checkbox" id="Sat1C1W1" name="day[]"  value="Sat1C1W1" class="special_days"/><span class="dayName"> Sat </span>
+											<div id="sp-act-ts-sat-w1">
+												<div>Duration</div>
+												<select name="duration-sp-sat" id="duration-sp-sat-w1" class="cls-duration-sp-sat" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-sat-w1" name="Sat[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>		
+										</div>
+									</div>
+								</div>
+								<div class="clear"></div>
+								<div class="custtd_left" id="custtd_leftc1w2" style="display:none;">
+									<h2>Days and Timeslot 2nd<span class="redstar">*</span></h2>
+								</div>
+								<div class="txtfield" >
+									<div id="c1week2" style="display:none;">
+										<div class="tmSlotc1w2">
+											<input type="checkbox" id="Mon2C1W2" name="day[]"  value="Mon2C1W2" class="special_days"/><span class="dayName"> Mon </span>
+											<div id="sp-act-ts-mon-w2">
+												<div>Duration</div>
+												<select name="duration-sp-mon" id="duration-sp-mon-w2" class="cls-duration-sp-mon" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-mon-w2" name="Mon[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w2">
+										<input type="checkbox" id="Tue2C1W2" name="day[]"  value="Tue2C1W2" class="special_days"/><span class="dayName"> Tue </span>
+											<div id="sp-act-ts-tue-w2">
+												<div>Duration</div>
+												<select name="duration-sp-tue" id="duration-sp-tue-w2" class="cls-duration-sp-tue" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-tue-w2" name="Tue[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w2">
+										<input type="checkbox" id="Wed2C1W2" name="day[]"  value="Wed2C1W2" class="special_days"/><span class="dayName"> Wed </span>
+											<div id="sp-act-ts-wed-w2">
+												<div>Duration</div>
+												<select name="duration-sp-wed" id="duration-sp-wed-w2" class="cls-duration-sp-wed" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-wed-w2" name="Wed[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w2">
+										<input type="checkbox" id="Thu2C1W2" name="day[]"  value="Thu2C1W2" class="special_days"/><span class="dayName"> Thu </span>
+											<div id="sp-act-ts-thu-w2">
+												<div>Duration</div>
+												<select name="duration-sp-thu" id="duration-sp-thu-w2" class="cls-duration-sp-thu" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-thu-w2" name="Thu[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w2">
+										<input type="checkbox" id="Fri2C1W2" name="day[]"  value="Fri2C1W2" class="special_days"/><span class="dayName"> Fri </span>
+											<div id="sp-act-ts-fri-w2">
+												<div>Duration</div>
+												<select name="duration-sp-fri" id="duration-sp-fri-w2" class="cls-duration-sp-fri" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-fri-w2" name="Fri[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>
+										</div>
+										<div class="tmSlotc1w2">
+										<input type="checkbox" id="Sat2C1W2" name="day[]"  value="Sat2C1W2" class="special_days"/><span class="dayName"> Sat </span>
+											<div id="sp-act-ts-sat-w2">
+												<div>Duration</div>
+												<select name="duration-sp-sat" id="duration-sp-sat-w2" class="cls-duration-sp-sat" >
+												   <?php echo $option_duration;?>
+												</select>
+												<div>Start Time</div>
+												<select id="ts-sp-sat-w2" name="Sat[]" class="slctSpTs">
+													  <option value="">--Select--</option>
+													  <?php echo $tslot_dropDwn;?>
+												</select>
+											</div>		
+										</div>
+									</div>
+								</div>
+								<div class="clear"></div>
+								<div class="custtable_left div-arrow-img" style="cursor:pointer">
+									<input type="button" name="saveRule" class="buttonsub" value="Create Rule" onclick="createActivityAvailRule();">
+								</div>
+								<div class="clear"></div>
+							</div>
+							<div class="scheduleBlockAct" style="border:1px solid #CCCCCC; padding:20px; 20px 20px 20px; margin-top:10px;">
+								<div>
+									<span style="font-size:14px"><b>Select A Rule for Creating Sessions :</b></span>
+								</div>
+								<div>
+									<ul id="rules" name="rules" class="rule">
+										<table border="1" >
+										   <?php
+											$count = 0;
+											while($data = $ActivityAvailData->fetch_assoc()){
+												$rule_id=$data['id'];
+												if($count%6 == 0){ echo "<tr>"; }  ?>
+													<td class="sched-data"><div style="word-wrap: break-word; overflow-y: scroll; height: 140px;"><li style="min-height:20px;" class="main-title"><input type="checkbox" name="ruleval[]" value="<?php echo $data['id']; ?>"  class="rule_checkbox" <?php if(in_array($data['id'], $rule_id_gr_arr)) { echo "checked"; } ?>/><b>&nbsp;<?php echo $data['rule_name']; ?></b>
+													<span style="padding-left:10px; cursor:pointer; padding-top:5px;"><img alt="Delete Rule" style="margin-bottom:-3px;" onclick="deleteActivityByRule(<?php echo $rule_id; ?>);" src="images/delete-rule.png" /></span>
+													</li>
+													<span>From <?php echo $data['start_date']; ?> to <?php echo $data['end_date']; ?></span><br/>
+													<span>Occurrence: <?php if($data['occurrence'] == '1w') echo 'Weekly';else if($data['occurrence'] == '2w') echo 'Biweekly';else echo 'N/A'; ?></span>
+													<ul class="listing">
+														<?php //get the day and timeslot
+														$week1=$week2='';
+														$tsobj = new Timeslot();
+														if($data['week1']!='' &&  count(unserialize($data['week1']))>0){
+															foreach(unserialize($data['week1']) as $key=> $value)
+															{
+																$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
+																$week1 = $week1." ".'<span style="text-decoration: underline;">'.$daysDBArr[$key].'</span>'.":&nbsp;".implode(',',$timeslotVal)."<br/>";
+															}
+														}
+														if(count(unserialize($data['week2']))>0)
+														{
+															if($data['occurrence'] == '2w'){
+																foreach(unserialize($data['week2']) as $key=> $value)
+																{
+																	$tsobj = new Timeslot();
+																	$timeslotVal = $tsobj->getTSbyIDs('('.implode(',',$value).')');
+																	$week2 = $week2." ".'<span style="text-decoration: underline;">'.$daysDBArr[$key].'</span>'.":&nbsp;".implode(',',$timeslotVal)."<br/>";
+																}
+															}
+														}
+														?>
+														<?php if($data['week1']!=''){?>
+														<li><b>Week1:</b><br/><?php echo $week1;?></li>
+														<?php } if($data['occurrence'] == '2w'){?>
+														<li><b>Week2:</b><br/><?php echo $week2;?></li>
+														<?php } ?>
+													</ul>
+												</div>
+											</td>								
+										<?php $count++; } ?>
+										</tr>
+										</table>
+									</ul>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div class="txtfield" style="margin-top:15px;">
+								<input type="submit" name="btnSave" class="buttonsub" value="Save">
+							</div>
+							<div class="clear"></div>
+						</div>
+                        <div id="individual_div" style="display:none;" class="sessionData" <?php echo $disDivCss; ?>>
                             <div class="custtd_left">
                                 <h2><strong>Manage Sessions:-</strong></h2>
                             </div>
@@ -242,10 +626,6 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                     <h3>Session Name<span class="redstar">*</span></h3>
                                     <input type="text" class="inp_txt_session required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="<?php echo $sess_name_edit; ?>">
                                 </div>
-                                <!--<div class="sessionboxSub" style="width:110px;">
-                                <h3>Order Number<span class="redstar">*</span></h3>
-                                        <input type="text" class="inp_txt_session number required" <?php //echo $disSession;  ?> id="txtOrderNum" maxlength="10" style="width:94px;" name="txtOrderNum" value="">
-                                </div>-->
                                 <div class="sessionboxSub" style="width:108px;">
                                     <h3>Duration(Hr)<span class="redstar">*</span></h3>
                                     <select name="duration" id="duration" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
@@ -289,9 +669,9 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
                                  <div class="sessionboxSub" style="width:150px;">
                                     <h3>Teacher<span class="redstar">*</span></h3>									
-										<select id="slctTeacher" name="slctTeacher[]" class="required" onchange="processSelectBox();" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
+										<select id="slctTeacherInd" name="slctTeacherInd[]" class="required" onchange="processSelectBoxInd();" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
 										<?php
-										while ($row = $rel_teacher->fetch_assoc()) {
+										while ($row = $rel_teacher1->fetch_assoc()) {
 											if(in_array($row['id'],$teachers))
 											{
 												$selected = 'selected="selected"';
@@ -317,7 +697,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
 								<div class="sessionboxSub" style="width:165px;margin-left:5px;">
                                     <h3>Multiple Teacher Reason</h3>									
-										<select id="reason" name="reason" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
+										<select id="reasonInd" name="reason" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
 										 <option value="">--Select--</option>
 										 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Alternate Choices for Session') echo 'selected';?> value="Alternate Choices for Session">Alternate Choices for Session</option>
 										 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Teaching Session Jointly') echo 'selected';?> value="Teaching Session Jointly">Teaching Session Jointly</option>
