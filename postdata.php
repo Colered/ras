@@ -687,7 +687,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}
 		break;
 		case "addSessions":
-			if($_POST['txtSessName']=="" || $_POST['slctTeacherRule'] == "" || $_POST['reasonRule'] == "" || $_POST['ruleval'] == "")
+			if($_POST['txtSessName']=="" || $_POST['slctTeacherRule'] == "" || (count($_POST['slctTeacherRule']) >1 && $_POST['reasonRule'] == "") || $_POST['ruleval'] == "")
 			{
 				$message="Please enter all required fields";
 				$_SESSION['error_msg'] = $message;
