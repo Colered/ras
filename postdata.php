@@ -695,7 +695,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			$obj=new Subjects();
 			$resp = $obj->createSessions();
 			}
-			header('Location: subjects.php?edit='.$_POST['subIdEncrypt']);
+			header('Location: subjects.php?edit='.$_POST['subIdEncrypt'].'&rule=1');
 		break;
 	}
 }

@@ -19,7 +19,6 @@ $cycle_no = "";
 $cycleData = array();
 $disTest = "";
 $disSession = "";
-$disDivCss = "";
 $disFDivCss = "";
 $subIdEncrypt = "";
 $objT = new Teacher();
@@ -70,6 +69,16 @@ $option_duration='<option value="">--Select--</option>
                   <option value="345">07:45</option>
                   <option value="345">08:00</option>';	
 
+if(isset($_REQUEST['rule']) && $_REQUEST['rule'] == 1)
+{
+	$ruleCSS="display:block;";
+	$selectedRule = "selected='selected'";
+}
+else
+{
+	$ruleCSS="display:none;";
+	$selectedRule = "";
+}
 if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $_GET['clone'] != "")) {	
     if(isset($_GET['edit']) && $_GET['edit'] != ""){
 		if($user['edit'] != '1')
@@ -89,13 +98,23 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
 		 	$rule_id_gr_uni_arr = array_unique($rule_id_gr_arr);
 			$rule_id_grp_str=implode(',',$rule_id_gr_uni_arr);
 		}
+		if(isset($_REQUEST['rule']) && $_REQUEST['rule'] == 1)
+		{
+			$disDivCss = "style='display:none;'";
+			$disMainDivCss = "style='display:block;'";
+		}else{
+			$disDivCss = "style='display:block;'";
+			$disMainDivCss = "style='display:block;'";
+		}
+		
 	}else if(isset($_GET['clone']) && $_GET['clone'] != ""){
 		if($user['clone'] != '1')
 		{
 			echo '<script type="text/javascript">window.location = "page_not_found.php"</script>';
 		}
 		$disSession = "disabled";
-   		$disDivCss = "style='opacity:.5; pointer-event:none'";
+   		$disDivCss = "style='opacity:.5; pointer-event:none;display:block;'";
+		$disMainDivCss = "style='opacity:.5; pointer-event:none;display:block;'";
 		$subIdEncrypt = $_GET['clone'];
     	$subjectId = base64_decode($_GET['clone']);
 	}
@@ -122,7 +141,8 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
 		header("location:page_not_found.php");
 	}
     $disSession = "disabled";
-    $disDivCss = "style='opacity:.5; pointer-event:none'";
+    $disDivCss = "style='opacity:.5; pointer-event:none;display:block'";
+	$disMainDivCss = "style='opacity:.5; pointer-event:none;display:block'";
 }
 //$objT = new Teacher();
 $rel_teacher1 = $objT->getTeachers();
@@ -282,16 +302,16 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                             </div>
                             <div class="clear"></div>
                         </div>						
-						<div class="custtd_left" <?php echo $disDivCss; ?>>
+						<div class="custtd_left" <?php echo $disMainDivCss; ?>>
 							<h2 style="margin-top:20px;"><strong>Create Sessions By</strong></h2>
                         </div>
 						<div>
 							<select name="allocation_style" id="allocation_style" style="height:27px;margin-top:20px; width:150px;margin-left:13px;" onchange="setAllocation(this.value);" <?php echo $disSession; ?>>
 								<option value="Allocation by Individual">Individual</option>
-								<option value="Allocation by Rule">Rule</option>								
+								<option value="Allocation by Rule" <?php echo $selectedRule;?>>Rule</option>								
 							</select>
 						</div>					
-						<div id="rule_div" style="padding-top:20px;margin-top:10px;width:1200px;display:none;" class="sessionData" <?php echo $disDivCss; ?>>
+						<div id="rule_div" style="padding-top:20px;margin-top:10px;width:1200px;<?php echo $ruleCSS;?>" class="sessionData" <?php echo $disDivCss; ?>>
 							<div class="custtd_left" style="width:95px;">
                                 <h2>Session Name<span class="redstar">*</span></h2>
                             </div>

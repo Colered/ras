@@ -3951,7 +3951,7 @@ function createActivityAvailRule(){
 					},
 				success: function($succ){
 					if($succ==1){
-						window.location.href = 'subjects.php?edit='+subIdEncrypt;
+						window.location.href = 'subjects.php?edit='+subIdEncrypt+'&rule=1';
 					}else{
 						alert("Rule name already exists.");
 					}
@@ -3980,7 +3980,7 @@ function createActivityAvailRule(){
 					},
 					success: function($succ){
 						if($succ==1){
-							window.location.href = 'subjects.php?edit='+subIdEncrypt;
+							window.location.href = 'subjects.php?edit='+subIdEncrypt+'&rule=1';
 						}else{
 							alert("Cannot delete the selected Rule, as this rule is associated with sessions and activities.");
 						}
@@ -4019,7 +4019,7 @@ function createActivityAvailRule(){
 								},
 								success: function($succ){
 									if($succ==1){
-										window.location.href = 'subjects.php?edit='+subIdEncrypt;
+										window.location.href = 'subjects.php?edit='+subIdEncrypt+'&rule=1';
 										$('.green, .red').hide();
 									}else{
 										alert('Activity can not be deleted');
