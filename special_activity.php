@@ -500,17 +500,16 @@ $option_duration='<option value="">--Select--</option>
                     </div>
                     <div class="txtfield">
                         <select id="c1chWeek1" name="c1chWeek1" class="select1 required" onchange="showCycleDetails(this.value);">
-                            <option value="">--Select Week--</option>
                             <option value="1w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '1w') echo 'selected = "selected"';?>>Weekly</option>
                             <option value="2w" <?php if(isset($occurrence['0']) && $occurrence['0'] == '2w') echo 'selected = "selected"';?>>Bi Weekly</option>
                         </select>
                     </div>
                     <div class="clear"></div>
-                    <div class="custtd_left" id="custtd_leftc1w1" style="display:none;">
+                    <div class="custtd_left" id="custtd_leftc1w1">
                         <h2>Days and Timeslot 1st<span class="redstar">*</span></h2>
                     </div>
 					<div class="txtfield" >
-						<div id="c1week1" style="display:none;">
+						<div id="c1week1">
 							<div class="tmSlotc1w1">
 								<input type="checkbox" id="Mon1C1W1" name="day[]"  value="Mon1C1W1" class="special_days"/><span class="dayName"> Mon </span>
 								<div id="sp-act-ts-mon-w1">
