@@ -1281,21 +1281,39 @@ $(document).ready(function(){
 	   $('input[class=days]').click(function(){
             if($(this).attr("value")=="0"){
 				$("#ts-avail-day-0").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-0").val('');
+   				}
 			}
             if($(this).attr("value")=="1"){
 				$("#ts-avail-day-1").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-1").val('');
+   				}
             }
             if($(this).attr("value")=="2"){
 				$("#ts-avail-day-2").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-2").val('');
+   				}
             }
 			if($(this).attr("value")=="3"){
 				$("#ts-avail-day-3").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-3").val('');
+   				}
             }
 			if($(this).attr("value")=="4"){
 				$("#ts-avail-day-4").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-4").val('');
+   				}
             }
 			if($(this).attr("value")=="5"){
 				$("#ts-avail-day-5").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-5").val('');
+   				}
             }
 	   });
 });
@@ -1313,23 +1331,54 @@ $(document).ready(function() {
 			alert('Please select atleast one day and timeslot.');
 	}else{
 		//get the selected values on each days
-		if(($('#Mon:checked').length > 0) && ($('#ts-avail-day-0').val() != null)){
-				var timeslotMon = '{' +$('select#ts-avail-day-0').val()+ '}';
+		if($('#Mon:checked').length > 0){
+				if($('#ts-avail-day-0').val()==null){
+					alert('please select the timeslot of monday');
+					return false;
+				}else{
+					var timeslotMon = '{' +$('select#ts-avail-day-0').val()+ '}';
+				}
 		}
-		if(($('#Tue:checked').length > 0) && ($('#ts-avail-day-1').val() != null)){
-			var timeslotTue = '{' +$('select#ts-avail-day-1').val()+ '}';
+		if($('#Tue:checked').length > 0) {
+				if($('#ts-avail-day-1').val()==null){
+					alert('please select the timeslot of tuesday');
+					return false;
+				}else{
+					var timeslotTue = '{' +$('select#ts-avail-day-1').val()+ '}';
+				}
+			
 		}
-		if(($('#Wed:checked').length > 0) && ($('#ts-avail-day-2').val() != null)){
-			var timeslotWed = '{' +$('select#ts-avail-day-2').val()+ '}';
+		if($('#Wed:checked').length > 0) {
+				if($('#ts-avail-day-2').val()==null){
+					alert('please select the timeslot of wednesday');
+					return false;
+				}else{
+					var timeslotWed = '{' +$('select#ts-avail-day-2').val()+ '}';
+				}
 		}
-		if(($('#Thu:checked').length > 0) && ($('#ts-avail-day-3').val() != null)){
-			var timeslotThu = '{' +$('select#ts-avail-day-3').val()+ '}';
+		if($('#Thu:checked').length > 0){
+				if($('#ts-avail-day-3').val()==null){
+					alert('please select the timeslot of thursday');
+					return false;
+				}else{
+					var timeslotThu = '{' +$('select#ts-avail-day-3').val()+ '}';
+				}
 		}
-		if(($('#Fri:checked').length > 0) && ($('#ts-avail-day-4').val() != null)){
-			var timeslotFri = '{' +$('select#ts-avail-day-4').val()+ '}';
+		if($('#Fri:checked').length > 0){
+				if($('#ts-avail-day-4').val()==null){
+					alert('please select the timeslot of friday');
+					return false;
+				}else{
+					var timeslotFri = '{' +$('select#ts-avail-day-4').val()+ '}';
+				}
 		}
-		if(($('#Sat:checked').length > 0) && ($('#ts-avail-day-5').val() != null)){
-			var timeslotSat = '{' +$('select#ts-avail-day-5').val()+ '}';
+		if($('#Sat:checked').length > 0){
+				if($('#ts-avail-day-5').val()==null){
+					alert('please select the timeslot of saturday');
+					return false;
+				}else{
+					var timeslotSat = '{' +$('select#ts-avail-day-5').val()+ '}';
+				}
 		}							
 		//send ajax request to insert values into DB		
  if(timeslotMon!="" || timeslotTue!="" || timeslotWed!="" || timeslotThu!="" || timeslotFri!="" || timeslotSat!=""){				
@@ -1491,45 +1540,63 @@ $(document).ready(function(){
 	   $('input[class=days]').click(function(){
             if($(this).attr("value")=="Mon"){
 				$("#ts-avail-mon").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-mon").val('');
+   				}
 			}
             if($(this).attr("value")=="Tue"){
 				$("#ts-avail-tue").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-tue").val('');
+   				}
             }
             if($(this).attr("value")=="Wed"){
 				$("#ts-avail-wed").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-wed").val('');
+   				}
             }
 			if($(this).attr("value")=="Thu"){
 				$("#ts-avail-thu").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-thu").val('');
+   				}
             }
 			if($(this).attr("value")=="Fri"){
 				$("#ts-avail-fri").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-fri").val('');
+   				}
             }
 			if($(this).attr("value")=="Sat"){
 				$("#ts-avail-sat").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-sat").val('');
+   				}
             }
 	   });
 });
 $(document).ready(function(){
 	$(".sp-act-ts-mon,.sp-act-ts-tue,.sp-act-ts-wed,.sp-act-ts-thu,.sp-act-ts-fri,.sp-act-ts-sat").hide();
 	   $('input[class=days]').click(function(){
-            if($(this).attr("value")=="Mon"){
+			if($(this).attr("value")=="Mon"){
 				$(".sp-act-ts-mon").toggle();
 			}
             if($(this).attr("value")=="Tue"){
 				$(".sp-act-ts-tue").toggle();
-            }
+			 }
             if($(this).attr("value")=="Wed"){
 				$(".sp-act-ts-wed").toggle();
-            }
+			}
 			if($(this).attr("value")=="Thu"){
 				$(".sp-act-ts-thu").toggle();
-            }
+			}
 			if($(this).attr("value")=="Fri"){
 				$(".sp-act-ts-fri").toggle();
-            }
+			}
 			if($(this).attr("value")=="Sat"){
 				$(".sp-act-ts-sat").toggle();
-            }
+			}
 	   });
 });
 //function to show subjects by program
@@ -1551,23 +1618,54 @@ function createTeachAvailRule(){
 			alert('Please select atleast one day and timeslot.');
 	}else{
 		//get the selected values on each days
-		if(($('#Mon:checked').length > 0) && ($('#ts-avail-mon').val() != null)){
-				var timeslotMon = '{' +$('select#ts-avail-mon').val()+ '}';
+		if($('#Mon:checked').length > 0){
+				if($('#ts-avail-mon').val() == null){
+					alert('please select the timeslot of monday');
+					return false;
+				}else{
+					var timeslotMon = '{' +$('select#ts-avail-mon').val()+ '}';
+				}
 		}
-		if(($('#Tue:checked').length > 0) && ($('#ts-avail-tue').val() != null)){
-			var timeslotTue = '{' +$('select#ts-avail-tue').val()+ '}';
+		if($('#Tue:checked').length > 0){
+				if($('#ts-avail-tue').val() == null){
+					alert('please select the timeslot of tuesday');
+					return false;
+				}else{
+					var timeslotTue = '{' +$('select#ts-avail-tue').val()+ '}';
+				}
 		}
-		if(($('#Wed:checked').length > 0) && ($('#ts-avail-wed').val() != null)){
-			var timeslotWed = '{' +$('select#ts-avail-wed').val()+ '}';
+		if($('#Wed:checked').length > 0){
+				if($('#ts-avail-wed').val() == null){
+					alert('please select the timeslot of wednesday');
+					return false;
+				}else{
+					var timeslotWed = '{' +$('select#ts-avail-wed').val()+ '}';
+				}
 		}
-		if(($('#Thu:checked').length > 0) && ($('#ts-avail-thu').val() != null)){
-			var timeslotThu = '{' +$('select#ts-avail-thu').val()+ '}';
+		if($('#Thu:checked').length > 0){
+				if($('#ts-avail-thu').val() == null){
+					alert('please select the timeslot of thursday');
+					return false;
+				}else{
+					var timeslotThu = '{' +$('select#ts-avail-thu').val()+ '}';
+				}
 		}
-		if(($('#Fri:checked').length > 0) && ($('#ts-avail-fri').val() != null)){
-			var timeslotFri = '{' +$('select#ts-avail-fri').val()+ '}';
+		if($('#Fri:checked').length > 0){
+				if($('#ts-avail-fri').val() == null){
+					alert('please select the timeslot of friday');
+					return false;
+				}else{
+					var timeslotFri = '{' +$('select#ts-avail-fri').val()+ '}';
+				}
+			
 		}
-		if(($('#Sat:checked').length > 0) && ($('#ts-avail-sat').val() != null)){
-			var timeslotSat = '{' +$('select#ts-avail-sat').val()+ '}';
+		if($('#Sat:checked').length > 0){
+				if($('#ts-avail-sat').val() == null){
+					alert('please select the timeslot of saturday');
+					return false;
+				}else{
+					var timeslotSat = '{' +$('select#ts-avail-sat').val()+ '}';
+				}
 		}
 		//send ajax request to insert values into DB		
 		if(timeslotMon!="" || timeslotTue!="" || timeslotWed!="" || timeslotThu!="" || timeslotFri!="" || timeslotSat!=""){
