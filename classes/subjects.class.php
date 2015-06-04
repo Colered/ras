@@ -441,14 +441,16 @@ class Subjects extends Base {
 								if($last_session_id!=''){
 									$result_mapping = mysqli_query($this->conn, "INSERT INTO subject_rule_mapping(subject_rule_id, session_id, date_add, date_update) VALUES ('".$ruleId."','".$last_session_id."','".$currentDateTime."','".$currentDateTime."') ");
 								}
-								if($_POST['reasonRule'] == 'Teaching Session Jointly')
+								if(!empty($_POST['reasonRule']) && $_POST['reasonRule'] == 'Teaching Session Jointly')
 								{
 									//add activity data
 									$act_name_num = $act_name_num+1;
 									$act_name='A'.$act_name_num ;
 									$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".implode(',',$_POST['slctTeacherRule'])."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
 									$last_id = mysqli_insert_id($this->conn);
-								}else{
+								}
+								else if($_POST['reasonRule'] == 'Alternate Choices for Session')
+								{
 									foreach($_POST['slctTeacherRule'] as $teacher_id)
 									{
 										//add activity data
@@ -457,6 +459,12 @@ class Subjects extends Base {
 										$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".$teacher_id."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','".$_POST['reasonRule']."')");
 										$last_id = mysqli_insert_id($this->conn);
 									}
+								}else{
+									//add activity data
+									$act_name_num = $act_name_num+1;
+									$act_name='A'.$act_name_num ;
+									$result = mysqli_query($this->conn, "INSERT INTO teacher_activity (name, program_year_id, cycle_id, subject_id,session_id,teacher_id, group_id, room_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update, forced_flag,reason) VALUES ('".$act_name."', '".$_POST['program_year_id']."','".$_POST['cycle_id']."', '".$_POST['subjectId']."','".$last_session_id."','".implode(',',$_POST['slctTeacherRule'])."','','','".implode(',',$time)."','".$time[0]."','".$val."', '2' ,'".$currentDateTime."','".$currentDateTime."','','')");
+									$last_id = mysqli_insert_id($this->conn);
 								}
 								$k++;
 							}
