@@ -1281,21 +1281,39 @@ $(document).ready(function(){
 	   $('input[class=days]').click(function(){
             if($(this).attr("value")=="0"){
 				$("#ts-avail-day-0").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-0").val('');
+   				}
 			}
             if($(this).attr("value")=="1"){
 				$("#ts-avail-day-1").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-1").val('');
+   				}
             }
             if($(this).attr("value")=="2"){
 				$("#ts-avail-day-2").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-2").val('');
+   				}
             }
 			if($(this).attr("value")=="3"){
 				$("#ts-avail-day-3").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-3").val('');
+   				}
             }
 			if($(this).attr("value")=="4"){
 				$("#ts-avail-day-4").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-4").val('');
+   				}
             }
 			if($(this).attr("value")=="5"){
 				$("#ts-avail-day-5").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-day-5").val('');
+   				}
             }
 	   });
 });
@@ -1313,23 +1331,54 @@ $(document).ready(function() {
 			alert('Please select atleast one day and timeslot.');
 	}else{
 		//get the selected values on each days
-		if(($('#Mon:checked').length > 0) && ($('#ts-avail-day-0').val() != null)){
-				var timeslotMon = '{' +$('select#ts-avail-day-0').val()+ '}';
+		if($('#Mon:checked').length > 0){
+				if($('#ts-avail-day-0').val()==null){
+					alert('please select the timeslot of monday');
+					return false;
+				}else{
+					var timeslotMon = '{' +$('select#ts-avail-day-0').val()+ '}';
+				}
 		}
-		if(($('#Tue:checked').length > 0) && ($('#ts-avail-day-1').val() != null)){
-			var timeslotTue = '{' +$('select#ts-avail-day-1').val()+ '}';
+		if($('#Tue:checked').length > 0) {
+				if($('#ts-avail-day-1').val()==null){
+					alert('please select the timeslot of tuesday');
+					return false;
+				}else{
+					var timeslotTue = '{' +$('select#ts-avail-day-1').val()+ '}';
+				}
+			
 		}
-		if(($('#Wed:checked').length > 0) && ($('#ts-avail-day-2').val() != null)){
-			var timeslotWed = '{' +$('select#ts-avail-day-2').val()+ '}';
+		if($('#Wed:checked').length > 0) {
+				if($('#ts-avail-day-2').val()==null){
+					alert('please select the timeslot of wednesday');
+					return false;
+				}else{
+					var timeslotWed = '{' +$('select#ts-avail-day-2').val()+ '}';
+				}
 		}
-		if(($('#Thu:checked').length > 0) && ($('#ts-avail-day-3').val() != null)){
-			var timeslotThu = '{' +$('select#ts-avail-day-3').val()+ '}';
+		if($('#Thu:checked').length > 0){
+				if($('#ts-avail-day-3').val()==null){
+					alert('please select the timeslot of thursday');
+					return false;
+				}else{
+					var timeslotThu = '{' +$('select#ts-avail-day-3').val()+ '}';
+				}
 		}
-		if(($('#Fri:checked').length > 0) && ($('#ts-avail-day-4').val() != null)){
-			var timeslotFri = '{' +$('select#ts-avail-day-4').val()+ '}';
+		if($('#Fri:checked').length > 0){
+				if($('#ts-avail-day-4').val()==null){
+					alert('please select the timeslot of friday');
+					return false;
+				}else{
+					var timeslotFri = '{' +$('select#ts-avail-day-4').val()+ '}';
+				}
 		}
-		if(($('#Sat:checked').length > 0) && ($('#ts-avail-day-5').val() != null)){
-			var timeslotSat = '{' +$('select#ts-avail-day-5').val()+ '}';
+		if($('#Sat:checked').length > 0){
+				if($('#ts-avail-day-5').val()==null){
+					alert('please select the timeslot of saturday');
+					return false;
+				}else{
+					var timeslotSat = '{' +$('select#ts-avail-day-5').val()+ '}';
+				}
 		}							
 		//send ajax request to insert values into DB		
  if(timeslotMon!="" || timeslotTue!="" || timeslotWed!="" || timeslotThu!="" || timeslotFri!="" || timeslotSat!=""){				
@@ -1491,45 +1540,63 @@ $(document).ready(function(){
 	   $('input[class=days]').click(function(){
             if($(this).attr("value")=="Mon"){
 				$("#ts-avail-mon").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-mon").val('');
+   				}
 			}
             if($(this).attr("value")=="Tue"){
 				$("#ts-avail-tue").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-tue").val('');
+   				}
             }
             if($(this).attr("value")=="Wed"){
 				$("#ts-avail-wed").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-wed").val('');
+   				}
             }
 			if($(this).attr("value")=="Thu"){
 				$("#ts-avail-thu").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-thu").val('');
+   				}
             }
 			if($(this).attr("value")=="Fri"){
 				$("#ts-avail-fri").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-fri").val('');
+   				}
             }
 			if($(this).attr("value")=="Sat"){
 				$("#ts-avail-sat").toggle();
+				if($(this).is(":not(:checked)")){
+   					$("#ts-avail-sat").val('');
+   				}
             }
 	   });
 });
 $(document).ready(function(){
 	$(".sp-act-ts-mon,.sp-act-ts-tue,.sp-act-ts-wed,.sp-act-ts-thu,.sp-act-ts-fri,.sp-act-ts-sat").hide();
 	   $('input[class=days]').click(function(){
-            if($(this).attr("value")=="Mon"){
+			if($(this).attr("value")=="Mon"){
 				$(".sp-act-ts-mon").toggle();
 			}
             if($(this).attr("value")=="Tue"){
 				$(".sp-act-ts-tue").toggle();
-            }
+			 }
             if($(this).attr("value")=="Wed"){
 				$(".sp-act-ts-wed").toggle();
-            }
+			}
 			if($(this).attr("value")=="Thu"){
 				$(".sp-act-ts-thu").toggle();
-            }
+			}
 			if($(this).attr("value")=="Fri"){
 				$(".sp-act-ts-fri").toggle();
-            }
+			}
 			if($(this).attr("value")=="Sat"){
 				$(".sp-act-ts-sat").toggle();
-            }
+			}
 	   });
 });
 //function to show subjects by program
@@ -1551,23 +1618,54 @@ function createTeachAvailRule(){
 			alert('Please select atleast one day and timeslot.');
 	}else{
 		//get the selected values on each days
-		if(($('#Mon:checked').length > 0) && ($('#ts-avail-mon').val() != null)){
-				var timeslotMon = '{' +$('select#ts-avail-mon').val()+ '}';
+		if($('#Mon:checked').length > 0){
+				if($('#ts-avail-mon').val() == null){
+					alert('please select the timeslot of monday');
+					return false;
+				}else{
+					var timeslotMon = '{' +$('select#ts-avail-mon').val()+ '}';
+				}
 		}
-		if(($('#Tue:checked').length > 0) && ($('#ts-avail-tue').val() != null)){
-			var timeslotTue = '{' +$('select#ts-avail-tue').val()+ '}';
+		if($('#Tue:checked').length > 0){
+				if($('#ts-avail-tue').val() == null){
+					alert('please select the timeslot of tuesday');
+					return false;
+				}else{
+					var timeslotTue = '{' +$('select#ts-avail-tue').val()+ '}';
+				}
 		}
-		if(($('#Wed:checked').length > 0) && ($('#ts-avail-wed').val() != null)){
-			var timeslotWed = '{' +$('select#ts-avail-wed').val()+ '}';
+		if($('#Wed:checked').length > 0){
+				if($('#ts-avail-wed').val() == null){
+					alert('please select the timeslot of wednesday');
+					return false;
+				}else{
+					var timeslotWed = '{' +$('select#ts-avail-wed').val()+ '}';
+				}
 		}
-		if(($('#Thu:checked').length > 0) && ($('#ts-avail-thu').val() != null)){
-			var timeslotThu = '{' +$('select#ts-avail-thu').val()+ '}';
+		if($('#Thu:checked').length > 0){
+				if($('#ts-avail-thu').val() == null){
+					alert('please select the timeslot of thursday');
+					return false;
+				}else{
+					var timeslotThu = '{' +$('select#ts-avail-thu').val()+ '}';
+				}
 		}
-		if(($('#Fri:checked').length > 0) && ($('#ts-avail-fri').val() != null)){
-			var timeslotFri = '{' +$('select#ts-avail-fri').val()+ '}';
+		if($('#Fri:checked').length > 0){
+				if($('#ts-avail-fri').val() == null){
+					alert('please select the timeslot of friday');
+					return false;
+				}else{
+					var timeslotFri = '{' +$('select#ts-avail-fri').val()+ '}';
+				}
+			
 		}
-		if(($('#Sat:checked').length > 0) && ($('#ts-avail-sat').val() != null)){
-			var timeslotSat = '{' +$('select#ts-avail-sat').val()+ '}';
+		if($('#Sat:checked').length > 0){
+				if($('#ts-avail-sat').val() == null){
+					alert('please select the timeslot of saturday');
+					return false;
+				}else{
+					var timeslotSat = '{' +$('select#ts-avail-sat').val()+ '}';
+				}
 		}
 		//send ajax request to insert values into DB		
 		if(timeslotMon!="" || timeslotTue!="" || timeslotWed!="" || timeslotThu!="" || timeslotFri!="" || timeslotSat!=""){
@@ -2968,57 +3066,118 @@ function createSpecialAvailRule(){
 			return false;
 		}
 	}
-	//get the selected values on each days
-	if(($('#Mon1C1W1:checked').length > 0)  && ($('#duration-sp-mon-w1').val() != null) && ($('#ts-sp-mon-w1').val() != null)){
-			var durationMon1 = $('select#duration-sp-mon-w1').val();
-			var timeslotMon1 = $('select#ts-sp-mon-w1').val();
+	if($('#Mon1C1W1:checked').length > 0){
+		   if($('#duration-sp-mon-w1').val() == '' || $('#ts-sp-mon-w1').val() == '' ){
+			   alert('Please select duration and start time of monday');
+			   return false;
+		   }else{
+				var durationMon1 = $('select#duration-sp-mon-w1').val();
+				var timeslotMon1 = $('select#ts-sp-mon-w1').val();
+		   }
 	}
-	if(($('#Tue1C1W1:checked').length > 0)  && ($('#duration-sp-tue-w1').val() != null) && ($('#ts-sp-tue-w1').val() != null)){
-			var durationTue1 = $('select#duration-sp-tue-w1').val();
-			var timeslotTue1 = $('select#ts-sp-tue-w1').val();			
+	if($('#Tue1C1W1:checked').length > 0){
+		   if($('#duration-sp-tue-w1').val() == '' || $('#ts-sp-tue-w1').val() == '' ){
+			    alert('Please select duration and start time of tuesday');
+			    return false;
+		   }else{
+				var durationTue1 = $('select#duration-sp-tue-w1').val();
+				var timeslotTue1 = $('select#ts-sp-tue-w1').val();
+		   }
 	}
-	if(($('#Wed1C1W1:checked').length > 0) && ($('#duration-sp-wed-w1').val() != null) && ($('#ts-sp-wed-w1').val() != null)){
-			var durationWed1= $('select#duration-sp-wed-w1').val();
-			var timeslotWed1 = $('select#ts-sp-wed-w1').val();
+	if($('#Wed1C1W1:checked').length > 0){
+			if($('#duration-sp-wed-w1').val() == '' || $('#ts-sp-wed-w1').val() == '' ){
+			    alert('Please select duration and start time of wednesday');
+			    return false;
+		   }else{
+				var durationWed1= $('select#duration-sp-wed-w1').val();
+				var timeslotWed1 = $('select#ts-sp-wed-w1').val();
+		   }
 	}
-	if(($('#Thu1C1W1:checked').length > 0)  && ($('#duration-sp-thu-w1').val() != null) && ($('#ts-sp-thu-w1').val() != null)){
-			var durationThu1 = $('select#duration-sp-thu-w1').val();
-			var timeslotThu1 = $('select#ts-sp-thu-w1').val();
+	if($('#Thu1C1W1:checked').length > 0){
+			if($('#duration-sp-thu-w1').val() == '' || $('#ts-sp-thu-w1').val() != '' == '' ){
+			    alert('Please select duration and start time of thursday');
+			    return false;
+		   }else{
+				var durationThu1 = $('select#duration-sp-thu-w1').val();
+				var timeslotThu1 = $('select#ts-sp-thu-w1').val();
+		   }
 	}
-	if(($('#Fri1C1W1:checked').length > 0) && ($('#duration-sp-fri-w1').val() != null) && ($('#ts-sp-fri-w1').val() != null)){
-			var durationFri1 = $('select#duration-sp-fri-w1').val();
-			var timeslotFri1 = $('select#ts-sp-fri-w1').val();
+	if($('#Fri1C1W1:checked').length > 0){
+		   if($('#duration-sp-fri-w1').val()== '' || $('#ts-sp-fri-w1').val() == '' ){
+			   alert('Please select duration and start time of friday');
+			   return false;
+		   }else{
+				var durationFri1 = $('select#duration-sp-fri-w1').val();
+				var timeslotFri1 = $('select#ts-sp-fri-w1').val();
+		   }
+			
 	}
-	if(($('#Sat1C1W1:checked').length > 0) && ($('#duration-sp-sat-w1').val() != null) && ($('#ts-sp-sat-w1').val() != null)){
-			var durationSat1 = $('select#duration-sp-sat-w1').val();
-			var timeslotSat1 = $('select#ts-sp-sat-w1').val();
+	if($('#Sat1C1W1:checked').length > 0){
+		   if($('#duration-sp-sat-w1').val() == '' || $('#ts-sp-sat-w1').val() == '' ){
+			   alert('Please select duration and start time of saturday');
+			   return false;
+		   }else{
+				var durationSat1 = $('select#duration-sp-sat-w1').val();
+				var timeslotSat1 = $('select#ts-sp-sat-w1').val();
+		   }
+			
 	}
-	if(($('#Mon2C1W2:checked').length > 0)  && ($('#duration-sp-mon-w2').val() != null) && ($('#ts-sp-mon-w2').val() != null)){
-			var durationMon2 = $('select#duration-sp-mon-w2').val();
-			var timeslotMon2 = $('select#ts-sp-mon-w2').val();
+	if($('#Mon2C1W2:checked').length > 0){
+		   if($('#duration-sp-mon-w2').val() == '' || $('#ts-sp-mon-w2').val() == '' ){
+			   alert('Please select duration and start time of monday');
+			   return false;
+		   }else{
+				var durationMon2 = $('select#duration-sp-mon-w2').val();
+				var timeslotMon2 = $('select#ts-sp-mon-w2').val();
+		   }
 	}
-	if(($('#Tue2C1W2:checked').length > 0)  && ($('#duration-sp-tue-w2').val() != null) && ($('#ts-sp-tue-w2').val() != null)){
-			var durationTue2 = $('select#duration-sp-tue-w2').val();
-			var timeslotTue2 = $('select#ts-sp-tue-w2').val();
+	if($('#Tue2C1W2:checked').length > 0){
+		   if($('#duration-sp-tue-w2').val() == '' || $('#ts-sp-tue-w2').val() == '' ){
+			   alert('Please select duration and start time of tuesday');
+			   return false;
+		   }else{
+				var durationTue2 = $('select#duration-sp-tue-w2').val();
+				var timeslotTue2 = $('select#ts-sp-tue-w2').val();
+		   }
 	}
-	if(($('#Wed2C1W2:checked').length > 0) && ($('#duration-sp-wed-w2').val() != null) && ($('#ts-sp-wed-w2').val() != null)){
-			var durationWed2= $('select#duration-sp-wed-w2').val();
-			var timeslotWed2 = $('select#ts-sp-wed-w2').val();
+	if($('#Wed2C1W2:checked').length > 0){
+		   if($('#duration-sp-wed-w2').val() == '' || $('#ts-sp-wed-w2').val() == '' ){
+			   alert('Please select duration and start time of wednesday');
+			   return false;
+		   }else{
+				var durationWed2= $('select#duration-sp-wed-w2').val();
+				var timeslotWed2 = $('select#ts-sp-wed-w2').val();
+		   }
 	}
-	if(($('#Thu2C1W2:checked').length > 0)  && ($('#duration-sp-thu-w2').val() != null) && ($('#ts-sp-thu-w2').val() != null)){
-			var durationThu2 = $('select#duration-sp-thu-w2').val();
-			var timeslotThu2 = $('select#ts-sp-thu-w2').val();
+	if($('#Thu2C1W2:checked').length > 0){
+		   if($('#duration-sp-thu-w2').val() == '' || $('#ts-sp-thu-w2').val() == '' ){
+			   alert('Please select duration and start time of thursday');
+			   return false;
+		   }else{
+				var durationThu2 = $('select#duration-sp-thu-w2').val();
+				var timeslotThu2 = $('select#ts-sp-thu-w2').val();
+		   }
 	}
-	if(($('#Fri2C1W2:checked').length > 0) && ($('#duration-sp-fri-w2').val() != null) && ($('#ts-sp-fri-w2').val() != null)){
-			var durationFri2 = $('select#duration-sp-fri-w2').val();
-			var timeslotFri2 = $('select#ts-sp-fri-w2').val();
+	if($('#Fri2C1W2:checked').length > 0) {
+		 if($('#duration-sp-fri-w2').val() == '' || $('#ts-sp-fri-w2').val() == '' ){
+			   alert('Please select duration and start time of friday');
+			   return false;
+		   }else{
+				var durationFri2 = $('select#duration-sp-fri-w2').val();
+				var timeslotFri2 = $('select#ts-sp-fri-w2').val();
+		   }
+			
 	}
-	if(($('#Sat2C1W2:checked').length > 0) && ($('#duration-sp-sat-w2').val() != null) && ($('#ts-sp-sat-w2').val() != null)){
-			var durationSat2 = $('select#duration-sp-sat-w2').val();
-			var timeslotSat2 = $('select#ts-sp-sat-w2').val();
+	if($('#Sat2C1W2:checked').length > 0){
+		   if($('#duration-sp-sat-w2').val() == '' || $('#ts-sp-sat-w2').val() == '' ){
+			   alert('Please select duration and start time of saturday');
+			   return false;
+		   }else{
+				var durationSat2 = $('select#duration-sp-sat-w2').val();
+				var timeslotSat2 = $('select#ts-sp-sat-w2').val();
+		   }
 	}
-	
-		//send ajax request to insert values into DB		
+	//send ajax request to insert values into DB		
 			$.ajax({
 				url: "./ajax_common.php",
 				type: "POST",
@@ -3788,37 +3947,85 @@ function PrgmSubSessCloning(){
 $(document).ready(function(){
 	$("#sp-act-ts-mon-w1,#sp-act-ts-tue-w1,#sp-act-ts-wed-w1,#sp-act-ts-thu-w1,#sp-act-ts-fri-w1,#sp-act-ts-sat-w1").hide();
 	$("#sp-act-ts-mon-w2,#sp-act-ts-tue-w2,#sp-act-ts-wed-w2,#sp-act-ts-thu-w2,#sp-act-ts-fri-w2,#sp-act-ts-sat-w2").hide();
-		
-	   $('input[class=special_days]').click(function(){
+	  $('input[class=special_days]').click(function(){
             if($(this).attr("value")=="Mon1C1W1"){
 				$("#sp-act-ts-mon-w1").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-mon-w1").val('');
+					$("#ts-sp-mon-w1").val('');
+				}
 			}else if($(this).attr("value")=="Mon2C1W2"){
 				$("#sp-act-ts-mon-w2").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-mon-w2").val('');
+					$("#ts-sp-mon-w2").val('');
+				}
 			}
             if($(this).attr("value")=="Tue1C1W1"){
 				$("#sp-act-ts-tue-w1").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-tue-w1").val('');
+					$("#ts-sp-tue-w1").val('');
+				}
             }else if($(this).attr("value")=="Tue2C1W2"){
 				$("#sp-act-ts-tue-w2").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-tue-w2").val('');
+					$("#ts-sp-tue-w2").val('');
+				}
             }
             if($(this).attr("value")=="Wed1C1W1"){
 				$("#sp-act-ts-wed-w1").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-wed-w1").val('');
+					$("#ts-sp-wed-w1").val('');
+				}
+				
             }else if($(this).attr("value")=="Wed2C1W2"){
 				$("#sp-act-ts-wed-w2").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-wed-w2").val('');
+					$("#ts-sp-wed-w2").val('');
+				}
             }
 			if($(this).attr("value")=="Thu1C1W1"){
 				$("#sp-act-ts-thu-w1").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-thu-w1").val('');
+					$("#ts-sp-thu-w1").val('');
+				}
             }else if($(this).attr("value")=="Thu2C1W2"){
 				$("#sp-act-ts-thu-w2").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-thu-w2").val('');
+					$("#ts-sp-thu-w2").val('');
+				}
             }
 			if($(this).attr("value")=="Fri1C1W1"){
 				$("#sp-act-ts-fri-w1").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-fri-w1").val('');
+					$("#ts-sp-fri-w1").val('');
+				}
             }else if($(this).attr("value")=="Fri2C1W2"){
 				$("#sp-act-ts-fri-w2").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-fri-w2").val('');
+					$("#ts-sp-fri-w2").val('');
+				}
             }
 			if($(this).attr("value")=="Sat1C1W1"){
 				$("#sp-act-ts-sat-w1").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-sat-w1").val('');
+					$("#ts-sp-sat-w1").val('');
+				}
             }else if($(this).attr("value")=="Sat2C1W2"){
 				$("#sp-act-ts-sat-w2").toggle();
+				if($(this).is(":not(:checked)")){
+					$("#duration-sp-sat-w2").val('');
+					$("#ts-sp-sat-w2").val('');
+				}
             }        
 	   });
 });
@@ -3863,53 +4070,123 @@ function createActivityAvailRule(){
 		}
 	}	
 	//get the selected values on each days
-	if(($('#Mon1C1W1:checked').length > 0)  && ($('#duration-sp-mon-w1').val() != null) && ($('#ts-sp-mon-w1').val() != null)){
-			var durationMon1 = $('select#duration-sp-mon-w1').val();
-			var timeslotMon1 = $('select#ts-sp-mon-w1').val();
+	if($('#Mon1C1W1:checked').length > 0){
+			if($('#duration-sp-mon-w1').val() == '' || $('#ts-sp-mon-w1').val() == '' ){
+			   alert('Please select duration and start time of monday');
+			   return false;
+		   }else{
+				var durationMon1 = $('select#duration-sp-mon-w1').val();
+				var timeslotMon1 = $('select#ts-sp-mon-w1').val();
+		   }
 	}
-	if(($('#Tue1C1W1:checked').length > 0)  && ($('#duration-sp-tue-w1').val() != null) && ($('#ts-sp-tue-w1').val() != null)){
-			var durationTue1 = $('select#duration-sp-tue-w1').val();
-			var timeslotTue1 = $('select#ts-sp-tue-w1').val();			
+	if($('#Tue1C1W1:checked').length > 0){
+		   if($('#duration-sp-tue-w1').val() == '' || $('#ts-sp-tue-w1').val() == '' ){
+			   alert('Please select duration and start time of tuesday');
+			   return false;
+		   }else{
+				var durationTue1 = $('select#duration-sp-tue-w1').val();
+				var timeslotTue1 = $('select#ts-sp-tue-w1').val();		
+		   }
+				
 	}
-	if(($('#Wed1C1W1:checked').length > 0) && ($('#duration-sp-wed-w1').val() != null) && ($('#ts-sp-wed-w1').val() != null)){
-			var durationWed1= $('select#duration-sp-wed-w1').val();
-			var timeslotWed1 = $('select#ts-sp-wed-w1').val();
+	if($('#Wed1C1W1:checked').length > 0){
+		   if($('#duration-sp-wed-w1').val() == '' || $('#ts-sp-wed-w1').val() == '' ){
+			   alert('Please select duration and start time of wednesday');
+			   return false;
+		   }else{
+				var durationWed1= $('select#duration-sp-wed-w1').val();
+				var timeslotWed1 = $('select#ts-sp-wed-w1').val();
+		   }
+			
 	}
-	if(($('#Thu1C1W1:checked').length > 0)  && ($('#duration-sp-thu-w1').val() != null) && ($('#ts-sp-thu-w1').val() != null)){
-			var durationThu1 = $('select#duration-sp-thu-w1').val();
-			var timeslotThu1 = $('select#ts-sp-thu-w1').val();
+	if($('#Thu1C1W1:checked').length > 0){
+			if($('#duration-sp-thu-w1').val() == '' || $('#ts-sp-thu-w1').val() == '' ){
+			   alert('Please select duration and start time of thursday');
+			   return false;
+		   }else{
+				var durationThu1 = $('select#duration-sp-thu-w1').val();
+				var timeslotThu1 = $('select#ts-sp-thu-w1').val();
+		   }
+			
 	}
-	if(($('#Fri1C1W1:checked').length > 0) && ($('#duration-sp-fri-w1').val() != null) && ($('#ts-sp-fri-w1').val() != null)){
-			var durationFri1 = $('select#duration-sp-fri-w1').val();
-			var timeslotFri1 = $('select#ts-sp-fri-w1').val();
+	if($('#Fri1C1W1:checked').length > 0){
+			if($('#duration-sp-fri-w1').val() == '' || $('#ts-sp-fri-w1').val() == '' ){
+			   alert('Please select duration and start time of friday');
+			   return false;
+		   }else{
+				var durationFri1 = $('select#duration-sp-fri-w1').val();
+				var timeslotFri1 = $('select#ts-sp-fri-w1').val();
+		   }
+			
 	}
-	if(($('#Sat1C1W1:checked').length > 0) && ($('#duration-sp-sat-w1').val() != null) && ($('#ts-sp-sat-w1').val() != null)){
-			var durationSat1 = $('select#duration-sp-sat-w1').val();
-			var timeslotSat1 = $('select#ts-sp-sat-w1').val();
+	if($('#Sat1C1W1:checked').length > 0){
+			if($('#duration-sp-sat-w1').val() == '' || $('#ts-sp-sat-w1').val() == '' ){
+			   alert('Please select duration and start time of saturday');
+			   return false;
+		   }else{
+				var durationSat1 = $('select#duration-sp-sat-w1').val();
+				var timeslotSat1 = $('select#ts-sp-sat-w1').val();
+		   }
+			
 	}
-	if(($('#Mon2C1W2:checked').length > 0)  && ($('#duration-sp-mon-w2').val() != null) && ($('#ts-sp-mon-w2').val() != null)){
-			var durationMon2 = $('select#duration-sp-mon-w2').val();
-			var timeslotMon2 = $('select#ts-sp-mon-w2').val();
+	if($('#Mon2C1W2:checked').length > 0){
+			if($('#duration-sp-mon-w2').val() == '' || $('#ts-sp-mon-w2').val() == '' ){
+			   alert('Please select duration and start time of monday');
+			   return false;
+		   }else{
+				var durationMon2 = $('select#duration-sp-mon-w2').val();
+				var timeslotMon2 = $('select#ts-sp-mon-w2').val();
+		   }
+			
 	}
-	if(($('#Tue2C1W2:checked').length > 0)  && ($('#duration-sp-tue-w2').val() != null) && ($('#ts-sp-tue-w2').val() != null)){
-			var durationTue2 = $('select#duration-sp-tue-w2').val();
-			var timeslotTue2 = $('select#ts-sp-tue-w2').val();
+	if($('#Tue2C1W2:checked').length > 0){
+			if($('#duration-sp-tue-w2').val() == '' || $('#ts-sp-tue-w2').val() == '' ){
+			   alert('Please select duration and start time of tuesday');
+			   return false;
+		   }else{
+				var durationTue2 = $('select#duration-sp-tue-w2').val();
+				var timeslotTue2 = $('select#ts-sp-tue-w2').val();
+		   }
 	}
-	if(($('#Wed2C1W2:checked').length > 0) && ($('#duration-sp-wed-w2').val() != null) && ($('#ts-sp-wed-w2').val() != null)){
-			var durationWed2= $('select#duration-sp-wed-w2').val();
-			var timeslotWed2 = $('select#ts-sp-wed-w2').val();
+	if($('#Wed2C1W2:checked').length > 0){
+			if($('#duration-sp-wed-w2').val() == '' || $('#ts-sp-wed-w2').val() == '' ){
+			   alert('Please select duration and start time of wednesday');
+			   return false;
+		   }else{
+				var durationWed2= $('select#duration-sp-wed-w2').val();
+				var timeslotWed2 = $('select#ts-sp-wed-w2').val();
+		   }
+			
 	}
-	if(($('#Thu2C1W2:checked').length > 0)  && ($('#duration-sp-thu-w2').val() != null) && ($('#ts-sp-thu-w2').val() != null)){
-			var durationThu2 = $('select#duration-sp-thu-w2').val();
-			var timeslotThu2 = $('select#ts-sp-thu-w2').val();
+	if($('#Thu2C1W2:checked').length > 0){
+			if($('#duration-sp-thu-w2').val() == '' || $('#ts-sp-thu-w2').val() == '' ){
+			   alert('Please select duration and start time of thursday');
+			   return false;
+		   }else{
+				var durationThu2 = $('select#duration-sp-thu-w2').val();
+				var timeslotThu2 = $('select#ts-sp-thu-w2').val();
+		   }
+			
 	}
-	if(($('#Fri2C1W2:checked').length > 0) && ($('#duration-sp-fri-w2').val() != null) && ($('#ts-sp-fri-w2').val() != null)){
-			var durationFri2 = $('select#duration-sp-fri-w2').val();
-			var timeslotFri2 = $('select#ts-sp-fri-w2').val();
+	if($('#Fri2C1W2:checked').length > 0){
+			if($('#duration-sp-fri-w2').val() == '' || $('#ts-sp-fri-w2').val() == '' ){
+			   alert('Please select duration and start time of friday');
+			   return false;
+		   }else{
+				var durationFri2 = $('select#duration-sp-fri-w2').val();
+				var timeslotFri2 = $('select#ts-sp-fri-w2').val();
+		   }
+			
 	}
-	if(($('#Sat2C1W2:checked').length > 0) && ($('#duration-sp-sat-w2').val() != null) && ($('#ts-sp-sat-w2').val() != null)){
-			var durationSat2 = $('select#duration-sp-sat-w2').val();
-			var timeslotSat2 = $('select#ts-sp-sat-w2').val();
+	if($('#Sat2C1W2:checked').length > 0){
+			if($('#duration-sp-sat-w2').val() == '' || $('#ts-sp-sat-w2').val() == '' ){
+			   alert('Please select duration and start time of saturday');
+			   return false;
+		   }else{
+				var durationSat2 = $('select#duration-sp-sat-w2').val();
+				var timeslotSat2 = $('select#ts-sp-sat-w2').val();
+		   }
+			
 	}
 	if((timeslotMon1!="" || timeslotTue1!="" || timeslotWed1!="" || timeslotThu1!="" || timeslotFri1!="" || timeslotSat1!="" || timeslotMon2!="" || timeslotTue2!="" || timeslotWed2!="" || timeslotThu2!="" || timeslotFri2!="" || timeslotSat2!="") && (durationMon1!="" || durationTue1!="" || durationWed1!="" || durationThu1!="" || durationFri1!="" || durationSat1!="" || durationMon2!="" || durationTue2!="" || durationWed2!="" || durationThu2!="" || durationFri2!="" || durationSat2!="")){
 	
