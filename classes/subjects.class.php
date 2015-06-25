@@ -176,6 +176,7 @@ class Subjects extends Base {
 		}
 	}
   }
+  //function to get program id by name
 	public function getProgramId(){
 		$program_query="select id from program where program_name='".$_POST['slctProgram']."'";
 		$program_result= mysqli_query($this->conn, $program_query);
@@ -188,6 +189,7 @@ class Subjects extends Base {
 		   $_SESSION['error_msg'] = $message;
 		}
 	}
+	//function to get area id by name
 	public function getAreaId(){
 		$area_query="select id from area where area_code='".$_POST['slctArea']."'";
 		$area_result= mysqli_query($this->conn, $area_query);
@@ -200,6 +202,7 @@ class Subjects extends Base {
 			$_SESSION['error_msg'] = $message;
 		}
 	}
+	//function to get area code by name
 	public function getAreaCode($area_id){
 		$area_query="select area_code from area where id='".$area_id."'";
 		$area_result= mysqli_query($this->conn, $area_query);
@@ -208,6 +211,7 @@ class Subjects extends Base {
 			return $area_data['area_code'];
 		}
 	}
+	//function to get program details by id
 	 public function getProgramName($id){
         $program_query="select * from  program_years where id='".$id."'";
 	    $program_result= mysqli_query($this->conn, $program_query);
@@ -300,7 +304,7 @@ class Subjects extends Base {
 			return 2;
 		}
    }
-
+	//function to get session details by id
 	public function getSessionRow($sessid)
 	{
 		 $query="SELECT subs.id,
@@ -313,7 +317,7 @@ class Subjects extends Base {
 		$row = $result->fetch_assoc();
    		return $row;
     }
-
+	//function to get activity details by id
 	public function getActRow($actid)
 	{
 		 $query="SELECT ta.start_time,
@@ -325,6 +329,7 @@ class Subjects extends Base {
 		$row = $result->fetch_assoc();
 		return $row;
 	}
+	//function to get all created activities of a session
 	public function getAllActivities($sess_id)
 	{
 		$query="SELECT ta.teacher_id,ta.id
@@ -332,6 +337,7 @@ class Subjects extends Base {
 		$result = $this->conn->query($query);
 		return $result;
 	}
+	//function to get cycle id
 	public function getCycleId($program_id,$cycle_no)
 	{
 		$cycle_id = '';
@@ -369,11 +375,13 @@ class Subjects extends Base {
 		$q_res = mysqli_query($this->conn, $specia_act_query);
 		return $q_res;
 	}
+	//function to get rule start and end dates using rules id
 	public function ruleStartEndDate($rule_id){
 		$query = mysqli_query ($this->conn, "SELECT start_date,end_date,occurrence,week1,week2,subject_id,rule_name FROM  subject_rule WHERE  id='".$rule_id."' ");
 		$data = $query->fetch_assoc();
 		return $data;
 	}
+	//function to create sessions using rules
 	public function createSessions()
 	{
 		//print"<pre>";print_r($_POST);die;
@@ -602,6 +610,7 @@ class Subjects extends Base {
 			return 0;
 		}
 	}
+	//function to get rule id by subject id
 	public function getRulesBySubjectId($subject_id)
 	{
 		$specia_act_query="select subject_rule_id from subject_rule_mapping srm inner join subject_session ss on ss.id = srm.session_id where ss.subject_id='".$subject_id."'";

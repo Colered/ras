@@ -267,6 +267,7 @@ class Teacher extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;
 	}
+	//get teacher activities according to filter
 	public function getTeachersActFilterView($activity_filter_val)
 	{
 		$sql_tt_range="SELECT start_date ,end_date  from  timetable";
@@ -295,6 +296,7 @@ class Teacher extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;
 	}
+	//get all session id from timetable detail
 	public function getSessionFromTT()
 	{
 		$sql = "SELECT session_id FROM timetable_detail";
@@ -306,6 +308,7 @@ class Teacher extends Base {
 		}
 		return $sess_array;
 	}
+	//get all activity id from timetable detail
 	public function getActsFromTT()
 	{
 		$sql = "SELECT activity_id FROM timetable_detail";
@@ -529,6 +532,7 @@ class Teacher extends Base {
 		}
 		return '';
 	}
+	//function to get timeslot id by times
 	public function getTimeslotId($timeSoltArr)
 	{   
 		$ts_array = explode(",",$timeSoltArr);
@@ -552,16 +556,19 @@ class Teacher extends Base {
 		$timeslotIds = implode(',',$timeslots);	
 		return $timeslotIds;
 	}
+	//function to get all teacher types
 	public function getTeachersType()
 	{
 		$result =  $this->conn->query("select * from teacher_type order by teacher_type_name");
 		return $result;
 	}
+	//function to get teacher types by id
 	public function getTeacherTypeById($id)
 	{
 		$result =  $this->conn->query("select * from teacher_type where id = '".$id."'");
 		return $result;
 	}
+	//function to get all teacher exceptions
 	public function getTeacherException()
 	{
 		$excep_query="select exception_date from teacher_availability_exception";
@@ -569,12 +576,14 @@ class Teacher extends Base {
 		return $q_excep;
 	
 	}
+	//function to get all teacher availability days and time
 	public function getTeacherAvailDayFilter($id)
 	{
 		$area_query="select id, timeslot_id, day from teacher_availability_rule_day_map where teacher_availability_rule_id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $area_query);
 		return $q_res;
 	}
+	//function to get start and end date by teacher availbility rule id
 	public function getTeacherRuleStartEndDate($id){
 		$classromm_start_end_date="select rule_name,start_date,end_date from teacher_availability_rule where id ='".$id."'"; 
 		$q_res = mysqli_query($this->conn, $classromm_start_end_date);
@@ -583,6 +592,7 @@ class Teacher extends Base {
 		$data['end_date']=date('Y-m-d', strtotime($data['end_date']));
 		return $data;
 	}
+	//function to get teacher exceptions by id
 	public function getTeacherAvailExceptionById($teacher_id='')
 	{
 		$excep_query="select exception_date from teacher_availability_exception where teacher_id='".$teacher_id."'";
@@ -590,6 +600,7 @@ class Teacher extends Base {
 		return $q_excep;
 	
 	}
+	//function to get reserved dates for a teacher
 	public function getResDatesForTeacher($teacher_id='')
 	{
 		$resDates = array();
@@ -602,6 +613,7 @@ class Teacher extends Base {
 		}
 		return $resDates;		
 	}
+	//function to get start time and end time by id
 	public function getTimeslotById($st='',$et='')
 	{
 		$sql_st_ts = "select start_time from timeslot where id='".$st."'";

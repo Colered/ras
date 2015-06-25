@@ -3,51 +3,61 @@ class Timetable extends Base {
     public function __construct(){
    		 parent::__construct();
    	}
+	//get details from timetable
  	public function viewTimetable(){
 		$tt_query="select * from timetable_detail"; 
 		$q_res = mysqli_query($this->conn, $tt_query);
 		return $q_res;
    	}
+	//get timetable details by id
 	public function getTimetableYear($id){
 		$tt_query="select * from timetable where id ='".$id."'"; 
 		$q_res = mysqli_query($this->conn, $tt_query);
 		return $q_res;
    	}
+	//get subject by id
    public function getSubject($id){
 		$subject_query="select * from  subject where id ='".$id."'"; 
 		$q_res = mysqli_query($this->conn, $subject_query);
 		return $q_res;
    	}
+	//get area by id
 	public function getArea($id){
 		$area_query="select * from  area where id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $area_query);
 		return $q_res;
    	}
+	//get session by id
 	public function getSession($id){
 		$session_query="select * from  subject_session where id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $session_query);
 		return $q_res;
    	}
+	//get teacher by id
 	public function getTeacher($id){
 		$teacher_query="select * from  teacher where id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $teacher_query);
 		return $q_res;
    	}
+	//get room by id
 	public function getClassroom($id){
 		$room_query="select * from  room where id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $room_query);
 		return $q_res;
    	}
+	//get program years by id
 	public function getProgramYear($id){
 		$program_year_query="select * from  program_years where id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $program_year_query);
 		return $q_res;
    	}
+	//get program by id
 	public function gerProgram($id){
 		$program_year_query="select * from  program where id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $program_year_query);
 		return $q_res;
    	}
+	//get cycles of a program
 	public function getCycle($id){
 		$cycle_query="select * from  cycle where program_year_id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $cycle_query);
@@ -167,6 +177,7 @@ class Timetable extends Base {
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
+	//get all cycles
 	public function getAllCycle()
 	{
 		 $row_program_ids=$array1=$array2=$array3=array();
@@ -1691,7 +1702,7 @@ class Timetable extends Base {
 		}
 		return $recess_activities;
 	}
-
+	//function to get duration of special activity
 	public function getDuration($act_id)
 	{
 		$sql_dur = $this->conn->query("select duration from special_activity_mapping where teacher_activity_id = '".$act_id."'");
@@ -1776,7 +1787,7 @@ class Timetable extends Base {
 		}
 		return $adhoc_activities;
 	}
-
+	//function to get activities dates of adhoc ones
 	public function getSpecialAdhActDate($start_date,$end_date,$flag)
 	{
 		$special_dates = array();
@@ -1812,7 +1823,7 @@ class Timetable extends Base {
 		$special_dates = array_unique($special_dates);
 		return $special_dates;		
 	}
-
+	//get date of group meeting
 	public function getSpecialGMActDate($start_date,$end_date,$flag)
 	{
 		$special_dates = array();
@@ -2728,7 +2739,7 @@ class Timetable extends Base {
 			return 0;
 		}
 	}
-
+	//function to get room name according to timeslots
 	public function searchRoom1($subject_id,$date,$reserved_rooms,$all_ts,$start_time,$end_time,$edit_room_id='',$loc_id,$recess_activities,$program_id,$counter,$allTimeslots)
 	{
 		$final_room_id = 0;
@@ -3414,6 +3425,7 @@ class Timetable extends Base {
 		$dataArr=$q_res->fetch_assoc();
 		return $dataArr;
 	}
+	//function to get teachers assigned in timetable within a range
 	public function getTeachersInDateRange($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id='',$module=''){
 		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,py.name,a.area_name,r.room_name from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit inner join subject_session s on s.id = td.session_id inner join area a on a.id = su.area_id inner join room r on r.id = td.room_id left join teacher_type tt on tt.id = t.teacher_type where date between '".$from."' and '".$to."'";
 		

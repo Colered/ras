@@ -3,28 +3,33 @@ class SpecialActivity extends Base {
     public function __construct(){
    		 parent::__construct();
    	}
+	//get time details from rule id
 	public function getSpecialAvailDay($id)
 	{
 		$area_query="select id, actual_timeslot_id , duration , day_name from special_activity_rule_day_map where special_activity_rule_id ='".$id."'";
 		$q_res = mysqli_query($this->conn, $area_query);
 		return $q_res;
 	}
+	//get availability details of special activity by name
 	public function getSpecialAvailRule()
 	{
 		$specia_act_query="select id, rule_name,occurrence,week1,week2, start_date, end_date from special_activity_rule WHERE rule_name<>'Always Available' ORDER BY id DESC";
 		$q_res = mysqli_query($this->conn, $specia_act_query);
 		return $q_res;
 	}
+	//get rule details of a rule id
 	public function ruleStartEndDate($rule_id){
 		$query = mysqli_query ($this->conn, "SELECT start_date , end_date,occurrence,week1,week2 FROM  special_activity_rule WHERE  id='".$rule_id."' ");
 		$data = $query->fetch_assoc();
 		return $data;
 	}
+	//get last inserted teacher activity
 	public function activityLastReocrd(){
 		$query = mysqli_query($this->conn, "SELECT id,name FROM teacher_activity ORDER BY id DESC LIMIT 1");
 		$data=$query->fetch_assoc();
 		return $data;
 	}
+	//get time details from rule id
 	public function ruleTimeslotandDay($ruleId){
 		$query = mysqli_query($this->conn, "SELECT id,actual_timeslot_id,duration,day FROM  special_activity_rule_day_map  WHERE  special_activity_rule_id='".$ruleId."' ");
 		while($data = $query->fetch_assoc()){
@@ -32,6 +37,7 @@ class SpecialActivity extends Base {
 		}
 		return $timeslot;
 	}
+	//get exception dates associated with a rule id
 	public function getExceptionDate($ruleId){
 		$exceptionDate=array();
 		$query = mysqli_query($this->conn, "SELECT exception_date FROM special_activity_exception  WHERE  special_activity_rule_id='".$ruleId."' ");
@@ -40,6 +46,7 @@ class SpecialActivity extends Base {
 		}
 		return $exceptionDate;
 	}
+	//get special activity details by id
 	public function specialActivityDetail($special_act_id){
 		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.start_time,ta.reserved_flag,ta.act_date,sa.teacher_activity_id,sa.id as special_id,sa.special_activity_rule_id,sa.area_id,sa.special_activity_type,sa.duration,sa.special_activity_name,sa.adhoc_start_date,sa.adhoc_end_date FROM teacher_activity ta
 						inner join  special_activity_mapping sa on(sa.teacher_activity_id = ta.id)
@@ -48,12 +55,14 @@ class SpecialActivity extends Base {
 		$data=$query->fetch_assoc();
 		return $data;
 	}
+	//get start time by timeslot id
 	public function getStartTime($start_time_id){
 		$ts_sql = "SELECT start_time FROM timeslot WHERE id='".$start_time_id."'";
 		$query = mysqli_query($this->conn,$ts_sql);
 		$data=$query->fetch_assoc();
 		return $data;
 	}
+	//add special activity in database
 	public function addSpecialActivity(){
 		if($_POST['txtActName']!=""){
 			//check if the activity name exists
@@ -246,6 +255,7 @@ class SpecialActivity extends Base {
 		return 0;
 	}
   }
+  //edit special activity
 	public function updateSpecialActivity(){
 		if(isset($_POST['special_activity_type']) && ($_POST['special_activity_type']!="2" || $_POST['one_time_edit']=="1") && $_POST['duration']!=""){
 			  $timeslotIdsArray = array();
@@ -444,6 +454,7 @@ class SpecialActivity extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;				
 	}
+	//delete special activity by rule
 	public function deleteSpecialActivities(){
 		$sql = "SELECT ta.id  FROM teacher_activity ta
 						left join special_activity_mapping sam on(ta.id = sam.teacher_activity_id)
@@ -468,6 +479,7 @@ class SpecialActivity extends Base {
 			return 0;
 		}
 	}
+	//get a particular special activity by id
 	public function getSpecialActivityDetailView(){
 		$sql = "SELECT ta.id, ta.program_year_id, ta.cycle_id, ta.subject_id, ta.session_id, ta.teacher_id, ta.group_id, ta.room_id, ta.timeslot_id, ta.reserved_flag, ta.act_date, s.subject_name, t.teacher_name, t.email, py.name program_name, rm.room_name, sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date,sam.special_activity_type,ar.area_name
 				FROM teacher_activity ta
@@ -482,6 +494,7 @@ class SpecialActivity extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;				
 	}
+	//delete special activity by name
 	public function getSpecialActivityByActName($spActName){
 		$sql = "SELECT ta.id,ta.name, ta.timeslot_id, ta.reserved_flag, ta.act_date,sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date
 				FROM teacher_activity ta
@@ -499,6 +512,7 @@ class SpecialActivity extends Base {
 		return $result;				
 	}
 */	
+	//get list of special activities on editing name
 	public function getSpecialActivityDetailOnGrpEdit($special_gp_act_name){
 		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name,sam.special_activity_rule_id,sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date FROM teacher_activity ta
 						left join subject s on(s.id = ta.subject_id)
@@ -511,7 +525,7 @@ class SpecialActivity extends Base {
 		$result =  $this->conn->query($sql);
 		return $result;				
 	}
-	
+	//get list of special activities on editing name
 	public function getSpecialActivityDetailGrpEditOne($special_gp_act_name){
 		$sql = "SELECT ta.id, ta.program_year_id, ta.cycle_id, ta.subject_id, ta.session_id, ta.teacher_id, ta.group_id, ta.room_id, ta.timeslot_id, ta.reserved_flag, ta.act_date,ta.start_time, s.subject_name, t.teacher_name, t.email, py.name program_name, rm.room_name,sam.duration,sam.special_activity_type, sam.special_activity_name, sam.adhoc_start_date, sam.adhoc_end_date,sam.special_activity_type,sam.area_id,ar.area_name
 				FROM teacher_activity ta
