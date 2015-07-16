@@ -429,7 +429,7 @@ $(document).ready(function() {
 								echo $options;?>
 							</select>
 							</div>
-							<div class="tmSlot">
+							<div class="tmSlotc2w1">
 							<input type="checkbox" id="c2-w1-5" value="SatC2W1" class="days"  <?php if(isset($week1[1][5])) echo 'checked';?>/><span class="dayName"> Sat </span>
 							 <select id="ts-avail-c2-w1-5" name="cycle2[week1][5][]" class="slctTs required" multiple="multiple">
 							<?php if(isset($week1[1][5]))
