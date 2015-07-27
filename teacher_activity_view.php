@@ -146,7 +146,7 @@ function activityFilter()
 								 	$tdColor = ' style="color:#FFFFFF;"';
 								 	$session_array[] = $row['session_id'];
 									$class = "unallocated-activity";
-									$row['reason'] = '';
+									//$row['reason'] = '';
 								}else{
 								 	$trBColor1 = '';
 								 	$tdColor = '';
