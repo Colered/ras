@@ -2917,7 +2917,7 @@ function opendialogToComfirmArea(){
 	$("#dialog-confirm-area").show();
 	$( "#dialog-confirm-area" ).dialog({
       resizable: false,
-      height:70,
+      height:240,
       modal: true,
       buttons: {
         "Force Entry": function() {
