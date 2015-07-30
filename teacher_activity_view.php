@@ -79,10 +79,10 @@ function activityFilter()
 				$readonly = 'class="buttonsub" disabled="disabled" style="background-color:#CCCCCC; background-image:none"';
 			}?>
 			<div style="float:right">
-				<!--<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
+				<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
 				<input type="hidden" value="acceptAllocation" name="form_action">
 				<input  type="button" class="buttonsub"  disabled="disabled" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
-				</form>-->
+				</form>
 				<div class = "activity-color-filteration" style="margin-right:420px;"> 
 					<form id="act_view_filter" name="act_view_filter" method="post" action="teacher_activity_view.php" novalidate="novalidate">	
 						<strong>Activity Filter  </strong>
