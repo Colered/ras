@@ -788,7 +788,8 @@ function checkAvailability($forcing) {
 						'subSessDate': $('#subSessDate').val(),
 						'sess_hidden_id': $('#sess_hidden_id').val(),
 						'act_hidden_id': $('#act_hidden_id').val(),
-						'check_avail_force_entry':$forcing,						
+						'check_avail_force_entry':$forcing,
+						'force_flag':0,
 						'codeBlock': 'checkAvailabilitySession',
 					},
 					success: function($succ){
@@ -803,18 +804,22 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is not available on the selected time and day.');
+							opendialogToComfirmArea();
 						}else if($succ==6){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
+							opendialogToComfirmArea();
 						}else if($succ==3){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is already engaged in other activity.');
+							opendialogToComfirmArea();
 						}else if($succ==4){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Classroom is already engaged in other activity.');
+							opendialogToComfirmArea();
 						}else if($succ==7){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -831,24 +836,27 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher already have 4 sessions allocated to him on selected day.');
+							opendialogToComfirmArea();
 						}else if($succ==11){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Selected teacher already have other classs at some different location on the selected day.');
+							opendialogToComfirmArea();
 						}else if($succ==12){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
+							alert('Teacher is already allocated to two saturdays of this cycle.');
 							opendialogToComfirm();
-							//alert('Teacher is already allocated to two saturdays of this cycle.');
 						}else if($succ==13){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
+							alert('The sessions scheduled on Saturdays should be from the same academic area.');
 							opendialogToComfirmArea();
-							//alert('The sessions scheduled on Saturdays should be from the same academic area.');
 						}else if($succ==14){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
+							opendialogToComfirmArea();
 						}else if($succ==15){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -861,6 +869,7 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Maximum number of sessions of the Program for the selected date has been exceeded.');
+							opendialogToComfirmArea();
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -2908,7 +2917,7 @@ function opendialogToComfirmArea(){
 	$("#dialog-confirm-area").show();
 	$( "#dialog-confirm-area" ).dialog({
       resizable: false,
-      height:140,
+      height:70,
       modal: true,
       buttons: {
         "Force Entry": function() {

@@ -880,7 +880,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
 						<p>Teacher is already allocated to two saturdays of this cycle.</p>
 					</div>
 					<div class="sessionboxSub" id="dialog-confirm-area" title="Message">
-						<p>The sessions scheduled on Saturdays should be from the same academic area.</p>
+						<p>You can force this entry into your schedule, bypassing the rules of validation. Please exercise caution when deciding to go this way!</p>
 					</div>
                 </form>
             </div>
