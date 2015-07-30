@@ -846,7 +846,7 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is already allocated to two saturdays of this cycle.');
-							opendialogToComfirm();
+							opendialogToComfirmArea();
 						}else if($succ==13){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -1009,11 +1009,11 @@ function addSubjectSession($forcing,$force_flag){
 						}else if($succ==11){
 							alert('Teacher is already allocated to some different location the same day.');
 						}else if($succ==12){
-							opendialogToComfirm();
-							//alert('Teacher is already allocated to two saturdays of this cycle.');
-						}else if($succ==13){							
+							alert('Teacher is already allocated to two saturdays of this cycle.');
 							opendialogToComfirmArea();
-							//alert('The sessions scheduled on Saturdays should be from the same academic area.');
+						}else if($succ==13){	
+							alert('The sessions scheduled on Saturdays should be from the same academic area.');
+							opendialogToComfirmArea();
 						}else if($succ==14){
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
 						}else if($succ==15){
