@@ -833,7 +833,6 @@ switch ($codeBlock) {
                 $valid = 1;
 				//check number of teachers for reserved activity
 				if($_POST['force_flag']!=1){
-					echo "hello"; die;
 					if ($valid == 1) 
 					{
 						if(count($_POST['slctTeacher']) > 1 && $_POST['reason'] == 'Alternate Choices for Session')
