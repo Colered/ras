@@ -3113,7 +3113,7 @@ class Timetable extends Base {
 		if($loc_id != 0)
 			$sql_str.= " and b.location_id = '".$loc_id."'";
 
-		$sql_str.= " order by room.order_priority DESC";
+		$sql_str.= " order by room.order_priority ASC";
 		$sql_room = $this->conn->query($sql_str);						
 		$k = 0;
 		while($result_room = mysqli_fetch_array($sql_room))
