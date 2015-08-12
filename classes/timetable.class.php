@@ -324,6 +324,7 @@ class Timetable extends Base {
 												$activities_array =$this->makeArray($date,$cycle_id,$res_act_detail['activity_id'],$res_act_detail['name'],$res_act_detail['program_year_id'],$res_act_detail['area_id'],$res_act_detail['program_name'],$res_act_detail['teacher_id'],$teacher_str,$res_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$res_act_detail['session_id'],$res_act_detail['session_name'],$res_act_detail['subject_id'],$res_act_detail['subject_name'],$res_act_detail['order_number'], $res_act_detail['reserved_flag']);
 												$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 												$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $res_act_detail['room_id'];
+												$reserved_subject_rooms[$date][$res_act_detail['subject_id']] = $res_act_detail['room_id'];
 												if($res_act_detail['reason'] == 'Teaching Session Jointly')
 												{
 													$reserved_teachers[$date][$start_time." - ".$end_time][$i] = explode(",",$res_act_detail['teacher_id']);
@@ -354,6 +355,7 @@ class Timetable extends Base {
 																$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$res_act_detail['room_id'],$res_act_detail['room_name'],$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag'],$recess_act_detail['special_activity_name']);
 																$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $res_act_detail['room_id'];
+																$reserved_subject_rooms[$date][$recess_act_detail['subject_id']] = $res_act_detail['room_id'];
 																$ts_array = explode(",",$recess_act_detail['timeslot_id']);
 																foreach($ts_array as $ts_id)
 																{
@@ -739,7 +741,7 @@ class Timetable extends Base {
 																			}
 																		}
 																		//Search for a room for this activity
-																		$room_id = $this->searchRoom1($free_act_detail['subject_id'],$date,$reserved_rooms,$all_ts,$start_time,$end_time,'',$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter);
+																		$room_id = $this->searchRoom1($free_act_detail['subject_id'],$date,$reserved_rooms,$all_ts,$start_time,$end_time,'',$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter,$reserved_subject_rooms);
 																		//if room found,then proceed further, otherwise exit.
 																		if($room_id >0)
 																		{
@@ -760,6 +762,7 @@ class Timetable extends Base {
 																						$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag'],$recess_act_detail['special_activity_name']);
 																						$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																						$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $room_id;
+																						$reserved_subject_rooms[$date][$recess_act_detail['subject_id']] = $room_id;
 																						$times_array = explode(",",$recess_act_detail['timeslot_id']);
 																						$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 																						$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
@@ -1932,7 +1935,7 @@ class Timetable extends Base {
 																$loc_id = 0;
 															}
 														}
-														$room_id = $this->searchRoom1($semi_res_act_detail['subject_id'],$date,$reserved_rooms,$semi_res_act_detail['timeslot_id'],$start_time,$end_time,$edit_room_id,$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter);
+														$room_id = $this->searchRoom1($semi_res_act_detail['subject_id'],$date,$reserved_rooms,$semi_res_act_detail['timeslot_id'],$start_time,$end_time,$edit_room_id,$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter,$reserved_subject_rooms);
 														if($room_id > 0)
 														{
 															$room_name = $this->getRoomName($room_id);
@@ -1952,6 +1955,7 @@ class Timetable extends Base {
 																		$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag'],$recess_act_detail['special_activity_name']);
 																		$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																		$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $room_id;
+																		$reserved_subject_rooms[$date][$recess_act_detail['subject_id']] = $room_id;
 																		$times_array = explode(",",$recess_act_detail['timeslot_id']);
 																		$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 																		$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
@@ -2269,7 +2273,7 @@ class Timetable extends Base {
 																			}
 																		}
 																		//If room is available,then proceed further otherwise exit
-																		$room_id = $this->searchRoom1($semi_res_act_detail['subject_id'],$date,$reserved_rooms,$all_ts,$start_time,$end_time,$edit_room_id,$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter);
+																		$room_id = $this->searchRoom1($semi_res_act_detail['subject_id'],$date,$reserved_rooms,$all_ts,$start_time,$end_time,$edit_room_id,$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter,$reserved_subject_rooms);
 																		if($room_id > 0)
 																		{
 																			$room_name = $this->getRoomName($room_id);
@@ -2289,6 +2293,7 @@ class Timetable extends Base {
 																						$activities_array = $this->makeArray($date,$cycle_id,$recess_act_detail['activity_id'],$recess_act_detail['name'],$recess_act_detail['program_year_id'],$recess_act_detail['area_id'],$recess_act_detail['program_name'],$recess_act_detail['teacher_id'],$recess_act_detail['teacher_name'],$recess_act_detail['teacher_type'],$room_id,$room_name,$recess_act_detail['session_id'],$recess_act_detail['session_name'],$recess_act_detail['subject_id'],$recess_act_detail['subject_name'],$recess_act_detail['order_number'],$recess_act_detail['reserved_flag'],$recess_act_detail['special_activity_name']);
 																						$reserved_array[$date][$i][$rec_start_time." - ".$rec_end_time] = $activities_array;
 																						$reserved_rooms[$date][$rec_start_time." - ".$rec_end_time][$i] = $room_id;
+																						$reserved_subject_rooms[$date][$recess_act_detail['subject_id']] = $room_id;
 																						$times_array = explode(",",$recess_act_detail['timeslot_id']);
 																						$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 																						$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
@@ -2747,7 +2752,7 @@ class Timetable extends Base {
 		}
 	}
 	//function to get room name according to timeslots
-	public function searchRoom1($subject_id,$date,$reserved_rooms,$all_ts,$start_time,$end_time,$edit_room_id='',$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter)
+	public function searchRoom1($subject_id,$date,$reserved_rooms,$all_ts,$start_time,$end_time,$edit_room_id='',$loc_id,$recess_activities,$program_id,$counter,$allTimeslots,$recCounter,$reserved_subject_rooms)
 	{
 		$final_room_id = 0;
 		if($edit_room_id != '')
@@ -2755,7 +2760,7 @@ class Timetable extends Base {
 			$room_id = $this->getRoomBySubject($subject_id,$date,$loc_id);
 			if($room_id == '0')
 			{
-				$room_res_id = $this->getRoomFromReservedAct($subject_id,$date,$reserved_rooms,$loc_id);
+				$room_res_id = $this->getRoomFromReservedAct($subject_id,$date,$reserved_subject_rooms,$loc_id);
 				if($room_res_id == '0')
 				{
 					if($this->checkRoomAvailability($edit_room_id,$date,$all_ts) && !$this->isRoomReserved($date,$start_time,$end_time,$edit_room_id,$reserved_rooms))
@@ -2841,7 +2846,7 @@ class Timetable extends Base {
 			$room_id = $this->getRoomBySubject($subject_id,$date,$loc_id);
 			if($room_id == '0')
 			{
-				$room_res_id = $this->getRoomFromReservedAct($subject_id,$date,$reserved_rooms,$loc_id);
+				$room_res_id = $this->getRoomFromReservedAct($subject_id,$date,$reserved_subject_rooms,$loc_id);
 				if($room_res_id == '0')
 				{
 					$rooms = $this->search_room($date,$all_ts,$loc_id);
@@ -3043,47 +3048,48 @@ class Timetable extends Base {
 	{
 		$rid = '';
 		if(!empty($reserved_rooms))
-		{			
-			foreach($reserved_rooms as $key => $value)
+		{	
+			//print_r($reserved_rooms);die;
+			/*foreach($reserved_rooms as $key => $value)
 			{
 				foreach($value as $k=>$v)
 				{					
 					$new_reserved_rooms[$key] = $v;
 				}				
-			}
+			}*/
 			//print_r($new_reserved_rooms);die;			
-			foreach($new_reserved_rooms as $key => $value)
+			foreach($reserved_rooms as $key => $value)
 			{
 				$timestamp = strtotime($key);
 				$startDateOfWeek = (date("D", $timestamp) == 'Mon') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Last Monday', $timestamp));
 				$endDateOfWeek = (date("D", $timestamp) == 'Sun') ? date('Y-m-d', $timestamp) : date('Y-m-d', strtotime('Next Sunday', $timestamp));
 				if($date >= $startDateOfWeek && $date <= $endDateOfWeek)
 				{
-					if(array_key_exists($subject_id,$new_reserved_rooms[$key]))
+					if(array_key_exists($subject_id,$reserved_rooms[$key]))
 					{
 						if($loc_id == 0)
 						{
-							$rid = $new_reserved_rooms[$key][$subject_id];
+							$rid = $reserved_rooms[$key][$subject_id];
 							break;
 						}else{
-							$location_id = $this->getLocation($new_reserved_rooms[$key][$subject_id]);
+							$location_id = $this->getLocation($reserved_rooms[$key][$subject_id]);
 							if($location_id == $loc_id)
 							{
-								$rid = $new_reserved_rooms[$key][$subject_id];
+								$rid = $reserved_rooms[$key][$subject_id];
 								break;
 							}					
 						}						
-					}elseif(array_key_exists('0',$new_reserved_rooms[$key]))
+					}elseif(array_key_exists('0',$reserved_rooms[$key]))
 					{
 						if($loc_id == 0)
 						{
-							$rid = $new_reserved_rooms[$key][0];
+							$rid = $reserved_rooms[$key][0];
 							break;
 						}else{
-							$location_id = $this->getLocation($new_reserved_rooms[$key][0]);
+							$location_id = $this->getLocation($reserved_rooms[$key][0]);
 							if($location_id == $loc_id)
 							{
-								$rid = $new_reserved_rooms[$key][0];
+								$rid = $reserved_rooms[$key][0];
 								break;
 							}					
 						}
@@ -3113,7 +3119,7 @@ class Timetable extends Base {
 		if($loc_id != 0)
 			$sql_str.= " and b.location_id = '".$loc_id."'";
 
-		$sql_str.= " order by room.order_priority ASC";
+		$sql_str.= " order by order_priority DESC";
 		$sql_room = $this->conn->query($sql_str);						
 		$k = 0;
 		while($result_room = mysqli_fetch_array($sql_room))
