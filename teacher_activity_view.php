@@ -79,10 +79,10 @@ function activityFilter()
 				$readonly = 'class="buttonsub" disabled="disabled" style="background-color:#CCCCCC; background-image:none"';
 			}?>
 			<div style="float:right">
-				<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
+				<!--<form action="postdata.php" name="acc_allo" id="acc_allo" method="post">
 				<input type="hidden" value="acceptAllocation" name="form_action">
 				<input  type="button" class="buttonsub"  disabled="disabled" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo"/>
-				</form>
+				</form>-->
 				<div class = "activity-color-filteration" style="margin-right:420px;"> 
 					<form id="act_view_filter" name="act_view_filter" method="post" action="teacher_activity_view.php" novalidate="novalidate">	
 						<strong>Activity Filter  </strong>
@@ -113,6 +113,7 @@ function activityFilter()
                         <th>Class Room</th>
                         <th>Date</th>
                         <th>Timeslot</th>
+						<th>Special Activity Name</th>
                         <th>PreAllocated</th>
                         <th>Allocation Status</th>
 						<th>Reason</th>
@@ -228,6 +229,7 @@ function activityFilter()
 										echo $objT->getTimeslotById($min_ts_id,$max_ts_id);
 									 }
 								?></td>
+							<td><?php echo $row['special_activity_name'];?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $row['reason'];?></td>

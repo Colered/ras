@@ -275,13 +275,15 @@ class Teacher extends Base {
 		$Date_range = $result_tt_range->fetch_assoc();
 		$result_sess = $this->getSessionFromTT();
 		
-		$sql = "SELECT ta.id,td.activity_id reserved_act_id,ta.name,ta.program_year_id,ta.reason as reason_flag,tar.reason,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name ,td.room_id reserverd_room_id,td.date,td.timeslot FROM teacher_activity ta
-						left join subject s on(s.id = ta.subject_id)
-						left join subject_session ss on(ss.id=ta.session_id)
-						left join teacher t on(t.id = ta.teacher_id)
-						left join timetable_detail td on(td.activity_id=ta.id)
-						left join program_years py on(py.id=ta.program_year_id)
-						left join teacher_activity_reason tar on tar.activity_id = ta.id";
+	    $sql = "SELECT ta.id, td.activity_id reserved_act_id, ta.name, ta.program_year_id, ta.reason AS reason_flag, tar.reason, ta.cycle_id, ta.subject_id, ta.session_id, ta.teacher_id, ta.group_id, ta.room_id, ta.timeslot_id, ta.reserved_flag, ta.act_date, s.subject_name, ss.session_name, t.teacher_name, t.email, py.name program_name, td.room_id reserverd_room_id, td.date, td.timeslot, sam.special_activity_name
+		FROM teacher_activity ta
+		LEFT JOIN subject s ON ( s.id = ta.subject_id ) 
+		LEFT JOIN subject_session ss ON ( ss.id = ta.session_id ) 
+		LEFT JOIN teacher t ON ( t.id = ta.teacher_id ) 
+		LEFT JOIN timetable_detail td ON ( td.activity_id = ta.id ) 
+		LEFT JOIN program_years py ON ( py.id = ta.program_year_id ) 
+		LEFT JOIN teacher_activity_reason tar ON tar.activity_id = ta.id
+		LEFT JOIN special_activity_mapping sam ON sam.teacher_activity_id = ta.id";
 		if($activity_filter_val==1){
 			$sql.= " WHERE  td.activity_id = ta.id";
 		}
