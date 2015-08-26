@@ -662,11 +662,14 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																								);
 						$sesNo = 0;
 						foreach($val as $dataArr){
-							$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowNo, $dataArr['timeslot']);
+							$timeslotArr = explode('-',$dataArr['timeslot']);
+							
+							$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowNo, trim($timeslotArr[0]));
+							$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo, trim($timeslotArr[1]));
 							if($dataArr['teacher_name']==''){
-								$objPHPExcel->getActiveSheet()->mergeCells('C'.$rowNo.':E'.$rowNo);
-								$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo, $dataArr['special_activity_name']);
-								$objPHPExcel->getActiveSheet()->getStyle('C'.$rowNo)->applyFromArray(array(
+								$objPHPExcel->getActiveSheet()->mergeCells('D'.$rowNo.':E'.$rowNo);
+								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo, $dataArr['special_activity_name']);
+								$objPHPExcel->getActiveSheet()->getStyle('D'.$rowNo)->applyFromArray(array(
 																											'alignment' => array(
 																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
 																												'wrap' => true
@@ -685,15 +688,29 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																											  )
 																										)
 																								);
+								$objPHPExcel->getActiveSheet()->getStyle('C'.$rowNo)->applyFromArray(array(
+																										'fill'  => array(
+																												'type' => PHPExcel_Style_Fill::FILL_SOLID,
+																												'color' => array('rgb' => 'D2D2D2')
+																											  )
+																										)
+																								);
+								$objPHPExcel->getActiveSheet()->getStyle('F'.$rowNo)->applyFromArray(array(
+																										'fill'  => array(
+																												'type' => PHPExcel_Style_Fill::FILL_SOLID,
+																												'color' => array('rgb' => 'D2D2D2')
+																											  )
+																										)
+																								);
 							}else{
 								
 								$sessionNoText = utf8_encode('Sesión No: ');
 								$textTechNote = utf8_encode('Nota Técnica: ');
-								$contentColumD = 'Caso: '.$dataArr['case_number'].' / '.$textTechNote.$dataArr['technical_notes'];
-								$contentColumE = 'Prof: '.$dataArr['teacher_name'].' / '.$dataArr['subject_name'].' / '.$sessionNoText.$dataArr['session_name'];
-								$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo,utf8_encode($arraySessionNo[$sesNo]));
-								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo, $contentColumD);
+								$contentColumE = 'Caso: '.$dataArr['case_number'].' / '.$textTechNote.$dataArr['technical_notes'];
+								$contentColumF = 'Prof: '.$dataArr['teacher_name'].' / '.$dataArr['subject_name'].' / '.$sessionNoText.$dataArr['session_name'];
+								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo,utf8_encode($arraySessionNo[$sesNo]));
 								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo, $contentColumE);
+								$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowNo, $contentColumF);
 								$sesNo++;
 							}
 							$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
@@ -701,14 +718,16 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							$objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('F')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('C8')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('D8')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('E8')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('F8')->getAlignment()->setWrapText(true);
 							$rowNo = $rowNo+1;
 						}
 				}
-				$objPHPExcel->getActiveSheet()->SetCellValue('C2', $programName);
-				$objPHPExcel->getActiveSheet()->SetCellValue('C4', $dateStr);
+				$objPHPExcel->getActiveSheet()->SetCellValue('D2', $programName);
+				$objPHPExcel->getActiveSheet()->SetCellValue('D4', $dateStr);
 				$worksheet = $objPHPExcel->getActiveSheet();
 				$objDrawing = new PHPExcel_Worksheet_Drawing();
 				$objDrawing->setPath('./images/barna_excel.png');
