@@ -628,7 +628,10 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										3 => 'Cuarta Sesión:',
 										4 => 'Quinta Sesión:',
 										5 => 'Sexta Sesión:',
-										6 => 'Séptima Sesión:'
+										6 => 'Séptima Sesión:',
+										7 => 'Octava Sesion:',
+										8 => 'Novena Sesion:',
+										9 => 'Decima Sesion:'
 										);
 				if(isset($_POST['slctProgram']) && $_POST['slctProgram'] !="" ){
 					$programNameArr = explode('|', $_POST['slctProgram']);
@@ -698,6 +701,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							$objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('C8')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('D8')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('E8')->getAlignment()->setWrapText(true);
 							$rowNo = $rowNo+1;
 						}
 				}
