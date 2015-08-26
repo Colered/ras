@@ -239,6 +239,36 @@ $(function() {
 	});
  });
 $(function() {
+	$("#fromGenrtWPR").datepicker({
+	    dateFormat: 'yy/mm/dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function( selectedDate) {
+			 $("#toGenrtWPR").datepicker("option", "minDate", selectedDate);
+             //var maxDate = new Date(Date.parse(selectedDate));
+			 //maxDate.setDate(maxDate.getDate() + 6 ); 
+			 $( "#toGenrtWPR" ).datepicker( "option", "minDate", selectedDate);
+        }
+	});
+	$("#toGenrtWPR").datepicker({
+	    dateFormat: 'yy/mm/dd',
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		changeMonth: true, 
+		changeYear: true,
+		onClose: function(selectedDate) {
+			$("#fromGenrtWR").datepicker("option", "maxDate", selectedDate);
+			//var minDate = new Date(Date.parse(selectedDate));
+            //minDate.setDate(minDate.getDate() - 6 );   
+			$("#fromGenrtWR").datepicker("option", "maxDate", selectedDate);
+		}
+	});
+ });
+$(function() {
 	$("#fromSpecialAval").datepicker({
 	    dateFormat: 'yy-mm-dd',
 		defaultDate: "+1w",

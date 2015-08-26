@@ -3503,6 +3503,25 @@ class Timetable extends Base {
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
+	
+	//Getting the teacher activity detail for report for a date range
+	public function getTeachersActivityInDateRange($from,$to,$programId){
+		$teacher_sql = "SELECT t.id,td.activity_id, sam.special_activity_name, td.date, td.timeslot, t.teacher_name, t.teacher_type, tt.teacher_type_name, py.id AS program_id, py.name, p.company, u.name AS unit, t.payrate, s.session_name, a.area_name, su.subject_name, s.case_number, s.technical_notes, r.room_name
+FROM timetable_detail td
+LEFT JOIN teacher t ON t.id = td.teacher_id
+LEFT JOIN subject su ON su.id = td.subject_id
+LEFT JOIN program_years py ON py.id = td.program_year_id
+LEFT JOIN program p ON p.id = py.program_id
+LEFT JOIN unit u ON u.id = p.unit
+LEFT JOIN subject_session s ON s.id = td.session_id
+LEFT JOIN area a ON a.id = su.area_id
+LEFT JOIN room r ON r.id = td.room_id
+LEFT JOIN teacher_type tt ON tt.id = t.teacher_type
+LEFT JOIN special_activity_mapping sam ON sam.teacher_activity_id = td.activity_id
+WHERE DATE between '".$from."' and '".$to."' and py.id = '".$programId."' ORDER BY td.date ASC, td.timeslot ASC"; 
+		$q_res = mysqli_query($this->conn, $teacher_sql);
+		return $q_res;
+	}
 	//getting cycle id 
 	public function getCycleDetailsId($program_id,$cycle_id_old)
 	{

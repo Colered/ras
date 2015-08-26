@@ -612,6 +612,108 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$objWriter->save('php://output');
 	}
 	break;
+	case "generateWorkPlanReport":
+			if(isset($_POST['fromGenrtWPR']) && $_POST['toGenrtWPR'] != '')
+			{   
+				require 'classes/PHPExcel.php';
+				require_once 'classes/PHPExcel/IOFactory.php';
+				$objPHPExcel = PHPExcel_IOFactory::load("work_plan_report.xlsx");
+				$objPHPExcel->setActiveSheetIndex(0);
+				$from = date("Y-m-d",strtotime($_POST['fromGenrtWPR']));
+				$to = date("Y-m-d",strtotime($_POST['toGenrtWPR']));
+				$dateStr='From Date '.$from.' to '.$to;
+				$arraySessionNo = array(0 => 'Primera Sesión:',
+										1 => 'Segunda Sesión:',
+										2 => 'Tercera Sesión:',
+										3 => 'Cuarta Sesión:',
+										4 => 'Quinta Sesión:',
+										5 => 'Sexta Sesión:',
+										6 => 'Séptima Sesión:'
+										);
+				if(isset($_POST['slctProgram']) && $_POST['slctProgram'] !="" ){
+					$programNameArr = explode('|', $_POST['slctProgram']);
+					$programName  = $programNameArr[1];	
+					$programId = $programNameArr[0];		
+				}
+				require_once('config.php');
+				$objTime = new Timetable();
+				//getting the allocated activities details
+				$result = $objTime->getTeachersActivityInDateRange($from,$to,$programId);
+				$i=0;
+				$datePrgmArray=array();
+				$reformRowArr = array();
+				while($row = $result->fetch_assoc()){
+						$reformRowArr[$row['date']][] = $row;
+				}
+				$rowNo = 8;
+				foreach($reformRowArr as $key=>$val){
+						$valToMerge = $rowNo + count($val)-1;
+						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowNo, $key);
+						$objPHPExcel->getActiveSheet()->mergeCells('A'.$rowNo.':A'.$valToMerge);
+						$objPHPExcel->getActiveSheet()->getStyle('A'.$rowNo)->applyFromArray(	array(
+																											'alignment' => array(
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
+																											)
+																										)
+																								);
+						$sesNo = 0;
+						foreach($val as $dataArr){
+							$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowNo, $dataArr['timeslot']);
+							if($dataArr['teacher_name']==''){
+								$objPHPExcel->getActiveSheet()->mergeCells('C'.$rowNo.':E'.$rowNo);
+								$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo, $dataArr['special_activity_name']);
+								$objPHPExcel->getActiveSheet()->getStyle('C'.$rowNo)->applyFromArray(array(
+																											'alignment' => array(
+																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+																												'wrap' => true
+																											),
+																										
+																										'fill'  => array(
+																												'type' => PHPExcel_Style_Fill::FILL_SOLID,
+																												'color' => array('rgb' => 'D2D2D2')
+																											  )
+																										)
+																								);
+								$objPHPExcel->getActiveSheet()->getStyle('B'.$rowNo)->applyFromArray(array(
+																										'fill'  => array(
+																												'type' => PHPExcel_Style_Fill::FILL_SOLID,
+																												'color' => array('rgb' => 'D2D2D2')
+																											  )
+																										)
+																								);
+							}else{
+								
+								$sessionNoText = utf8_encode('Sesión No: ');
+								$textTechNote = utf8_encode('Nota Técnica: ');
+								$contentColumD = 'Case: '.$dataArr['case_number'].' / '.$textTechNote.$dataArr['technical_notes'];
+								$contentColumE = 'Prof: '.$dataArr['teacher_name'].' / '.$dataArr['subject_name'].' / '.$sessionNoText.$dataArr['session_name'];
+								$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo,utf8_encode($arraySessionNo[$sesNo]));
+								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo, $contentColumD);
+								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo, $contentColumE);
+								$sesNo++;
+							}
+							$objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setWrapText(true);
+							$rowNo = $rowNo+1;
+						}
+				}
+				$objPHPExcel->getActiveSheet()->SetCellValue('C2', $programName);
+				$objPHPExcel->getActiveSheet()->SetCellValue('C4', $dateStr);
+				$worksheet = $objPHPExcel->getActiveSheet();
+				$objDrawing = new PHPExcel_Worksheet_Drawing();
+				$objDrawing->setPath('./images/barna_excel.png');
+				$objDrawing->setResizeProportional(false);
+				$objDrawing->setWidth(110);
+				$objDrawing->setHeight(35);
+				$objDrawing->setCoordinates('M2');
+				$objDrawing->setWorksheet($worksheet);		
+				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+				header('Content-type: application/vnd.ms-excel');
+				header('Content-Disposition: attachment; filename="work_plan_report.xls"');
+				$objWriter->save('php://output');
+	}
+	break;
  }
 }
 ?>
