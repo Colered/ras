@@ -686,13 +686,16 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								
 								$sessionNoText = utf8_encode('Sesión No: ');
 								$textTechNote = utf8_encode('Nota Técnica: ');
-								$contentColumD = 'Case: '.$dataArr['case_number'].' / '.$textTechNote.$dataArr['technical_notes'];
+								$contentColumD = 'Caso: '.$dataArr['case_number'].' / '.$textTechNote.$dataArr['technical_notes'];
 								$contentColumE = 'Prof: '.$dataArr['teacher_name'].' / '.$dataArr['subject_name'].' / '.$sessionNoText.$dataArr['session_name'];
 								$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo,utf8_encode($arraySessionNo[$sesNo]));
 								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo, $contentColumD);
 								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo, $contentColumE);
 								$sesNo++;
 							}
+							$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setWrapText(true);
 							$rowNo = $rowNo+1;
