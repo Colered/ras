@@ -649,6 +649,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$reformRowArr[$row['date']][] = $row;
 				}
 				$rowNo = 8;
+				//echo 'tot='.count($reformRowArr).'<br>';
+				$totData = count($reformRowArr);
+				$tot = 1;
 				foreach($reformRowArr as $key=>$val){
 						$valToMerge = $rowNo + count($val)-1;
 						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowNo, $key);
@@ -666,6 +669,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							
 							$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowNo, trim($timeslotArr[0]));
 							$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo, trim($timeslotArr[1]));
+							//for recess activities
 							if($dataArr['teacher_name']==''){
 								$objPHPExcel->getActiveSheet()->mergeCells('D'.$rowNo.':E'.$rowNo);
 								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo, $dataArr['special_activity_name']);
@@ -703,29 +707,151 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																										)
 																								);
 							}else{
-								
+								//for normal activities
 								$sessionNoText = utf8_encode('Sesión No: ');
 								$textTechNote = utf8_encode('Nota Técnica: ');
-								$contentColumE = 'Caso: '.$dataArr['case_number'].' / '.$textTechNote.$dataArr['technical_notes'];
-								$contentColumF = 'Prof: '.$dataArr['teacher_name'].' / '.$dataArr['subject_name'].' / '.$sessionNoText.$dataArr['session_name'];
+								$textArea = utf8_encode('Área: ');
+								$contentColumE = 'Caso: '.$dataArr['case_number']."\n".$textTechNote.$dataArr['technical_notes'];
+								$contentColumF = 'Prof: '.$dataArr['teacher_name']."\n"."Sub: ".$dataArr['subject_name']."\n"."Room: ".$dataArr['room_name']."\n".$textArea.$dataArr['area_name']."\n".$sessionNoText.$dataArr['session_name'];
 								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo,utf8_encode($arraySessionNo[$sesNo]));
 								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo, $contentColumE);
 								$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowNo, $contentColumF);
 								$sesNo++;
 							}
-							$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
-							$objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
-							$objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
-							$objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setWrapText(true);
-							$objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setWrapText(true);
-							$objPHPExcel->getActiveSheet()->getStyle('F')->getAlignment()->setWrapText(true);
+							$objPHPExcel->getActiveSheet()->getStyle('A'.$rowNo)->applyFromArray(array(
+																											'alignment' => array(
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
+																											)
+																										)
+																								);
+							$objPHPExcel->getActiveSheet()->getStyle('B'.$rowNo)->applyFromArray(array(
+																											'alignment' => array(
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
+																											)
+																										)
+																								);
+							$objPHPExcel->getActiveSheet()->getStyle('C'.$rowNo)->applyFromArray(array(
+																											'alignment' => array(
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
+																											)
+																										)
+																								);
+							$objPHPExcel->getActiveSheet()->getStyle('D'.$rowNo)->applyFromArray(array(
+																											'alignment' => array(
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
+																											)
+																										)
+																								);
+							$objPHPExcel->getActiveSheet()->getStyle('E'.$rowNo)->applyFromArray(array(
+																											'alignment' => array(
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
+																											)
+																										)
+																								);
+							$objPHPExcel->getActiveSheet()->getStyle('F'.$rowNo)->applyFromArray(array(
+																											'alignment' => array(
+																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'wrap' => true
+																											)
+																										)
+																								);																																																																				
 							$objPHPExcel->getActiveSheet()->getStyle('C8')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('D8')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('E8')->getAlignment()->setWrapText(true);
 							$objPHPExcel->getActiveSheet()->getStyle('F8')->getAlignment()->setWrapText(true);
 							$rowNo = $rowNo+1;
 						}
-				}
+						$objPHPExcel->getActiveSheet()->mergeCells('A'.$rowNo.':F'.$rowNo);
+						if($tot != $totData){
+							$rowNo = $rowNo+1;
+							$objPHPExcel->getActiveSheet()->getStyle('A'.$rowNo)->applyFromArray(array(	'fill'  => array( 'type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'B8CCE4')),'alignment' => array(
+																													'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+																													'wrap' => true
+																												),'borders' => array(
+																													'left'     => array(
+																														'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																													),
+																													'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																												)));
+							$objPHPExcel->getActiveSheet()->getStyle('B'.$rowNo)->applyFromArray(array(	'fill'  => array( 'type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'B8CCE4')),'alignment' => array(
+																													'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+																													'wrap' => true
+																												),'borders' => array(
+																													'left'     => array(
+																														'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																													),
+																													'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																												)));
+							$objPHPExcel->getActiveSheet()->getStyle('C'.$rowNo)->applyFromArray(array(	'fill'  => array( 'type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'B8CCE4')),'alignment' => array(
+																													'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+																													'wrap' => true
+																												),'borders' => array(
+																													'left'     => array(
+																														'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																													),
+																													'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																												)));
+							$objPHPExcel->getActiveSheet()->getStyle('D'.$rowNo)->applyFromArray(array(	'fill'  => array( 'type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'B8CCE4')),'alignment' => array(
+																													'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+																													'wrap' => true
+																												),'borders' => array(
+																													'left'     => array(
+																														'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																													),
+																													'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																												)));
+							$objPHPExcel->getActiveSheet()->getStyle('E'.$rowNo)->applyFromArray(array(	'fill'  => array( 'type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'B8CCE4')),'alignment' => array(
+																													'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+																													'wrap' => true
+																												),'borders' => array(
+																													'left'     => array(
+																														'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																													),
+																													'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																												)));
+							$objPHPExcel->getActiveSheet()->getStyle('F'.$rowNo)->applyFromArray(array(	'fill'  => array( 'type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'B8CCE4')),'alignment' => array(
+																													'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+																													'wrap' => true
+																												),'borders' => array(
+																													'left'     => array(
+																														'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																													),
+																													'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																													'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																												)));
+							
+							$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowNo, utf8_encode('Día'));
+							$objPHPExcel->getActiveSheet()->getStyle('A'.$rowNo)->getFont()->setBold(true);
+							$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowNo, utf8_encode('Comienzo'));
+							$objPHPExcel->getActiveSheet()->getStyle('B'.$rowNo)->getFont()->setBold(true);
+							$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo, utf8_encode('Final'));
+							$objPHPExcel->getActiveSheet()->getStyle('C'.$rowNo)->getFont()->setBold(true);
+							$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo, utf8_encode('Distribución'));
+							$objPHPExcel->getActiveSheet()->getStyle('D'.$rowNo)->getFont()->setBold(true);
+							$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo, utf8_encode('Materiales'));
+							$objPHPExcel->getActiveSheet()->getStyle('E'.$rowNo)->getFont()->setBold(true);
+							$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowNo, utf8_encode('Profesor/Área/Sesión'));
+							$objPHPExcel->getActiveSheet()->getStyle('F'.$rowNo)->getFont()->setBold(true);
+							$rowNo = $rowNo+1;
+							$tot = $tot+1;
+						}
+				} 
 				$objPHPExcel->getActiveSheet()->SetCellValue('D2', $programName);
 				$objPHPExcel->getActiveSheet()->SetCellValue('D4', $dateStr);
 				$worksheet = $objPHPExcel->getActiveSheet();
