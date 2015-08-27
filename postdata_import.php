@@ -619,9 +619,19 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				require_once 'classes/PHPExcel/IOFactory.php';
 				$objPHPExcel = PHPExcel_IOFactory::load("work_plan_report.xlsx");
 				$objPHPExcel->setActiveSheetIndex(0);
+				/*$objPHPExcel->getDefaultStyle()->applyFromArray(array(
+																	'borders' => array(
+																						'left'     => array(
+																							'style' => PHPExcel_Style_Border::BORDER_MEDIUM
+																						),
+																						'bottom' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																						'right'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM),
+																						'top'  => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+																					)
+																	));*/
 				$from = date("Y-m-d",strtotime($_POST['fromGenrtWPR']));
 				$to = date("Y-m-d",strtotime($_POST['toGenrtWPR']));
-				$dateStr='From Date '.$from.' to '.$to;
+				$dateStr='Desde '.$from.' hasta '.$to;
 				$arraySessionNo = array(0 => 'Primera Sesión:',
 										1 => 'Segunda Sesión:',
 										2 => 'Tercera Sesión:',
@@ -669,8 +679,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							
 							$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowNo, trim($timeslotArr[0]));
 							$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowNo, trim($timeslotArr[1]));
-							//for recess activities
-							if($dataArr['teacher_name']==''){
+							//for recess activities 3 for recess, 4 for group activity and 5 for adhoc activity
+							$specialActivityArr = array(3,4,5);
+							if(in_array($dataArr['reserved_flag'], $specialActivityArr)){
 								$objPHPExcel->getActiveSheet()->mergeCells('D'.$rowNo.':E'.$rowNo);
 								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo, $dataArr['special_activity_name']);
 								$objPHPExcel->getActiveSheet()->getStyle('D'.$rowNo)->applyFromArray(array(
@@ -711,9 +722,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								$sessionNoText = utf8_encode('Sesión No: ');
 								$textTechNote = utf8_encode('Nota Técnica: ');
 								$textArea = utf8_encode('Área: ');
-								$contentColumE = 'Caso: '.$dataArr['case_number']."\n".$textTechNote.$dataArr['technical_notes'];
-								$contentColumF = 'Prof: '.$dataArr['teacher_name']."\n"."Sub: ".$dataArr['subject_name']."\n"."Room: ".$dataArr['room_name']."\n".$textArea.$dataArr['area_name']."\n".$sessionNoText.$dataArr['session_name'];
+								$textSubName = utf8_encode('Módulo: ');
+								$contentColumE = "Caso: ".$dataArr['case_number']."\n".$textTechNote.$dataArr['technical_notes'];
+								$contentColumF = 'Prof: '.$dataArr['teacher_name']."\n".$textSubName.$dataArr['subject_name']."\n".$textArea.$dataArr['area_name']."\n".$sessionNoText.$dataArr['session_name']."\n".$dataArr['room_name'];
 								$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowNo,utf8_encode($arraySessionNo[$sesNo]));
+								$objPHPExcel->getActiveSheet()->getStyle('D'.$rowNo)->getFont()->setBold(true);
 								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo, $contentColumE);
 								$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowNo, $contentColumF);
 								$sesNo++;
@@ -767,8 +780,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							$rowNo = $rowNo+1;
 						}
 						$objPHPExcel->getActiveSheet()->mergeCells('A'.$rowNo.':F'.$rowNo);
+						$nextRow = $rowNo+1;
+						$objPHPExcel->getActiveSheet()->mergeCells('A'.$nextRow.':F'.$nextRow);
+						$objPHPExcel->getActiveSheet()->mergeCells('A'.$rowNo.':A'.$nextRow);
 						if($tot != $totData){
-							$rowNo = $rowNo+1;
+							$rowNo = $rowNo+2;
 							$objPHPExcel->getActiveSheet()->getStyle('A'.$rowNo)->applyFromArray(array(	'fill'  => array( 'type' => PHPExcel_Style_Fill::FILL_SOLID, 'color' => array('rgb' => 'B8CCE4')),'alignment' => array(
 																													'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
 																													'wrap' => true

@@ -95,7 +95,19 @@ class Timetable extends Base {
 		return $cycle_id;
 	}
 	public function getTeachersInRange($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id='',$module=''){
-		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name from timetable_detail td left join teacher t on t.id = td.teacher_id left join subject su on su.id = td.subject_id left join program_years py on py.id = td.program_year_id left join program p on p.id = py.program_id left join unit u on u.id = p.unit left join subject_session s on s.id = td.session_id left join area a on a.id = su.area_id left join room r on r.id = td.room_id left join teacher_type tt on tt.id = t.teacher_type where date between '".$from."' and '".$to."'";
+		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name,tact.reserved_flag
+		 from timetable_detail td 
+		 left join teacher t on t.id = td.teacher_id 
+		 left join subject su on su.id = td.subject_id 
+		 left join program_years py on py.id = td.program_year_id 
+		 left join program p on p.id = py.program_id 
+		 left join unit u on u.id = p.unit 
+		 left join subject_session s on s.id = td.session_id 
+		 left join area a on a.id = su.area_id 
+		 left join room r on r.id = td.room_id 
+		 left join teacher_type tt on tt.id = t.teacher_type
+		 left join teacher_activity tact on tact.id = td.activity_id
+		 where date between '".$from."' and '".$to."'";
 		 if($teacher_id != '')
 		{
 			 $teacher_sql .= " and teacher_id = '".$teacher_id."'";
@@ -3506,7 +3518,7 @@ class Timetable extends Base {
 	
 	//Getting the teacher activity detail for report for a date range
 	public function getTeachersActivityInDateRange($from,$to,$programId){
-		$teacher_sql = "SELECT t.id,td.activity_id, sam.special_activity_name, td.date, td.timeslot, t.teacher_name, t.teacher_type, tt.teacher_type_name, py.id AS program_id, py.name, p.company, u.name AS unit, t.payrate, s.session_name, a.area_name, su.subject_name, s.order_number, s.case_number, s.technical_notes, r.room_name, tact.start_time
+		$teacher_sql = "SELECT t.id,td.activity_id, sam.special_activity_name, td.date, td.timeslot, t.teacher_name, t.teacher_type, tt.teacher_type_name, py.id AS program_id, py.name, p.company, u.name AS unit, t.payrate, s.session_name, a.area_name, su.subject_name, s.order_number, s.case_number, s.technical_notes, r.room_name, tact.start_time, tact.reserved_flag
 FROM timetable_detail td
 LEFT JOIN teacher t ON t.id = td.teacher_id
 LEFT JOIN subject su ON su.id = td.subject_id

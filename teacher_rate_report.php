@@ -229,7 +229,7 @@ function submitFunction()
 				</select>
 				
 			</div>
-			<?php } ?>
+			<?php }?>
 		</div>
 		</form>
 			<div id="printing-div">
@@ -242,14 +242,16 @@ function submitFunction()
                         <th>Teacher Type </th>
                         <th>Program</th>
                         <th>Company</th>
-                        <th>Module</th>
+                        <th>Subject Name</th>
                         <th>Sessions</th>
+						<th>Activity type</th>
                         <th>Amount to pay $</th>
                         
                     </tr>
                 </thead>
                 <tbody>
 				<?php	
+						$activityType = array(0=>"", 1=>"",2=>"",3=>"Recess Activity", 4=>"Group Meeting", 5=>"Adhoc Activity");
 						if($result)
 						{	$i=1;
 							while($row = $result->fetch_assoc())
@@ -261,8 +263,9 @@ function submitFunction()
 								<td><?php echo $row['teacher_type_name'];?></td>
 								<td><?php echo $row['name'];?></td>
 								<td><?php echo $row['company'];?></td>
-								<td><?php echo $row['unit'];?></td>
+								<td><?php echo $row['subject_name'];?></td>
 								<td><?php echo $row['session_name'];?></td>
+								<td><?php echo $activityType[$row['reserved_flag']];?></td>
 								<td><?php echo $row['payrate'];?></td>
 							</tr>
 						<?php $i++; } 
