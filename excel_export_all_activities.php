@@ -6,26 +6,39 @@ $data = array();
 while($row = mysqli_fetch_array($q_res))
 {
 	$cycle_id = $objTime->getCycleDetailsId($row['program_id'],$row['cycle_id']);
+	$cycleDurationTemp = $objTime->getCycleDuration($row['program_id'],$cycle_id);
+	$cycleDuration = explode("to", $cycleDurationTemp);
 	$tsobj = new Timeslot();
 	$timeslotVal = $tsobj->getTSbyIDs('('.$row['timeslot_id'].')');
-	$data[] = array("ActIvity Name" => $row['act_name'],
-					"Date" => $row['act_date'],
-					"Timeslot" => str_convert(isset($timeslotVal['0'])? $timeslotVal['0'] :''),
-					"Program" => str_convert($row['name']),
-					"Company" => str_convert($row['company']),
-					"Module" => str_convert($row['unit']),
+	$startTime = array();
+	$duration = "";
+	if(isset($timeslotVal['0']) && $timeslotVal['0']!=""){
+		$startTime = explode("-", $timeslotVal['0']);
+		$duration = (strtotime($startTime['1'])- strtotime($startTime['0']))/60;
+	}
+	$data[] = array("Program" => str_convert($row['name']),
 					"Cycle" => str_convert($cycle_id),
-					"Special Act Name" => $row['special_activity_name'],
-					"Area" => str_convert($row['area_name']),
-					"Subject" => str_convert($row['subject_name']),
+					"Subject Name" => str_convert($row['subject_name']),
 					"Subject Code" => str_convert($row['subject_code']),
-					"Session" => str_convert($row['session_name']),
-					"Teacher Name" => str_convert($row['teacher_name']),
-					"Teacher Type" => str_convert($row['teacher_type_name']),
-					"Classroom" => str_convert($row['room_name']),
+					"Session Name" => str_convert($row['session_name']),
+					"Session Order" => str_convert($row['session_name']),
+					"Duration" => $duration,
+					"Teacher" => str_convert($row['teacher_name']),
+					"Room" => str_convert($row['room_name']),
+					"Date" => $row['act_date'],
+					"Start Time" => str_convert(isset($startTime['0'])? $startTime['0'] :''),
 					"Case No" => str_convert($row['case_number']),
 					"Technical Notes" => str_convert($row['technical_notes']),
-					"Description" => str_convert($row['description']));  
+					"Description" => str_convert($row['description']),
+					"ActIvity Name" => $row['act_name'],
+					"Special Act Name" => $row['special_activity_name'],
+					"Timeslot" => str_convert(isset($timeslotVal['0'])? $timeslotVal['0'] :''),
+					"Cycle Start Time" => str_convert(isset($cycleDuration['0'])? $cycleDuration['0'] :''),
+					"Cycle End Time" => str_convert(isset($cycleDuration['1'])? $cycleDuration['1'] :''),
+					"Company" => str_convert($row['company']),
+					"Module" => str_convert($row['unit']),
+					"Area" => str_convert($row['area_name']),
+					"Teacher Type" => str_convert($row['teacher_type_name']));
 } 
 function str_convert($str){
 	return iconv("UTF-8", "ISO-8859-1//IGNORE",$str);

@@ -3566,4 +3566,20 @@ WHERE DATE between '".$from."' and '".$to."' and py.id = '".$programId."' ORDER 
 		}
 		return $cycle_id;
 	}
+	
+	
+	public function getCycleDuration($program_id,$cycle_id_old)
+	{
+		$cycleDuration=''; $startWeek = $endWeek = array();
+		$cyc_sql = "SELECT start_week, no_of_cycle, end_week FROM cycle WHERE program_year_id ='".$program_id."'";		
+		$q_res = mysqli_query($this->conn, $cyc_sql);
+		while($data = $q_res->fetch_assoc()){
+					$startWeek[] =  $data['start_week'];
+					$endWeek[] =  $data['end_week'];
+		}
+		if(count($startWeek)>0 && count($endWeek)>0){
+			$cycleDuration = $startWeek[$cycle_id_old-1].'to'.$endWeek[$cycle_id_old-1];
+		}
+		return $cycleDuration;
+	}
 }
