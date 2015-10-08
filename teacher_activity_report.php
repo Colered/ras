@@ -56,6 +56,7 @@ $(document).ready(function(){
 						<th>Cycle</th>
 						<th>Area</th>
 						<th>Subject</th>
+						<th>subject code</th>
 						<th>Session</th>
                         <th>Teacher</th>
                         <th>Teacher Type </th>
@@ -86,6 +87,7 @@ $(document).ready(function(){
 								<td><?php echo $cycle_id;?></td>
 								<td><?php echo $row['area_name'];?></td>
 								<td><?php echo $row['subject_name'];?></td>
+								<td><?php echo $row['subject_code'];?></td>
 								<td><?php echo $row['session_name'];?></td>
 								<td><?php echo $row['teacher_name'];?></td>
 								<td><?php echo $row['teacher_type_name'];?></td>	

@@ -22,6 +22,7 @@ $buildData = $objBuld->viewBuld();
 $slctRmType = isset($_GET['edit']) ? $row['room_type_id'] : (isset($_POST['slctRmType'])? $_POST['slctRmType']:'');
 $txtRmName = isset($_GET['edit']) ? $row['room_name'] : (isset($_POST['txtRmName'])? $_POST['txtRmName']:'');
 $slctBuilding = isset($_GET['edit']) ? $row['building_id'] : (isset($_POST['slctBuilding'])? $_POST['slctBuilding']:'');
+$slctPriority = isset($_GET['edit']) ? $row['order_priority'] : (isset($_POST['slctPriority'])? $_POST['slctPriority']:'');
 
 ?>
 <div id="content">
@@ -69,6 +70,17 @@ $slctBuilding = isset($_GET['edit']) ? $row['building_id'] : (isset($_POST['slct
 							<?php }}else{ ?>
 									<option value="">No Building Available</option>
                             <?php } ?>
+                        </select>
+                    </div>
+					<div class="clear"></div>
+                    <div class="custtd_left">
+                        <h2>Priority Order<span class="redstar">*</span></h2>
+                    </div>
+                    <div class="txtfield">
+						<select id="slctPriority" name="slctPriority" class="select1 required">
+                            <?php for($i=1; $i<=100; $i++){ ?>
+									<option value="<?php echo $i ; ?>" <?php if($slctPriority == $i){echo "selected"; }?>><?php echo $i; ?></option>
+							<?php } ?>
                         </select>
                     </div>
                     <div class="clear"></div>

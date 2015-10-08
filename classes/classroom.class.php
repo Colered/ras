@@ -17,7 +17,7 @@ class Classroom extends Base {
 			}else{
 				//add the new Room
 				$currentDateTime = date("Y-m-d H:i:s");
-				if ($result = mysqli_query($this->conn, "INSERT INTO room VALUES ('', '".$_POST['slctBuilding']."', '".$_POST['slctRmType']."', '".Base::cleanText($_POST['txtRmName'])."', '".$currentDateTime."', '".$currentDateTime."');")) {
+				if ($result = mysqli_query($this->conn, "INSERT INTO room VALUES ('', '".$_POST['slctBuilding']."', '".$_POST['slctRmType']."', '".Base::cleanText($_POST['txtRmName'])."', '".$_POST['slctPriority']."', '".$currentDateTime."', '".$currentDateTime."');")) {
    					$message="New room has been added successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;
@@ -30,7 +30,7 @@ class Classroom extends Base {
 	}
 	/*function for listing Room*/
 	public function viewRoom() {
-			$room_query="select rm.id as listId, rt.id, bd.id, rm.building_id, rm.room_type_id, rm.room_name, rt.room_type, bd.building_name FROM room as rm LEFT JOIN room_type as rt ON rm.room_type_id = rt.id LEFT JOIN building as bd ON rm.building_id = bd.id";
+			$room_query="select rm.id as listId, rt.id, bd.id, rm.building_id, rm.room_type_id, rm.room_name, rt.room_type, rm.order_priority, bd.building_name FROM room as rm LEFT JOIN room_type as rt ON rm.room_type_id = rt.id LEFT JOIN building as bd ON rm.building_id = bd.id";
 			$q_res = mysqli_query($this->conn, $room_query);
 			return $q_res;
 	}
@@ -52,7 +52,7 @@ class Classroom extends Base {
 				$_SESSION['error_msg'] = $message;
 				header('Location: rooms.php?edit='.base64_encode($_POST['roomId']));
 				return 0;
-			}elseif ($result = mysqli_query($this->conn, "Update room  Set building_id = '".$_POST['slctBuilding']."', room_type_id = '".$_POST['slctRmType']."', room_name = '".Base::cleanText($_POST['txtRmName'])."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['roomId']."'")) {
+			}elseif ($result = mysqli_query($this->conn, "Update room  Set building_id = '".$_POST['slctBuilding']."', room_type_id = '".$_POST['slctRmType']."', room_name = '".Base::cleanText($_POST['txtRmName'])."' , order_priority = '".$_POST['slctPriority']."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['roomId']."'")) {
    					$message="Room has been updated successfully";
 					$_SESSION['succ_msg'] = $message;
 					return 1;

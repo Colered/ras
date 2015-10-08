@@ -551,10 +551,13 @@ class Teacher extends Base {
 			while($data = $q_res->fetch_assoc()){
 				$tempIdRange[] =  $data['id'];
 			}
-			for($i=min($tempIdRange); $i<=max($tempIdRange); $i++){
-				$timeslots[] = $i;
+			if(count($tempIdRange)>0){
+				for($i=min($tempIdRange); $i<=max($tempIdRange); $i++){
+					$timeslots[] = $i;
+				}
 			}				
 		}
+		//print_r($timeslots); die;
 		$timeslotIds = implode(',',$timeslots);	
 		return $timeslotIds;
 	}

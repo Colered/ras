@@ -40,6 +40,7 @@ $(document).ready(function(){
 							<th>Name</th>
 							<th>Room Type</th>
 							<th>Building</th>
+							<th>Priority Order</th>
 							<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
 								<th>Action</th>
 							<?php } ?>
@@ -52,6 +53,7 @@ $(document).ready(function(){
                         <td><?php echo $data['room_name'] ?></td>
                         <td><?php echo $data['room_type'] ?></td>
 						<td><?php echo $data['building_name'] ?></td>
+						<td><?php echo $data['order_priority'] ?></td>
 						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
 							<td class="align-center" id="<?php echo $data['listId'] ?>">
 							<?php if($user['edit'] != '0'){?>
