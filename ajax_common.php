@@ -2541,5 +2541,24 @@ switch ($codeBlock) {
 			echo 0;
 		}
 	break;
+	case "del_AllSessForASub":
+		if(isset($_POST['subjectId'])){
+			$subjectId = $_POST['subjectId'];
+			//delete activity
+			$del_act_query="delete from teacher_activity where subject_id='".$_POST['subjectId']."'";
+			$qry = mysqli_query($db, $del_act_query);
+			if(mysqli_affected_rows($db)>0){
+				$del_session="delete from subject_session where subject_id='".$_POST['subjectId']."'";
+				$qry = mysqli_query($db, $del_session);
+				if(mysqli_affected_rows($db)>0){
+					echo 1;
+				}else{
+					echo 0;
+				}
+			}else{
+				echo 0;
+			}
+	}
+    break;
 }
 ?>

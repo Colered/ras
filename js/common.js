@@ -700,7 +700,7 @@ $(document).ready(function() {
 	$("#btnCheckAvail").on( "click", function() {
 		checkAvailability();									  
 	});
-
+	
 	//add a new session function										  
 	$("#btnAddNewSess").on( "click", function() {
 		addSubjectSession();										  
@@ -1078,6 +1078,31 @@ function getSessionName(subjectId)
         $(divSessionName).slideUp("slow");
         $(imageId).attr({src: 'images/plus_icon.png'});
 	}
+}
+
+
+//Ajax delete the Subject function 
+function delAllSessForASub($subjectId, $encSubjectId){
+	alert($subjectId);
+	if(confirm("Are you sure you want to delete all sessions of selected subject?")) {
+		$.ajax({
+				type: "POST",
+				url: "ajax_common.php",
+				data: {
+					'subjectId': $subjectId,
+					'codeBlock': 'del_AllSessForASub',
+				},
+				success: function($succ){
+					if($succ==1){
+						window.location.href = 'subjects.php?edit='+$encSubjectId+'';
+					}else{
+						alert("Cannot delete all sessions for the selected subject.");
+						$('.green, .red').hide();
+					}
+				}
+		});
+	}
+    return false;
 }
 //Ajax delete the Subject function 
 function removeSession($activityId, $sessionID, $subjectId, $srno ){

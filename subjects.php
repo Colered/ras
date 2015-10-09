@@ -764,6 +764,8 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
                                 </div>
                             <div class="clear"></div>
+							<div class="delAllSess" style="margin-left:10px;"><input type="button" name="btnDelSessAll" id="btnDelSessAll" class="btnSession buttonsub" value="Delete All Sessions" onclick="delAllSessForASub(<?php echo $subjectId; ?>,  '<?php echo base64_encode($subjectId); ?>')" style="height:30px;">
+							</div>
                         </div>
                         <div class="divSession" style="width:88%;text-align:left; <?php if(isset($_GET['clone']) && $_GET['clone'] != ""){ echo 'display:none'; } ?>">
                             <?php
