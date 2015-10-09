@@ -1083,7 +1083,6 @@ function getSessionName(subjectId)
 
 //Ajax delete the Subject function 
 function delAllSessForASub($subjectId, $encSubjectId){
-	alert($subjectId);
 	if(confirm("Are you sure you want to delete all sessions of selected subject?")) {
 		$.ajax({
 				type: "POST",
