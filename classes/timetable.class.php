@@ -699,18 +699,18 @@ class Timetable extends Base {
 												{
 													//Here will check a teacher can have maximum of two saturdays working per cycle
 													$valid = 0;							
-													foreach($teacher_array as $teacher_id)
+													/*foreach($teacher_array as $teacher_id)
 													{			
 														if(($f_day == 5 && array_key_exists($teacher_id,$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$teacher_id]) && array_key_exists($date,$teachers_sat[$teacher_id][$cycle_id])) || $f_day != 5 || ($f_day == 5 && !array_key_exists($teacher_id,$teachers_sat)) || ($f_day == 5 && array_key_exists($teacher_id,$teachers_sat) && !array_key_exists($cycle_id,$teachers_sat[$teacher_id])) || ($f_day == 5 && array_key_exists($teacher_id,$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$teacher_id]) && !array_key_exists($date,$teachers_sat[$teacher_id][$cycle_id]) && sizeof($teachers_sat[$teacher_id][$cycle_id]) < 2))
 														{
 															$valid++;
 														}
-													}
-													if($valid == count($teacher_array))
-													{
+													}*/
+													/*if($valid == count($teacher_array))
+													{*/
 														//Here will check sessions from same area will be scheduled on saturday 
-														if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $free_act_detail['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
-														{													
+														/*if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $free_act_detail['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
+														{*/													
 															$order_no_array = $this->getSubjectsWithLessOrder($free_act_detail['subject_id'],$free_act_detail['order_number']);
 															$order_no_value = 0;
 															foreach($order_no_array as $order_no)
@@ -881,12 +881,12 @@ class Timetable extends Base {
 															}else{
 																$reasons[$free_act_detail['activity_id']] = "Sessions with lesser order number could not be allocated";
 															}														
-														}else{
+														/*}else{
 															$reasons[$free_act_detail['activity_id']] = "Sessions of some other area is already allocated to this saturday";
-														}
-													}else{
+														}*/
+													/*}else{
 														$reasons[$free_act_detail['activity_id']] = "Teacher is already allocated to two saturday of this cycle";
-													}
+													}*/
 												}else{
 													$reasons[$free_act_detail['activity_id']] = "Teacher is already having 4 sessions on the date ".$date;
 												}
@@ -1890,18 +1890,18 @@ class Timetable extends Base {
 								{
 									//Here will check a teacher can have maximum of two saturdays working per cycle
 									$valid = 0;
-									foreach($teacher_array as $teacher_id)
+									/*foreach($teacher_array as $teacher_id)
 									{									
 										if(($f_day == 5 && array_key_exists($teacher_id,$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$teacher_id]) && array_key_exists($date,$teachers_sat[$teacher_id][$cycle_id])) || $f_day != 5 || ($f_day == 5 && !array_key_exists($teacher_id,$teachers_sat)) || ($f_day == 5 && array_key_exists($teacher_id,$teachers_sat) && !array_key_exists($cycle_id,$teachers_sat[$teacher_id])) || ($f_day == 5 && array_key_exists($teacher_id,$teachers_sat) && array_key_exists($cycle_id,$teachers_sat[$teacher_id]) && !array_key_exists($date,$teachers_sat[$teacher_id][$cycle_id]) && sizeof($teachers_sat[$teacher_id][$cycle_id]) < 2))
 										{
 											$valid++;
 										}
-									}									
-									if($valid == count($teacher_array))
-									{							
+									}	*/								
+									/*if($valid == count($teacher_array))
+									{*/							
 										//Here will check sessions from same area will be scheduled on saturday 
-										if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $semi_res_act_detail['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
-										{									
+										/*if(($f_day == 5 && array_key_exists($date,$reserved_areas) && array_key_exists($program_id,$reserved_areas[$date]) && $reserved_areas[$date][$program_id] == $semi_res_act_detail['area_id']) || $f_day != 5 || ($f_day == 5 && !array_key_exists($date,$reserved_areas)) || ($f_day == 5 && !array_key_exists($program_id,$reserved_areas[$date])))
+										{*/									
 											$order_no_array = $this->getSubjectsWithLessOrder($semi_res_act_detail['subject_id'],$semi_res_act_detail['order_number']);
 											$order_no_value = 0;
 											foreach($order_no_array as $order_no)
@@ -2589,12 +2589,12 @@ class Timetable extends Base {
 											}else{
 												$reasons[$semi_res_act_detail['activity_id']] = "Sessions with lesser order number could not be allocated";
 											}										
-										}else{
+										/*}else{
 											$reasons[$semi_res_act_detail['activity_id']] = "Sessions of some other area is already allocated to this saturday";
 										}
 									}else{
 										$reasons[$semi_res_act_detail['activity_id']] = "Teacher is already allocated to two saturday of this cycle";
-									}
+									}*/
 								}else{
 									$reasons[$semi_res_act_detail['activity_id']] = "Teacher is already having 4 sessions on the date ".$date;
 								}
