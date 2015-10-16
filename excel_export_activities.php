@@ -9,7 +9,20 @@ $profesor_id = isset($_POST['postdata'][6])?$_POST['postdata'][6]:'';
 $cycle_id = isset($_POST['postdata'][7])?$_POST['postdata'][7]:'';
 $module = isset($_POST['postdata'][8])?$_POST['postdata'][8]:'';
 
-$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name from timetable_detail td left join teacher t on t.id = td.teacher_id left join subject su on su.id = td.subject_id left join program_years py on py.id = td.program_year_id left join program p on p.id = py.program_id left join unit u on u.id = p.unit left join subject_session s on s.id = td.session_id left join area a on a.id = su.area_id left join room r on r.id = td.room_id left join teacher_type tt on tt.id = t.teacher_type where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
+$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes, s.description,r.room_name, sam.special_activity_name 
+from timetable_detail td 
+left join teacher t on t.id = td.teacher_id 
+left join subject su on su.id = td.subject_id 
+left join program_years py on py.id = td.program_year_id 
+left join program p on p.id = py.program_id 
+left join unit u on u.id = p.unit 
+left join subject_session s on s.id = td.session_id 
+left join area a on a.id = su.area_id 
+left join room r on r.id = td.room_id 
+left join teacher_type tt on tt.id = t.teacher_type
+left join special_activity_mapping sam on sam.teacher_activity_id = td.activity_id
+ 
+where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
 if($teacher_id != '')
 {
 	 $teacher_sql .= " and teacher_id = '".$teacher_id."'";
@@ -75,20 +88,24 @@ while($row = mysqli_fetch_array($q_res))
 		else
 			$cycle_id = 2;
 	}
+	$startTime = "";
+	if($row['timeslot'] !=""){
+		$startTime = explode('-', $row['timeslot']);
+	}
 	$data[] = array("Date" => $row['date'],
+					"Start Time" => str_convert($startTime[0]),
 					"Timeslot" => str_convert($row['timeslot']),
 					"Program" => str_convert($row['name']),
-					"Company" => str_convert($row['company']),
-					"Module" => str_convert($row['unit']),
 					"Cycle" => str_convert($cycle_id),
 					"Area" => str_convert($row['area_name']),
 					"Subject" => str_convert($row['subject_name']),
 					"Session" => str_convert($row['session_name']),
+					"Special Activity Name" => str_convert($row['special_activity_name']),
 					"Teacher Name" => str_convert($row['teacher_name']),
-					"Teacher Type" => str_convert($row['teacher_type_name']),
 					"Classroom" => str_convert($row['room_name']),
 					"Case No" => str_convert($row['case_number']),
-					"Technical Notes" => str_convert($row['technical_notes']));  
+					"Technical Notes" => str_convert($row['technical_notes']),
+					"Description" => str_convert($row['description'])); 
 } 
 function str_convert($str){
 	return iconv("UTF-8", "ISO-8859-1//IGNORE",$str);
