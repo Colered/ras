@@ -668,15 +668,15 @@ switch ($codeBlock) {
                     $result = mysqli_query($db, "UPDATE subject_session SET
                                                         session_name = '" . $_POST['txtSessionName'] . "',
                                                         description = '" . $_POST['txtareaSessionDesp'] . "',
-                                                        case_number = '" . $_POST['txtCaseNo'] . "',
-                                                        technical_notes = '" . $_POST['txtareatechnicalNotes'] . "',
+                                                        case_number = '" . htmlspecialchars($_POST['txtCaseNo'], ENT_QUOTES) . "',
+                                                        technical_notes = '" . htmlspecialchars($_POST['txtareatechnicalNotes'], ENT_QUOTES) . "',
                                                         date_update = NOW() WHERE id = $sess_hidden_id");
                 } else {
                     //add new session
                     $result = mysqli_query($db, "INSERT INTO subject_session (id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES('', '" . $_POST['subjectId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['txtSessionName'] . "', '" . $txtOrderNum . "', '" . $_POST['txtareaSessionDesp'] . "', '" . $_POST['txtCaseNo'] . "', '" . $_POST['txtareatechnicalNotes'] . "', '" . $duration . "', NOW(), NOW());");
                 }
 
-                //if only teacher name OR teacher and any 1 or 2 of room, date and timeslot is also provided then create an un-reserved activity
+                //if only teacher name OR teacher and any 1 or 2 from room, date and timeslot is also provided then create an un-reserved activity
                 if (mysqli_affected_rows($db) > 0) 
 				{        						
 					if(!empty($sess_hidden_id))
@@ -1236,16 +1236,16 @@ switch ($codeBlock) {
                     $sessCount_data = mysqli_fetch_assoc($sessCount_res);
                     $txtOrderNum = $sessCount_data['total'] + 1;
                     if ($sess_hidden_id <> "") {
-                        $result = mysqli_query($db, "UPDATE subject_session SET
+						  $result = mysqli_query($db, "UPDATE subject_session SET
 							                                    cycle_no = '" . $_POST['cycleId'] . "',
 							                                    session_name = '" . $_POST['txtSessionName'] . "',
 							                                    description = '" . $_POST['txtareaSessionDesp'] . "',
-							                                    case_number = '" . $_POST['txtCaseNo'] . "',
-							                                    technical_notes = '" . $_POST['txtareatechnicalNotes'] . "',
+							                                    case_number = '" . htmlspecialchars($_POST['txtCaseNo'], ENT_QUOTES) . "',
+							                                    technical_notes = '" . htmlspecialchars($_POST['txtareatechnicalNotes'], ENT_QUOTES) . "',
 							                                    duration = '" . $_POST['duration'] . "',
 							                                    date_update = NOW() WHERE id = $sess_hidden_id");
                     } else {
-                        $result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" . $_POST['subjectId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['txtSessionName'] . "', '" . $txtOrderNum . "', '" . $_POST['txtareaSessionDesp'] . "', '" . $_POST['txtCaseNo'] . "', '" . $_POST['txtareatechnicalNotes'] . "', '" . $_POST['duration'] . "', NOW(), NOW());");
+                        $result = mysqli_query($db, "INSERT INTO subject_session(id, subject_id, cycle_no, session_name, order_number, description, case_number, technical_notes, duration, date_add, date_update) VALUES ('', '" . $_POST['subjectId'] . "', '" . $_POST['cycleId'] . "', '" . $_POST['txtSessionName'] . "', '" . $txtOrderNum . "', '" . $_POST['txtareaSessionDesp'] . "', '" . htmlspecialchars($_POST['txtCaseNo'], ENT_QUOTES) . "', '" . htmlspecialchars($_POST['txtareatechnicalNotes'], ENT_QUOTES) . "', '" . $_POST['duration'] . "', NOW(), NOW());");
                     }
 
                     if (mysqli_affected_rows($db) > 0) {
@@ -1882,7 +1882,7 @@ switch ($codeBlock) {
 											$date = $v['date'];
 											$date_add = date("Y-m-d H:i:s");
 											$date_upd = date("Y-m-d H:i:s");
-
+											//echo $timeslot ;die;
 											$resp = $obj->addTimetableDetail($timeslot, $tt_id, $activity_id, $program_year_id, $teacher_id, $room_id, $session_id, $subject_id, $date, $date_add, $date_upd,$cycle_id);
 											if($resp)
 											{
