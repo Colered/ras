@@ -3467,7 +3467,7 @@ class Timetable extends Base {
 	}
 	public function checkTimetableByActivity($activity_id)
 	{
-		$tt_query="select * from timetable_detail where activity_id='".$activity_id."'"; 
+		$tt_query="select td.* from timetable_detail as td LEFT JOIN special_activity_mapping as sam ON td.activity_id = sam.teacher_activity_id where td.activity_id='".$activity_id."' and special_activity_type NOT IN(3,4,5)"; 
 		$q_res = mysqli_query($this->conn, $tt_query);
 		return $q_res;
 	}
