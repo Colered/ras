@@ -46,7 +46,7 @@ $prgm_IdArr = explode(',' ,$program_year_id);
                         <h2><strong>Choose Programs</strong><span class="redstar">*</span></h2>
                     </div>
 					<div class="txtfield">
-						<select id="programs" name="programs[]" class="slctTs required" multiple="multiple">
+						<select id="programs" name="programs[]" class="slctTs required" multiple="multiple" style="width:260px; height:200px; margin-left:29px;">
 						<?php 
 						$objP = new Programs();
 						$result = $objP->getProgramWithCycle();

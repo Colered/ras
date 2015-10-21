@@ -2565,5 +2565,122 @@ switch ($codeBlock) {
 			}
 	}
     break;
+	case "forceSwap2Act":
+			if(isset($_POST['forceSwapActVal']) && $_POST['forceSwapActVal'] != '')
+			{
+				$activityArr= $resp = $timeslotArr1 = $timeslotArr1 = array();
+				$objT = new Timetable();
+				$activityArr = (isset($_POST['forceSwapActVal'])) ? $_POST['forceSwapActVal'] : '';
+				$activitiesAll = implode("," , $activityArr);
+				$act_sql = "SELECT ta.*, subs.duration, td.timeslot FROM teacher_activity as ta LEFT JOIN subject_session as subs ON ta.session_id = subs.id
+							LEFT JOIN timetable_detail as td ON ta.id = td.activity_id
+							WHERE ta.id IN($activitiesAll) 
+							AND ta.reserved_flag = 1";
+				$act_qry=mysqli_query($db,$act_sql);
+				if(mysqli_affected_rows($db)==2){
+						$actcount = 1;
+						$valid = 1;
+						while($data = mysqli_fetch_array($act_qry)){
+							if($actcount==1){
+								//for first activity
+								$actDuration1 = $data['duration'];
+								$actprogramId1 = $data['program_year_id'];
+								$acttimeslots1 = $data['timeslot_id'];
+								$actId1 = $data['id'];
+								$actTeacherId1 = $data['teacher_id'];
+								$room_id1 = $data['room_id'];
+								$act_date1 = $data['act_date'];
+								$start_time1 = $data['start_time'];
+								$timeslot1 = $data['timeslot'];
+								
+							}else if($actcount==2){
+								//for second activity
+								$actDuration2 = $data['duration'];
+								$actprogramId2 = $data['program_year_id'];
+								$acttimeslots2 = $data['timeslot_id'];
+								$actId2 = $data['id'];
+								$actTeacherId2 = $data['teacher_id'];
+								$room_id2 = $data['room_id'];
+								$act_date2 = $data['act_date'];
+								$start_time2 = $data['start_time'];
+								$timeslot2 = $data['timeslot'];
+							}
+							$actcount = $actcount +1;;
+						}
+						//check if teacher1 is available for activity 2
+						$teacher1_sql = "SELECT id FROM teacher_activity WHERE teacher_id = '".$actTeacherId1."' and act_date = '".$act_date2."' and timeslot_id = '".$acttimeslots2."' and id != '".$actId2."'";
+						$query1 = mysqli_query($db,$teacher1_sql);
+						if(mysqli_affected_rows($db)>0)
+						{	//teacher from activity 1 is not free for second activity
+							echo 4;
+							$valid = 0;
+						}
+						//check if teacher2 is avalable for activity 1
+						$teacher2_sql = "SELECT id FROM teacher_activity WHERE teacher_id = '".$actTeacherId2."' and act_date = '".$act_date1."' and timeslot_id = '".$acttimeslots1."' and id != '".$actId1."'";
+						$query2 = mysqli_query($db,$teacher2_sql);
+						if(mysqli_affected_rows($db)>0)
+						{	//teacher from actiuvity 2 is not free for first activity
+							echo 5;
+							$valid = 0;
+						}
+						if($actprogramId1 != $actprogramId2){
+							//activities are from different programs
+							echo 2;
+							$valid = 0;
+						}elseif($actDuration1 != $actDuration2 ){
+							//duration should be same for both activities
+							echo 3;
+							$valid = 0;
+						}
+						if($valid==1){
+						//all checked pass, swap the activities.. for activity 1
+						$updateAct1 = mysqli_query($db, "UPDATE teacher_activity SET
+															teacher_id = '".$actTeacherId2."',
+															room_id = '".$room_id2."',
+															start_time = '".$start_time2."',
+															timeslot_id = '".$acttimeslots2."',
+															act_date = '".$act_date2."',
+															date_update = NOW() WHERE id = '".$actId1."'");
+						$updateTimetable1 = mysqli_query($db, "UPDATE timetable_detail SET
+															teacher_id = '".$actTeacherId2."',
+															room_id = '".$room_id2."',
+															start_time = '".$start_time2."',
+															timeslot = '".$timeslot2."',
+															date = '".$act_date2."',
+															date_upd = NOW() WHERE activity_id = '".$actId1."'");
+						$updateSession1 = mysqli_query($db, "UPDATE subject_session SET
+															duration = '".$actDuration2."',
+															date_upd = NOW() WHERE activity_id = '".$actId1."'");
+						//for activity 2
+						$updateAct2 = mysqli_query($db, "UPDATE teacher_activity SET
+															teacher_id = '".$actTeacherId1."',
+															room_id = '".$room_id1."',
+															start_time = '".$start_time1."',
+															timeslot_id = '".$acttimeslots1."',
+															act_date = '".$act_date1."',
+															date_update = NOW() WHERE id = '".$actId2."'");
+						$updateTimetable2 = mysqli_query($db, "UPDATE timetable_detail SET
+															teacher_id = '".$actTeacherId1."',
+															room_id = '".$room_id1."',
+															start_time = '".$start_time1."',
+															timeslot = '".$timeslot1."',
+															date = '".$act_date1."',
+															date_upd = NOW() WHERE activity_id = '".$actId2."'");
+						$updateSession1 = mysqli_query($db, "UPDATE subject_session SET
+															duration = '".$actDuration1."',
+															date_upd = NOW() WHERE activity_id = '".$actId2."'");
+						$_SESSION['succ_msg']="Activities has been swapped successfully";
+						echo 1;
+						
+						}
+						
+					}else{
+						echo 0;
+						$valid = 0;
+					}
+				}else{
+					echo 0;
+				}	
+	 break;
 }
 ?>

@@ -29,6 +29,10 @@ $(document).ready(function(){
 	    "aaSorting":[[1, "asc"]],
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
+		"aLengthMenu": [
+        [25, 50, 100, 200, -1],
+        [25, 50, 100, 200, "All"]
+    	],
 		"aoColumnDefs": [
 			  { 'bSortable': false, 'aTargets': [ 0 ] }
 			],
@@ -95,7 +99,10 @@ function activityFilter()
 					</form>
 				</div>
 				<?php if($user1['view'] != '0'){?>
-				<div class="btnAcceptAllocation"> <input  type="button" <?php echo $readonly;?> value="Accept Allocation" name="btnacceptallo" id="btnacceptallo" onclick="acceptAllocationFun();"/></div>
+				<div class="btnAcceptAllocation" style="margin-left:10px; margin-right:10px;"> <input  type="button" <?php /*?><?php echo $readonly;?><?php */?> class="buttonsub" value="Accept Allocation" name="btnacceptallo" id="btnacceptallo" onclick="acceptAllocationFun();"/></div> 
+				<?php } ?>
+				<?php if($user1['view'] != '0'){?>
+				<div class="btnAcceptAllocation"> <input  type="button" <?php /*?><?php echo $readonly;?><?php */?> class="buttonsub" value="Force-Swap 2 Activities" name="btnforceswap" id="btnforceswap" onclick="forceSwap2Act();"/></div>
 				<?php } ?>
 			</div>
             <table id="datatables" class="display tblActivity">
@@ -107,13 +114,13 @@ function activityFilter()
                         <th>ID</th>
                         <th>Activity</th>
                         <th>Program</th>
+						<th>Special Activity Name</th>
                         <th>Subject</th>
                         <th>Session</th>
                         <th>Teacher</th>
                         <th>Class Room</th>
                         <th>Date</th>
                         <th>Timeslot</th>
-						<th>Special Activity Name</th>
                         <th>PreAllocated</th>
                         <th>Allocation Status</th>
 						<th>Reason</th>
@@ -185,11 +192,14 @@ function activityFilter()
 						
 						<tr<?php echo $trBColor;echo $trBColor1;?> class=<?php if($trBColor == ''){echo $class;}else{echo $class_allocated ;}?>>
 						<?php if($user1['view'] != '0'){?>
-							<td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td>
+					<?php /*?>		<td <?php echo $tdColor;?> class="align-center"><?php echo ($row['reserved_act_id']<>"" && $row['reserved_flag']!= "1")?'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>':'<input type="checkbox" value="'.$row['id'].'" name="activity_allocation[]" disabled="disabled" class=" ckbDisabled allCKbCls" />'?></td><?php */?>
+							
+							<td <?php echo $tdColor;?> class="align-center"><input type="checkbox" value="<?php echo $row['id']; ?>" name="activity_allocation[]" class="activityCkb allCKbCls" /></td>
 						<?php } ?>
 							<td <?php echo $tdColor;?> class="align-center"><?php echo $row['id'];?></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['name'];?></a></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="program_cycles.php?edit=<?php echo base64_encode($row['program_year_id']);?>" target="_blank"><?php echo $row['program_name'];?></a></td>
+							<td><?php echo $row['special_activity_name'];?></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['subject_name'];?></a></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="subjects.php?edit=<?php echo base64_encode($row['subject_id']);?>" target="_blank"><?php echo $row['session_name'];?></a></td>
 							<td class="act_color"<?php echo $tdColor;?>><a href="teacher_availability.php?tid=<?php echo base64_encode($row['teacher_id']);?>" target="_blank"><?php echo $teacher_str;?></a></td>
@@ -229,7 +239,6 @@ function activityFilter()
 										echo $objT->getTimeslotById($min_ts_id,$max_ts_id);
 									 }
 								?></td>
-							<td><?php echo $row['special_activity_name'];?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $row['reason'];?></td>

@@ -89,7 +89,7 @@ if($user_profiles['view'] != '1')
 											<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
 									<?php } ?>
 									<?php if($user_profiles4['view'] != '0'){?>	
-											<li>&#8250; <a href="teacher_activity_view.php">Activities</a></li>
+											<li>&#8250; <a href="teacher_activity_view.php">Activity List</a></li>
 									<?php } ?>
 									<?php if($user_profiles5['view'] != '0'){?>	
 											<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>

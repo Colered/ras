@@ -4303,9 +4303,9 @@ function createActivityAvailRule(){
 		}else{
 			alert('Please select atleast one duration and timeslot.');
 		}
-	}
-	//Ajax to delete the activity rule
-	function deleteActivityByRule($id){
+}
+//Ajax to delete the activity rule
+function deleteActivityByRule($id){
 		var subIdEncrypt = $('#subIdEncrypt').val();
 		if($id==""){
 			alert("Please select a rule to delete");
@@ -4328,10 +4328,10 @@ function createActivityAvailRule(){
 			});
 		}
 		return false;
-	}
+}
 	
-	//deleting the special activity which are associate rule
-	$(document).ready(function() {
+//deleting the special activity which are associate rule
+$(document).ready(function() {
 	   var subIdEncrypt = $('#subIdEncrypt').val();
 	   $('.rule_checkbox').click(function(){		 
 			if($(this).is(":checked")){
@@ -4374,8 +4374,8 @@ function createActivityAvailRule(){
 			}
 		 
 	   });
-	});
-	function checkSubjectForm()
+});
+function checkSubjectForm()
 	{
 		if($('#txtSessName').val()==""){
 			alert('Please select a valid Session Name.');
@@ -4392,5 +4392,38 @@ function createActivityAvailRule(){
 		}else{
 			$("#subjectForm").submit();
 		}
+}
+function forceSwap2Act(){
+	var values = new Array();
+	$.each($("input[name='activity_allocation[]']:checked"), function() {
+  		values.push($(this).val());
+    });
+	if(values.length != 2){
+		alert('Please select any two pre-allocated activities to swap with each other.');
+	}else if(confirm("Are you sure ,you want to swap selected activity ?")){
+		$.ajax({
+			   type: "POST",
+			   url: "ajax_common.php",
+			   data: {
+						'forceSwapActVal': values,
+						'codeBlock': 'forceSwap2Act',
+					 },
+					success: function($succ){
+						if($succ==1){
+							$(location).attr('href', 'teacher_activity_view.php');
+						}else if($succ==0){
+							 alert('Only pre allocated activities can be swapped with each other.');	
+						}else if($succ==2){
+							 alert('Both selected activities should be from same program.');	
+						}else if($succ==3){
+							 alert('Both selected activities should have same duration.');	
+						}else if($succ==4 || $succ==5){
+							 alert('Teacher is not available on the swapped time.');	
+						}else{
+							 alert('Swaping cannot be done, please contact to site administrator.');	
+							}
+					}
+			});
 	}
+}
 

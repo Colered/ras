@@ -90,7 +90,7 @@ if($_SERVER['REQUEST_URI']=='/ras/forgot.php' || $_SERVER['REQUEST_URI']=='/forg
 											<li>&#8250; <a href="teacher_availability_view.php">Teacher Availabilty</a></li>
 									<?php } ?>
 									<?php if($user4['view'] != '0'){?>	
-											<li>&#8250; <a href="teacher_activity_view.php">Activities</a></li>
+											<li>&#8250; <a href="teacher_activity_view.php">Activity List</a></li>
 									<?php } ?>
 									<?php if($user5['view'] != '0'){?>	
 											<li>&#8250; <a href="special_activity_view.php">Special Activities</a></li>
