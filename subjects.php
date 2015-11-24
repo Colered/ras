@@ -146,12 +146,16 @@ if ((isset($_GET['edit']) && $_GET['edit'] != "") || (isset($_GET['clone']) && $
 }
 //$objT = new Teacher();
 $rel_teacher1 = $objT->getTeachers();
+$disSessClass="";
+$disSessClass = ($_SESSION['role_id']==1 || $_SESSION['role_id']==2)? "enabled": "disabled";
 if(isset($_GET['edit']) && $_GET['edit'] != ""){
 	//code for edit mode
 	$subjectName = isset($_GET['edit']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');
 	$subjectCode = isset($_GET['edit']) ? $row['subject_code'] : (isset($_POST['txtSubjCode']) ? $_POST['txtSubjCode'] : '');
 	$areaId = isset($_GET['edit']) ? $row['area_id'] : (isset($_POST['slctArea']) ? $_POST['slctArea'] : '');
 	$progId = isset($_GET['edit']) ? $row['program_year_id'] : (isset($_POST['slctProgram']) ? $_POST['slctProgram'] : '');
+	//if usr is admin
+	
 }else if(isset($_GET['clone']) && $_GET['clone'] != ""){
 	//code while creating the clone
 	$subjectName = isset($_GET['clone']) ? $row['subject_name'] : (isset($_POST['txtSubjName']) ? $_POST['txtSubjName'] : '');
@@ -637,11 +641,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                             <div class="txtfield" style="padding:0px;">
                                 <div class="sessionboxSub" style="width:108px;">
                                     <h3>Session Name<span class="redstar">*</span></h3>
-                                    <input type="text" class="inp_txt_session required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="<?php echo $sess_name_edit; ?>">
+                                    <input type="text"  <?php echo $disSessClass; ?> class="inp_txt_session required" <?php echo $disSession; ?> id="txtSessionName" maxlength="50" style="width:94px;" name="txtSessionName" value="<?php echo $sess_name_edit; ?>">
                                 </div>
                                 <div class="sessionboxSub" style="width:108px;">
                                     <h3>Duration(Hr)<span class="redstar">*</span></h3>
-                                    <select name="duration" id="duration" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
+                                    <select <?php echo $disSessClass; ?> name="duration" id="duration" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
                                         <option value="">--Select--</option>
                                         <option value="15">00:15</option>
                                         <option value="30">00:30</option>
@@ -682,7 +686,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
                                  <div class="sessionboxSub" style="width:150px;">
                                     <h3>Teacher<span class="redstar">*</span></h3>									
-										<select id="slctTeacherInd" name="slctTeacherInd[]" class="required" onchange="processSelectBoxInd();" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
+										<select <?php echo $disSessClass; ?> id="slctTeacherInd" name="slctTeacherInd[]" class="required" onchange="processSelectBoxInd();" multiple="multiple" <?php echo $disSession; ?> style="width:151px; height:75px;">
 										<?php
 										while ($row = $rel_teacher1->fetch_assoc()) {
 											if(in_array($row['id'],$teachers))
@@ -710,7 +714,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
 								<div class="sessionboxSub" style="width:165px;margin-left:5px;">
                                     <h3>Multiple Teacher Reason</h3>									
-										<select id="reasonInd" name="reason" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
+										<select <?php echo $disSessClass; ?> id="reasonInd" name="reason" class="required" <?php echo $disSession; ?> style="height:27px; width:140px;">
 										 <option value="">--Select--</option>
 										 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Alternate Choices for Session') echo 'selected';?> value="Alternate Choices for Session">Alternate Choices for Session</option>
 										 <option <?php if(isset($dataActArr['reason']) && $dataActArr['reason'] == 'Teaching Session Jointly') echo 'selected';?> value="Teaching Session Jointly">Teaching Session Jointly</option>
@@ -718,7 +722,7 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
                                 <div class="sessionboxSub" style="width:108px;">
                                     <h3>Room</h3>
-                                    <select name="room_id" id="room_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px;">
+                                    <select <?php echo $disSessClass; ?> name="room_id" id="room_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px;">
                                         <option value="">--Select--</option>
 <?php echo $room_dropDwn; ?>
                                     </select>
@@ -728,11 +732,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                 </div>
                                 <div class="sessionboxSub" style="width:105px;">
                                     <h3>Date</h3>
-                                    <input type="text" size="12" id="subSessDate" value="<?php echo ($sess_act_date_edit=='0000-00-00') ? '' : $sess_act_date_edit; ?>" <?php echo $disSession; ?> style="height:23px; width:102px;"/>
+                                    <input <?php echo $disSessClass; ?> type="text" size="12" id="subSessDate" value="<?php echo ($sess_act_date_edit=='0000-00-00') ? '' : $sess_act_date_edit; ?>" <?php echo $disSession; ?> style="height:23px; width:102px;"/>
                                 </div>
                                 <div class="sessionboxSub" style="width:108px;">
                                     <h3>Start Time</h3>
-                                    <select name="tslot_id" id="tslot_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
+                                    <select <?php echo $disSessClass; ?> name="tslot_id" id="tslot_id" class="activity_row_chk" <?php echo $disSession; ?> style="height:27px; width:106px">
                                         <option value="">--Select--</option>
 <?php echo $tslot_dropDwn; ?>
                                     </select>
