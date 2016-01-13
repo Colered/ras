@@ -110,7 +110,7 @@ class Timetable extends Base {
 		 where date between '".$from."' and '".$to."'";
 		 if($teacher_id != '')
 		{
-			 $teacher_sql .= " and teacher_id = '".$teacher_id."'";
+			 $teacher_sql .= " and td.teacher_id = '".$teacher_id."'";
 		}
 		if($program_id != '')
 		{
