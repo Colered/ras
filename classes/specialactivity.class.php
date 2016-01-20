@@ -119,7 +119,7 @@ class SpecialActivity extends Base {
 				}else{
 					$message="Not inserted ";
 					$_SESSION['error_msg'] = $message;
-					header('Location: special_activity.php');
+					header('Location: special_activity_view.php');
 				}	
 				return 1;
 		   	}else{
@@ -302,7 +302,7 @@ class SpecialActivity extends Base {
 				}else{
 				    $message="Not updated";
 					$_SESSION['error_msg'] = $message;
-					header('Location: special_activity.php');
+					header('Location: special_activity_view.php');
 				}	
 		}else{
 			$obj_SA=new SpecialActivity();
