@@ -10,6 +10,7 @@ $result = '';
 $teachers_result = '';
 $objTime = new Timetable();
 $result = $objTime->getTeachersActivityInRange();
+$filename = $objTime->generateAllSessActReport();
 
 ?>
 <script src="js/jquery.dataTables.js" type="text/javascript"></script>
@@ -33,7 +34,7 @@ $(document).ready(function(){
 			<div class="filter-teache-report1">All Activities</div>
 		</div>
 		<div>
-			<form action="excel_export_all_activities.php" method="post" id="export-form">
+		<?php /*?>	<form action="excel_export_all_activities.php" method="post" id="export-form">
 					<?php
 					foreach($_POST as $value)
 					{
@@ -41,7 +42,8 @@ $(document).ready(function(){
 					}
 					?>
 				<button onclick="document.getElementById('#export-form').submit();" class="btn-export" ><span class="btn-export-text">Export</span></button>					
-			</form>
+			</form><?php */?>
+				<button class="btn-export" ><a style="color:#000000" target="_blank" href="<?php echo $filename ?>" ><span class="btn-export-text">Export</span></a></button>		
 				<button onclick="printDiv('printing-div')" class="btn-export" ><span class="btn-export-text" >Print</span></button>
 		</div>
 		<div id="printing-div" class="teach-excel-report-tbl">

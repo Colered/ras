@@ -175,7 +175,8 @@ if($user_profiles['view'] != '1')
 							  if($user_profiles['view'] != '0'){?>	
 								<li class="upp"><a href="">Data Upload</a>
 									<ul>							
-										<li>&#8250; <a href="session_upload.php">Session Data</a></li>								
+										<li>&#8250; <a href="session_upload.php">Session Data</a></li>	
+										<li>&#8250; <a href="session_update.php">Modify Session Data</a></li>								
 									</ul>
 								</li>
 						<?php } ?>
