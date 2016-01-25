@@ -48,6 +48,15 @@ function submitFunction()
 {
 	$('#teacher_report').submit();
 }
+function resetFilter(){
+	$("#teacher option[value]").removeAttr("selected");
+	$("#program option[value]").removeAttr("selected");
+	$("#area option[value]").removeAttr("selected");
+	$("#profesor option[value]").removeAttr("selected");
+	$("#cycle option[value]").removeAttr("selected");
+	$("#module option[value]").removeAttr("selected");
+	$('#teacher_report').submit();
+}
 </script>
 <style type="text/css">
 	@import "css/demo_table_jui.css";
@@ -235,7 +244,7 @@ function submitFunction()
 				
 			</div>
 		<input class="buttonsub" type="button" onclick="submitFunction();" value="Apply Filters" />
-		<input style="margin-top:5px;" class="buttonsub" type="button" value="Reset Filters" />
+		<input style="margin-top:5px;" class="buttonsub" type="button" onclick="resetFilter()" value="Reset Filters" />
 		<?php } ?>
 		</div>
 		</form>
