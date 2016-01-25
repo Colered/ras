@@ -151,7 +151,7 @@ class Timetable extends Base {
 		}
 		if($addSpecialAct == '')
 		{
-			$teacher_sql .= " and tact.reserved_flag = 1";
+			$teacher_sql .= " and tact.reserved_flag IN(1, 5)";
 		}
 
 		$teacher_sql .= " order by td.teacher_id";
