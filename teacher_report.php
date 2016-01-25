@@ -7,18 +7,22 @@ if($user['view'] != '1')
 }
 $result = '';
 $teachers_result = '';
+//echo "<pre>";
+//print_r($_POST);
 if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
 {
 	if($_POST['fromTmDuratn'] != "" || $_POST['toTmDuratn'] != "")
 	{
+		$addSpecialAct = $teacher_id = $program_id = $area_id = $profesor_id = $cycle_id = $module = array();
+		$addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 		$objTime = new Timetable();
-		$teacher_id = isset($_POST['teacher'])?$_POST['teacher']:'';
-		$program_id = isset($_POST['program'])?$_POST['program']:'';
-		$area_id = isset($_POST['area'])?$_POST['area']:'';
-		$profesor_id = isset($_POST['profesor'])?$_POST['profesor']:'';
-		$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
-		$module = isset($_POST['module'])?$_POST['module']:'';
-		$result = $objTime->getTeachersInRange($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module);	
+		$teacher_id = isset($_POST['teacher'])?$_POST['teacher']:array();
+		$program_id = isset($_POST['program'])?$_POST['program']:array();
+		$area_id = isset($_POST['area'])?$_POST['area']:array();
+		$profesor_id = isset($_POST['profesor'])?$_POST['profesor']:array();
+		$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:array();
+		$module = isset($_POST['module'])?$_POST['module']:array();
+		$result = $objTime->getTeachersInRange($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct);	
 	}else{		
 		$message="Please enter all required fields";
 		$_SESSION['error_msg'] = $message;
@@ -62,9 +66,9 @@ function submitFunction()
 		<div>
 			<form action="excel_export_activities.php" method="post" id="export-form">
 					<?php
-					foreach($_POST as $value)
+					foreach($_POST as $key => $value)
 					{
-					  echo '<input type="hidden" name="postdata[]" value="'. $value. '">';
+					  echo '<input type="hidden" name="'.$key.'" value="'.$value. '">';
 					}
 					?>
 					<button onclick="document.getElementById('#export-form').submit();" class="btn-export"><span class="btn-export-text">Export</span></button>					
@@ -74,10 +78,13 @@ function submitFunction()
 		<?php } ?>		
 		<form id="teacher_report" name="teacher_report" method="post" action="teacher_report.php" novalidate="novalidate">
 		<input type="hidden" value="Generate Report" name="btnGenrtReport"/>
-			 <div class="filter-teache-report" style="padding-top:20px;" ><strong> Time Interval: </strong>
+			 <div class="filter-teache-report" style="padding-top:20px; height:58px;" ><strong> Time Interval: </strong>
 				From: <input type="text" size="12" class="required" id="fromTmDuratn" name="fromTmDuratn" value="<?php echo $fromTmDuratn;?>"/>
-				To: <input type="text" size="12" class="required" id="toTmDuratn" name="toTmDuratn" value="<?php echo $toTmDuratn;?>"/>
+				To: <input type="text" size="12" class="required" id="toTmDuratn" name="toTmDuratn" value="<?php echo $toTmDuratn;?>"/><br />
+				<div style="float:left; margin-top:8px; margin-left:114px;">
+				<input type="checkbox" name="addSpecialAct" <?php if(isset($_POST['addSpecialAct']) && $_POST['addSpecialAct']==1){ echo "checked"; } ?> value="1" onclick="submitFunction();" /> Include special activities </div>
 			</div>
+				
 			<div class="txtfield">
 				<input style="margin-top: 15px;" class="buttonsub" type="submit" value="Generate Report" name="btnGenrtReport">
 			</div>
@@ -87,13 +94,13 @@ function submitFunction()
 			<?php if(isset($_POST['btnGenrtReport'])){?>
 			 <div class="filter-teache-report">
 			  <strong>Teacher:</strong>
-			  	<select id="teacher" name="teacher" class="select-filter" onchange="submitFunction();"> 
-					<option value="" selected="selected">--Select--</option>
+			  	<select id="teacher" name="teacher[]" class="select-filter" multiple="multiple" style="width:135px;" /*onchange="submitFunction();"*/> 
+					<!--<option value="" selected="selected">--Select--</option>-->
 					<?php 
 					$result_techName = $objT->getTeachers();
 					if($result_techName->num_rows){
 					while ($row_techName =$result_techName->fetch_assoc()){
-						if($row_techName['id'] == $_POST['teacher'])
+						if(in_array($row_techName['id'], $teacher_id))
 						{
 							$selected = 'selected="selected"';
 						}else{
@@ -109,18 +116,19 @@ function submitFunction()
 			
 			<div class="filter-teache-report">
 				<strong>Program:</strong>
-				<select id="program" name="program" class="select-filter" onchange="submitFunction();"> 
-				 <option value="" selected="selected">--Select--</option>
+				<select id="program" name="program[]" class="select-filter" multiple="multiple" /*onchange="submitFunction();"*/> 
+				 <!--<option value="" selected="selected">--Select--</option>-->
 				 <?php 
 					$result_prgm=$objP->getProgramListYearWise();
 					if($result_prgm->num_rows){
 					while ($row_prgm =$result_prgm->fetch_assoc()){
-						if($row_prgm['id'] == $_POST['program'])
+						if(in_array($row_prgm['id'], $program_id))
 						{
 							$selected = 'selected="selected"';
 						}else{
 							$selected = '';
-						}?>
+						}
+						?>
 						<option <?php echo $selected;?> value="<?php echo $row_prgm['id'];?>"><?php echo $row_prgm['name'];?></option>
 					<?php } 
 					}
@@ -130,18 +138,19 @@ function submitFunction()
 			</div>
 			<div class="filter-teache-report">	
 				<strong>Area:</strong>
-				<select id="area" name="area" class="select-filter" onchange="submitFunction();"> 
-					<option value="" selected="selected">--Select--</option>
+				<select id="area" name="area[]" class="select-filter" multiple="multiple" style="width:235px;" /*onchange="submitFunction();"*/> 
+					<!--<option value="" selected="selected">--Select--</option>-->
 					<?php 
 					$result_area=$objA->detailArea();
 					if($result_area->num_rows){
 					while ($row_area =$result_area->fetch_assoc()){
-						if($row_area['id'] == $_POST['area'])
+						if(in_array($row_area['id'], $area_id))
 						{
 							$selected = 'selected="selected"';
 						}else{
 							$selected = '';
-						}?>
+						}
+						?>
 						<option <?php echo $selected;?> value="<?php echo $row_area['id'];?>"><?php echo $row_area['area_name'];?></option>
 					<?php } 
 					}
@@ -152,12 +161,12 @@ function submitFunction()
 			</div>
 			<div class="filter-teache-report">	
 				<strong>Type of profesor:</strong>
-				<select id="profesor" name="profesor" class="select-filter" onchange="submitFunction();"> 
-					<option value="" selected="selected">--Select--</option>
+				<select id="profesor" name="profesor[]" class="select-filter" multiple="multiple" /*onchange="submitFunction();"*/> 
+					<!--<option value="" selected="selected">--Select--</option>-->
 					<?php 
 					$result_type=$objT->getTeachersType();
 					while ($row_type =$result_type->fetch_assoc()){
-						if($row_type['id'] == $_POST['profesor'])
+						if(in_array($row_type['id'], $profesor_id))
 						{
 							$selected = 'selected="selected"';
 						}else{
@@ -175,27 +184,25 @@ function submitFunction()
 					$result_prgm=$objTime->getAllCycle();
 					//print"<pre>";print_r($result_prgm);die;
 					?>
-				<select id="cycle" name="cycle" class="select-filter" onchange="submitFunction();"> 
-					<option value="" selected="selected">--Select--</option>
+				<select id="cycle" name="cycle[]" class="select-filter" multiple="multiple" style="width:40px;" /*onchange="submitFunction();"*/> 
+					<!--<option value="" selected="selected">--Select--</option>-->
 					<?php
-					if($result_prgm[0] == $_POST['cycle'])
+					if(in_array($result_prgm[0], $cycle_id))
 					{
 						$selected1 = 'selected="selected"';
-						$selected2 = '';
-						$selected3 = '';
-					}elseif($result_prgm[1] == $_POST['cycle'])
-					{
-						$selected2 = 'selected="selected"';
-						$selected1 = '';
-						$selected3 = '';
-					}elseif($result_prgm[2] == $_POST['cycle'])
-					{
-						$selected3 = 'selected="selected"';
-						$selected2 = '';
-						$selected1 = '';
 					}else{
 						$selected1 = '';
+					}
+					if(in_array($result_prgm[1], $cycle_id))
+					{
+						$selected2 = 'selected="selected"';
+					}else{
 						$selected2 = '';
+					}
+					if(in_array($result_prgm[2], $cycle_id))
+					{
+						$selected3 = 'selected="selected"';
+					}else{
 						$selected3 = '';
 					}
 					?>
@@ -206,18 +213,19 @@ function submitFunction()
 			</div>
 			<div class="filter-teache-report">	
 				<strong>Module:</strong>
-				<select id="module" name="module" class="select-filter" onchange="submitFunction();"> 
-					<option value="" selected="selected">--Select--</option>
+				<select id="module" name="module[]" multiple="multiple" class="select-filter" style="width:155px; margin-right:10px;" /*onchange="submitFunction();"*/> 
+					<!--<option value="" selected="selected">--Select--</option>-->
 					<?php 
 					$result_unit=$objP->getUnit();
 					if($result_unit->num_rows){
 					while ($row_unit =$result_unit->fetch_assoc()){
-						if($row_unit['id'] == $_POST['module'])
+						if(in_array($row_unit['id'], $module))
 						{
 							$selected = 'selected="selected"';
 						}else{
 							$selected = '';
-						}?>
+						}
+						?>
 						<option <?php echo $selected;?> value="<?php echo $row_unit['id'];?>"><?php echo $row_unit['name'];?></option>
 					<?php } 
 					}
@@ -226,7 +234,9 @@ function submitFunction()
 				</select>
 				
 			</div>
-			<?php } ?>
+		<input class="buttonsub" type="button" onclick="submitFunction();" value="Apply Filters" />
+		<input style="margin-top:5px;" class="buttonsub" type="button" value="Reset Filters" />
+		<?php } ?>
 		</div>
 		</form>
 			<div id="printing-div">

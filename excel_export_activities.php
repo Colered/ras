@@ -1,15 +1,16 @@
 <?php
 include('config.php');
-$fromTmDuratn = $_POST['postdata'][1];
-$toTmDuratn = $_POST['postdata'][2];
-$teacher_id = isset($_POST['postdata'][3])?$_POST['postdata'][3]:'';
-$program_id = isset($_POST['postdata'][4])?$_POST['postdata'][4]:'';
-$area_id = isset($_POST['postdata'][5])?$_POST['postdata'][5]:'';
-$profesor_id = isset($_POST['postdata'][6])?$_POST['postdata'][6]:'';
-$cycle_id = isset($_POST['postdata'][7])?$_POST['postdata'][7]:'';
-$module = isset($_POST['postdata'][8])?$_POST['postdata'][8]:'';
+$fromTmDuratn = $_POST['fromTmDuratn'];
+$toTmDuratn = $_POST['toTmDuratn'];
+$teacher_id = isset($_POST['teacher'])?$_POST['teacher']:'';
+$program_id = isset($_POST['program'])?$_POST['program']:'';
+$area_id = isset($_POST['area'])?$_POST['area']:'';
+$profesor_id = isset($_POST['profesor'])?$_POST['profesor']:'';
+$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
+$module = isset($_POST['module'])?$_POST['module']:'';
+$addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
-$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes, s.description,r.room_name, sam.special_activity_name 
+$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes, s.description,r.room_name, sam.special_activity_name , teaAct.reserved_flag, td.teacher_id
 from timetable_detail td 
 left join teacher t on t.id = td.teacher_id 
 left join subject su on su.id = td.subject_id 
@@ -21,11 +22,12 @@ left join area a on a.id = su.area_id
 left join room r on r.id = td.room_id 
 left join teacher_type tt on tt.id = t.teacher_type
 left join special_activity_mapping sam on sam.teacher_activity_id = td.activity_id
+left join teacher_activity teaAct on teaAct.id = td.activity_id
  
 where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
 if($teacher_id != '')
 {
-	 $teacher_sql .= " and teacher_id = '".$teacher_id."'";
+	 $teacher_sql .= " and td.teacher_id = '".$teacher_id."'";
 }
 if($program_id != '')
 {
@@ -57,6 +59,10 @@ if($cycle_id != '')
 if($module != '')
 {
 	$teacher_sql .= " and p.unit = '".$module."'";
+}
+if($addSpecialAct == '')
+{
+	$teacher_sql .= " and teaAct.reserved_flag = 1";
 }
 $teacher_sql .= " order by td.teacher_id";
 $q_res = mysqli_query($db,$teacher_sql);
