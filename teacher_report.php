@@ -259,7 +259,7 @@ function resetFilter(){
                         <th>Date</th>
 						<th>Timeslot</th>
 						<th>Program</th>
-						<th>Company</th>
+						<th>Special Activity Name</th>
                         <th>Module</th>
 						<th>Cycle</th>
 						<th>Area</th>
@@ -285,7 +285,7 @@ function resetFilter(){
 								<td><?php echo $row['date'];?></td>
 								<td><?php echo $row['timeslot'];?></td>
 								<td><?php echo $row['name'];?></td>
-								<td><?php echo $row['company'];?></td>
+								<td><?php echo $row['special_activity_name'];?></td>
 								<td><?php echo $row['unit'];?></td>
 								<td><?php echo $cycle_id;?></td>
 								<td><?php echo $row['area_name'];?></td>

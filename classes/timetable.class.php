@@ -101,7 +101,7 @@ class Timetable extends Base {
 		 $profesor_id = implode(',' , $profesor_id);
 		 $cycle_id = implode(',' , $cycle_id);
 		 $module = implode(',' , $module);
-		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name,tact.reserved_flag
+		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name,tact.reserved_flag, sam.special_activity_name
 		 from timetable_detail td 
 		 left join teacher t on t.id = td.teacher_id 
 		 left join subject su on su.id = td.subject_id 
@@ -113,6 +113,7 @@ class Timetable extends Base {
 		 left join room r on r.id = td.room_id 
 		 left join teacher_type tt on tt.id = t.teacher_type
 		 left join teacher_activity tact on tact.id = td.activity_id
+		 left join special_activity_mapping sam ON sam.teacher_activity_id = tact.id
 		 where date between '".$from."' and '".$to."'";
 		 if($teacher_id != '')
 		{
@@ -3518,7 +3519,7 @@ class Timetable extends Base {
 		 $profesor_id = implode(',' , $profesor_id);
 		 $cycle_id = implode(',' , $cycle_id);
 		 $module = implode(',' , $module);
-		 $teacher_sql = "select t.id,ta.id as act_id,ta.cycle_id,ta.name as act_name,ta.act_date,ta.timeslot_id,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name, p.company, u.name as unit,t.payrate, s.session_name, a.area_name, su.subject_name, su.subject_code, s.case_number, s.technical_notes, s.description, r.room_name, sam.special_activity_name, ta.program_year_id from teacher_activity ta 
+		 $teacher_sql = "select t.id,ta.id as act_id,ta.cycle_id,ta.name as act_name,ta.act_date,ta.timeslot_id,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name, p.company, u.name as unit,t.payrate, s.session_name, a.area_name, su.subject_name, su.subject_code, s.case_number, s.technical_notes, s.description, r.room_name, sam.special_activity_name, ta.program_year_id, sam.special_activity_name from teacher_activity ta 
 		left join teacher t on t.id = ta.teacher_id 
 		left join subject su on su.id = ta.subject_id 
 		left join program_years py on py.id = ta.program_year_id 
