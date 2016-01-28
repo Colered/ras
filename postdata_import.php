@@ -171,7 +171,9 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					if(((strtolower(trim($values[8]))!="floating") && (strtolower(trim($values[8]))!="")) && ((strtolower(trim($values[9]))!="floating") && (strtolower(trim($values[9]))!="")) && ((strtolower(trim($values[10]))!="floating") && (strtolower(trim($values[10]))!="")))
 					{
 						$errorArr[] = "Error in Row no:" .$count." Import can be done only for unreserved or semi-reserved activities please make either room or date or start time field as FLOATING or empty";
-					}
+					}$count++;
+				}else{
+					$errorArr[] = "Error in Row no:" .$count." column  no 1 to 8 are mandatory fields";
 					$count++;
 				}
 			}
@@ -266,8 +268,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 										{
 											$reserveFlag = 2;
 										}
-										//insert new activity
-										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '".$actName."', '".$program_year_id."', '".$cycle_id."', '".$subject_id."', '".$sessionId."', '".$teacher_id."', '','".$room_id."', '".$start_time."', '".$tsIdsAll."', '".$act_date."', '".$reserveFlag."', NOW(), NOW(), 0);");
+										if($start_time=='0' || $start_time==""){$start_time = 'NULL'; }
+										$result2 = mysqli_query($db, "INSERT INTO teacher_activity (id, name, program_year_id, cycle_id, subject_id, session_id, teacher_id, group_id, room_id, start_time, timeslot_id, act_date, reserved_flag, date_add, date_update, forced_flag) VALUES ('', '".$actName."', '".$program_year_id."', '".$cycle_id."', '".$subject_id."', '".$sessionId."', '".$teacher_id."', '','".$room_id."', $start_time, '".$tsIdsAll."', '".$act_date."', '".$reserveFlag."', NOW(), NOW(), 0);");
 									}
 								}
 								
@@ -285,6 +287,98 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$errorArr[] = "File do not have any data to import.";
 				$_SESSION['error_msgArr'] = $errorArr;
 				header('Location: session_upload.php');
+		}
+		break;
+		case "upldateSession":
+				require 'classes/PHPExcel.php';
+				require_once 'classes/PHPExcel/IOFactory.php';
+				$path = $_FILES['uploadSess']['tmp_name'];//"datafile.xlsx";
+				$objPHPExcel = PHPExcel_IOFactory::load($path);
+			foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+				$worksheetTitle     = $worksheet->getTitle();
+				$highestRow         = $worksheet->getHighestRow(); // e.g. 10
+				$highestColumn      = $worksheet->getHighestColumn(); // e.g 'F'
+				$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+				$nrColumns = ord($highestColumn) - 64;
+			}
+			$dataArr = array();
+			for ($row = 1; $row <= $highestRow; ++ $row) 
+			{
+				$val=array();
+				for ($col = 0; $col < $highestColumnIndex; ++ $col) 
+				{
+				   $cell = $worksheet->getCellByColumnAndRow($col, $row);
+				   if($col == 10){
+				   		$val[] = (string)$cell->getFormattedValue();
+				   }else{
+				   		$val[] = (string)$cell->getValue();
+					}
+				}
+				$dataArr[] = $val;
+			}
+			$errorArr = array();
+			if(count($dataArr)>1){
+			$count = 1;
+			require_once('config.php');
+			//get all Activity names in the array
+			$objT = new Timetable();								
+			$respT = $objT->getAllActivities();
+			$actNameArr = array(); $actIdArr = array();
+			while($row = mysqli_fetch_array($respT))
+			{
+				$actNameArr[] = $row['name'];
+				$actIdArr[] = $row['id'];
+			}
+			foreach($dataArr as $values){
+				//check if file headers are in expected format
+				if($count == 1){
+					if(strtolower(trim($values[0]))=="program" && strtolower(trim($values[1]))=="cycle" && strtolower(trim($values[2]))=="subject name" && strtolower(trim($values[3]))=="subject code" && strtolower(trim($values[4]))=="session name" && strtolower(trim($values[5]))=="order no" && strtolower(trim($values[6]))=="duration" && strtolower(trim($values[7]))=="teacher" && strtolower(trim($values[8]))=="room" && strtolower(trim($values[9]))=="date" && strtolower(trim($values[10]))=="start time" && strtolower(trim($values[11]))=="case no" && strtolower(trim($values[12]))=="technical notes" && strtolower(trim($values[13]))=="description" && strtolower(trim($values[14]))=="activity name"){
+						//File format is correct
+					}else{
+						$errorArr[] = "File format is not same, one or more header names are not matching";
+						$_SESSION['error_msgArr'] = $errorArr;
+						header('Location: session_update.php');
+						exit;
+					}
+					$count++;
+				}elseif(strtolower(trim($values[14]))!=""){
+					//check if activity exist
+					$actNamekey =array_search(trim(strtolower($values[14])), array_map('trim', array_map('strtolower', $actNameArr)));
+					if(($actNamekey === 0) || ($actNamekey > 0)){
+						$activity_id = $actIdArr[$actNamekey];
+					}else{
+						$errorArr[] = "Error in Row no:" .$count." Activity name does not exist in the system";
+					}
+					$count++;
+				}
+			}
+			//if file have no errors update three fields for related activities
+			if(count($errorArr)==0){
+				$total = 0;
+				foreach($dataArr as $values){
+						if($total > 0 && trim($values[14])!=""){
+								$activityName = trim($values[14]);
+								$caseNo = trim($values[11]);
+								$technicalNotes = trim($values[12]);
+								$description = trim($values[13]);
+								//update the activity
+								$result2 = mysqli_query($db, "UPDATE subject_session as ss LEFT JOIN teacher_activity as ta ON ss.id = ta.session_id
+								SET ss.case_number = '".$caseNo."', ss.technical_notes='".$technicalNotes."', ss.description='".$description."', ss.date_update= NOW() WHERE ta.name ='".$activityName."' ");
+								
+						} $total++ ; 
+				}
+				
+				$_SESSION['succ_msg'] = "Data has been updated successfully.";
+				header('Location: session_update.php');
+			}else{
+				$_SESSION['error_msgArr'] = $errorArr;
+				header('Location: session_update.php');
+			}
+		}else{
+				session_start();
+				$errorArr[] = "File do not have any data to import.";
+				$_SESSION['error_msgArr'] = $errorArr;
+				header('Location: session_update.php');
 		}
 		break;
 		case "generateWeeklyReport":
