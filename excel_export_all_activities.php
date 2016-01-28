@@ -107,34 +107,34 @@ while($row = mysqli_fetch_array($q_res))
 		$startTime = explode("-", $timeslotVal['0']);
 		$duration = (strtotime($startTime['1'])- strtotime($startTime['0']))/60;
 	}
-	$objPHPExcel->getActiveSheet()->SetCellValue('A'.$count, str_convert($row['name']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('B'.$count, str_convert($cycle_id));
-	$objPHPExcel->getActiveSheet()->SetCellValue('C'.$count, str_convert($row['subject_name']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('D'.$count, str_convert($row['subject_code']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('E'.$count, str_convert($row['session_name']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('F'.$count, str_convert($row['session_name']));
+	$objPHPExcel->getActiveSheet()->SetCellValue('A'.$count, $row['name']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('B'.$count, $cycle_id);
+	$objPHPExcel->getActiveSheet()->SetCellValue('C'.$count, $row['subject_name']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('D'.$count, $row['subject_code']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('E'.$count, $row['session_name']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('F'.$count, $row['session_name']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('G'.$count, $duration);
-	$objPHPExcel->getActiveSheet()->SetCellValue('H'.$count, str_convert($row['teacher_name']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('I'.$count, str_convert($row['room_name']));
+	$objPHPExcel->getActiveSheet()->SetCellValue('H'.$count, $row['teacher_name']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('I'.$count, $row['room_name']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('J'.$count, $row['act_date']);
-	$objPHPExcel->getActiveSheet()->SetCellValue('K'.$count, str_convert(isset($startTime['0'])? $startTime['0'] :''));
-	$objPHPExcel->getActiveSheet()->SetCellValue('L'.$count, str_convert($row['case_number']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('M'.$count, str_convert($row['technical_notes']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('N'.$count, str_convert($row['description']));
+	$objPHPExcel->getActiveSheet()->SetCellValue('K'.$count, isset($startTime['0'])? $startTime['0'] :'');
+	$objPHPExcel->getActiveSheet()->SetCellValue('L'.$count, $row['case_number']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('M'.$count, $row['technical_notes']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('N'.$count, $row['description']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('O'.$count, $row['act_name']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('P'.$count, $row['special_activity_name']);
-	$objPHPExcel->getActiveSheet()->SetCellValue('Q'.$count, str_convert(isset($timeslotVal['0'])? $timeslotVal['0'] :''));
-	$objPHPExcel->getActiveSheet()->SetCellValue('R'.$count, str_convert(isset($cycleDuration['0'])? $cycleDuration['0'] :''));
-	$objPHPExcel->getActiveSheet()->SetCellValue('S'.$count, str_convert(isset($cycleDuration['1'])? $cycleDuration['1'] :''));
-	$objPHPExcel->getActiveSheet()->SetCellValue('T'.$count, str_convert($row['company']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('U'.$count, str_convert($row['unit']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('V'.$count, str_convert($row['area_name']));
-	$objPHPExcel->getActiveSheet()->SetCellValue('W'.$count, str_convert($row['teacher_type_name']));
+	$objPHPExcel->getActiveSheet()->SetCellValue('Q'.$count, isset($timeslotVal['0'])? $timeslotVal['0'] :'');
+	$objPHPExcel->getActiveSheet()->SetCellValue('R'.$count, isset($cycleDuration['0'])? $cycleDuration['0'] :'');
+	$objPHPExcel->getActiveSheet()->SetCellValue('S'.$count, isset($cycleDuration['1'])? $cycleDuration['1'] :'');
+	$objPHPExcel->getActiveSheet()->SetCellValue('T'.$count, $row['company']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('U'.$count, $row['unit']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('V'.$count, $row['area_name']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('W'.$count, $row['teacher_type_name']);
 	$count++;
 } 
-function str_convert($str){
+/*function str_convert($str){
 	return iconv("UTF-8", "ISO-8859-1//IGNORE",$str);
-}
+}*/
 function cleanData(&$str)
 {
 	$str = preg_replace("/\t/", "\\t", $str);
@@ -147,7 +147,7 @@ $objWriter->save($filename);
 header('Content-Disposition: attachment; filename=' . $filename	 );
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Length: ' . filesize($filename));
-header('Content-Transfer-Encoding: binary');
+header('Content-Transfer-Encoding: UTF-8');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
 readfile('activity_report.xlsx');
