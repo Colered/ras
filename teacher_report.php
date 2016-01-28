@@ -94,7 +94,7 @@ function resetFilter(){
 				From: <input type="text" size="12" class="required" id="fromTmDuratn" name="fromTmDuratn" value="<?php echo $fromTmDuratn;?>"/>
 				To: <input type="text" size="12" class="required" id="toTmDuratn" name="toTmDuratn" value="<?php echo $toTmDuratn;?>"/><br />
 				<div style="float:left; margin-top:8px; margin-left:114px;">
-				<input type="checkbox" name="addSpecialAct" <?php if(isset($_POST['addSpecialAct']) && $_POST['addSpecialAct']==1){ echo "checked"; } ?> value="1" onclick="submitFunction();" /> Include special activities </div>
+				<input type="checkbox" name="addSpecialAct" <?php if(isset($_POST['addSpecialAct']) && $_POST['addSpecialAct']==1){ echo "checked"; } ?> value="1" onclick="submitFunction();" /> Include special activities (Recess and Group Meetings) </div>
 			</div>
 				
 			<div class="txtfield">

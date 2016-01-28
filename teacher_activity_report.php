@@ -217,7 +217,7 @@ function resetFilter(){
 		<input style="margin-top:5px;" class="buttonsub" type="button" onclick="resetFilter()" value="Reset Filters" />
 		<div class="filter-teache-report" style="padding-top:20px; height:32px;" > 	
 				<div style="float:left; margin-left:3px;">
-				<input type="checkbox" name="addSpecialAct" <?php if(isset($_POST['addSpecialAct']) && $_POST['addSpecialAct']==1){ echo "checked"; } ?> value="1" onclick="submitFunction();" /> <strong>Include special activities </strong> </div>
+				<input type="checkbox" name="addSpecialAct" <?php if(isset($_POST['addSpecialAct']) && $_POST['addSpecialAct']==1){ echo "checked"; } ?> value="1" onclick="submitFunction();" /> <strong>Include special activities (Recess and Group Meetings) </strong> </div>
 			</div>
 		<?php //} ?>
 		</div>
