@@ -1,7 +1,70 @@
 <?php
 include('config.php');
 $objTime = new Timetable();
-$q_res= $objTime->getTeachersActivityInRange();
+$teacher_id = isset($_POST['teacher'])?$_POST['teacher']:'';
+$program_id = isset($_POST['program'])?$_POST['program']:'';
+$area_id = isset($_POST['area'])?$_POST['area']:'';
+$profesor_id = isset($_POST['profesor'])?$_POST['profesor']:'';
+$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
+$module = isset($_POST['module'])?$_POST['module']:'';
+$addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
+//$q_res= $objTime->getTeachersActivityInRange($teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct);
+$teacher_sql = "select t.id,ta.id as act_id,ta.cycle_id,ta.name as act_name,ta.act_date,ta.timeslot_id,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name, p.company, u.name as unit,t.payrate, s.session_name, a.area_name, su.subject_name, su.subject_code, s.case_number, s.technical_notes, s.description, r.room_name, sam.special_activity_name, ta.program_year_id from teacher_activity ta 
+		left join teacher t on t.id = ta.teacher_id 
+		left join subject su on su.id = ta.subject_id 
+		left join program_years py on py.id = ta.program_year_id 
+		left join program p on p.id = py.program_id 
+		left join unit u on u.id = p.unit 
+		left join subject_session s on s.id = ta.session_id
+		left join special_activity_mapping sam on sam.teacher_activity_id = ta.id 
+		left join area a on a.id = su.area_id or  a.id = sam.area_id
+		left join room r on r.id = ta.room_id 
+		left join teacher_type tt on tt.id = t.teacher_type
+		where 1";
+		if($teacher_id != '')
+		{
+			 $teacher_sql .= " and ta.teacher_id IN($teacher_id)";
+		}
+		if($program_id != '')
+		{
+			$teacher_sql .= " and ta.program_year_id IN($program_id)";
+		}
+		if($area_id != '')
+		{
+			$teacher_sql .= " and su.area_id IN($area_id)";
+		}
+		if($profesor_id != '')
+		{
+			$teacher_sql .= " and t.teacher_type IN($profesor_id)";
+		}
+		if($cycle_id != '')
+		{
+			$cyc_arr = explode(",",$cycle_id);
+			$teacher_sql .= " and (";			
+			for($i=0;$i<count($cyc_arr);$i++)
+			{
+				if($i == count($cyc_arr)-1)
+				{
+					$teacher_sql .= "ta.cycle_id = '".$cyc_arr[$i]."'";
+				}else{
+					$teacher_sql .= "ta.cycle_id = '".$cyc_arr[$i]."' || ";
+				}
+			}
+			$teacher_sql .= ")";
+		}
+		if($module != '')
+		{
+			$teacher_sql .= " and p.unit IN($module)";
+		}
+		if($addSpecialAct == '')
+		{
+			$teacher_sql .= " and ta.reserved_flag IN(1, 5)";
+		}
+
+		$teacher_sql .= " order by ta.id";
+
+$q_res = mysqli_query($db,$teacher_sql);
+
 include_once 'classes/PHPExcel.php';
 include 'classes/PHPExcel/Writer/Excel2007.php';
 $objPHPExcel = new PHPExcel();
@@ -78,18 +141,14 @@ function cleanData(&$str)
 	$str = preg_replace("/\r?\n/", "\\n", $str);
 	if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
 }
-
-$filename = "all_activity_report.xlsx";
+$filename = "activity_report.xlsx";
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save($filename); 
-
-header("Content-Disposition: attachment; filename=\"$filename\"");
-//header("Content-Disposition: attachment; filename="\D:/xampp/htdocs/ras/".$filename");
-
-header("Content-Type:");
-ob_clean();
-flush();	
-	
-
-
+header('Content-Disposition: attachment; filename=' . $filename	 );
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Length: ' . filesize($filename));
+header('Content-Transfer-Encoding: binary');
+header('Cache-Control: must-revalidate');
+header('Pragma: public');
+readfile('activity_report.xlsx');
 ?>

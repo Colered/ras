@@ -7,8 +7,6 @@ if($user['view'] != '1')
 }
 $result = '';
 $teachers_result = '';
-//echo "<pre>";
-//print_r($_POST);
 if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
 {
 	if($_POST['fromTmDuratn'] != "" || $_POST['toTmDuratn'] != "")
@@ -77,7 +75,12 @@ function resetFilter(){
 					<?php
 					foreach($_POST as $key => $value)
 					{
-					  echo '<input type="hidden" name="'.$key.'" value="'.$value. '">';
+						$arrValue = implode(',',$value);
+						if($key == "btnGenrtReport" || $key == "fromTmDuratn" || $key == "toTmDuratn"){
+					  		echo '<input type="hidden" name="'.$key.'" value="'.$value. '">';
+						}else{
+					  		echo '<input type="hidden" name="'.$key.'" value="'.$arrValue. '">';
+						}
 					}
 					?>
 					<button onclick="document.getElementById('#export-form').submit();" class="btn-export"><span class="btn-export-text">Export</span></button>					

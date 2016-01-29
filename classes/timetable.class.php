@@ -3511,7 +3511,71 @@ class Timetable extends Base {
 			return trim($sorted_ts_str);
 	}
 	//Getting the teacher activity detail for report
-	public function getTeachersActivityInRange(){
+	public function getTeachersActivityInRange($teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct){
+		 $teacher_id = implode(',' , $teacher_id);
+		 $program_id = implode(',' , $program_id);
+		 $area_id = implode(',' , $area_id);
+		 $profesor_id = implode(',' , $profesor_id);
+		 $cycle_id = implode(',' , $cycle_id);
+		 $module = implode(',' , $module);
+		 $teacher_sql = "select t.id,ta.id as act_id,ta.cycle_id,ta.name as act_name,ta.act_date,ta.timeslot_id,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name, p.company, u.name as unit,t.payrate, s.session_name, a.area_name, su.subject_name, su.subject_code, s.case_number, s.technical_notes, s.description, r.room_name, sam.special_activity_name, ta.program_year_id from teacher_activity ta 
+		left join teacher t on t.id = ta.teacher_id 
+		left join subject su on su.id = ta.subject_id 
+		left join program_years py on py.id = ta.program_year_id 
+		left join program p on p.id = py.program_id 
+		left join unit u on u.id = p.unit 
+		left join subject_session s on s.id = ta.session_id
+		left join special_activity_mapping sam on sam.teacher_activity_id = ta.id 
+		left join area a on a.id = su.area_id or  a.id = sam.area_id
+		left join room r on r.id = ta.room_id 
+		left join teacher_type tt on tt.id = t.teacher_type
+		where 1";
+		if($teacher_id != '')
+		{
+			 $teacher_sql .= " and ta.teacher_id IN($teacher_id)";
+		}
+		if($program_id != '')
+		{
+			$teacher_sql .= " and ta.program_year_id IN($program_id)";
+		}
+		if($area_id != '')
+		{
+			$teacher_sql .= " and su.area_id IN($area_id)";
+		}
+		if($profesor_id != '')
+		{
+			$teacher_sql .= " and t.teacher_type IN($profesor_id)";
+		}
+		if($cycle_id != '')
+		{
+			$cyc_arr = explode(",",$cycle_id);
+			$teacher_sql .= " and (";			
+			for($i=0;$i<count($cyc_arr);$i++)
+			{
+				if($i == count($cyc_arr)-1)
+				{
+					$teacher_sql .= "ta.cycle_id = '".$cyc_arr[$i]."'";
+				}else{
+					$teacher_sql .= "ta.cycle_id = '".$cyc_arr[$i]."' || ";
+				}
+			}
+			$teacher_sql .= ")";
+		}
+		if($module != '')
+		{
+			$teacher_sql .= " and p.unit IN($module)";
+		}
+		if($addSpecialAct == '')
+		{
+			$teacher_sql .= " and ta.reserved_flag IN(1, 5)";
+		}
+
+		$teacher_sql .= " order by ta.id";
+		//echo $teacher_sql; die;
+		$q_res = mysqli_query($this->conn, $teacher_sql);
+		return $q_res;
+	}
+	/*public function getTeachersActivityInRange(){
 		$teacher_sql = "select t.id,ta.id as act_id,ta.cycle_id,ta.name as act_name,ta.act_date,ta.timeslot_id,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,su.subject_code,s.case_number,s.technical_notes,s.description,r.room_name,sam.special_activity_name from teacher_activity ta 
 		left join teacher t on t.id = ta.teacher_id 
 		left join subject su on su.id = ta.subject_id 
@@ -3525,7 +3589,7 @@ class Timetable extends Base {
 		left join teacher_type tt on tt.id = t.teacher_type order by ta.id ";
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
-	}
+	}*/
 	
 	//Getting the teacher activity detail for report for a date range
 	public function getTeachersActivityInDateRange($from,$to,$programId){

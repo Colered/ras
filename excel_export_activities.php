@@ -10,61 +10,61 @@ $cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
 $module = isset($_POST['module'])?$_POST['module']:'';
 $addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
-$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes, s.description,r.room_name, sam.special_activity_name , teaAct.reserved_flag, td.teacher_id
-from timetable_detail td 
-left join teacher t on t.id = td.teacher_id 
-left join subject su on su.id = td.subject_id 
-left join program_years py on py.id = td.program_year_id 
-left join program p on p.id = py.program_id 
-left join unit u on u.id = p.unit 
-left join subject_session s on s.id = td.session_id 
-left join area a on a.id = su.area_id 
-left join room r on r.id = td.room_id 
-left join teacher_type tt on tt.id = t.teacher_type
-left join special_activity_mapping sam on sam.teacher_activity_id = td.activity_id
-left join teacher_activity teaAct on teaAct.id = td.activity_id
- 
-where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
-if($teacher_id != '')
-{
-	 $teacher_sql .= " and td.teacher_id = '".$teacher_id."'";
-}
-if($program_id != '')
-{
-	$teacher_sql .= " and td.program_year_id = '".$program_id."'";
-}
-if($area_id != '')
-{
-	$teacher_sql .= " and su.area_id = '".$area_id."'";
-}
-if($profesor_id != '')
-{
-	$teacher_sql .= " and t.teacher_type = '".$profesor_id."'";
-}
-if($cycle_id != '')
-{
-	$cyc_arr = explode(",",$cycle_id);
-	$teacher_sql .= " and (";			
-	for($i=0;$i<count($cyc_arr);$i++)
-	{
-		if($i == count($cyc_arr)-1)
+$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name,tact.reserved_flag
+		 from timetable_detail td 
+		 left join teacher t on t.id = td.teacher_id 
+		 left join subject su on su.id = td.subject_id 
+		 left join program_years py on py.id = td.program_year_id 
+		 left join program p on p.id = py.program_id 
+		 left join unit u on u.id = p.unit 
+		 left join subject_session s on s.id = td.session_id 
+		 left join area a on a.id = su.area_id 
+		 left join room r on r.id = td.room_id 
+		 left join teacher_type tt on tt.id = t.teacher_type
+		 left join teacher_activity tact on tact.id = td.activity_id
+		 where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
+		 if($teacher_id != '')
 		{
-			$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."'";
-		}else{
-			$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."' || ";
+			 $teacher_sql .= " and td.teacher_id IN($teacher_id)";
 		}
-	}
-	$teacher_sql .= ")";
-}
-if($module != '')
-{
-	$teacher_sql .= " and p.unit = '".$module."'";
-}
-if($addSpecialAct == '')
-{
-	$teacher_sql .= " and teaAct.reserved_flag = 1";
-}
-$teacher_sql .= " order by td.teacher_id";
+		if($program_id != '')
+		{
+			$teacher_sql .= " and td.program_year_id IN($program_id)";
+		}
+		if($area_id != '')
+		{
+			$teacher_sql .= " and su.area_id IN($area_id)";
+		}
+		if($profesor_id != '')
+		{
+			$teacher_sql .= " and t.teacher_type IN($profesor_id)";
+		}
+		if($cycle_id != '')
+		{
+			$cyc_arr = explode(",",$cycle_id);
+			$teacher_sql .= " and (";			
+			for($i=0;$i<count($cyc_arr);$i++)
+			{
+				if($i == count($cyc_arr)-1)
+				{
+					$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."'";
+				}else{
+					$teacher_sql .= "td.cycle_id = '".$cyc_arr[$i]."' || ";
+				}
+			}
+			$teacher_sql .= ")";
+		}
+		if($module != '')
+		{
+			$teacher_sql .= " and p.unit IN($module)";
+		}
+		if($addSpecialAct == '')
+		{
+			$teacher_sql .= " and tact.reserved_flag IN(1, 5)";
+		}
+
+		$teacher_sql .= " order by td.teacher_id";
+		//echo $teacher_sql; die;
 $q_res = mysqli_query($db,$teacher_sql);
 $data = array();
 while($row = mysqli_fetch_array($q_res))
