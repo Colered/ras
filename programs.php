@@ -26,6 +26,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
 
 $program_name = isset($_GET['edit']) ? $row['program_name'] : (isset($_POST['txtPrgmName'])? $_POST['txtPrgmName']:'');
 $company_name = isset($_GET['edit']) ? $row['company'] : (isset($_POST['txtCompanyName'])? $_POST['txtCompanyName']:'');
+$no_participants = isset($_GET['edit']) ? $row['participants'] : (isset($_POST['txtParticipants'])? $_POST['txtParticipants']:'');
 $program_type = isset($_GET['edit']) ? $row['program_type'] : (isset($_POST['slctPrgmType'])? $_POST['slctPrgmType']:'');
 $max_session_no = isset($_GET['edit']) ? $row['max_no_session'] : (isset($_POST['maxSessNo'])? $_POST['maxSessNo']:'');
 $max_tot_session_no = isset($_GET['edit']) ? $row['max_tot_no_session'] : (isset($_POST['maxTotSessNo'])? $_POST['maxTotSessNo']:'');
@@ -158,6 +159,13 @@ $(document).ready(function() {
 							<?php } ?>
                         	</select>
                     </div>
+					<div class="clear"></div>
+					<div class="custtd_left">
+						<h2>No. Of participants</h2>
+					</div>
+					<div class="txtfield">
+						<input type="text" class="inp_txt" id="txtParticipants" maxlength="100" name="txtParticipants" value="<?php echo $no_participants;?>">
+					</div>
                     <div class="clear"></div>
 					<div class="custtd_left">
 						<h2>Company</h2>

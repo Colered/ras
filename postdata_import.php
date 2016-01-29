@@ -476,7 +476,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 					  $mkNewArr[$key][$k]=$v;
 					  	foreach($mkNewArr[$key][$k] as $ke=>$vl){
 						    if($ke==2){
-							     $mkNewArr[$key][$k][$ke] = $objTime->sortingTimesSlots($vl);
+							     //$mkNewArr[$key][$k][$ke] = $objTime->sortingTimesSlots($vl);
+								 $mkNewArr[$key][$k][$ke] = $objTime->timesSlotsMinMax($vl);
 							}else{
 								 $mkNewArr[$key][$k][$ke] = $vl;
 							}
@@ -534,7 +535,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
 					  if($x==2){
-					 	$y='';
+					 	$y='5';
 						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "PARTICIPANTES");
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setName('Calibri');
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setSize(6);
@@ -613,35 +614,37 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																										)
 																								);
 						}																	
-						//$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);																		
+						//$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);	
+						//echo "<pre>";
+						//print_r($mkNewArr); die;																	
 						if(isset(${'array' . $j}) || !empty(${'array' . $j}) ){
-					  	foreach(${'array' . $j} as $row){
-							foreach($row as $k=>$v){
-								if (array_key_exists($z, $v)) {
-								 if($y!=''){
-								  	if($k==0){
-								  		$objPHPExcel->getActiveSheet()->SetCellValue('C'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
-									}
-								   if($k==1){
-								   		$objPHPExcel->getActiveSheet()->SetCellValue('E'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
-									}
-								   if($k==2){
-								   		$objPHPExcel->getActiveSheet()->SetCellValue('G'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
-									}
-								   if($k==3){
-								   		$objPHPExcel->getActiveSheet()->SetCellValue('I'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
-									}
-								   if($k==4){
-								   		$objPHPExcel->getActiveSheet()->SetCellValue('K'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
-								    }
-								   if($k==5){
-								   		$objPHPExcel->getActiveSheet()->SetCellValue('M'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
-								   }
-								}
-							   }	
-							}
-						}
-					  }
+							foreach(${'array' . $j} as $row){
+								foreach($row as $k=>$v){
+									if (array_key_exists($z, $v)) {
+									 if($y!=''){
+										if($k==0){
+											$objPHPExcel->getActiveSheet()->SetCellValue('C'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+										}
+									   if($k==1){
+											$objPHPExcel->getActiveSheet()->SetCellValue('E'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+										}
+									   if($k==2){
+											$objPHPExcel->getActiveSheet()->SetCellValue('G'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+										}
+									   if($k==3){
+											$objPHPExcel->getActiveSheet()->SetCellValue('I'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+										}
+									   if($k==4){
+											$objPHPExcel->getActiveSheet()->SetCellValue('K'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+										}
+									   if($k==5){
+											$objPHPExcel->getActiveSheet()->SetCellValue('M'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									    }
+									  }
+								    }	
+							     }
+							  }
+					  		}
 				     }
 				 	   $HeightestRow++;
 					}
@@ -651,6 +654,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																										array(
 																											'alignment' => array(
 																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
 																											),
 																											'borders' => array(
 																												'left'     => array(
@@ -667,6 +671,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																										array(
 																											'alignment' => array(
 																												'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+																												'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
 																											),
 																											'borders' => array(
 																												'left'     => array(

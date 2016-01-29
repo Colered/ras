@@ -21,7 +21,7 @@ $tslot_dropDwn = $obj2->getTimeSlotStartDateDropDwn();
 $objTS = new Timeslot();
 $tslot_dropDwn = $objTS->getTimeSlotStartDateDropDwn();
 $disFDivCss = "style=''";
-$special_act_id=$detail_grp=$act_date=$act_ad_hoc_fix_date=$special_act_name=$special_activity=$special_activity_type=$program_year_id=$cycle_id=$area_id=$room_id=$subject_id=$subject_val=$teacher_id=$start_time_id=$duration=$adhoc_start_date=$adhoc_end_date=$disabled=$ad_hoc_act_date_dd=$readonly=$special_sp_act_name=$one_time_edit=$rule_id_grp_str="";
+$special_act_id=$detail_grp=$act_date=$act_ad_hoc_fix_date=$special_act_name=$special_activity=$special_activity_type=$program_year_id=$cycle_id=$area_id=$room_id=$subject_id=$subject_val=$teacher_id=$start_time_id=$duration=$adhoc_start_date=$adhoc_end_date=$disabled=$ad_hoc_act_date_dd=$readonly=$special_sp_act_name=$one_time_edit=$rule_id_grp_str=$no_participants=$coordinator="";
 $btnSubmit="Save";
 $daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
@@ -94,6 +94,8 @@ $option_duration='<option value="">--Select--</option>
 		$teacher_id =(isset($detail['teacher_id']) && $detail['teacher_id']!="")? $detail['teacher_id'] :"";
 		$start_time_id =(isset($detail['start_time']) && $detail['start_time']!="")? $detail['start_time'] :"";
 		$duration =(isset($detail['duration']) && $detail['duration']!="")? $detail['duration'] :"";
+		$no_participants = (isset($detail['adhoc_participants']) && $detail['adhoc_participants']!="")? $detail['adhoc_participants'] :"";
+		$coordinator = (isset($detail['adhoc_coordinator']) && $detail['adhoc_coordinator']!="")? $detail['adhoc_coordinator'] :"";
 		$adhoc_start_date =(isset($detail['adhoc_start_date']) && $detail['adhoc_start_date']!="" && $detail['act_date']=="0000-00-00")? $detail['adhoc_start_date'] :"";
 		$adhoc_end_date =(isset($detail['adhoc_end_date']) && $detail['adhoc_end_date']!="" && $detail['act_date']=="0000-00-00")? $detail['adhoc_end_date'] :"";
 		$disabled =(isset($special_act_id) && $special_act_id!="")? 'disabled="disabled"' :"";
@@ -128,6 +130,8 @@ $option_duration='<option value="">--Select--</option>
 		}else{
 			$act_date=$duration=$act_ad_hoc_fix_date=$adhoc_start_date=$adhoc_end_date=$start_time_id="";
 		}
+		$no_participants = (isset($detail_grp['adhoc_participants']) && $detail_grp['adhoc_participants']!="")? $detail_grp['adhoc_participants'] :"";
+		$coordinator = (isset($detail_grp['adhoc_coordinator']) && $detail_grp['adhoc_coordinator']!="")? $detail_grp['adhoc_coordinator'] :"";
 		$program_year_id =(isset($detail_grp['program_year_id']) && $detail_grp['program_year_id']!="")? $detail_grp['program_year_id'] :"";
 		$cycle_id =(isset($detail_grp['cycle_id']) && $detail_grp['cycle_id']!="")? $detail_grp['cycle_id'] :"";
 		$area_id =(isset($detail_grp['area_id']) && $detail_grp['area_id']!="")? $detail_grp['area_id'] :"";
@@ -326,6 +330,7 @@ $option_duration='<option value="">--Select--</option>
 							</div>		
 							<div class="clear"></div> 
 							<?php }?>
+							
 							<div class="custtd_left">
                                 <h2>Choose Program<span class="redstar spanPrgm">*</span></h2>
                             </div>
@@ -375,6 +380,20 @@ $option_duration='<option value="">--Select--</option>
 								<?php }?>
                             </div>
                             <div class="clear"></div>
+							<div class="custtd_left">
+                                <h2>No. of participants</h2>
+                            </div>
+                            <div class="txtfield">
+                                <input type="text" class="inp_txt" id="participantsNo" maxlength="100" name="participantsNo" value="<?php echo $no_participants;?>">
+                            </div>
+							<div class="clear"></div>
+							<div class="custtd_left">
+                                <h2>Coordinator</h2>
+                            </div>
+                            <div class="txtfield">
+                                <input type="text" class="inp_txt" id="coordinator" maxlength="100" name="coordinator" value="<?php echo $coordinator;?>">
+                            </div>
+							<div class="clear"></div>
                             <div class="custtd_left">
                                 <h2>Choose Area <span class="redstar spanArea">*</span></h2>
                             </div>
