@@ -20,7 +20,7 @@ if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
 		$profesor_id = isset($_POST['profesor'])?$_POST['profesor']:array();
 		$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:array();
 		$module = isset($_POST['module'])?$_POST['module']:array();
-		$result = $objTime->getTeachersInRange($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct);	
+		$result = $objTime->getTeachersInRangeMod($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct);	
 	}else{		
 		$message="Please enter all required fields";
 		$_SESSION['error_msg'] = $message;
