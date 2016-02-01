@@ -143,7 +143,7 @@ class Timetable extends Base {
 		{
 			$teacher_sql .= " and p.unit = '".$module."'";
 		}
-
+		$teacher_sql .= " and tact.reserved_flag IN(1, 5)";
 		$teacher_sql .= " order by td.teacher_id";
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
