@@ -84,7 +84,7 @@ $(document).ready(function(){
 															<td>'.$act_name_data_result['act_date'].'</td>
 															<td>'.$timeslot.'</td>
 															<td id="'.$act_name_data_result['id'].'">
-																<a href="special_activity.php?edit='.base64_encode($act_name_data_result['id']).'?>" class="table-icon edit" title="Edit"></a>
+																<a href="special_activity.php?edit='.base64_encode($act_name_data_result['id']).'?>" class="table-icon edit" title="Edit Activity"></a>
 																<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$act_name_data_result['id'].')"></a></td>
 												  </tr> ';
 									}else{
@@ -97,7 +97,7 @@ $(document).ready(function(){
 															<td>'.$startDate.'</td>
 															<td>'.$endDate.'</td>
 															<td id="'.$act_name_data_result['id'].'" width="30">
-																<a href="special_activity.php?edit='.base64_encode($act_name_data_result['id']).'?>" class="table-icon edit" title="Edit"></a>
+																<a href="special_activity.php?edit='.base64_encode($act_name_data_result['id']).'?>" class="table-icon edit" title="Edit Activity"></a>
 																<a class="table-icon delete" onClick="deleteSpecialActivityListing('.$act_name_data_result['id'].')"></a>
 															</td>
 												  </tr> ';
@@ -121,7 +121,7 @@ $(document).ready(function(){
 						<?php if($user['edit'] != '0' || $user['delete_role'] != '0'){?>
 							<td id="<?php echo trim($data['special_activity_name']) ?>">
 								<?php if($user['edit'] != '0'){?>
-									<a href="special_activity.php?gp_Edit=<?php echo base64_encode($data['special_activity_name'])?>" class="table-icon edit" title="Edit"></a>
+									<a href="special_activity.php?gp_Edit=<?php echo base64_encode($data['special_activity_name'])?>" class="table-icon edit" title="Edit Activity Group"></a>
 								<?php } ?>
 								<?php if($user['delete_role'] != '0'){?>
 									<a class="table-icon delete" onClick="deleteSpecialActivity('<?php echo trim($data['special_activity_name']) ?>')"></a>

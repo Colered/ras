@@ -87,6 +87,7 @@ $option_duration='<option value="">--Select--</option>
 		$special_activity_type =(isset($detail['special_activity_type']) && $detail['special_activity_type']!="")? $detail['special_activity_type'] :"";
 		$program_year_id =(isset($detail['program_year_id']) && $detail['program_year_id']!="")? $detail['program_year_id'] :"";
 		$cycle_id =(isset($detail['cycle_id']) && $detail['cycle_id']!="")? $detail['cycle_id'] :"";
+		$special_activity_category =(isset($detail['special_activity_category']) && $detail['special_activity_category']!="")? $detail['special_activity_category'] :"";
 		$area_id =(isset($detail['area_id']) && $detail['area_id']!="")? $detail['area_id'] :"";
 		$room_id =(isset($detail['room_id']) && $detail['room_id']!="")? $detail['room_id'] :"";
 		$subject_id =(isset($detail['subject_id']) && $detail['subject_id']!="")? $detail['subject_id'] :"";
@@ -131,6 +132,8 @@ $option_duration='<option value="">--Select--</option>
 			$act_date=$duration=$act_ad_hoc_fix_date=$adhoc_start_date=$adhoc_end_date=$start_time_id="";
 		}
 		$no_participants = (isset($detail_grp['adhoc_participants']) && $detail_grp['adhoc_participants']!="")? $detail_grp['adhoc_participants'] :"";
+			$special_activity_category =(isset($detail_grp['special_activity_category']) && $detail_grp['special_activity_category']!="")? $detail_grp['special_activity_category'] :"";
+
 		$coordinator = (isset($detail_grp['adhoc_coordinator']) && $detail_grp['adhoc_coordinator']!="")? $detail_grp['adhoc_coordinator'] :"";
 		$program_year_id =(isset($detail_grp['program_year_id']) && $detail_grp['program_year_id']!="")? $detail_grp['program_year_id'] :"";
 		$cycle_id =(isset($detail_grp['cycle_id']) && $detail_grp['cycle_id']!="")? $detail_grp['cycle_id'] :"";
@@ -378,6 +381,19 @@ $option_duration='<option value="">--Select--</option>
 								<?php if($disabled!="" && isset($_GET['gp_Edit'])){?>
 									<input type="hidden" name="slctCycle" value="<?php echo $cycle_id;?>" />
 								<?php }?>
+                            </div>
+							
+							<div class="clear"></div>
+                            <div class="custtd_left">
+                                <h2>Activity Category<span class="redstar spanCycle">*</span></h2>
+                            </div>
+                            <div class="txtfield">
+                                <select id="special_activity_category" name="special_activity_category" class="select1 required" >
+                                    <option value="Actividad" <?php if($special_activity_category=="Actividad"){echo "selected=selected"; } ?> >Actividad</option>
+									<option value="Uso de Espacio" <?php if($special_activity_category=="Uso de Espacio"){echo "selected=selected"; } ?> >Uso de Espacio</option>
+									<option value="Centro de investigación" <?php if($special_activity_category=="Centro de investigación"){echo "selected=selected"; } ?> >Centro de investigación</option>
+									<option value="Otros" <?php if($special_activity_category=="Otros"){echo "selected=selected"; } ?> >Otros</option>
+                                </select>
                             </div>
                             <div class="clear"></div>
 							<div class="custtd_left">
