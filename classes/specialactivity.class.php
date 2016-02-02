@@ -48,7 +48,7 @@ class SpecialActivity extends Base {
 	}
 	//get special activity details by id
 	public function specialActivityDetail($special_act_id){
-		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.start_time,ta.reserved_flag,ta.act_date,sa.teacher_activity_id,sa.id as special_id,sa.special_activity_rule_id,sa.area_id,sa.special_activity_type,sa.duration,sa.special_activity_name,sa.adhoc_start_date,sa.adhoc_end_date FROM teacher_activity ta
+		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.start_time,ta.reserved_flag,ta.act_date,sa.teacher_activity_id,sa.id as special_id,sa.special_activity_rule_id,sa.area_id,sa.special_activity_type,sa.duration,sa.special_activity_name,sa.adhoc_start_date,sa.adhoc_end_date, sa.adhoc_participants, sa.adhoc_coordinator FROM teacher_activity ta
 						inner join  special_activity_mapping sa on(sa.teacher_activity_id = ta.id)
 						WHERE ta.id='".$special_act_id."' ";
 		$query = mysqli_query($this->conn,$sql);
@@ -282,17 +282,18 @@ class SpecialActivity extends Base {
 			    $ts_id_Arr = explode(',',$ot_timeslot_str);
 				$start_time = $ts_id_Arr['0'];
 				if((isset($_POST['special_act_id'])) && $_POST['special_act_id']!=""){
-					$result_update = mysqli_query($this->conn, "Update teacher_activity set timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$activity_date."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['special_act_id']."' ");
+					
+					$result_update = mysqli_query($this->conn, "Update teacher_activity set teacher_id = '".$_POST['slctTeacher']."', subject_id = '".$_POST['slctSubjectName']."', room_id = '".$_POST['slctRoom']."', timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$activity_date."', date_update = '".date("Y-m-d H:i:s")."' where id='".$_POST['special_act_id']."' ");
 					if($result_update){
-						$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set duration = '".$_POST['duration']."',adhoc_start_date = '".$_POST['fromADHocDate']."',adhoc_end_date = '".$_POST['toADHocDate']."', adhoc_participants = '".$_POST['participantsNo']."' , adhoc_coordinator = '".$_POST['coordinator']."',date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$_POST['special_act_id']."' ");
+						$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set area_id = '".$_POST['slctArea']."', duration = '".$_POST['duration']."', special_activity_name = '".$_POST['txtActName']."', adhoc_start_date = '".$_POST['fromADHocDate']."',adhoc_end_date = '".$_POST['toADHocDate']."', adhoc_participants = '".$_POST['participantsNo']."' , adhoc_coordinator = '".$_POST['coordinator']."',date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$_POST['special_act_id']."' ");
 					}
 				}else{
 					$sql = "select teacher_activity_id from special_activity_mapping where special_activity_name='".trim($_POST['special_sp_act_name'])."' ";
 					$query = mysqli_query($this->conn,$sql);
 					$teacher_act_id_result = $query->fetch_assoc();
-					$result_update = mysqli_query($this->conn, "Update teacher_activity set timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$activity_date."', date_update = '".date("Y-m-d H:i:s")."' where id='".$teacher_act_id_result['teacher_activity_id']."' ");
+					$result_update = mysqli_query($this->conn, "Update teacher_activity set teacher_id = '".$_POST['slctTeacher']."', subject_id = '".$_POST['slctSubjectName']."', room_id = '".$_POST['slctRoom']."', timeslot_id = '".$ot_timeslot_str."',start_time = '".$start_time."', act_date = '".$activity_date."', date_update = '".date("Y-m-d H:i:s")."' where id='".$teacher_act_id_result['teacher_activity_id']."' ");
 					if($result_update){
-						$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set duration = '".$_POST['duration']."',adhoc_start_date = '".$_POST['fromADHocDate']."',adhoc_end_date = '".$_POST['toADHocDate']."', adhoc_participants = '".$_POST['participantsNo']."' , adhoc_coordinator = '".$_POST['coordinator']."' ,date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$teacher_act_id_result['teacher_activity_id']."' ");
+						$result_mapping_update = mysqli_query($this->conn, "Update  special_activity_mapping set area_id = '".$_POST['slctArea']."', duration = '".$_POST['duration']."', special_activity_name = '".$_POST['txtActName']."', adhoc_start_date = '".$_POST['fromADHocDate']."',adhoc_end_date = '".$_POST['toADHocDate']."', adhoc_participants = '".$_POST['participantsNo']."' , adhoc_coordinator = '".$_POST['coordinator']."' ,date_update = '".date("Y-m-d H:i:s")."' where teacher_activity_id='".$teacher_act_id_result['teacher_activity_id']."' ");
 					}
 				}
 				if($result_update==1 && $result_mapping_update==1){
@@ -443,7 +444,7 @@ class SpecialActivity extends Base {
    }	
 	//fetching detail for the listing special activity
 	public function getSpecialActivityDetail($special_act){
-		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name,sam.special_activity_name FROM teacher_activity ta
+		$sql = "SELECT ta.id,ta.name,ta.program_year_id,ta.cycle_id,ta.subject_id,ta.session_id,ta.teacher_id,ta.group_id,ta.room_id,ta.timeslot_id,ta.reserved_flag,ta.act_date,s.subject_name,ss.session_name,t.teacher_name,t.email,py.name program_name,rm.room_name,sam.special_activity_name, sam.adhoc_participants, sam.adhoc_coordinator FROM teacher_activity ta
 						left join subject s on(s.id = ta.subject_id)
 						left join subject_session ss on(ss.id=ta.session_id)
 						left join teacher t on(t.id = ta.teacher_id)

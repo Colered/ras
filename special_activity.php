@@ -193,7 +193,7 @@ $option_duration='<option value="">--Select--</option>
                                 <h2 class="blod-text">Activity Name<span class="redstar">*</span></h2>
                             </div>
                             <div class="txtfield">
-                                <input type="text" class="inp_txt" id="txtActName" maxlength="50" name="txtActName" value="<?php echo $special_act_name;?>" <?php echo $readonly;?>>
+                                <input type="text" class="inp_txt" id="txtActName" maxlength="120" name="txtActName" size="120" style="width:450px;" value="<?php echo $special_act_name;?>" <?php //echo $readonly;?>>
                             </div>
                             <div class="clear"></div>
 							<div class="custtd_left">
@@ -398,7 +398,7 @@ $option_duration='<option value="">--Select--</option>
                                 <h2>Choose Area <span class="redstar spanArea">*</span></h2>
                             </div>
                             <div class="txtfield ">
-                                <select id="slctArea" name="slctArea" class="select1 required" <?php echo $disabled;?>>
+                                <select id="slctArea" name="slctArea" class="select1 required" <?php //echo $disabled;?>>
                                     <option value="" selected="selected">--Select Area--</option>
 									<?php
 									$areaId = "";
@@ -419,7 +419,7 @@ $option_duration='<option value="">--Select--</option>
                                 <h2>Choose Room <span class="redstar spanRoom">*</span></h2>
                             </div>
 							<div class="txtfield">
-                                <select id="slctRoom" name="slctRoom" class="select1 required" <?php echo $disabled;?>>
+                                <select id="slctRoom" name="slctRoom" class="select1 required" <?php //echo $disabled;?>>
                                     <option value="" selected="selected">--Select Room--</option>
 									<option value="0" <?php if($room_id==0 && $room_id!=""){echo 'selected="selected"';}?>>N/A</option>
                                 <?php
@@ -441,7 +441,7 @@ $option_duration='<option value="">--Select--</option>
                                 <h2>Subject Name<span class="redstar spanSubject">*</span></h2>
                             </div>
                             <div class="txtfield">
-                                <select id="slctSubjectName" name="slctSubjectName" class="select1 required" <?php echo $disabled;?> >
+                                <select id="slctSubjectName" name="slctSubjectName" class="select1 required" <?php //echo $disabled; ?> >
                                     <option value="" selected="selected">--Select Subject--</option>
                                     <option value="0" <?php if($subject_id==0 &&$subject_id!="" ){echo ' selected="selected"';}?>>N/A</option>
 									<?php
@@ -480,7 +480,7 @@ $option_duration='<option value="">--Select--</option>
                         <h2>Teacher <span class="redstar spanSubCode">*</span></h2>
                     </div>
                     <div class="txtfield">
-					 <select id="slctTeacher" name="slctTeacher" class="select1 required" <?php echo $disabled;?> >
+					 <select id="slctTeacher" name="slctTeacher" class="select1 required" <?php //echo $disabled;?> >
 						<option value="" >--Select--</option>
 						<?php while($data = $teacherData->fetch_assoc()){ 
 							$selected = (trim($teacher_id) == trim($data['id'])) ? ' selected="selected"' : '';?>

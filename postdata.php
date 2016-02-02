@@ -567,11 +567,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			}else{
 				$resp = $obj->addSpecialActivity();//add new SpecialActivity
 			}
-			/*if($resp){
-				header('Location: special_activity_view.php');
-			}else{
-				header('Location: special_activity_view.php');
-			}*/
 		break;
 		case 'addEditUser':
 			//adding new user

@@ -3545,10 +3545,22 @@ class Timetable extends Base {
 	}
 	//function to get teachers assigned in timetable within a range
 	public function getTeachersInDateRange($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id='',$module=''){
-		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,py.name, p.participants, a.area_name,r.room_name from timetable_detail td inner join teacher t on t.id = td.teacher_id inner join subject su on su.id = td.subject_id inner join program_years py on py.id = td.program_year_id inner join program p on p.id = py.program_id inner join unit u on u.id = p.unit inner join subject_session s on s.id = td.session_id inner join area a on a.id = su.area_id inner join room r on r.id = td.room_id left join teacher_type tt on tt.id = t.teacher_type where date between '".$from."' and '".$to."'";
-		
+		 $teacher_sql = "select ta.id,td.date,td.timeslot,t.teacher_name,py.name, p.participants, a.area_name,r.room_name, ta.reserved_flag,ta.name as activityName, sam.special_activity_name, sam.adhoc_participants, sam.adhoc_coordinator
+		 from timetable_detail td 
+		 LEFT JOIN teacher_activity ta on ta.id = td.activity_id
+		 LEFT JOIN special_activity_mapping sam on sam.teacher_activity_id = td.activity_id
+		 LEFT JOIN teacher t on t.id = td.teacher_id 
+		 LEFT JOIN subject su on su.id = td.subject_id 
+		 LEFT JOIN program_years py on py.id = td.program_year_id 
+		 LEFT JOIN program p on p.id = py.program_id 
+		 LEFT JOIN unit u on u.id = p.unit 
+		 LEFT JOIN subject_session s on s.id = td.session_id 
+		 LEFT JOIN area a on a.id = su.area_id 
+		 LEFT JOIN room r on r.id = td.room_id 
+		 LEFT JOIN teacher_type tt on tt.id = t.teacher_type 
+		 where ta.reserved_flag IN(1, 5)
+		 AND td.date between '".$from."' and '".$to."'";
 		$teacher_sql .= " order by td.teacher_id";
-		//echo $teacher_sql;die;
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
 	}
@@ -3576,7 +3588,6 @@ class Timetable extends Base {
  		 			return $a - $b;
     		});
 			$total = count($strTSArr);
-			if(count($strTSArr)>1){
 			//find the min and max range
 				$fistVal = $strTSArr[0];
 				$fistValBrk = explode('-', $fistVal);
@@ -3584,9 +3595,6 @@ class Timetable extends Base {
 				$lastValBrk = explode('-', $lastVal);
 				return trim($fistValBrk[0]).' - '.trim($lastValBrk[1]);
 				
-			}else{
-				return trim($strTSArr);
-			}
 	}
 	//Getting the teacher activity detail for report
 	public function getTeachersActivityInRange($teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct){

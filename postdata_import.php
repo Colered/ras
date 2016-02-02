@@ -517,7 +517,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				
 				$cells=array('A','B','C','D','E','F','G','H','I','J','K','L','M');
 				for($z=0;$z<max($maxArr);$z++){
-				    for($x=0;$x<7;$x++){
+				    for($x=0;$x<13;$x++){
 					 if($x=='0'){
 					 	$y='4';
 						$objPHPExcel->getActiveSheet()->SetCellValue('A'.$HeightestRow, "EVENTO / PROGRAMA");
@@ -574,6 +574,24 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getFont()->setBold(true);
 						$objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 					 }
+					 if($x=='7'){
+					 	$y='7';
+					 }
+					 if($x=='8'){
+					 	$y='8';
+					 }
+					 if($x=='9'){
+					 	$y='9';
+					 }
+					 if($x=='10'){
+					 	$y='10';
+					 }
+					 if($x=='11'){
+					 	$y='11';
+					 }
+					 if($x=='12'){
+					 	$y='12';
+					 }
 					  for($j=0;$j<13;$j++){
 					   if($j%2==0){
 					  	$objPHPExcel->getActiveSheet()->getStyle($cells[$j].$HeightestRow)->applyFromArray(
@@ -614,31 +632,64 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 																										)
 																								);
 						}																	
-						//$objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);	
-						//echo "<pre>";
-						//print_r($mkNewArr); die;																	
 						if(isset(${'array' . $j}) || !empty(${'array' . $j}) ){
 							foreach(${'array' . $j} as $row){
 								foreach($row as $k=>$v){
 									if (array_key_exists($z, $v)) {
 									 if($y!=''){
 										if($k==0){
-											$objPHPExcel->getActiveSheet()->SetCellValue('C'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+											if(($y==8) && ($mkNewArr[$j][$k][$z][$y]==5) ){
+												$objPHPExcel->getActiveSheet()->SetCellValue('C'.($HeightestRow - 8), $mkNewArr[$j][$k][$z][10]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('C'.($HeightestRow - 6), $mkNewArr[$j][$k][$z][11]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('C'.($HeightestRow - 3), $mkNewArr[$j][$k][$z][12]);
+											}else{
+												$objPHPExcel->getActiveSheet()->SetCellValue('C'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+											}
 										}
 									   if($k==1){
-											$objPHPExcel->getActiveSheet()->SetCellValue('E'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									   		if(($y==8) && ($mkNewArr[$j][$k][$z][$y]==5) ){
+												$objPHPExcel->getActiveSheet()->SetCellValue('E'.($HeightestRow - 8), $mkNewArr[$j][$k][$z][10]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('E'.($HeightestRow - 6), $mkNewArr[$j][$k][$z][11]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('E'.($HeightestRow - 3), $mkNewArr[$j][$k][$z][12]);
+											}else{
+												$objPHPExcel->getActiveSheet()->SetCellValue('E'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+											}
 										}
 									   if($k==2){
-											$objPHPExcel->getActiveSheet()->SetCellValue('G'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									   		if(($y==8) && ($mkNewArr[$j][$k][$z][$y]==5) ){
+												$objPHPExcel->getActiveSheet()->SetCellValue('G'.($HeightestRow - 8), $mkNewArr[$j][$k][$z][10]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('G'.($HeightestRow - 6), $mkNewArr[$j][$k][$z][11]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('G'.($HeightestRow - 3), $mkNewArr[$j][$k][$z][12]);
+											}else{
+												$objPHPExcel->getActiveSheet()->SetCellValue('G'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+											}
 										}
 									   if($k==3){
-											$objPHPExcel->getActiveSheet()->SetCellValue('I'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									   		if(($y==8) && ($mkNewArr[$j][$k][$z][$y]==5) ){
+												$objPHPExcel->getActiveSheet()->SetCellValue('I'.($HeightestRow - 8), $mkNewArr[$j][$k][$z][10]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('I'.($HeightestRow - 6), $mkNewArr[$j][$k][$z][11]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('I'.($HeightestRow - 3), $mkNewArr[$j][$k][$z][12]);
+											}else{
+												$objPHPExcel->getActiveSheet()->SetCellValue('I'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+											}
 										}
 									   if($k==4){
-											$objPHPExcel->getActiveSheet()->SetCellValue('K'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									   		if(($y==8) && ($mkNewArr[$j][$k][$z][$y]==5) ){
+												$objPHPExcel->getActiveSheet()->SetCellValue('K'.($HeightestRow - 8), $mkNewArr[$j][$k][$z][10]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('K'.($HeightestRow - 6), $mkNewArr[$j][$k][$z][11]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('K'.($HeightestRow - 3), $mkNewArr[$j][$k][$z][12]);
+											}else{
+												$objPHPExcel->getActiveSheet()->SetCellValue('K'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+											}
 										}
 									   if($k==5){
-											$objPHPExcel->getActiveSheet()->SetCellValue('M'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+									   		if(($y==8) && ($mkNewArr[$j][$k][$z][$y]==5) ){
+												$objPHPExcel->getActiveSheet()->SetCellValue('M'.($HeightestRow - 8), $mkNewArr[$j][$k][$z][10]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('M'.($HeightestRow - 6), $mkNewArr[$j][$k][$z][11]);
+												$objPHPExcel->getActiveSheet()->SetCellValue('M'.($HeightestRow - 3), $mkNewArr[$j][$k][$z][12]);
+											}else{
+												$objPHPExcel->getActiveSheet()->SetCellValue('M'.$HeightestRow, $mkNewArr[$j][$k][$z][$y]);
+											}
 									    }
 									  }
 								    }	
@@ -646,8 +697,11 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 							  }
 					  		}
 				     }
-				 	   $HeightestRow++;
+					   $HeightestRow++;
 					}
+					 //echo $HeightestRow; die;
+					   $objPHPExcel->getActiveSheet()->removeRow(($HeightestRow -6), ($HeightestRow -1));
+					   $HeightestRow = $HeightestRow -6;
 					   for($i=0;$i<13;$i++){
 					   if($i%2==0){
 					   $objPHPExcel->getActiveSheet()->getStyle($cells[$i].$HeightestRow)->applyFromArray(
