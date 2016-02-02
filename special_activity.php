@@ -391,7 +391,7 @@ $option_duration='<option value="">--Select--</option>
                                 <select id="special_activity_category" name="special_activity_category" class="select1 required" >
                                     <option value="Actividad" <?php if($special_activity_category=="Actividad"){echo "selected=selected"; } ?> >Actividad</option>
 									<option value="Uso de Espacio" <?php if($special_activity_category=="Uso de Espacio"){echo "selected=selected"; } ?> >Uso de Espacio</option>
-									<option value="Centro de investigaci&oacute;n" selected="selected" <?php if($special_activity_category=="Centro de investigaci&oacute;n"){echo "selected=selected"; } ?> >Centro de investigaci&oacute;n</option>
+									<option value="Centro de investigaci&oacute;n" <?php if($special_activity_category == "Centro de investigaci&oacute;n"){echo "selected=selected"; } ?> >Centro de investigaci&oacute;n</option>
 									<option value="Otros" <?php if($special_activity_category=="Otros"){echo "selected=selected"; } ?> >Otros</option>
                                 </select>
                             </div>
