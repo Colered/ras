@@ -194,7 +194,7 @@ $option_duration='<option value="">--Select--</option>
 				<div class="addSubDiv">
                             <div class="custtd_left">
                                 <h2 class="blod-text">Activity Name<span class="redstar">*</span></h2>
-                            </div>
+                  </div>
                             <div class="txtfield">
                                 <input type="text" class="inp_txt" id="txtActName" maxlength="120" name="txtActName" size="120" style="width:450px;" value="<?php echo $special_act_name;?>" <?php //echo $readonly;?>>
                             </div>
@@ -391,7 +391,7 @@ $option_duration='<option value="">--Select--</option>
                                 <select id="special_activity_category" name="special_activity_category" class="select1 required" >
                                     <option value="Actividad" <?php if($special_activity_category=="Actividad"){echo "selected=selected"; } ?> >Actividad</option>
 									<option value="Uso de Espacio" <?php if($special_activity_category=="Uso de Espacio"){echo "selected=selected"; } ?> >Uso de Espacio</option>
-									<option value="Centro de investigación" <?php if($special_activity_category=="Centro de investigación"){echo "selected=selected"; } ?> >Centro de investigación</option>
+									<option value="Centro de investigaci&oacute;n" selected="selected" <?php if($special_activity_category=="Centro de investigaci&oacute;n"){echo "selected=selected"; } ?> >Centro de investigaci&oacute;n</option>
 									<option value="Otros" <?php if($special_activity_category=="Otros"){echo "selected=selected"; } ?> >Otros</option>
                                 </select>
                             </div>
@@ -490,7 +490,7 @@ $option_duration='<option value="">--Select--</option>
                                 <input type="text" class="inp_txt" id="txtSubjCode" maxlength="50" name="txtSubjCode" value="<?php echo $subject_val;?>" <?php echo $disabled;?>>
                             </div>
                             <div class="clear"></div>
-                        </div>
+                  </div>
 				<!-- end -->
                     <div class="custtd_left">
                         <h2>Teacher <span class="redstar spanSubCode">*</span></h2>
