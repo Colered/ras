@@ -11,7 +11,7 @@ if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
 {
 	if($_POST['fromTmDuratn'] != "" || $_POST['toTmDuratn'] != "")
 	{
-		$addSpecialAct = $teacher_id = $program_id = $area_id = $profesor_id = $cycle_id = $module = array();
+		$addSpecialAct = $teacher_id = $program_id = $area_id = $profesor_id = $cycle_id = $module = $special_activity_category = array();
 		$addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 		$objTime = new Timetable();
 		$teacher_id = isset($_POST['teacher'])?$_POST['teacher']:array();
@@ -20,7 +20,8 @@ if(isset($_POST['btnGenrtReport']) && $_POST['btnGenrtReport'] != '')
 		$profesor_id = isset($_POST['profesor'])?$_POST['profesor']:array();
 		$cycle_id = isset($_POST['cycle'])?$_POST['cycle']:array();
 		$module = isset($_POST['module'])?$_POST['module']:array();
-		$result = $objTime->getTeachersInRangeMod($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct);	
+		$special_activity_category = isset($_POST['special_activity_category'])?$_POST['special_activity_category']:array();
+		$result = $objTime->getTeachersInRangeMod($_POST['fromTmDuratn'],$_POST['toTmDuratn'],$teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct, $special_activity_category);	
 	}else{		
 		$message="Please enter all required fields";
 		$_SESSION['error_msg'] = $message;
@@ -53,6 +54,7 @@ function resetFilter(){
 	$("#profesor option[value]").removeAttr("selected");
 	$("#cycle option[value]").removeAttr("selected");
 	$("#module option[value]").removeAttr("selected");
+	$("#special_activity_category option[value]").removeAttr("selected");
 	$('#teacher_report').submit();
 }
 </script>
@@ -223,6 +225,15 @@ function resetFilter(){
 					<option <?php echo $selected3;?> value="<?php echo $result_prgm[2]?>">3</option>
 				</select>
 			</div>
+				<div class="filter-teache-report">	
+				<strong>Activity Category:</strong>
+				<select id="special_activity_category" name="special_activity_category[]" multiple="multiple" class="select-filter" >
+					<option value="1" <?php if(in_array(1, $special_activity_category)){echo "selected=selected"; } ?> >Actividad</option>
+					<option value="2" <?php if(in_array(2, $special_activity_category)){echo "selected=selected"; } ?> >Uso de Espacio</option>
+					<option value="3" <?php if(in_array(3, $special_activity_category)){echo "selected=selected"; } ?> >Centro de investigaci&oacute;n</option>
+					<option value="4" <?php if(in_array(4, $special_activity_category)){echo "selected=selected"; } ?> >Otros</option>
+				</select>
+				</div>
 			<div class="filter-teache-report">	
 				<strong>Module:</strong>
 				<select id="module" name="module[]" multiple="multiple" class="select-filter" style="width:155px; margin-right:10px;" /*onchange="submitFunction();"*/> 
@@ -259,7 +270,9 @@ function resetFilter(){
                         <th>Date</th>
 						<th>Timeslot</th>
 						<th>Program</th>
-						<th>Special Activity Name</th>
+						<th>Company</th>
+						<th>Special Act. Name</th>
+						<th>Activity Category</th>
                         <th>Module</th>
 						<th>Cycle</th>
 						<th>Area</th>
@@ -285,7 +298,14 @@ function resetFilter(){
 								<td><?php echo $row['date'];?></td>
 								<td><?php echo $row['timeslot'];?></td>
 								<td><?php echo $row['name'];?></td>
+								<td><?php echo $row['company'];?></td>
 								<td><?php echo $row['special_activity_name'];?></td>
+								<td>
+								<?php if($row['special_activity_category']=="1"){echo "Actividad"; } 
+									  else if($row['special_activity_category']=="2"){echo "Uso de Espacio"; } 
+									  else if($row['special_activity_category']=="3"){echo "Centro de investigaci&oacute;n"; } 
+									  else if($row['special_activity_category']=="4"){echo "Otros"; } 
+								?>
 								<td><?php echo $row['unit'];?></td>
 								<td><?php echo $cycle_id;?></td>
 								<td><?php echo $row['area_name'];?></td>

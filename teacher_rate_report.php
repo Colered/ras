@@ -242,9 +242,11 @@ function submitFunction()
                         <th>Teacher Type </th>
                         <th>Program</th>
                         <th>Company</th>
+						<th>Special Act. Name</th>
+						<th>Activity Category</th>
                         <th>Subject Name</th>
                         <th>Sessions</th>
-						<th>Activity type</th>
+						<!--<th>Activity type</th>-->
                         <th>Amount to pay $</th>
                         
                     </tr>
@@ -263,9 +265,11 @@ function submitFunction()
 								<td><?php echo $row['teacher_type_name'];?></td>
 								<td><?php echo $row['name'];?></td>
 								<td><?php echo $row['company'];?></td>
+								<td><?php echo $row['special_activity_name'];?></td>
+								<td><?php echo $row['special_activity_category'];?></td>
 								<td><?php echo $row['subject_name'];?></td>
 								<td><?php echo $row['session_name'];?></td>
-								<td><?php echo $activityType[$row['reserved_flag']];?></td>
+								<?php /*?><td><?php echo $activityType[$row['reserved_flag']];?></td><?php */?>
 								<td><?php echo $row['payrate'];?></td>
 							</tr>
 						<?php $i++; } 

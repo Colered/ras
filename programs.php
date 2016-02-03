@@ -12,7 +12,7 @@ if(isset($_GET['edit']) && $_GET['edit']!=''){
     $row = $result->fetch_assoc();
     $unitArr[]= explode(',',$row['unit']);
     // set the value
-    $button_save = 'Edit Program';
+    $button_save = 'Update';
     $form_action = 'edit_program';
 
 }else{
@@ -161,7 +161,7 @@ $(document).ready(function() {
                     </div>
 					<div class="clear"></div>
 					<div class="custtd_left">
-						<h2>No. Of participants</h2>
+						<h2>No. of Participants</h2>
 					</div>
 					<div class="txtfield">
 						<input type="text" class="inp_txt" id="txtParticipants" maxlength="100" name="txtParticipants" value="<?php echo $no_participants;?>">

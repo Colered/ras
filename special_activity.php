@@ -389,15 +389,15 @@ $option_duration='<option value="">--Select--</option>
                             </div>
                             <div class="txtfield">
                                 <select id="special_activity_category" name="special_activity_category" class="select1 required" >
-                                    <option value="Actividad" <?php if($special_activity_category=="Actividad"){echo "selected=selected"; } ?> >Actividad</option>
-									<option value="Uso de Espacio" <?php if($special_activity_category=="Uso de Espacio"){echo "selected=selected"; } ?> >Uso de Espacio</option>
-									<option value="Centro de investigaci&oacute;n" <?php if($special_activity_category == "Centro de investigaci&oacute;n"){echo "selected=selected"; } ?> >Centro de investigaci&oacute;n</option>
-									<option value="Otros" <?php if($special_activity_category=="Otros"){echo "selected=selected"; } ?> >Otros</option>
+                                    <option value="1" <?php if($special_activity_category=="1"){echo "selected=selected"; } ?> >Actividad</option>
+									<option value="2" <?php if($special_activity_category=="2"){echo "selected=selected"; } ?> >Uso de Espacio</option>
+									<option value="3" <?php if($special_activity_category == "3"){echo "selected=selected"; } ?> >Centro de investigaci&oacute;n</option>
+									<option value="4" <?php if($special_activity_category=="4"){echo "selected=selected"; } ?> >Otros</option>
                                 </select>
                             </div>
                             <div class="clear"></div>
 							<div class="custtd_left">
-                                <h2>No. of participants</h2>
+                                <h2>No. of Participants</h2>
                             </div>
                             <div class="txtfield">
                                 <input type="text" class="inp_txt" id="participantsNo" maxlength="100" name="participantsNo" value="<?php echo $no_participants;?>">
