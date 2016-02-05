@@ -21,7 +21,7 @@ $tslot_dropDwn = $obj2->getTimeSlotStartDateDropDwn();
 $objTS = new Timeslot();
 $tslot_dropDwn = $objTS->getTimeSlotStartDateDropDwn();
 $disFDivCss = "style=''";
-$special_act_id=$detail_grp=$act_date=$act_ad_hoc_fix_date=$special_act_name=$special_activity=$special_activity_type=$program_year_id=$cycle_id=$area_id=$room_id=$subject_id=$subject_val=$teacher_id=$start_time_id=$duration=$adhoc_start_date=$adhoc_end_date=$disabled=$ad_hoc_act_date_dd=$readonly=$special_sp_act_name=$one_time_edit=$rule_id_grp_str=$no_participants=$coordinator="";
+$special_act_id=$detail_grp=$act_date=$act_ad_hoc_fix_date=$special_act_name=$special_activity=$special_activity_type=$program_year_id=$cycle_id=$area_id=$room_id=$subject_id=$subject_val=$teacher_id=$start_time_id=$duration=$adhoc_start_date=$adhoc_end_date=$disabled=$ad_hoc_act_date_dd=$readonly=$special_sp_act_name=$one_time_edit=$rule_id_grp_str=$no_participants=$coordinator=$special_activity_category="";
 $btnSubmit="Save";
 $daysDBArr = array('0'=>'Mon','1'=>'Tue','2'=>'Wed','3'=>'Thu','4'=>'Fri','5'=>'Sat','6'=>'Sun');
 $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
