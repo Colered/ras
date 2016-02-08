@@ -463,15 +463,18 @@ class Timetable extends Base {
 															$duration = $this->getDuration($meeting_detail['activity_id']);
 															$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
 															$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));
-															if(!$this->isTimeslotReserved($date,$meet_start_time,$meet_end_time,$reserved_rooms))
+															if($meeting_detail['room_id'] != 0)
 															{
-																if($meeting_detail['room_id'] != 0)
-																{
-																	$edit_room_id = $meeting_detail['room_id'];
-																}else{
-																	$edit_room_id = 0;
-																}
-																$room_id = $this->searchRoomForGM($date,$meeting_detail['timeslot_id'],$meet_start_time,$meet_end_time,$reserved_rooms,$edit_room_id);													
+																$edit_room_id = $meeting_detail['room_id'];
+															}else{
+																$edit_room_id = 0;
+															}
+															
+															if(!$this->isTimeslotReservedAdhoc($date,$meet_start_time,$meet_end_time,$reserved_rooms, $edit_room_id))
+															{
+																if($edit_room_id==0){
+																$room_id = $this->searchRoomForGM($date,$meeting_detail['timeslot_id'],$meet_start_time,$meet_end_time,$reserved_rooms,$edit_room_id);									
+																}else{ $room_id = $edit_room_id; }
 																if($room_id > 0)
 																{
 																	$room_name = $this->getRoomName($room_id);
