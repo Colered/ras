@@ -1077,5 +1077,11 @@ class Programs extends Base {
 		$row = $result->fetch_assoc();
 		return $row['min_id']."-".$row['max_id'];
     }
+	public function getPgmCompany(){
+    	$prgm_query="select pg.id, pg.program_id, pg.name, p.company from program_years pg left join program p on p.id=pg.program_id";
+  	   	$q_res = mysqli_query($this->conn, $prgm_query);
+  	   	return $q_res;
+    }
+	
 }
 

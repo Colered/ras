@@ -1814,10 +1814,27 @@ switch ($codeBlock) {
 				$end_date = date('Y-m-d', strtotime($_POST['toGenrtTmtbl']));
 				$programs = $_POST['programs'];
 				$program_list = implode(",",$programs);
+				//get all teacher data
+				$objTeacher = new Teacher();
+				$teacherArr = $objTeacher->getTeachers();
+				$teacArr = array(); 
+				while($row = mysqli_fetch_array($teacherArr))
+				{
+					$teacArr[$row['id']] = $row['teacher_code'];
+				}
+				//get all Program data for company name
+				$objProgram = new Programs();
+				$progmArr = $objProgram->getPgmCompany();
+				$companyArr = array(); 
+				while($data = mysqli_fetch_array($progmArr))
+				{
+					$companyArr[$data['id']] = $data['company'];
+				}
 				/*if(!$obj->checkName($_POST['txtAName']))
 				{*/
 					$from_time = date('Y', strtotime($_POST['fromGenrtTmtbl']));
 					$output_array = $obj->generateTimetable($start_date, $end_date,$programs);
+					
 					if(!isset($output_array['system_error']))
 					{
 						$final_output_array = $output_array[0];
@@ -1857,7 +1874,9 @@ switch ($codeBlock) {
 											$room_id = $v['room_id'];
 											$session_id = $v['session_id'];
 											$room_name = $v['room_name'];
-											$name = $v['name'];
+											/*$name = $v['name'];*/
+											$teachCode = isset($teacArr[$v['teacher_id']])?$teacArr[$v['teacher_id']]:"";
+											$name = $v['program_name'].'/'.$teachCode;
 											$program_name = $v['program_name'];
 											$subject_name = $v['subject_name'];
 											$session_name = $v['session_name'];
@@ -1865,7 +1884,9 @@ switch ($codeBlock) {
 											$teacher_type = $v['teacher_type'];
 											$cycle_id = $v['cycle_id'];
 											$subject_id = $v['subject_id'];
-											$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
+											//$description = $program_name."-".$subject_name."-".$session_name."-".$teacher_name;
+											$companyName = (isset($companyArr[$v['program_year_id']]) && $companyArr[$v['program_year_id']]!="")?', '.$companyArr[$v['program_year_id']]:"";
+											$description = $teacher_name.", ".$program_name.$companyName;
 											if($v['reserved_flag'] == '3')
 											{
 												$description = "Recess Activity - ".$program_name;
