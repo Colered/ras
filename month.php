@@ -3,6 +3,8 @@
 include_once 'includes/init.php';
 include_once 'config.php';
 include_once 'includes/header.php';
+//echo "<pre>"; 
+//print_r($_POST); die;
 
 //check UAC
 if ( ! access_can_access_function ( ACCESS_MONTH ) || 
@@ -25,9 +27,11 @@ if ( empty ( $user ) )
  $area_id=(isset($_REQUEST['area_id']))?$_REQUEST['area_id']:'';
  $teacher_type_id=(isset($_REQUEST['teacher_type_id']))?$_REQUEST['teacher_type_id']:'';
  $cycle_id=(isset($_REQUEST['cycle_id']))?$_REQUEST['cycle_id']:'';
- $room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
- $teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
- $program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:''; 
+ $room_filter_id = (isset($_GET['room_avail_id']) && ($_GET['room_avail_id']!=""))? (explode('-', $_GET['room_avail_id'])):((isset($_POST['room_avail_id']) && ($_POST['room_avail_id']!=""))? $_POST['room_avail_id']:"");
+  $teacher_filter_id = (isset($_GET['teacher_avail_id']) && ($_GET['teacher_avail_id']!=""))? (explode('-',$_GET['teacher_avail_id'])):((isset($_POST['teacher_avail_id']) && ($_POST['teacher_avail_id']!=""))? $_POST['teacher_avail_id']:"");
+  $program_filter_id = (isset($_GET['program_avail_id']) && ($_GET['program_avail_id']!=""))? (explode('-',$_GET['program_avail_id'])):((isset($_POST['program_avail_id']) && ($_POST['program_avail_id']!=""))? $_POST['program_avail_id']:"");
+
+ 
  $new_event_Arr=array();
 load_user_categories ();
 $next = mktime ( 0, 0, 0, $thismonth + 1, 1, $thisyear );
@@ -52,7 +56,7 @@ if ( $BOLD_DAYS_IN_YEAR == 'Y' ) {
 $new_event_Arr=$exception_dates=array();
 if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 	$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
-}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
+}elseif(!empty($room_filter_id) || !empty($teacher_filter_id) || !empty($program_filter_id)){
 	$events_detail = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
 	$events=$events_detail[0];
 	$rows_detail=isset($events_detail[2])?$events_detail[2]:'';
@@ -101,9 +105,6 @@ if ( $DISPLAY_TASKS == 'Y' && $friendly != 1 ) {
   $tableWidth = '80%';
 }
 $eventinfo = ( ! empty ( $eventinfo ) ? $eventinfo : '' );
-/*echo '<pre>';
-print_r($new_event_Arr);*/
-
 $monthStr = display_month ( $thismonth, $thisyear, false, $room_filter_id, $teacher_filter_id, $program_filter_id,$exception_dates,$new_event_Arr);
 $navStr = display_navigation ( 'month' );
 $month_name_display=display_navigation_current_month( 'month' );

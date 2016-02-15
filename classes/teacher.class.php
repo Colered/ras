@@ -360,6 +360,19 @@ class Teacher extends Base {
 		}
 		return $allIds;
 	}
+	//get all rule ids from teacher
+	public function getRuleIdsForTeacherCalView($ids)
+	{
+		$allIds = implode(',', $ids); 
+		//echo '<br>';
+		$teacher_avail_query="select teacher_availability_rule_id from teacher_availability_rule_teacher_map where teacher_id IN($allIds)";
+		$q_res = mysqli_query($this->conn, $teacher_avail_query);
+		$allIds = array();
+		while($data = $q_res->fetch_assoc()){
+			$allIds[] =  $data['teacher_availability_rule_id'];
+		}
+		return $allIds;
+	}
 	//add and update teacher availability
 	public function addUpdateTeacAvail(){
 		$teacherId = base64_decode($_POST['slctTeacher']);

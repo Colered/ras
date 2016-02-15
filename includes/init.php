@@ -318,9 +318,15 @@ function print_menu_dates ( $menu = false ) {
   }
  
   if ( access_can_access_function ( ACCESS_MONTH ) ) {
+  	$room_avail_id = (isset($_GET['room_avail_id']) && ($_GET['room_avail_id']!=""))? $_GET['room_avail_id']:((isset($_POST['room_avail_id']) && ($_POST['room_avail_id']!=""))?(implode('-',$_POST['room_avail_id'])):"");
+  $teacher_avail_id = (isset($_GET['teacher_avail_id']) && ($_GET['teacher_avail_id']!=""))? $_GET['teacher_avail_id']:((isset($_POST['teacher_avail_id']) && ($_POST['teacher_avail_id']!=""))?(implode('-',$_POST['teacher_avail_id'])):"");
+  $program_avail_id = (isset($_GET['program_avail_id']) && ($_GET['program_avail_id']!=""))? $_GET['program_avail_id']:((isset($_POST['program_avail_id']) && ($_POST['program_avail_id']!=""))?(implode('-',$_POST['program_avail_id'])):"");
+
     $ret .= '<td>
-            <form action="' . $monthUrl
-     . '" method="post" name="SelectMonth" id="month'
+            <form action="' . $monthUrl.'?'
+       . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$room_avail_id )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$teacher_avail_id )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$program_avail_id ). '" method="post" name="SelectMonth" id="month'
      . ( $menu ? 'menu' : 'form' ) . '"> ' . $urlArgs
      . ( ! empty ( $user ) && $user != $login ? '
               <input type="hidden" name="user" value="' . $user . '" />' : '' )
@@ -343,13 +349,7 @@ function print_menu_dates ( $menu = false ) {
 	 . ( !empty ( $_REQUEST['teacher_type_id'] ) ? '
 			  <input type="hidden" value="'.$_REQUEST['teacher_type_id'].'" name="teacher_type_id">' : '' )
 	 . ( !empty ( $_REQUEST['cycle_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['cycle_id'].'" name="cycle_id">' : '' )
-	 . ( !empty ( $_REQUEST['program_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['program_avail_id'].'" name="program_avail_id">' : '' )
-	 . ( !empty ( $_REQUEST['room_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['room_avail_id'].'" name="room_avail_id">' : '' )
-	 . ( !empty ( $_REQUEST['teacher_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ).'
+			  <input type="hidden" value="'.$_REQUEST['cycle_id'].'" name="cycle_id">' : '' ).'
 	               
               <select name="date" id="monthselect" '
      . 'onchange="document.SelectMonth.submit()" class="menu-select-filter">';
@@ -407,7 +407,10 @@ function print_menu_dates ( $menu = false ) {
       }
     }
     $ret .= '
-           <td> <form action="' . $weekUrl
+           <td> <form action="' . $weekUrl.'?'
+		   	.( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$room_avail_id )
+	   		.( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$teacher_avail_id )
+	   		.( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$program_avail_id ) 
      . '" method="post" name="SelectWeek" id="week'
      . ( $menu ? 'menu' : 'form' ) . '">' . $urlArgs
      . ( ! empty ( $user ) && $user != $login ? '
@@ -432,14 +435,7 @@ function print_menu_dates ( $menu = false ) {
 			  <input type="hidden" value="'.$_REQUEST['teacher_type_id'].'" name="teacher_type_id">' : '' )
 	 . ( !empty ( $_REQUEST['cycle_id'] ) ? '
 			  <input type="hidden" value="'.$_REQUEST['cycle_id'].'" name="cycle_id">' : '' )
-	 . ( !empty ( $_REQUEST['program_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['program_avail_id'].'" name="program_avail_id">' : '' )
-	 . ( !empty ( $_REQUEST['room_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['room_avail_id'].'" name="room_avail_id">' : '' )
-	 . ( !empty ( $_REQUEST['teacher_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ). '
-
-              <select name="date" id="weekselect" '
+	 . '<select name="date" id="weekselect" '
      . 'onchange="document.SelectWeek.submit()">';
   
     if ( ! empty ( $thisyear ) && ! empty ( $thismonth ) ) {
@@ -498,7 +494,10 @@ function print_menu_dates ( $menu = false ) {
       }
     }
     $ret .= '
-            <td><form action="' . $yearUrl . '" method="post" name="SelectYear" id="year'
+            <td><form action="' . $yearUrl.'?' 
+			. ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$room_avail_id )
+	   		. ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$teacher_avail_id )
+	   		. ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$program_avail_id ).  '" method="post" name="SelectYear" id="year'
      . ( $menu ? 'menu' : 'form' ) . '">' . $urlArgs
      . ( ! empty ( $user ) && $user != $login ? '
               <input type="hidden" name="user" value="' . $user . '" />' : '' )
@@ -522,13 +521,7 @@ function print_menu_dates ( $menu = false ) {
 			  <input type="hidden" value="'.$_REQUEST['teacher_type_id'].'" name="teacher_type_id">' : '' )
 	 . ( !empty ( $_REQUEST['cycle_id'] ) ? '
 			  <input type="hidden" value="'.$_REQUEST['cycle_id'].'" name="cycle_id">' : '' ) 
-	 . ( !empty ( $_REQUEST['program_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['program_avail_id'].'" name="program_avail_id">' : '' )
-	 . ( !empty ( $_REQUEST['room_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['room_avail_id'].'" name="room_avail_id">' : '' )
-	 . ( !empty ( $_REQUEST['teacher_avail_id'] ) ? '
-			  <input type="hidden" value="'.$_REQUEST['teacher_avail_id'].'" name="teacher_avail_id">' : '' ). '
-              <select name="year" id="yearselect" '
+	. '<select name="year" id="yearselect" '
      . 'onchange="document.SelectYear.submit()">';
   
     $y = ( empty ( $thisyear ) ? date ( 'Y' ) : $thisyear );

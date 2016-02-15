@@ -210,5 +210,27 @@ class Timeslot extends Base {
 		}
 		return $allocated_date_Arr;
 	}
+	//getting all allocated date for multiple ids
+	public function getAllAllocatedDateForAllIds($teacher_id,$class_id,$program_year_id){
+		$allocated_date_Arr = $teacher_idtemp = $class_idtemp = $program_year_idtemp = array();
+		$teacher_idtemp = explode('-', $teacher_id);
+		$teacher_id = implode(',', $teacher_idtemp);
+		$class_idtemp = explode('-', $class_id);
+		$class_id = implode(',', $class_idtemp);
+		$program_year_idtemp = explode('-', $program_year_id);
+		$program_year_id = implode(',', $program_year_idtemp);
+		if($program_year_id!=""){
+			$sql_query="SELECT date FROM timetable_detail WHERE program_year_id IN($program_year_id) GROUP BY date";
+		}elseif($teacher_id!=""){
+			$sql_query="SELECT date FROM timetable_detail WHERE teacher_id IN($teacher_id) GROUP BY date";
+		}else{
+			$sql_query="SELECT date FROM timetable_detail WHERE room_id  IN($class_id) GROUP BY date";
+		}
+		$res_query = mysqli_query($this->conn, $sql_query);
+		while($data = mysqli_fetch_array($res_query)){
+				$allocated_date_Arr[]=date("Ymd", strtotime($data['date']));
+		}
+		return $allocated_date_Arr;
+	}
 
 }

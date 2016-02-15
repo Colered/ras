@@ -12,9 +12,11 @@ $room_id=(isset($_REQUEST['room_id'])) ? ($_REQUEST['room_id']) : '';
 $area_id=(isset($_REQUEST['area_id'])) ? ($_REQUEST['area_id']) : '';
 $teacher_type_id=(isset($_REQUEST['teacher_type_id'])) ? ($_REQUEST['teacher_type_id']) : '';
 $cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
-$room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
-$teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
-$program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:'';
+$room_avail_id = (isset($_GET['room_avail_id']) && ($_GET['room_avail_id']!=""))? (explode('-', $_GET['room_avail_id'])):((isset($_POST['room_avail_id']) && ($_POST['room_avail_id']!=""))? $_POST['room_avail_id']:"");
+  $teacher_avail_id = (isset($_GET['teacher_avail_id']) && ($_GET['teacher_avail_id']!=""))? (explode('-',$_GET['teacher_avail_id'])):((isset($_POST['teacher_avail_id']) && ($_POST['teacher_avail_id']!=""))? $_POST['teacher_avail_id']:"");
+  $program_avail_id = (isset($_GET['program_avail_id']) && ($_GET['program_avail_id']!=""))? (explode('-',$_GET['program_avail_id'])):((isset($_POST['program_avail_id']) && ($_POST['program_avail_id']!=""))? $_POST['program_avail_id']:"");
+
+
 $new_event_Arr=array();
 //check UAC
 if ( ! access_can_access_function ( ACCESS_YEAR ) || 
@@ -59,8 +61,8 @@ if ( ! empty ( $BOLD_DAYS_IN_YEAR ) && $BOLD_DAYS_IN_YEAR == 'Y' ) {
   
   	if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 		$events = read_events_filters ( ( ! empty ( $user ) && strlen ( $user ) )? $user : $login, $startdate, $enddate, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
-	}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
-		$events_detail = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
+}elseif(!empty($room_avail_id) || !empty($teacher_avail_id) || !empty($program_avail_id)){
+		$events_detail = read_events_clsrm_teacher_availability ( ( ! empty ( $user ) && strlen ( $user ) ) ? $user : $login, $startdate, $enddate, $cat_id ,$room_avail_id,$teacher_avail_id,$program_avail_id);
 		$events=$events_detail[0];
 		$rows_detail=isset($events_detail[2])?$events_detail[2]:'';
 		$date_var='';
@@ -100,9 +102,9 @@ $userStr = ( empty ( $user ) ? '' : '&amp;user=' . $user )
 	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
 	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
 	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
-	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
-	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
-	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] );
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$room_avail_id )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$teacher_avail_id )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$program_avail_id );
 
 $fullnameStr='';
 if ( $single_user == 'N' ) {
@@ -138,7 +140,7 @@ for ( $r = 1; $r <= $yr_rows; $r++ ) {
   for( $c = 1; $c <= $yr_cols; $c++, $m++ ) {
   $COUNT=$COUNT+1;
     $gridOmonths .= '
-          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT,$room_filter_id,$teacher_filter_id,$program_filter_id,$exception_dates,$new_event_Arr) . '</td>';
+          <td>' . display_small_month ( $m, $year, false,'','','month.php?',$COUNT,$room_avail_id,$teacher_avail_id,$program_avail_id,$exception_dates,$new_event_Arr) . '</td>';
   }
   $gridOmonths .= '
         </tr>';

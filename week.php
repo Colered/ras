@@ -11,9 +11,11 @@ $room_id=(isset($_REQUEST['room_id'])) ? ($_REQUEST['room_id']) : '';
 $area_id=(isset($_REQUEST['area_id'])) ? ($_REQUEST['area_id']) : '';
 $teacher_type_id=(isset($_REQUEST['teacher_type_id'])) ? ($_REQUEST['teacher_type_id']) : '';
 $cycle_id=(isset($_REQUEST['cycle_id'])) ? ($_REQUEST['cycle_id']) : '';
-$room_filter_id = (isset($_REQUEST['room_avail_id']))?$_REQUEST['room_avail_id']:'';
-$teacher_filter_id = (isset($_REQUEST['teacher_avail_id']))?$_REQUEST['teacher_avail_id']:'';
-$program_filter_id = (isset($_REQUEST['program_avail_id']))?$_REQUEST['program_avail_id']:'';
+$room_avail_id = (isset($_GET['room_avail_id']) && (!empty($_GET['room_avail_id'])))? (explode('-', $_GET['room_avail_id'])):((isset($_POST['room_avail_id']) && ($_POST['room_avail_id']!=""))? $_POST['room_avail_id']:"");
+  $teacher_avail_id = (isset($_GET['teacher_avail_id']) && (!empty($_GET['teacher_avail_id'])))? (explode('-',$_GET['teacher_avail_id'])):((isset($_POST['teacher_avail_id']) && ($_POST['teacher_avail_id']!=""))? $_POST['teacher_avail_id']:"");
+  $program_avail_id = (isset($_GET['program_avail_id']) && (!empty($_GET['program_avail_id'])))? (explode('-',$_GET['program_avail_id'])):((isset($_POST['program_avail_id']) && ($_POST['program_avail_id']!=""))? $_POST['program_avail_id']:"");
+  
+//echo $program_avail_id; die;
 
 if ( ! access_can_access_function ( ACCESS_WEEK ) || 
   ( ! empty ( $user ) && ! access_user_calendar ( 'view', $user ) )  )
@@ -70,8 +72,8 @@ $repeated_events = read_repeated_events ( ( strlen ( $user )
 
 if($program_id!='' || $teacher_id!='' || $subject_id!='' || $room_id!='' || $area_id!='' || $teacher_type_id!='' || $cycle_id!=''){
 	$events = read_events_filters ( ( strlen ( $user )? $user : $login ),  $evStart - 604800, $evEnd, '',$program_id,$teacher_id,$subject_id,$room_id,$area_id,$teacher_type_id,$cycle_id);
-}elseif($room_filter_id!='' || $teacher_filter_id!="" || $program_filter_id!=""){
-     $events_detail = read_events_clsrm_teacher_availability (( strlen ( $user )? $user : $login ), $evStart - 604800, $evEnd,$cat_id ,$room_filter_id,$teacher_filter_id,$program_filter_id);
+}elseif(!empty($room_avail_id) || !empty($teacher_avail_id) || !empty($program_avail_id)){
+     $events_detail = read_events_clsrm_teacher_availability (( strlen ( $user )? $user : $login ), $evStart - 604800, $evEnd,$cat_id ,$room_avail_id,$teacher_avail_id,$program_avail_id);
 	$events=$events_detail[0];
 	
 	$rows_detail=isset($events_detail[2])?$events_detail[2]:'';
@@ -98,7 +100,7 @@ $eventsStr = $filler = $headerStr = $minical_tasks = $untimedStr = '';
 $navStr = display_navigation ( 'week' );
 $week_name_display=display_navigation_current_month( 'week' );
 $objTS =new Timeslot();
-$allocated_data=$objTS->getAllAllocatedDate($teacher_filter_id,$room_filter_id,$program_filter_id);
+$allocated_data=$objTS->getAllAllocatedDateForAllIds($teacher_filter_id,$room_filter_id,$program_filter_id);
 $allocate_nonAllocated_TS_str=$allocate_nonAllocated_TS = $hasTimeslot = '';$allocated_ts_str_Arr=array();
 $holiday_date=array();
    //Holiday Dates
@@ -118,6 +120,10 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   // Generate header row.
   $class = ( $dateYmd == date ( 'Ymd', $today )? " today" : ( is_weekend ( $days[$i] ) ? " weekend" : "" ) );
   
+  $room_avail_id_link = (isset($_GET['room_avail_id']) && ($_GET['room_avail_id']!=""))? $_GET['room_avail_id']:((isset($_POST['room_avail_id']) && ($_POST['room_avail_id']!=""))?(implode('-',$_POST['room_avail_id'])):"");
+  $teacher_avail_id_link = (isset($_GET['teacher_avail_id']) && ($_GET['teacher_avail_id']!=""))? $_GET['teacher_avail_id']:((isset($_POST['teacher_avail_id']) && ($_POST['teacher_avail_id']!=""))?(implode('-',$_POST['teacher_avail_id'])):"");
+  $program_avail_id_link = (isset($_GET['program_avail_id']) && ($_GET['program_avail_id']!=""))? $_GET['program_avail_id']:((isset($_POST['program_avail_id']) && ($_POST['program_avail_id']!=""))?(implode('-',$_POST['program_avail_id'])):"");
+  
   $headerStr .= '
               <th ' . $class . '>'
    . ( $can_add ? html_for_add_icon ( $dateYmd, '', '', $user ) : '' )
@@ -129,9 +135,9 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
 	   . ( empty ( $_REQUEST['area_id'] ) ? '' : '&amp;area_id=' .$_REQUEST['area_id'] )
 	   . ( empty ( $_REQUEST['teacher_type_id'] ) ? '' : '&amp;teacher_type_id=' .$_REQUEST['teacher_type_id'] )
 	   . ( empty ( $_REQUEST['cycle_id'] ) ? '' : '&amp;cycle_id=' .$_REQUEST['cycle_id'] )
-	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$_REQUEST['room_avail_id'] )
-	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$_REQUEST['teacher_avail_id'] )
-	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$_REQUEST['program_avail_id'] ). '">'
+	   . ( empty ( $_REQUEST['room_avail_id'] ) ? '' : '&amp;room_avail_id=' .$room_avail_id_link )
+	   . ( empty ( $_REQUEST['teacher_avail_id'] ) ? '' : '&amp;teacher_avail_id=' .$teacher_avail_id_link )
+	   . ( empty ( $_REQUEST['program_avail_id'] ) ? '' : '&amp;program_avail_id=' .$program_avail_id_link ). '">'
    . $header[$i] . '</a></p></th>';
 
   $date = date ( 'Ymd', $days[$i] );
@@ -155,8 +161,6 @@ for ( $i = $start_ind; $i <= $end_ind; $i++ ) {
   // Squish events that use the same cell into the same cell.
   // For example, an event from 8:00-9:15 and another from 9:30-9:45
   // both want to show up in the 8:00-9:59 cell.
-  //echo $last_row;
-// print_r($hour_arr);
    $last_row = -1;
   $rowspan = 0;
   for ( $j = 0; $j < $TIME_SLOTS; $j++ ) {
@@ -223,7 +227,8 @@ for ( $i = $first_slot; $i <= $last_slot; $i++ ) {
     $dateYmd = date ( 'Ymd', $days[$d] );
 	
 	//check the timeslot allocated or not for color change
-		if((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true)))){
+	//echo $program_avail_id;die;
+		if((isset($program_filter_id) && !empty($program_filter_id) && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true)))){
 		$allocate_nonAllocated_TS='';
 		   foreach($new_event_Arr as $key=>$val){
 		   		if($dateYmd==$key ){
@@ -245,8 +250,7 @@ for ( $i = $first_slot; $i <= $last_slot; $i++ ) {
 	$class = ( ! empty ( $save_hour_arr[$d][$i] ) && strlen ( $save_hour_arr[$d][$i] ) ? " hasevents".(((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? $hasTimeslot : (((isset($program_filter_id) && $program_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($teacher_filter_id) && $teacher_filter_id!='' && (in_array($dateYmd,$allocated_data, true))) || (isset($room_filter_id) && $room_filter_id!='' && (in_array($dateYmd,$allocated_data, true))))? $hasTimeslot : (isset($program_filter_id) && $program_filter_id!='') || (isset($teacher_filter_id) && $teacher_filter_id!='') || (isset($room_filter_id) && $room_filter_id!='')?' hasUnAllocatedAvailability':' ')) : ( $dateYmd == date ( 'Ymd', $today ) ? " today" : ( is_weekend ( $days[$d] ) ? "weekend" : "" ) ) )
 	
 	. (in_array($dateYmd,$holiday_date, true) ? " hasHolidays": "")
-   //. ((in_array($dateYmd,$teacher_exception_date, true) || in_array($dateYmd,$classroom_exception_date, true)) ? " hasExceptionDays": "");
-   . (in_array($dateYmd,$exception_dates, true) ? " hasExceptionDays": "");
+    . (in_array($dateYmd,$exception_dates, true) ? " hasExceptionDays": "");
    if ( $rowspan_day[$d] > 1 ) {
       // This might mean there's an overlap,
       // or it could mean one event ends at 11:15 and another starts at 11:30.
