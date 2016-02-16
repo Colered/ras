@@ -268,7 +268,7 @@ class Teacher extends Base {
 		return $result;
 	}
 	//get teacher activities according to filter
-	public function getTeachersActFilterView($activity_filter_val)
+	public function getTeachersActFilterView($activity_filter_val, $addSpecialAct)
 	{
 		$sql_tt_range="SELECT start_date ,end_date  from  timetable";
 		$result_tt_range =  $this->conn->query($sql_tt_range);
@@ -293,6 +293,12 @@ class Teacher extends Base {
 		}
 		if($activity_filter_val== 3){
 			$sql.= " WHERE ta.act_date != '0000-00-00' && ta.act_date < '".$Date_range['start_date']."' || ta.act_date > '".$Date_range['end_date']."' ";
+		}
+		if($addSpecialAct == '' && $activity_filter_val!="")
+		{
+			$sql .= " and ta.reserved_flag IN(1, 5)";
+		}elseif($addSpecialAct == '' && $activity_filter_val==""){
+			$sql .= " WHERE ta.reserved_flag IN(1, 5)";
 		}				
 		$sql.=" ORDER BY ta.name";
 		$result =  $this->conn->query($sql);

@@ -19,6 +19,7 @@ $result_act_id = $objTime->getLowestTeachAct($row_id['activity_id']);
 $row_act_id = $result_act_id->fetch_assoc();
 
 $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
+$addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
 
 ?>
@@ -96,6 +97,7 @@ function activityFilter()
 							<option value="2" <?php if($activity_filter_val == '2'){?> selected="selected"}<?php }?>>Floating</option>
 							<option value="3" <?php if($activity_filter_val == '3'){?> selected="selected"}<?php }?>>Out of range</option>
 						</select>
+						<input type="checkbox" name="addSpecialAct" <?php if(isset($_POST['addSpecialAct']) && $_POST['addSpecialAct']==1){ echo "checked"; } ?> value="1" onclick="activityFilter();" /> Include special activities (Recess and Group Meetings)
 					</form>
 				</div>
 				<?php if($user1['view'] != '0'){?>
@@ -131,7 +133,7 @@ function activityFilter()
                 </thead>
                 <tbody>
 				<?php
-					$result = $objT->getTeachersActFilterView($activity_filter_val);
+					$result = $objT->getTeachersActFilterView($activity_filter_val, $addSpecialAct);
 					$result_sess = $objT->getSessionFromTT();
 					$result_acts = $objT->getActsFromTT();
 					$session_array = array();
