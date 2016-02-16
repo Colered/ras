@@ -296,9 +296,9 @@ class Teacher extends Base {
 		}
 		if($addSpecialAct == '' && $activity_filter_val!="")
 		{
-			$sql .= " and ta.reserved_flag IN(1, 5)";
+			$sql .= " and ta.reserved_flag IN(1, 2, 5)"; // excluding 3- recess and 4 for group meeting
 		}elseif($addSpecialAct == '' && $activity_filter_val==""){
-			$sql .= " WHERE ta.reserved_flag IN(1, 5)";
+			$sql .= " WHERE ta.reserved_flag IN(1, 2, 5)";// excluding 3- recess and 4 for group meeting
 		}				
 		$sql.=" ORDER BY ta.name";
 		$result =  $this->conn->query($sql);

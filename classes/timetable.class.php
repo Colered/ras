@@ -144,7 +144,7 @@ class Timetable extends Base {
 		{
 			$teacher_sql .= " and p.unit = '".$module."'";
 		}
-		$teacher_sql .= " and tact.reserved_flag IN(1, 5)";
+		$teacher_sql .= " and tact.reserved_flag IN(1, 2, 5)"; // excluding 3- recess and 4 for group meeting
 		$teacher_sql .= " order by td.teacher_id";
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
@@ -212,7 +212,7 @@ class Timetable extends Base {
 		}
 		if($addSpecialAct == '')
 		{
-			$teacher_sql .= " and tact.reserved_flag IN(1, 5)";
+			$teacher_sql .= " and tact.reserved_flag IN(1, 2, 5)"; // excluding 3- recess and 4 for group meeting
 		}
 
 		$teacher_sql .= " order by td.teacher_id";
@@ -559,6 +559,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 																				$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
 																				$ts_array = explode(",",$all_ts);
+																				$reasons[$adh_act_detail['activity_id']] = "";
 																				foreach($ts_array as $ts_id)
 																				{
 																					$reserved_timeslots[] = trim($ts_id);
@@ -605,6 +606,7 @@ class Timetable extends Base {
 																			$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 																			$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
 																			$times_array = explode(",",$adh_act_detail['timeslot_id']);
+																			$reasons[$adh_act_detail['activity_id']] = "";
 																			foreach($ts_array as $ts_id)
 																			{
 																				$reserved_timeslots[] = trim($ts_id);
@@ -634,6 +636,7 @@ class Timetable extends Base {
 																				$reserved_array[$date][$i][$start_time." - ".$end_time] = $activities_array;
 																				$reserved_rooms[$date][$start_time." - ".$end_time][$i] = $room_id;
 																				$times_array = explode(",",$all_ts);
+																				$reasons[$adh_act_detail['activity_id']] = "";
 																				foreach($ts_array as $ts_id)
 																				{
 																					$reserved_timeslots[] = trim($ts_id);
