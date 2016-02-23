@@ -1082,6 +1082,11 @@ class Programs extends Base {
   	   	$q_res = mysqli_query($this->conn, $prgm_query);
   	   	return $q_res;
     }
+	public function getAllPgmExceptionData(){
+    	$prgm_query="select id, program_year_id, exception_date from program_cycle_exception order by id ASC";
+  	   	$q_res = mysqli_query($this->conn, $prgm_query);
+  	   	return $q_res;
+    }
 	
 }
 

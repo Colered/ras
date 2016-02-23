@@ -17,7 +17,17 @@ $result_id = $objTime->getLowestActDetail();
 $row_id = $result_id->fetch_assoc();
 $result_act_id = $objTime->getLowestTeachAct($row_id['activity_id']);
 $row_act_id = $result_act_id->fetch_assoc();
-
+$objHoliday = new Holidays();
+$result_holiday = $objHoliday->viewHoliday();
+$holidays = $allProgramExc = array();
+while($holidaysArr = $result_holiday->fetch_assoc()){
+	$holidays[] = $holidaysArr['holiday_date'];
+}
+$objPrograms = new Programs();
+$programExc = $objPrograms->getAllPgmExceptionData();
+while($excepArr = $programExc->fetch_assoc()){
+	$allProgramExc[][$excepArr['program_year_id']] = $excepArr['exception_date'];
+}
 $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
 $addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
@@ -161,7 +171,7 @@ function activityFilter()
 								 	$trBColor1 = '';
 								 	$tdColor = '';
 									$class = 'floating-activity';
-									$row['reason'] = '';
+									//$row['reason'] = '';
 									}
 							 }
 							if($row['session_id'] == '0' && !in_array($row['id'],$result_acts))
@@ -189,7 +199,11 @@ function activityFilter()
 							else
 							  $res_flag = "No";
 							  $trBColor=($row['reserved_act_id']<>"") ? ' style="background-color:#90EE90;"':'';
-							  $class_allocated=($row['reserved_act_id']<>"") ? 'allocated-activity':'';
+							  $class_allocated="";
+							  if($row['reserved_act_id']<>"" && $row['reserved_act_id']<>"NULL"){
+							  		$class_allocated='allocated-activity';
+									$row['reason'] = '';
+								}
 						?>
 						
 						<tr<?php echo $trBColor;echo $trBColor1;?> class=<?php if($trBColor == ''){echo $class;}else{echo $class_allocated ;}?>>
@@ -243,7 +257,26 @@ function activityFilter()
 								?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo $res_flag;?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
-							<td class="align-center"<?php echo $tdColor;?>><?php echo $row['reason'];?></td>
+							<td class="align-center"<?php echo $tdColor;?>><?php 
+							//check if the date is an exception date or a holiday for program
+							if($row['reserved_act_id']==""){
+								if($row['reason']<>""){
+									echo $row['reason'];
+								}else if(in_array($row['act_date'], $holidays)){
+									echo "It's a Holiday <br/>";
+								}else{
+									foreach($allProgramExc as $key=> $value)
+									{
+										foreach($value as $key=> $value){
+											if(($key == $row['program_year_id']) && ($value == $row['act_date'])){
+												echo "Program is not available as it's an exceptional date";
+											}
+										}
+									}
+								}
+							}
+						
+							?></td>
 							<?php if($user['delete_role'] != '0'){?>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
 								<?php /*<a href="edit_teacher_activity.php?edit=<?php echo base64_encode($row['id']);?>&pyid=<?php echo base64_encode($row['program_year_id']);?>&cycle_id=<?php echo base64_encode($row['cycle_id']);?>&sid=<?php echo base64_encode($row['subject_id']);?>&sessId=<?php echo base64_encode($row['session_id']);?>" class="table-icon edit" title="Edit"></a><?php */ ?>

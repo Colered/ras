@@ -301,6 +301,7 @@ class Teacher extends Base {
 			$sql .= " WHERE ta.reserved_flag IN(1, 2, 5)";// excluding 3- recess and 4 for group meeting
 		}				
 		$sql.=" ORDER BY ta.name";
+		
 		$result =  $this->conn->query($sql);
 		return $result;
 	}
