@@ -28,6 +28,7 @@ $programExc = $objPrograms->getAllPgmExceptionData();
 while($excepArr = $programExc->fetch_assoc()){
 	$allProgramExc[][$excepArr['program_year_id']] = $excepArr['exception_date'];
 }
+
 $activity_filter_val = (isset($_POST['activity_color_filter']) && $_POST['activity_color_filter']!="")?$_POST['activity_color_filter']:'';
 $addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
@@ -264,10 +265,11 @@ function activityFilter()
 								if($row['reason']<>""){
 									echo $row['reason'];
 									$actIdWithAssignReason[] = $row['id'];
-								}else if(($row['reason']=="") && (in_array($row['act_date'], $holidays))){
+								}else if(($row['reason']=="") && (in_array($row['act_date'], $holidays))){ //check if its an holiday
 									echo "It's a Holiday <br/>";
 									$actIdWithAssignReason[] = $row['id'];
 								}else{
+									//check for an program exceptional date
 									foreach($allProgramExc as $key=> $value)
 									{
 										foreach($value as $key=> $value){
@@ -278,9 +280,19 @@ function activityFilter()
 										}
 									}
 								}
+								//check if any normal activity has been allocated before this recess allocation
 								if(($row['reason']=="") && ($row['reserved_flag']== "3") && (($objPrograms->checkIfNormalActExistOnSelDay($row['program_year_id'], $row['act_date'], $min_ts_id, $max_ts_id )) ==0) && (!in_array($row['id'], $actIdWithAssignReason))){
-										//check if any normal activity has been allocated before this recess allocation
 										echo "No normal session/activity has been allocated bafore this recess activity on the selected day";
+										$actIdWithAssignReason[] = $row['id'];
+								}
+								//check if program is available on the given date and time
+								if(($row['reason']=="") && (!in_array($row['id'], $actIdWithAssignReason)) && ($row['program_year_id'] !="") && ($row['act_date'] !="" && $row['timeslot_id']!="")){
+										$finalDate  = str_replace('-', '', $row['act_date']);
+										$getProgramAvailability = $objPrograms->getAvailabilityOfProgram($row['program_year_id'], $finalDate, $row['timeslot_id']);
+										if(count($getProgramAvailability)==0){
+											echo "Program is not available on selected date and time";
+											$actIdWithAssignReason[] = $row['id'];
+										}
 								}
 							}
 						

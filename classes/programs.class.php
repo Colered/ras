@@ -1093,6 +1093,187 @@ class Programs extends Base {
 		return $row_cnt;
     }
 	
+	//This function use for program availability to show value in the calander menu
+	public function getAvailabilityOfProgram($prog_id, $act_date, $timeslot_ids){
+		if($prog_id >0){
+				$SQL = "select start_week, end_week, week1, week2, occurrence from cycle where program_year_id ='".$prog_id."'";
+				$result = $this->conn->query($SQL);
+				$row_cnt = $result->num_rows;
+				$mk_event_arr = $mk_event_new_arr = array();
+				$numSufArr = array('0'=>'1st cycle','1'=>'2nd cycle','2'=>'3rd cycle');
+				$z=0;
+				$last_day = 5;
+				$tsobj = new Timeslot();
+				$ttobj=new Timetable();
+				if($row_cnt > 0)
+				{
+					while($row = $result->fetch_assoc())
+					{
+						//print"<pre>";print_r($row);die;
+						$end_week=$row['end_week'];
+						if($row['occurrence'] == '1w')
+						{	
+							$week1 = unserialize($row['week1']);
+							foreach($week1 as $key=> $value)
+							{
+								$day = $key + 1;
+								$dateArr = $ttobj->getDateForSpecificDayBetweenDates($row['start_week'],$end_week,$day,'',$prog_id);
+								$timeslotVal = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$value).')');
+								for($j=0;$j<count($dateArr);$j++){
+									if(($dateArr[$j]==$act_date) && (strpos(implode(',',$value), $timeslot_ids) !== false)){
+										$mk_event_arr['blank']='';
+										$mk_event_arr['timeslot']=$timeslotVal;
+										$mk_event_arr['actual_timeslot_id']=implode(',',$value);
+										$mk_event_arr['day']=$key;
+										$mk_event_arr['particular_date']=$dateArr[$j];
+										$mk_event_arr['cycle_num']=$numSufArr[$z];
+										$mk_event_new_arr[]= $mk_event_arr;
+									}
+									
+								}
+							}											
+						}else if($row['occurrence'] == '2w'){
+							$weeks = $ttobj->countWeeksBetweenDates($row['start_week'],$end_week);
+							$start_week = $row['start_week'];
+							for($i=0; $i < $weeks; $i++)
+							{
+								if($i%2 == 0)
+								{
+									$day = date("w", strtotime($start_week));
+									$day = $day-1;
+									$rem_days = $last_day-$day;
+									$date = new DateTime($start_week);
+									$date->modify('+'.$rem_days.' day');
+									$end_week = $date->format('Y-m-d');
+									if($end_week > $row['end_week']){
+										$end_week=$row['end_week'];
+									}
+									$week1 = unserialize($row['week1']);
+									foreach($week1 as $key=> $value)
+									{
+										$day = $key + 1;
+										$dateArr = $ttobj->getDateForSpecificDayBetweenDates($start_week,$end_week,$day,'',$prog_id);
+										$timeslotVal = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$value).')');
+										for($j=0;$j<count($dateArr);$j++){
+											if(($dateArr[$j]==$act_date) && (strpos(implode(',',$value), $timeslot_ids) !== false)){
+												$mk_event_arr['blank']='';
+												$mk_event_arr['timeslot']=$timeslotVal;
+												$mk_event_arr['actual_timeslot_id']=implode(',',$value);
+												$mk_event_arr['day']=$key;
+												$mk_event_arr['particular_date']=$dateArr[$j];
+												$mk_event_arr['cycle_num']=$numSufArr[$z];
+												$mk_event_new_arr[]= $mk_event_arr;
+											}
+											
+										}
+									}
+									$date = new DateTime($end_week);
+									$date->modify('+2 day');
+									$start_week = $date->format('Y-m-d');
+								}else{	
+									$day = date("w", strtotime($start_week));
+									$day = $day-1;
+									$rem_days = $last_day-$day;
+									$date = new DateTime($start_week);
+									$date->modify('+'.$rem_days.' day');
+									$end_week = $date->format('Y-m-d');	
+									if($end_week > $row['end_week']){
+										$end_week=$row['end_week'];
+									}
+									if(count(unserialize($row['week2'])) > 0)
+									{
+										$week2 = unserialize($row['week2']);
+										foreach($week2 as $key=> $value)
+										{
+											$day = $key + 1;
+											$dateArr = $ttobj->getDateForSpecificDayBetweenDates($start_week,$end_week,$day,'',$prog_id);
+											$timeslotVal = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$value).')');
+											for($j=0;$j<count($dateArr);$j++){
+											if(($dateArr[$j]==$act_date) && (strpos(implode(',',$value), $timeslot_ids) !== false)){
+												$mk_event_arr['blank']='';
+												$mk_event_arr['timeslot']=$timeslotVal;
+												$mk_event_arr['actual_timeslot_id']=implode(',',$value);
+												$mk_event_arr['day']=$key;
+												$mk_event_arr['particular_date']=$dateArr[$j];
+												$mk_event_arr['cycle_num']=$numSufArr[$z];
+												$mk_event_new_arr[]= $mk_event_arr;
+											}
+											
+										}
+									  }
+									}
+									$date = new DateTime($end_week);
+									$date->modify('+2 day');
+									$start_week = $date->format('Y-m-d');
+								}
+							}								
+						}
+						$final_dates = array();
+						foreach($mk_event_new_arr as $mk_events_dates)
+						{
+							if(isset($mk_events_dates['particular_date']) && ($mk_events_dates['particular_date']==$act_date) && (strpos($mk_events_dates['actual_timeslot_id'], $timeslot_ids) !== false)){
+								$final_dates[$mk_events_dates['particular_date']]['particular_date'] = $mk_events_dates['particular_date'];
+								$final_dates[$mk_events_dates['particular_date']]['blank'] = $mk_events_dates['blank'];
+								$final_dates[$mk_events_dates['particular_date']]['timeslot'] = $mk_events_dates['timeslot'];
+								$final_dates[$mk_events_dates['particular_date']]['day'] = $mk_events_dates['day'];
+								$final_dates[$mk_events_dates['particular_date']]['actual_timeslot_id'] = $mk_events_dates['actual_timeslot_id'];
+								$final_dates[$mk_events_dates['particular_date']]['cycle_num'] = $mk_events_dates['cycle_num'];	
+							}										
+						}
+						$sql_pgm_add_date = $this->conn->query("select DATE_FORMAT(additional_date,'%Y%m%d') as additional_date,actual_timeslot_id,timeslot_id,cycle_id from program_cycle_additional_day_time where additional_date >= '".$row['start_week']."' and additional_date <= '".$row['end_week']."' and program_year_id = '".$prog_id."'");
+						while($result_pgm_add_date = mysqli_fetch_array($sql_pgm_add_date))
+						{
+							$time=array();
+							if(isset($final_dates[$result_pgm_add_date['additional_date']]['actual_timeslot_id'])){
+								$time = explode(",",$final_dates[$result_pgm_add_date['additional_date']]['actual_timeslot_id']);
+							}
+							$time1 = explode(",",$result_pgm_add_date['actual_timeslot_id']);
+							$total_time = array_unique(array_merge($time,$time1));
+							if(($result_pgm_add_date['additional_date']==$act_date) && (strpos(implode(',',$total_time), $timeslot_ids) !== false)){
+								if(array_key_exists($result_pgm_add_date['additional_date'],$final_dates))
+								{
+									
+									$sorted_array = array();
+									foreach($total_time as $new_key => $arr1)
+									{
+										$sorted_array[$new_key] = $arr1;							
+									}
+									array_multisort($sorted_array, SORT_ASC, $total_time);
+									$total_time_val = $tsobj->getTSbyIDsForProgramAvailbility('('.implode(',',$total_time).')');
+									$final_dates[$result_pgm_add_date['additional_date']]['timeslot'] = $total_time_val;
+									$final_dates[$result_pgm_add_date['additional_date']]['actual_timeslot_id'] = implode(',',$total_time);
+								}else{
+									$day = date("w", strtotime($result_pgm_add_date['additional_date']));
+									$day = $day-1;
+										$final_dates[$result_pgm_add_date['additional_date']]['particular_date'] = $result_pgm_add_date['additional_date'];
+										$final_dates[$result_pgm_add_date['additional_date']]['blank'] = '';
+										$final_dates[$result_pgm_add_date['additional_date']]['timeslot'] = $result_pgm_add_date['timeslot_id'];
+										$final_dates[$result_pgm_add_date['additional_date']]['day'] = $day;
+										$final_dates[$result_pgm_add_date['additional_date']]['actual_timeslot_id'] = $result_pgm_add_date['actual_timeslot_id'];
+										$final_dates[$result_pgm_add_date['additional_date']]['cycle_num'] = $numSufArr[$result_pgm_add_date['cycle_id'] - 1];
+								}
+							}						
+						}
+						$j=0;
+						foreach($final_dates as $final_pgms)
+						{
+							if(($final_pgms['particular_date']==$act_date) && (strpos($final_pgms['actual_timeslot_id'], $timeslot_ids) !== false)){
+								$mk_event_new_arr[$j]['blank'] = $final_pgms['blank'];
+								$mk_event_new_arr[$j]['timeslot'] = $final_pgms['timeslot'];					
+								$mk_event_new_arr[$j]['day'] = $final_pgms['day'];
+								$mk_event_new_arr[$j]['particular_date'] = $final_pgms['particular_date'];
+								$mk_event_new_arr[$j]['cycle_num'] = $final_pgms['cycle_num'];
+								$mk_event_new_arr[$j]['actual_timeslot_id'] = $final_pgms['actual_timeslot_id'];
+								$j++;
+							}
+						}	
+						$z++;
+					}					
+				}	
+			  return $mk_event_new_arr;
+		}
+	}
+	
 	
 }
 
