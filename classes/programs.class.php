@@ -1087,6 +1087,12 @@ class Programs extends Base {
   	   	$q_res = mysqli_query($this->conn, $prgm_query);
   	   	return $q_res;
     }
+	public function checkIfNormalActExistOnSelDay($program_year_id, $act_date, $min_ts_id, $max_ts_id){
+    	$result =  $this->conn->query("select td.id, td.activity_id from timetable_detail AS td LEFT JOIN teacher_activity AS ta ON td.activity_id = ta.id where ta.act_date = '".$act_date."' AND ta.program_year_id = '".$program_year_id."' AND ta.start_time < $min_ts_id AND ta.reserved_flag IN(1,2)");
+		$row_cnt = $result->num_rows;
+		return $row_cnt;
+    }
+	
 	
 }
 

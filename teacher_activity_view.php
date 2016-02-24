@@ -259,20 +259,28 @@ function activityFilter()
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php 
 							//check if the date is an exception date or a holiday for program
+							$actIdWithAssignReason = array();
 							if($row['reserved_act_id']==""){
 								if($row['reason']<>""){
 									echo $row['reason'];
-								}else if(in_array($row['act_date'], $holidays)){
+									$actIdWithAssignReason[] = $row['id'];
+								}else if(($row['reason']=="") && (in_array($row['act_date'], $holidays))){
 									echo "It's a Holiday <br/>";
+									$actIdWithAssignReason[] = $row['id'];
 								}else{
 									foreach($allProgramExc as $key=> $value)
 									{
 										foreach($value as $key=> $value){
 											if(($key == $row['program_year_id']) && ($value == $row['act_date'])){
 												echo "Program is not available as it's an exceptional date";
+												$actIdWithAssignReason[] = $row['id'];
 											}
 										}
 									}
+								}
+								if(($row['reason']=="") && ($row['reserved_flag']== "3") && (($objPrograms->checkIfNormalActExistOnSelDay($row['program_year_id'], $row['act_date'], $min_ts_id, $max_ts_id )) ==0) && (!in_array($row['id'], $actIdWithAssignReason))){
+										//check if any normal activity has been allocated before this recess allocation
+										echo "No normal session/activity has been allocated bafore this recess activity on the selected day";
 								}
 							}
 						
