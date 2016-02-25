@@ -4178,4 +4178,19 @@ WHERE DATE between '".$from."' and '".$to."' and py.id = '".$programId."' ORDER 
 		$str = preg_replace("/\r?\n/", "\\n", $str);
 		if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
 	}
+	
+	//Function to add the reasons for unallocated activities
+	public function addBulkReasonforActivities($actIdWithAssignReason,$actUnallocatnReason)
+	{
+		if(count($actIdWithAssignReason)>0){
+			//add new reasons	
+			for($i=0; $i< count($actIdWithAssignReason); $i++ ){
+				$sql_insert = "insert into teacher_activity_reason set
+									   activity_id = '".$actIdWithAssignReason[$i]."',
+									   reason = '".$actUnallocatnReason[$i]."'";
+				$this->conn->query($sql_insert);	
+			}
+		}
+	}	
+
 }

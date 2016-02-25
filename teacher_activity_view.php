@@ -148,6 +148,8 @@ function activityFilter()
 					$result_sess = $objT->getSessionFromTT();
 					$result_acts = $objT->getActsFromTT();
 					$session_array = array();
+					$actIdWithAssignReason = $actUnallocatnReason = array();
+
 					if($result->num_rows){
 						while($row = $result->fetch_assoc())
 						{ 
@@ -260,22 +262,22 @@ function activityFilter()
 							<td class="align-center"<?php echo $tdColor;?>><?php echo ($row['reserved_act_id']<>"")? 'Allocated':'Floating';?></td>
 							<td class="align-center"<?php echo $tdColor;?>><?php 
 							//check if the date is an exception date or a holiday for program
-							$actIdWithAssignReason = array();
 							if($row['reserved_act_id']==""){
 								if($row['reason']<>""){
 									echo $row['reason'];
-									$actIdWithAssignReason[] = $row['id'];
 								}else if(($row['reason']=="") && (in_array($row['act_date'], $holidays))){ //check if its an holiday
-									echo "It's a Holiday <br/>";
+									echo "It is a Holiday <br/>";
 									$actIdWithAssignReason[] = $row['id'];
+									$actUnallocatnReason[] = "It is a Holiday <br/>";
 								}else{
 									//check for an program exceptional date
 									foreach($allProgramExc as $key=> $value)
 									{
 										foreach($value as $key=> $value){
 											if(($key == $row['program_year_id']) && ($value == $row['act_date'])){
-												echo "Program is not available as it's an exceptional date";
+												echo "Program is not available as it is an exceptional date";
 												$actIdWithAssignReason[] = $row['id'];
+												$actUnallocatnReason[] = "Program is not available as it is an exceptional date";
 											}
 										}
 									}
@@ -284,6 +286,7 @@ function activityFilter()
 								if(($row['reason']=="") && ($row['reserved_flag']== "3") && (($objPrograms->checkIfNormalActExistOnSelDay($row['program_year_id'], $row['act_date'], $min_ts_id, $max_ts_id )) ==0) && (!in_array($row['id'], $actIdWithAssignReason))){
 										echo "No normal session/activity has been allocated bafore this recess activity on the selected day";
 										$actIdWithAssignReason[] = $row['id'];
+										$actUnallocatnReason[] = "No normal session/activity has been allocated bafore this recess activity on the selected day";
 								}
 								//check if program is available on the given date and time
 								if(($row['reason']=="") && (!in_array($row['id'], $actIdWithAssignReason)) && ($row['program_year_id'] !="") && ($row['act_date'] !="" && $row['timeslot_id']!="")){
@@ -292,10 +295,10 @@ function activityFilter()
 										if(count($getProgramAvailability)==0){
 											echo "Program is not available on selected date and time";
 											$actIdWithAssignReason[] = $row['id'];
+											$actUnallocatnReason[] = "Program is not available on selected date and time";
 										}
 								}
 							}
-						
 							?></td>
 							<?php if($user['delete_role'] != '0'){?>
 							<td class="align-center" id="<?php echo $row['id'] ?>">
@@ -308,7 +311,12 @@ function activityFilter()
 				<?php } ?>
 				</tbody>
             </table>
-			<?php if(isset($_SESSION['error_msg'])){ ?>
+			<?php 
+			// add all reasons to database
+			if(count($actIdWithAssignReason)>0){
+				$objTime->addBulkReasonforActivities($actIdWithAssignReason, $actUnallocatnReason);
+			}
+			if(isset($_SESSION['error_msg'])){ ?>
 					<div><span class="red center"><?php echo $_SESSION['error_msg']; $_SESSION['error_msg']=""; ?></span></div>
 			<?php } ?>
         </div>
