@@ -1776,7 +1776,7 @@ function changeTeacherData($id){
 		window.location.href = 'teacher_availability.php'+$id+'';
 }
 $(document).ready(function() {
-	var max_fields = 100; 
+	var max_fields = 10000; 
     var wrapper2 = $(".divException"); 
     var add_button_class_exception = $(".btnTeachAvailExcep"); 
     var x = 1,y=0; 
@@ -1853,7 +1853,7 @@ function deleteTeachAvail($id){
     return false;
 }
 $(document).ready(function() {
-	var max_fields = 100; 
+	var max_fields = 10000; 
     var wrapper = $(".divException"); 
     var add_button_class_exception = $(".btnclsrmException"); 
     var x = 1,y=0; 
@@ -2142,7 +2142,7 @@ $(function() {
 //function to add cycle exception
 $(document).ready(function() {
    $(".btnProgCycleAvailExcep1").click(function(e){ 
-		var max_fields = 100; 
+		var max_fields = 10000; 
 		var x = 1,y=0; 
 		var exception_date = $('#exceptnProgAval1').val();
 		e.preventDefault();
@@ -2163,7 +2163,7 @@ $(document).ready(function() {
 
    $(".btnProgCycleAvailExcep2").click(function(e){ 
         
-   		var max_fields = 100; 
+   		var max_fields = 10000; 
    		var x = 1,y=0; 
 		var exception_date = $('#exceptnProgAval2').val();
 		e.preventDefault();
@@ -2183,7 +2183,7 @@ $(document).ready(function() {
 	});
 
 	$(".btnProgCycleAvailExcep3").click(function(e){ 
-		var max_fields = 100; 
+		var max_fields = 10000; 
 		var x = 1,y=0; 
  		var exception_date = $('#exceptnProgAval3').val();
 		e.preventDefault();
@@ -2730,7 +2730,7 @@ $(document).ready(function() {
 	   if($('#timeSlot1 option:selected').length <= 0 || $('#additionalDayCal1').val() == ''){
 			alert('Atleast one timeslot and date needs to be selected for cycle-1.');			
 		}else{
-			var max_fields = 100; 
+			var max_fields = 10000; 
 			var x = 1,y=0; 
 			var additional_date = $('#additionalDayCal1').val();
 			var time_slot1 = $('#timeSlot1').val();
@@ -2773,7 +2773,7 @@ $(document).ready(function() {
 	   if($('#timeSlot2 option:selected').length <= 0 || $('#additionalDayCal2').val() == ''){
 			alert('Atleast one timeslot and date needs to be selected for cycle-2');			
 		}else{
-			var max_fields = 100; 
+			var max_fields = 10000; 
 			var x = 1,y=0; 
 			var additional_date = $('#additionalDayCal2').val();
 			var time_slot2 = $('#timeSlot2').val();
@@ -2815,7 +2815,7 @@ $(document).ready(function() {
 	   if($('#timeSlot3 option:selected').length <= 0 || $('#additionalDayCal3').val() == ''){
 			alert('Atleast one timeslot and date needs to be selected for cycle-3');			
 		}else{
-			var max_fields = 100; 
+			var max_fields = 10000; 
 			var x = 1,y=0; 
 			var additional_date = $('#additionalDayCal3').val();
 			var time_slot3 = $('#timeSlot3').val();
@@ -3290,7 +3290,7 @@ function createSpecialAvailRule(){
 		
 	}
 $(document).ready(function() {
-	var max_fields = 100; 
+	var max_fields = 10000; 
     var wrapper = $(".divException"); 
 	var add_button_class_exception = $(".btnSpecialActAvailExcep"); 
     var x = 1,y=0; 
