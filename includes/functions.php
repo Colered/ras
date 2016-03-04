@@ -985,6 +985,7 @@ function display_admin_link ( $break = true ) {
 																																																												function display_month ( $thismonth, $thisyear, $demo = false , $clsrm_avail_id='', $teacher_avail_id='',$program_avail_id='',$exception_dates=array(),$rows_detail_event=array()) {
   global $DISPLAY_ALL_DAYS_IN_MONTH, $DISPLAY_LONG_DAYS, $DISPLAY_WEEKNUMBER,
   $login, $today, $user, $WEEK_START, $WEEKENDBG;
+  $teacher_exception_date=$holiday_date=$classroom_exception_date=$allocated_date=array();
 
   echo 
   $ret = '
@@ -1021,7 +1022,6 @@ function display_admin_link ( $break = true ) {
 	while($row_holiday = $holiday_data->fetch_assoc()){
 		$holiday_date[] = date("Ymd", strtotime($row_holiday['holiday_date']));
 	}
-
 
   for ( $i = $wkstart; date ( 'Ymd', $i + 43200 ) <= $monthend; $i += 604800 ) {
     $ret .= '
@@ -1090,7 +1090,7 @@ function display_admin_link ( $break = true ) {
             $ret_events = translate ( 'My event text' );
           }
         }
-		$teacher_exception_date=$holiday_date=$classroom_exception_date=$allocated_date=array();
+		
 		
 		//Allocated Dates
 		$allocate_nonAllocated_TS = $allocate_nonAllocated_TS_str = $hasTimeslot = '';
