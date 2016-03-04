@@ -48,7 +48,7 @@ class Classroom extends Base {
 			$dataAll = mysqli_fetch_assoc($q_res);
 			if(count($dataAll)>0)
 			{
-				$message="Room with same neam already exists.";
+				$message="Room with same name already exists.";
 				$_SESSION['error_msg'] = $message;
 				header('Location: rooms.php?edit='.base64_encode($_POST['roomId']));
 				return 0;
@@ -90,5 +90,51 @@ class Classroom extends Base {
 		$excep_query="select exception_date from  classroom_availability_exception where room_id='".$room_id."'";
 		$q_excep = mysqli_query($this->conn, $excep_query);
 		return $q_excep;
+	}
+	public function addEditRoomPriority($program_id)
+	{
+		$roomnames = $roomorder = array();
+		if(isset($_POST['roomorder']) && isset($_POST['roomnames'])){
+			$roomnames = $_POST['roomnames'];
+			$roomorder = $_POST['roomorder'];
+			//check if priority data already exist
+			//$total = 0;
+			//get progrsm years id from program ID
+			$objPGM = new Programs();
+			$respPgm = $objPGM->getProgramYearsById($program_id);
+			$pgmYrIds = array();
+			while($pgmYrData = $respPgm->fetch_assoc()){
+				$pgmYrIds[] = $pgmYrData['id'];
+			}
+			//echo $program_id.'<br/>'; 
+			//print_r($pgmYrIds); die;
+			if(count($pgmYrIds > 0)){
+				foreach($pgmYrIds as $program_yr_id){
+					$total = 0;
+					foreach($roomnames as $key=>$value){
+						$room_query="select id from room_priority where program_yr_id='".$program_yr_id."' and room_id ='".$key."' limit 1";
+						$q_res = mysqli_query($this->conn, $room_query);
+						$dataAll = mysqli_fetch_assoc($q_res);
+						if(count($dataAll)>0)
+						{
+							//update the priority order
+							mysqli_query($this->conn, "Update room_priority Set program_id = '".$program_id."', program_yr_id = '".$program_yr_id."', room_id = '".$key."', order_priority = '".$roomorder[$total]."' , date_update = '".date("Y-m-d H:i:s")."' where id='".$dataAll['id']."'");
+						}else{
+							//add a new row
+							mysqli_query($this->conn, "INSERT INTO room_priority(program_id, program_yr_id, room_id, order_priority, date_add, date_update) VALUES ('".$program_id."','".$program_yr_id."', '".$key."', '".$roomorder[$total]."', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')");
+						}
+						$total++;
+					}
+				}
+			}
+		}
+	}
+	public function getRoomsPriorityOrder($programId, $room_id)
+	{
+		if($programId!=""){
+			$excep_query="select * from room_priority where program_id='".$programId."' AND room_id='".$room_id."' limit 1";
+			$q_excep = mysqli_query($this->conn, $excep_query);
+			return $q_excep;
+		}
 	}
 }

@@ -14,6 +14,73 @@ $toGenrtTmtbl = (isset($rowTT['end_date']) && $rowTT['end_date'] != "") ? date('
 $program_year_id = (isset($rowTT['programs']) && $rowTT['programs']!="") ? $rowTT['programs'] : '';
 $prgm_IdArr = explode(',' ,$program_year_id);
 ?>
+<script language="javascript" type="text/javascript">
+		$(function() {
+			$('#programs-left').dblclick(function() {
+				var targetListmove=$('#programs-left option:selected');
+				if(targetListmove.length >0){
+					$('#programs-left option:selected').appendTo('#programs');
+				}else{
+					alert('Please select atleast one item to move');
+				}
+			  });
+			$('#programs').dblclick(function() {
+				var targetList=$('#programs option:selected');
+				if(targetList.length >0){
+					targetList.appendTo('#programs-left');
+					var foption = $('#programs-left option:first');
+					var soptions = $.makeArray($('#programs-left option:not(:first)')).sort(function(a, b) {
+					 return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+					});
+					$('#programs-left').html(soptions).prepend(foption);
+					foption.attr("selected", true).siblings("option").removeAttr("selected");
+				}else{
+					alert('Please select atleast one item to move');
+				}
+			});
+			
+			$('.move-right').click(function(){
+				var targetListmove=$('#programs-left option:selected');
+				if(targetListmove.length >0){
+					$('#programs-left option:selected').appendTo('#programs');
+				}else{
+					alert('Please select atleast one item to move');
+				}
+			});
+			$('.move-left').click(function(){
+				var targetList=$('#programs option:selected');
+				if(targetList.length >0){
+					targetList.appendTo('#programs-left');
+					var foption = $('#programs-left option:first');
+					var soptions = $.makeArray($('#programs-left option:not(:first)')).sort(function(a, b) {
+					 return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+					});
+					$('#programs-left').html(soptions).prepend(foption);
+					foption.attr("selected", true).siblings("option").removeAttr("selected");
+				}else{
+					alert('Please select atleast one item to move');
+				}
+			});
+			
+			$('.my-button-up').click(function(){
+				var current = $('#programs option:selected');
+				if(current.length==1){
+					current.prev().before(current);
+				}else{
+					alert('Please select only one item to move up');
+				}
+			});
+			$('.my-button-down').click(function(){
+				var current = $('#programs option:selected');
+				if(current.length==1){
+					current.next().after(current);
+				}else{
+					alert('Please select only one item to move down');
+				}
+			});
+		});
+
+</script>
 <div id="content">
     <div id="main">
         <div class="full_w">
@@ -46,16 +113,58 @@ $prgm_IdArr = explode(',' ,$program_year_id);
                         <h2><strong>Choose Programs</strong><span class="redstar">*</span></h2>
                     </div>
 					<div class="txtfield">
-						<select id="programs" name="programs[]" class="slctTs required" multiple="multiple" style="width:260px; height:200px; margin-left:29px;">
+						<h2 style="color: #5A5A5A; font-family: 'Tahoma'; font-size: 13px; line-height: 27px; margin-left:20px;"><strong>&nbsp;</strong><span class="redstar"></span></h2>
+						<select id="programs-left" name="programs-left[]" class="slctTs" multiple="multiple" style="width:330px; height:200px; margin-left:29px;">
 						<?php 
 						$objP = new Programs();
 						$result = $objP->getProgramWithCycle();
 						while($row = $result->fetch_assoc()){
-							 $selected=(in_array($row['program_year_id'],$prgm_IdArr)) ? 'selected="selected"' : '' ;
-							?><option value="<?php echo $row['program_year_id'];?>" <?php echo $selected;?>><?php echo $row['name'];?></option><?php
-						}						
+							 //$selected=(in_array($row['program_year_id'],$prgm_IdArr)) ? 'selected="selected"' : '' ;
+							 if(!in_array($row['program_year_id'],$prgm_IdArr)){
+							?><option value="<?php echo $row['program_year_id'];?>" <?php //echo $selected;?>><?php echo $row['name'];?></option><?php
+								}	
+						}					
 						?>                         
                         </select>
+					</div>
+					<div class="txtfield" style="float:left; margin-top:92px;">
+						<div class="move-right" style="cursor:pointer"><img src="images/arrow-right.png" /></div>
+						<div class="move-left" style="cursor:pointer"><img src="images/arrow-left.png" /></div>
+					</div>
+					<div class="txtfield" style="float:left">
+						<h2 style="color: #5A5A5A; font-family: 'Tahoma'; font-size: 13px; line-height: 27px;"><strong>Ordered list of program for timetable generation</strong><span class="redstar">*</span></h2>
+						
+						<?php 
+						//$objP = new Programs(); $seletedIds =array();
+						//$seletedDatas = $objP->getProgramWithCycleSelected();
+						///$seletedData  =  $seletedDatas->fetch_assoc();
+						//$seletedIds = explode(',', $seletedData['programs']);
+						///$result = $objP->getProgramNameByCycleId($seletedData['programs']);
+						?>
+						<select id="programs" name="programs[]" class="slctTs" multiple="multiple" style="width:330px; height:200px;">
+						<?php
+						$objTimetable=new Timetable();
+						$result=$objTimetable->getTimetablesData();
+						while ($data = $result->fetch_assoc()){
+									$program_names = $program_ids = array();
+									$program_array = explode(",",$data['programs']);
+									foreach($program_array as $program_id)
+									{
+										$programs = $objP->getProgramDataByPrgmYrID($program_id);
+										$pgm_names = $programs->fetch_assoc();	
+										$program_names[] = $pgm_names['name'];
+										$program_ids[] = $program_id;
+									}
+						}
+						for($i=0; $i<count($program_names); $i++){
+							?><option value="<?php echo $program_ids[$i];?>" <?php //echo $selected;?>><?php echo $program_names[$i];?></option><?php
+						}				
+						?>                         
+                        </select>
+					</div>
+					<div class="txtfield" style="float:left; margin-top:92px;">
+						<div class="my-button-up" style="cursor:pointer"><img src="images/arrow-up.png" /></div>
+						<div class="my-button-down" style="cursor:pointer"><img src="images/arrow-down.png" /></div>
 					</div>
 					<div class="txtfield" id="wait" style="display:none;width:450px;height:44px;position:initial;top:40%;left:50%;"><img src='images/bar-circle.gif' style="float:left" /><br><span style="float:left" ><strong>Grab a cup of coffee! ... this will take several minutes!...</strong></span></div>
 					<div class="clear"></div>

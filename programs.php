@@ -2,6 +2,8 @@
 include('header.php');
 $user = getPermissions('programs');
 $objP = new Programs();
+$objClassroom = new Classroom();
+$programId="";
 if(isset($_GET['edit']) && $_GET['edit']!=''){
 	if($user['edit'] != '1')
 	{
@@ -184,6 +186,40 @@ $(document).ready(function() {
                             <option value="2">Two Year</option>
 							<option value="3">Three Year</option>
                         </select>
+						<script type="text/javascript">
+							jQuery('#slctPrgmType').val("<?php echo $program_type;?>");
+						</script>
+                    </div>
+                    <div class="clear"></div>
+					<div class="custtd_left">
+                        <h2>Classroom Priority Order <span class="redstar">*</span></h2>
+                    </div>
+					<div class="txtfield">
+                        
+						<?php
+						$allRooms = $objClassroom->getRoom();
+						$total = $allRooms->num_rows;
+						$selectedOrder="";
+						if($total >0){
+							while($row = $allRooms->fetch_assoc())
+							{ 
+								?>
+								<div class="names" style="float:left; width:190px; text-align:left">
+								<input type="text" readonly="readonly" name="roomnames[<?php echo $row['id']; ?>]" value="<?php echo $row['room_name']; ?>" style="border:none" />
+								</div>
+								<select id="roomorder" name="roomorder[]" class="select1 required" style="width: 40px; text-align:left">
+								<?php 
+								$roomOrdersData = $objClassroom->getRoomsPriorityOrder($programId, $row['id'] );
+								$orderRow = $roomOrdersData->fetch_assoc();
+								$order_priority = $orderRow['order_priority'];
+								for($i=1; $i<=$total; $i++){
+									?>
+									<option <?php if($i==$order_priority){ echo "selected='selected'"; } ?> value="<?php echo $i; ?>"><?php echo $i; ?></option> <?php
+							 	} ?>
+								</select><br />
+							<?php }	
+						} ?>
+						
 						<script type="text/javascript">
 							jQuery('#slctPrgmType').val("<?php echo $program_type;?>");
 						</script>

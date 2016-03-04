@@ -38,6 +38,8 @@ class Programs extends Base {
 			}
 			//END HERE
 			$message="New program has been added successfully";
+			$objClassroom = new Classroom;
+			$objClassroom->addEditRoomPriority($last_ins_id);
 			$_SESSION['succ_msg'] = $message;
 			return 1;
 		}
@@ -113,13 +115,16 @@ class Programs extends Base {
 			  }
 			}
 			$message="Record has been updated successfully";
+			//save the selected room order
+			$objClassroom = new Classroom;
+			$objClassroom->addEditRoomPriority($edit_id);
 			$_SESSION['succ_msg'] = $message;
 			return 1;
 
 		}else{
 			$message="Record could not be updated. Try again.";
 			$_SESSION['error_msg'] = $message;
-			return 1;
+			return 0;
 		}
 
 	}
@@ -710,6 +715,20 @@ class Programs extends Base {
 		$result =  $this->conn->query("select py.*, py.id as progid, cy.* from cycle as cy LEFT JOIN program_years as py ON cy.program_year_id = py.id GROUP BY cy.program_year_id");
 		return $result;
 	}
+	//function to  get all selected programs according to years 
+	//public function getProgramWithCycleSelected(){
+		//echo "select tt.programs, py.id as progid, py.name from timetable as tt LEFT JOIN program_years as py ON cy.program_year_id = py.id GROUP BY cy.program_year_id"; die;
+		//$result =  $this->conn->query("select programs from timetable");
+		//return $result;
+	//}
+	//function to  get all selected programs according to years 
+	//public function getProgramNameByCycleId($seletedData){
+		//echo "select  program_id, name from program_years where id IN('".$seletedData."')"; die;
+		//$result =  $this->conn->query("select  id, name from program_years where id IN(".$seletedData.")");
+		//return $result;
+	//}
+	
+	
 	public function getUnit(){
 		$result =  $this->conn->query("select * from unit");
 		return $result;

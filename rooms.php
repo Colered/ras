@@ -73,10 +73,10 @@ $slctPriority = isset($_GET['edit']) ? $row['order_priority'] : (isset($_POST['s
                         </select>
                     </div>
 					<div class="clear"></div>
-                    <div class="custtd_left">
+                    <div class="custtd_left" style="display:none">
                         <h2>Priority Order<span class="redstar">*</span></h2>
                     </div>
-                    <div class="txtfield">
+                    <div class="txtfield" style="display:none">
 						<select id="slctPriority" name="slctPriority" class="select1 required">
                             <?php for($i=1; $i<=100; $i++){ ?>
 									<option value="<?php echo $i ; ?>" <?php if($slctPriority == $i){echo "selected"; }?>><?php echo $i; ?></option>

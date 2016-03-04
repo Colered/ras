@@ -2994,7 +2994,10 @@ $(document).ready(function() {
 		var fromDate=$("#fromGenrtTmtbl").val();
 	    var toDate=$("#toGenrtTmtbl").val();
 		var programVal = new Array();
-		$("#programs option:selected").each(function(){
+		/*$("#programs option:selected").each(function(){
+			programVal.push($(this).val());
+  		});*/
+		$("#programs option").each(function(){
 			programVal.push($(this).val());
   		});
 		if(schdTime!="" && fromDate!="" && toDate!="" && programVal.length!=0){

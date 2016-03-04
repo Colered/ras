@@ -316,8 +316,6 @@ class Timetable extends Base {
 			$new_programs[$pgm_id][$newkey] =  $values;		
 			}
 		}
-		//print"<pre>";print_r($new_programs);die;
-
 		$reserved_array = array();
 		$reserved_teachers = array();
 		$reserved_rooms = array();
@@ -345,8 +343,6 @@ class Timetable extends Base {
 		$adhoc_activities = $this->searchAdhocActivities();
 		//prepare timeslot array in advance
 		$allTimeslots = $this->getAllTimeslots();
-		//print"<pre>";print_r($adhoc_activities);die;
-		
 		$i=0;		
 		foreach($new_programs as $key=>$cycles)
 		{				
@@ -491,7 +487,6 @@ class Timetable extends Base {
 																	//allocate group meeting
 																	$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number'],$meeting_detail['reserved_flag'],$meeting_detail['special_activity_name']);
 																	//if already having an activity of low priority (recess) then wite a reason an overrite and then allocate the new activity 
-																	//$tempArray = $reserved_array[$date][$i];
 																	if(isset($reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]) && !empty($reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]) ){
 																	$reasons[$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]['activity_id']] = "Some group meeting(High Priority that recess activity) has been allocated at the same time and in same room where other activities for this program are scheduled";
 																	}
@@ -945,6 +940,7 @@ class Timetable extends Base {
 																					$teacher_str = $free_act_detail['teacher_name'];
 																					if($free_act_detail['reason'] == 'Teaching Session Jointly')
 																					{
+
 																						$objT = new Teacher();
 																						$teacher_array = explode(",",$free_act_detail['teacher_id']);
 																						$teachers_names = array();
@@ -1529,26 +1525,36 @@ class Timetable extends Base {
 	{
 		$final_pgms = array();
 		$last_day = 5;
-		$program_list = '';
-		if(count($programs)>0)
+		$program_list = ''; $result_pgm_cycles=array();
+		/*if(count($programs)>0)
 		{
 			$program_list.= " and(";
-		}
+		}*/
 		foreach($programs as $pgm)
 		{
-			$program_list.= " program_year_id = '".$pgm."' ||";
+			//$program_list.= " program_year_id = '".$pgm."' ||";
+			$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE ((start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."') OR ('".$start_date."' >=  start_week AND '".$start_date."' <=  end_week) OR  ('".$end_date."' >=  start_week AND '".$end_date."' <=  end_week)) and program_year_id = '".$pgm."'");
+			while($result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle))
+			{
+				$result_pgm_cycles[] = $result_pgm_cycle;
+			}
 
 		}
-		$program_list = substr($program_list, 0, -2);
-		if(count($programs)>0)
+		//$program_list = substr($program_list, 0, -2);
+		/*if(count($programs)>0)
 		{
 			$program_list.= ")";
-		}
-		$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE ((start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."') OR ('".$start_date."' >=  start_week AND '".$start_date."' <=  end_week) OR  ('".$end_date."' >=  start_week AND '".$end_date."' <=  end_week))".$program_list."");
-		$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
-		if($pgm_cycle_cnt > 0)
+		}*/
+		//$sql_pgm_cycle = $this->conn->query("SELECT * FROM cycle WHERE ((start_week >=  '".$start_date."' AND start_week <=  '".$end_date."') OR (start_week <=  '".$start_date."' AND end_week >=  '".$end_date."') OR ('".$start_date."' >=  start_week AND '".$start_date."' <=  end_week) OR  ('".$end_date."' >=  start_week AND '".$end_date."' <=  end_week))".$program_list."");
+		//$pgm_cycle_cnt = mysqli_num_rows($sql_pgm_cycle);
+		/*echo "<pre>";
+		echo count($result_pgm_cycles); 
+		print_r($result_pgm_cycles);
+		die;*/
+		if(count($result_pgm_cycles) > 0)
 		{
-			while($result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle))
+			//while($result_pgm_cycle = mysqli_fetch_array($sql_pgm_cycle))
+			foreach($result_pgm_cycles as $result_pgm_cycle)
 			{
 				$i=0;
 				//if end date and start date are beyond the cycle date range
@@ -1687,6 +1693,8 @@ class Timetable extends Base {
 				}	
 			}					
 		}
+		//echo "<pre>";
+		//print_r($final_pgms); die;
 		return $final_pgms;
 	}
 
@@ -3242,7 +3250,7 @@ class Timetable extends Base {
 				$room_res_id = $this->getRoomFromReservedAct($subject_id,$date,$reserved_subject_rooms,$loc_id);
 				if($room_res_id == '0')
 				{
-					$rooms = $this->search_room($date,$all_ts,$loc_id);
+					$rooms = $this->search_room($date,$all_ts,$loc_id, $program_id);
 					$temp_room_id = '';
 					foreach($rooms as $room)
 					{
@@ -3369,7 +3377,7 @@ class Timetable extends Base {
 				$room_res_id = $this->getRoomFromReservedAct($subject_id,$date,$reserved_rooms);
 				if($room_res_id == '0')
 				{
-					$rooms = $this->search_room($date,$all_ts);
+					$rooms = $this->search_room($date,$all_ts, $program_id);
 					$temp_room_id = '';
 					foreach($rooms as $room)
 					{
@@ -3497,7 +3505,7 @@ class Timetable extends Base {
 	}	
 	
 	//Function to search room on a particular date and timeslot
-	public function search_room($date,$slot,$loc_id='')
+	/*public function search_room($date,$slot,$loc_id='')
 	{
 		$rooms = array();
 		$day = date('w', strtotime($date));
@@ -3530,9 +3538,45 @@ class Timetable extends Base {
 		}
 		//print"<pre>";print_r($rooms);die;
 		return $rooms;
-	}
+	}*/
+	
+	//Function to search room on a particular date and timeslot
+	public function search_room($date,$slot,$loc_id='',$program_id)
+	{
+		$rooms = array();
+		$day = date('w', strtotime($date));
+		$final_day = $day - 1;
+		$sql_str = "select distinct room_id, room.room_name, rp.order_priority, rp.room_id, b.location_id
+								from classroom_availability_rule_room_map cm
+								inner join classroom_availability_rule_day_map cd on cd.classroom_availability_rule_id = cm.classroom_availability_rule_id
+								inner join classroom_availability_rule ca on ca.id = cd.classroom_availability_rule_id
+								inner join room on room.id = cm.room_id
+								inner join room_priority rp on rp.room_id = room.id
+								inner join building b on room.building_id = b.id
+								where rp.program_id='".$program_id."' and start_date <= '".$date."' and end_date >= '".$date."' and day= '".$final_day."' and actual_timeslot_id REGEXP '" . $this->RexExpFormat($slot)."'";
+		if($loc_id != 0)
+			$sql_str.= " and b.location_id = '".$loc_id."'";
 
-	//Function to search room for GM on a particular date and timeslot
+		$sql_str.= " order by rp.order_priority ASC";
+		$sql_room = $this->conn->query($sql_str);						
+		$k = 0;
+		while($result_room = mysqli_fetch_array($sql_room))
+		{
+			$sql = $this->conn->query("select id from classroom_availability_exception where room_id = '".$result_room['room_id']."' and exception_date = '".$date."'");
+			$room_cnt = mysqli_num_rows($sql);
+			if($room_cnt == 0)
+			{
+				$rooms[$k]['id'] = $result_room['room_id'];
+				$rooms[$k]['room_name'] = $result_room['room_name'];
+				$rooms[$k]['location_id'] = $result_room['location_id'];
+				$k++;
+				
+			}				
+		}
+		print"<pre>";print_r($rooms);die;
+		return $rooms;
+	}
+	//Function to search room for GM(group meeting) on a particular date and timeslot
 	public function searchRoomForGM($date,$slot,$start_time,$end_time,$reserved_rooms,$edit_room_id)
 	{
 		$room_id="";
