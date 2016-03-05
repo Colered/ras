@@ -199,7 +199,7 @@ $(document).ready(function() {
 						<?php
 						$allRooms = $objClassroom->getRoom();
 						$total = $allRooms->num_rows;
-						$selectedOrder="";
+						$selectedOrder=""; $order_priority=0;
 						if($total >0){
 							while($row = $allRooms->fetch_assoc())
 							{ 
@@ -209,9 +209,11 @@ $(document).ready(function() {
 								</div>
 								<select id="roomorder" name="roomorder[]" class="select1 required" style="width: 40px; text-align:left">
 								<?php 
-								$roomOrdersData = $objClassroom->getRoomsPriorityOrder($programId, $row['id'] );
-								$orderRow = $roomOrdersData->fetch_assoc();
-								$order_priority = $orderRow['order_priority'];
+								if($programId!=""){
+									$roomOrdersData = $objClassroom->getRoomsPriorityOrder($programId, $row['id'] );
+									$orderRow = $roomOrdersData->fetch_assoc();
+									$order_priority = $orderRow['order_priority'];
+								}
 								for($i=1; $i<=$total; $i++){
 									?>
 									<option <?php if($i==$order_priority){ echo "selected='selected'"; } ?> value="<?php echo $i; ?>"><?php echo $i; ?></option> <?php
