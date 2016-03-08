@@ -3929,7 +3929,7 @@ class Timetable extends Base {
 	}
 	//function to get teachers assigned in timetable within a range
 	public function getTeachersInDateRange($from,$to,$teacher_id='',$program_id='',$area_id='',$profesor_id='',$cycle_id='',$module=''){
-		 $teacher_sql = "select ta.id,td.date,td.timeslot,t.teacher_name,py.name, p.participants, a.area_name,r.room_name, ta.reserved_flag,ta.name as activityName, sam.special_activity_name, sam.adhoc_participants, sam.adhoc_coordinator
+		 $teacher_sql = "select ta.id,td.date,td.timeslot,t.teacher_name,py.name, p.participants, r.room_name, a.area_name, ta.reserved_flag,ta.name as activityName, sam.special_activity_name, sam.adhoc_participants, sam.adhoc_coordinator
 		 from timetable_detail td 
 		 LEFT JOIN teacher_activity ta on ta.id = td.activity_id
 		 LEFT JOIN special_activity_mapping sam on sam.teacher_activity_id = td.activity_id
