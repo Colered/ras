@@ -695,22 +695,24 @@ function deleteSubject($id){
 $(document).ready(function() {
  	$('.subjectSession').hide();
 }); 
-$(document).ready(function() {
+//$(document).ready(function() {
 	//function for check availability
-	$("#btnCheckAvail").on( "click", function() {
+	/*$("#btnCheckAvail").on( "click", function() {
 		checkAvailability();									  
-	});
+	});*/
 	
 	//add a new session function										  
-	$("#btnAddNewSess").on( "click", function() {
+	/*$("#btnAddNewSess").on( "click", function() {
 		addSubjectSession();										  
-	});
-});
+	});*/
+//});
 
-function checkAvailability($forcing) {
-	    if($forcing == undefined){
+function checkAvailability($usrAccessforPopup) {
+	$usrAccessFlag = $usrAccessforPopup;
+	//alert($usrAccessFlag);
+	    /*if($forcing == undefined){
 			$forcing="";
-		}
+		}*/
 		var txtSessionName="", txtCaseNo="", slctTeacher="",tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";
 		var subIdEncrypt = $('#subIdEncrypt').val();
   		//custom validation for all the fieelds on form
@@ -818,7 +820,7 @@ function checkAvailability($forcing) {
 						'subSessDate': $('#subSessDate').val(),
 						'sess_hidden_id': $('#sess_hidden_id').val(),
 						'act_hidden_id': $('#act_hidden_id').val(),
-						'check_avail_force_entry':$forcing,
+						//'check_avail_force_entry':$forcing,
 						'force_flag':0,
 						'codeBlock': 'checkAvailabilitySession',
 					},
@@ -834,22 +836,26 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is not available on the selected time and day.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==6){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('This session cannot happen in selected room, as other sessions of this subject are scheduled in different room.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==3){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is already engaged in other activity.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==4){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Classroom is already engaged in other activity.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==7){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -866,27 +872,32 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher already have 4 sessions allocated to him on selected day.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==11){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Selected teacher already have other classs at some different location on the selected day.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==12){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Teacher is already allocated to two saturdays of this cycle.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==13){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('The sessions scheduled on Saturdays should be from the same academic area.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==14){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==15){
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -899,7 +910,8 @@ function checkAvailability($forcing) {
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
 							alert('Maximum number of sessions of the Program for the selected date has been exceeded.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else{
 							$('#showstatusAvail').hide();
 							$('#showstatusNoAvail').show();
@@ -911,13 +923,16 @@ function checkAvailability($forcing) {
 			return false;
 		}
 }
-function addSubjectSession($forcing,$force_flag){
+function addSubjectSession($forcing,$force_flag,$usrAccessFlag){
 		if($forcing == undefined){
 		   $forcing="";
 		}
 		if($force_flag == undefined){
 		   $force_flag="0";
-		}		
+		}	
+	    if($usrAccessFlag == undefined){
+			$usrAccessFlag = 0;
+		}
 	    var txtSessionName="", txtCaseNo="", tslot_id="", subSessDate="", txtareatechnicalNotes="", txtareaSessionDesp="", programId="", cycleId="", areaId="", subjectId="";	
 		var subIdEncrypt = $('#subIdEncrypt').val();
  		//validating the forms
@@ -1040,10 +1055,12 @@ function addSubjectSession($forcing,$force_flag){
 							alert('Teacher is already allocated to some different location the same day.');
 						}else if($succ==12){
 							alert('Teacher is already allocated to two saturdays of this cycle.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==13){	
 							alert('The sessions scheduled on Saturdays should be from the same academic area.');
-							opendialogToComfirmArea();
+							if($usrAccessFlag==1)
+								opendialogToComfirmArea();
 						}else if($succ==14){
 							alert('Maximum number of sessions for the selected area and date has been exceeded.');
 						}else if($succ==15){
@@ -2958,7 +2975,8 @@ function opendialogToComfirm(){
       buttons: {
         "Force Entry": function() {
 		  var force_entry="Forcing";
-		  addSubjectSession(force_entry);	
+		  var force_flag="1";
+		  addSubjectSession(force_entry, force_flag);	
           $( this ).dialog( "close" );
         },
         "Edit": function() {

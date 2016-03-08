@@ -2,6 +2,7 @@
 ob_start();
 include('header.php');
 $user = getPermissions('subjects');
+$forceAlloc = getPermissions('subject_session_force');
 $action="addEditSubject";
 $subjectName = "";
 $subjectCode = "";
@@ -757,11 +758,11 @@ while ($area_data = mysqli_fetch_assoc($area_result)) {
                                     <textarea style="height:40px;" class="inp_txt_session alphanumeric" <?php echo $disSession; ?> id="txtareaSessionDesp" cols="20" rows="2" name="txtSessionDesp"><?php echo $sess_description_edit; ?></textarea>
                                 </div>
 								<div class="sessionboxSub addbtnSession" style="width:140px;float:right;">
-                                    <input type="button" name="btnAddMore" <?php echo $disSession; ?> id="btnAddNewSess" class="btnSession buttonsub" value="<?php echo $sess_btn_lbl; ?>" style="width:115px; height:30px; margin-bottom: 1px;">
+                                    <input type="button" name="btnAddMore" <?php echo $disSession; ?> id="btnAddNewSess" onclick="addSubjectSession('', '0', <?php echo $forceAlloc['view']; ?>)" class="btnSession buttonsub" value="<?php echo $sess_btn_lbl; ?>" style="width:115px; height:30px; margin-bottom: 1px;">
 
                                 </div>
                                 <div class="sessionboxSub addbtnSession" style="width:140px;float:right;">
-                                    <input type="button" name="btnCheckAvail" id="btnCheckAvail" class="btnSession buttonsub" <?php echo $disSession; ?> value="Check Availability" style="height:30px;">
+                                    <input type="button" name="btnCheckAvail" id="btnCheckAvail" onclick="checkAvailability(<?php echo $forceAlloc['view']; ?>);" class="btnSession buttonsub" <?php echo $disSession; ?> value="Check Availability" style="height:30px;">
                                     <span style="display:none" name="showstatusAvail" id="showstatusAvail" ><img alt="OK" src="images/ok.gif" /></span>
                                     <span style="display:none" name="showstatusNoAvail" id="showstatusNoAvail" ><img alt="OK" src="images/error.gif" /></span>
                                     <!--<input style="display:none" type="button" name="showstatus" id="showstatus" class="btnSession buttonsub" value="">-->
