@@ -68,6 +68,7 @@ class Teacher extends Base {
 		$txtDegination = Base::cleanText($_POST['txtDegination']);
 		$txtQualification = Base::cleanText($_POST['txtQualification']);
 		$txtPayrate = Base::cleanText($_POST['txtPayrate']);
+		$email = $_POST['txtEmail'];
 		$years = $_POST['years'];
 		$months = $_POST['months'];
 		$totalmonthExp = $years*12+$months;
@@ -92,6 +93,7 @@ class Teacher extends Base {
 							qualification='".$txtQualification."',
 							payrate='".$txtPayrate."',
 							experience='".$totalmonthExp."',
+							email='".$email."',
 							date_update=now() WHERE id=$edit_id";
 			$rel = $this->conn->query($sql);
 			if(!$rel){

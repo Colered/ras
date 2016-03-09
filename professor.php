@@ -178,15 +178,14 @@ $(document).ready(function () {
                         </select>
                     </div>
                     <div class="clear"></div>
-
+					<div class="custtd_left">
+						<h2>Email<span class="redstar">*</span></h2>
+					</div>
+					<div class="txtfield">
+						<input type="text" class="inp_txt required email" id="txtEmail" maxlength="50" name="txtEmail" value="<?php echo $email;?>">
+					</div>
+					<div class="clear"></div>
                     <?php if(!isset($_GET['edit'])){?>
-							<div class="custtd_left">
-								<h2>Email<span class="redstar">*</span></h2>
-							</div>
-							<div class="txtfield">
-								<input type="text" class="inp_txt required email" id="txtEmail" maxlength="50" name="txtEmail" value="<?php echo $email;?>">
-							</div>
-							<div class="clear"></div>
 							<div class="custtd_left">
 								<h2>Username<span class="redstar">*</span></h2>
 							</div>

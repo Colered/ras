@@ -2164,7 +2164,7 @@ $(document).ready(function() {
 		var exception_date = $('#exceptnProgAval1').val();
 		e.preventDefault();
 		var programId=$('#programId').val();
-		var maxSerialNum=parseInt($('#maxSessionListVal1').val(),100);
+		var maxSerialNum=parseInt($('#maxSessionListVal1').val(),10);
 		if(programId!=""){
 			var maxSerialNumVal=maxSerialNum + 1;
 			$('#maxSessionListVal1').val(maxSerialNumVal);
@@ -2185,7 +2185,7 @@ $(document).ready(function() {
 		var exception_date = $('#exceptnProgAval2').val();
 		e.preventDefault();
 		var programId=$('#programId').val();
-		var maxSerialNum=parseInt($('#maxSessionListVal2').val(),100);
+		var maxSerialNum=parseInt($('#maxSessionListVal2').val(),10);
 		if(programId!=""){
 			var maxSerialNumVal=maxSerialNum + 1;
 			$('#maxSessionListVal2').val(maxSerialNumVal);
@@ -2205,7 +2205,7 @@ $(document).ready(function() {
  		var exception_date = $('#exceptnProgAval3').val();
 		e.preventDefault();
 		var programId=$('#programId').val();
-		var maxSerialNum=parseInt($('#maxSessionListVal3').val(),100);
+		var maxSerialNum=parseInt($('#maxSessionListVal3').val(),10);
 		if(programId!=""){
 			var maxSerialNumVal=maxSerialNum + 1;
 			$('#maxSessionListVal3').val(maxSerialNumVal);
