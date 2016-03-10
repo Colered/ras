@@ -1801,7 +1801,7 @@ $(document).ready(function() {
 		var exception_date = $('#exceptnTeachAval').val();
 		e.preventDefault();
 		var decodeTeachId=$('#decodeTeachId').val();
-		var maxSerialNum=parseInt($('#maxSessionListVal').val(),100);
+		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
 		if(decodeTeachId!=""){
 			var maxSerialNumVal=maxSerialNum + 1;
 			$('#maxSessionListVal').val(maxSerialNumVal);
@@ -1878,7 +1878,7 @@ $(document).ready(function() {
 		var exceptnDate = $('#exceptnClsrmAval').val();
 		e.preventDefault();
 		var roomIdException=$('#roomId').val();
-		var maxSerialNum=parseInt($('#maxSessionListVal').val(),100);
+		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
 		if(roomIdException!=""){
 			var maxSerialNumVal=maxSerialNum + 1;
 			$('#maxSessionListVal').val(maxSerialNumVal);
@@ -2771,7 +2771,7 @@ $(document).ready(function() {
 			});
 			e.preventDefault();
 			var programId=$('#programId').val();
-			var maxSerialNum=parseInt($('#maxSessListVal1').val(),100);
+			var maxSerialNum=parseInt($('#maxSessListVal1').val(),10);
 			if(programId!=""){
 				var maxSerialNumVal=maxSerialNum + 1;
 				$('#maxSessListVal1').val(maxSerialNumVal);
@@ -2794,7 +2794,7 @@ $(document).ready(function() {
 			var x = 1,y=0; 
 			var additional_date = $('#additionalDayCal2').val();
 			var time_slot2 = $('#timeSlot2').val();
-			var maxSerialNum=parseInt($('#maxSessListVal2').val(),100);
+			var maxSerialNum=parseInt($('#maxSessListVal2').val(),10);
 			 $.ajax({
 				url: "./ajax_common.php",
 				type: "POST",
@@ -2836,7 +2836,7 @@ $(document).ready(function() {
 			var x = 1,y=0; 
 			var additional_date = $('#additionalDayCal3').val();
 			var time_slot3 = $('#timeSlot3').val();
-			var maxSerialNum=parseInt($('#maxSessListVal3').val(),100);
+			var maxSerialNum=parseInt($('#maxSessListVal3').val(),10);
 			 $.ajax({
 				url: "./ajax_common.php",
 				type: "POST",
@@ -3321,7 +3321,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		var roomIdException=$('#roomId').val();
 		roomIdException="";
-		var maxSerialNum=parseInt($('#maxSessionListVal').val(),100);
+		var maxSerialNum=parseInt($('#maxSessionListVal').val(),10);
 		if(roomIdException!=""){
 			var maxSerialNumVal=maxSerialNum + 1;
 			$('#maxSessionListVal').val(maxSerialNumVal);
