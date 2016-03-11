@@ -8,17 +8,8 @@ if($user['view'] != '1')
 }
 $objU = new Users();
 $result = $objU->userDetail();
+include_once('datatable_js.php');
 ?>
-<script src="js/jquery.dataTables.js" type="text/javascript"></script>
-<script type="text/javascript" charset="utf-8">
-$(document).ready(function(){
-	$('#datatables').dataTable({
-		"sPaginationType":"full_numbers",
-		"aaSorting":[[0, "asc"]],
-		"bJQueryUI":true
-	});
-})
-</script>
 <style type="text/css">
 	@import "css/demo_table_jui.css";
 	@import "css/jquery-ui-1.8.4.custom.css";
@@ -29,7 +20,7 @@ $(document).ready(function(){
 		<?php if(isset($_SESSION['succ_msg'])){ echo $_SESSION['succ_msg']; unset($_SESSION['succ_msg']);} ?>
 		</div>
         <div class="full_w">
-            <div class="h_title">Users
+            <div class="h_title">Users View
 			<?php if($user['add_role'] != '0'){?>
 			<a href="user_add.php" class="gird-addnew" title="Add New User">Add New</a>
 			<?php } ?>

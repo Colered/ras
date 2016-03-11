@@ -7,19 +7,9 @@ if($user['view'] != '1')
 $objP = new Programs();
 $pTypeArr = array('1'=>'One Year','2'=>'Two Year','3'=>'Three Year');
 $pUnitArr = array('1'=>'Executive Education','2'=>'Master Programs','3'=>'Tailored Programs','4'=>'Activity');
-if(isset($_GET['status']) && $_GET['status']=='Y'){$_SESSION['succ_msg']="Program cloning has been done successfully";} 
+if(isset($_GET['status']) && $_GET['status']=='Y'){$_SESSION['succ_msg']="Program cloning has been done successfully";}
+include_once('datatable_js.php'); 
 ?>
-<script src="js/jquery.dataTables.js" type="text/javascript"></script>
-<script type="text/javascript" charset="utf-8">
-$(document).ready(function(){
-	$('#datatables').dataTable({
-		"sPaginationType":"full_numbers",
-		"aaSorting":[[0, "asc"]],
-		"bJQueryUI":true
-	});
-})
-
-</script>
 <style type="text/css">
 	@import "css/demo_table_jui.css";
 	@import "css/jquery-ui-1.8.4.custom.css";

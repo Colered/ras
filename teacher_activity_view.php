@@ -34,10 +34,12 @@ $addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
 
 ?>
-<script src="js/jquery.dataTables.js" type="text/javascript"></script>
+<script type="text/javascript" language="javascript" src="js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function(){
 	oTable = $('#datatables').dataTable({
+		"stateSave": true,
 	    "aaSorting":[[1, "asc"]],
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
