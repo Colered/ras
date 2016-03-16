@@ -466,47 +466,50 @@ class Timetable extends Base {
 														$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
 														foreach($group_meetings[$date] as $meeting_id=>$meeting_detail)
 														{
-															$duration = $this->getDuration($meeting_detail['activity_id']);
-															$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
-															$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));
-															if($meeting_detail['room_id'] != 0)
+															if(!$this->search_array($meeting_detail['name'],$reserved_array))
 															{
-																$edit_room_id = $meeting_detail['room_id'];
-															}else{
-																$edit_room_id = 0;
-															}
-															
-															if(!$this->isTimeslotReservedAdhoc($date,$meet_start_time,$meet_end_time,$reserved_rooms, $edit_room_id))
-															{
-																if($edit_room_id==0){
-																$room_id = $this->searchRoomForGM($date,$meeting_detail['timeslot_id'],$meet_start_time,$meet_end_time,$reserved_rooms,$edit_room_id);									
-																}else{ $room_id = $edit_room_id; }
-																if($room_id > 0)
-																{
-																	$room_name = $this->getRoomName($room_id);
-																	//allocate group meeting
-																	$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number'],$meeting_detail['reserved_flag'],$meeting_detail['special_activity_name']);
-																	//if already having an activity of low priority (recess) then wite a reason an overrite and then allocate the new activity 
-																	if(isset($reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]) && !empty($reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]) ){
-																	$reasons[$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]['activity_id']] = "Some group meeting(High Priority that recess activity) has been allocated at the same time and in same room where other activities for this program are scheduled";
-																	}
-																	$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time] = $activities_array;
-																	$reserved_rooms[$date][$meet_start_time." - ".$meet_end_time][$i] = $room_id;
-																	$ts_array = explode(",",$meeting_detail['timeslot_id']);
-																	if(array_key_exists($meeting_detail['activity_id'],$reasons))
+																	$duration = $this->getDuration($meeting_detail['activity_id']);
+																	$meet_start_time = $allTimeslots[$meeting_detail['start_time']]['start_time'];
+																	$meet_end_time = date("h:i A", strtotime($meet_start_time." +		".$duration." minutes"));
+																	if($meeting_detail['room_id'] != 0)
 																	{
-																		unset($reasons[$meeting_detail['activity_id']]); //ravendra
+																		$edit_room_id = $meeting_detail['room_id'];
+																	}else{
+																		$edit_room_id = 0;
 																	}
-																	foreach($ts_array as $ts_id)
+																	
+																	if(!$this->isTimeslotReservedAdhoc($date,$meet_start_time,$meet_end_time,$reserved_rooms, $edit_room_id))
 																	{
-																		$reserved_timeslots[] = trim($ts_id);
+																		if($edit_room_id==0){
+																		$room_id = $this->searchRoomForGM($date,$meeting_detail['timeslot_id'],$meet_start_time,$meet_end_time,$reserved_rooms,$edit_room_id);									
+																		}else{ $room_id = $edit_room_id; }
+																		if($room_id > 0)
+																		{
+																			$room_name = $this->getRoomName($room_id);
+																			//allocate group meeting
+																			$activities_array = $this->makeArray($date,$cycle_id,$meeting_detail['activity_id'],$meeting_detail['name'],$meeting_detail['program_year_id'],$meeting_detail['area_id'],$meeting_detail['program_name'],$meeting_detail['teacher_id'],$meeting_detail['teacher_name'],$meeting_detail['teacher_type'],$room_id,$room_name,$meeting_detail['session_id'],$meeting_detail['session_name'],$meeting_detail['subject_id'],$meeting_detail['subject_name'],$meeting_detail['order_number'],$meeting_detail['reserved_flag'],$meeting_detail['special_activity_name']);
+																			//if already having an activity of low priority (recess) then wite a reason an overrite and then allocate the new activity 
+																			if(isset($reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]) && !empty($reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]) ){
+																			$reasons[$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time]['activity_id']] = "Some group meeting(High Priority that recess activity) has been allocated at the same time and in same room where other activities for this program are scheduled";
+																			}
+																			$reserved_array[$date][$i][$meet_start_time." - ".$meet_end_time] = $activities_array;
+																			$reserved_rooms[$date][$meet_start_time." - ".$meet_end_time][$i] = $room_id;
+																			$ts_array = explode(",",$meeting_detail['timeslot_id']);
+																			if(array_key_exists($meeting_detail['activity_id'],$reasons))
+																			{
+																				unset($reasons[$meeting_detail['activity_id']]); //ravendra
+																			}
+																			foreach($ts_array as $ts_id)
+																			{
+																				$reserved_timeslots[] = trim($ts_id);
+																			}
+																		}else{
+																			$reasons[$meeting_detail['activity_id']] = "Classroom is not available";
 																	}
-																}else{
-																	$reasons[$meeting_detail['activity_id']] = "Classroom is not available";
-															}
-															}else{
-																$reasons[$meeting_detail['activity_id']] = "Timeslot is not available for this activity";
-															}									
+																	}else{
+																		$reasons[$meeting_detail['activity_id']] = "Timeslot is not available for this activity";
+																	}									
+																}
 														}
 													}							
 												}
@@ -1267,7 +1270,7 @@ class Timetable extends Base {
 									}
 								}
 							}
-						}						
+						}
 					}
 				}
 			}
@@ -1394,7 +1397,7 @@ class Timetable extends Base {
 								if($room_id > 0)
 								{
 									$room_name = $this->getRoomName($room_id);
-									//allocate group meeting
+									//allocate adhoc
 									$activities_array = $this->makeArray($adh_date,$cycle_id,$adh_act_detail['activity_id'],$adh_act_detail['name'],$adh_act_detail['program_year_id'],$adh_act_detail['area_id'],$adh_act_detail['program_name'],$adh_act_detail['teacher_id'],$adh_act_detail['teacher_name'],$adh_act_detail['teacher_type'],$room_id,$room_name,$adh_act_detail['session_id'],$adh_act_detail['session_name'],$adh_act_detail['subject_id'],$adh_act_detail['subject_name'],$adh_act_detail['order_number'],$adh_act_detail['reserved_flag'],$adh_act_detail['special_activity_name']);
 									//if already having an activity of low priority (recess) then wite a reason an overrite and then allocate the new activity 
 									if(isset($reserved_array[$adh_date][$i][$adh_start_time." - ".$adh_end_time]) && !empty($reserved_array[$adh_date][$i][$adh_start_time." - ".$adh_end_time]) ){
@@ -1515,8 +1518,6 @@ class Timetable extends Base {
 			$err['system_error'] = 'System could not generate the timetable. Please check your data first';
 			return $err;
 		}
-		//print_r($reserved_array); die;
-		//print_r($reasons); die;	
 		return array($reserved_array,$reasons);		
 	}	
 
@@ -1693,8 +1694,6 @@ class Timetable extends Base {
 				}	
 			}					
 		}
-		//echo "<pre>";
-		//print_r($final_pgms); die;
 		return $final_pgms;
 	}
 
@@ -1726,7 +1725,6 @@ class Timetable extends Base {
 		while($row_holiday = $holiday_data->fetch_assoc()){
 			$holiday_date[] = $row_holiday['holiday_date'];
 		}
-		//print"<pre>";print_r($holiday_date);die;
 		return $holiday_date;
 	}
 	
@@ -1830,10 +1828,13 @@ class Timetable extends Base {
 	{
 		 if(in_array($needle, $haystack)) {
 			  return true;
+			  exit;
 		 }
 		 foreach($haystack as $element) {
-			  if(is_array($element) && $this->search_array($needle, $element))
+			  if(is_array($element) && $this->search_array($needle, $element)){
 				   return true;
+				   exit;
+				   }
 		 }
 	   return false;
 	}
@@ -2605,7 +2606,6 @@ class Timetable extends Base {
 																	}
 																	if($valid == count($teacher_array))
 																	{
-																		//print"<pre>";print_r($locations);die;
 																		foreach($teacher_array as $teacher_id)
 																		{
 																			if(array_key_exists($date,$locations) && array_key_exists($teacher_id,$locations[$date]))
@@ -2997,7 +2997,6 @@ class Timetable extends Base {
 				}
 			}
 		}
-		//print"<pre>";print_r($reserved_array);die;
 		return array($reserved_array,$program_session_count,$teachers_count,$teachers_sat,$reserved_areas,$reserved_subject_rooms,$locations,$reserved_teachers,$reserved_rooms,$unreserved_timeslots,$unreserved_times,$reasons,$programs_count,$counter,$recCounter);
 	}
 	
@@ -3080,7 +3079,6 @@ class Timetable extends Base {
 				//echo $ts_array['0']."---".$ts_array['1']."---".$start_time."---".$end_time;die("if");
 				if(($s_time >= $st && $s_time < $et) || ($e_time > $st && $e_time <= $et))
 				{
-					//print_r($reserved_teachers[$date][$key]);die("here");
 					if($this->search_array($teacher_id,$reserved_teachers[$date][$key]))
 					{					
 						return 1;
@@ -3450,15 +3448,6 @@ class Timetable extends Base {
 		$rid = '';
 		if(!empty($reserved_rooms))
 		{	
-			//print_r($reserved_rooms);die;
-			/*foreach($reserved_rooms as $key => $value)
-			{
-				foreach($value as $k=>$v)
-				{					
-					$new_reserved_rooms[$key] = $v;
-				}				
-			}*/
-			//print_r($new_reserved_rooms);die;			
 			foreach($reserved_rooms as $key => $value)
 			{
 				$timestamp = strtotime($key);
@@ -3573,7 +3562,6 @@ class Timetable extends Base {
 				
 			}				
 		}
-		print"<pre>";print_r($rooms);die;
 		return $rooms;
 	}
 	//Function to search room for GM(group meeting) on a particular date and timeslot
