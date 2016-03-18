@@ -10,7 +10,7 @@ $cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
 $module = isset($_POST['module'])?$_POST['module']:'';
 $addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
-$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name,tact.reserved_flag
+$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name, samap.special_activity_name, a.area_name,su.subject_name,s.case_number,s.technical_notes,s.description,r.room_name,tact.reserved_flag
 		 from timetable_detail td 
 		 left join teacher t on t.id = td.teacher_id 
 		 left join subject su on su.id = td.subject_id 
@@ -22,6 +22,7 @@ $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt
 		 left join room r on r.id = td.room_id 
 		 left join teacher_type tt on tt.id = t.teacher_type
 		 left join teacher_activity tact on tact.id = td.activity_id
+		 left join special_activity_mapping samap on samap.teacher_activity_id = td.activity_id
 		 where date between '".$fromTmDuratn."' and '".$toTmDuratn."'";
 		 if($teacher_id != '')
 		{
