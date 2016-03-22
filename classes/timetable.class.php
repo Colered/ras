@@ -552,6 +552,7 @@ class Timetable extends Base {
 																			}
 																			$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 																			$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
+																			$i++;
 																			$ts_array = explode(",",$adh_act_detail['timeslot_id']);
 																			if(array_key_exists($adh_act_detail['activity_id'],$reasons))
 																			{
@@ -1137,6 +1138,7 @@ class Timetable extends Base {
 													
 													$reserved_array[$date][$i][$adh_start_time." - ".$adh_end_time] = $activities_array;
 													$reserved_rooms[$date][$adh_start_time." - ".$adh_end_time][$i] = $room_id;
+													$i++;
 													$times_array = explode(",",$adh_act_detail['timeslot_id']);
 													$unreserved_timeslots = array_diff($unreserved_timeslots,$times_array);
 													$unreserved_times = $this->getTimeSlots($unreserved_timeslots);
@@ -1303,8 +1305,8 @@ class Timetable extends Base {
 							$adh_end_time = date("h:i A", strtotime($adh_start_time." + ".$duration." minutes"));
 							$time = explode(",",$adh_act_detail['timeslot_id']);
 							$ts_cnt = count(array_intersect($unreserved_timeslots, $time));
-							if($ts_cnt == count($time))
-							{
+							//if($ts_cnt == count($time))
+							//{
 								$room_id = $this->searchRoomForGM($adh_date,$adh_act_detail['timeslot_id'],$adh_start_time,$adh_end_time,$reserved_rooms,$edit_room_id);
 								if($room_id > 0)
 								{
@@ -1324,9 +1326,9 @@ class Timetable extends Base {
 									{
 										unset($reasons[$adh_act_detail['activity_id']]); //ravendra
 									}
-								}else{
-								$reasons[$adh_act_detail['activity_id']] = "Classroom is not available";
-							}
+								//}else{
+								//$reasons[$adh_act_detail['activity_id']] = "Classroom is not available";
+							//}
 							}else{
 								$reasons[$adh_act_detail['activity_id']] = "Timeslot is not available for this activity";
 							}
