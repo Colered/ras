@@ -690,5 +690,20 @@ class Teacher extends Base {
 		  return $row['teacher_name'];
 		}
     }
+	/*get teacher name by id*/
+	public function getMulTeacherNameByIDs($id)
+	{
+		$sql="SELECT teacher_name,email FROM teacher WHERE id IN ($id)";
+		$result = $this->conn->query($sql);
+		if(!$result->num_rows){
+			return '';
+		}else{
+			$teachName = array();
+			while($row_unit =$result->fetch_assoc()){
+				  $teachName[] = $row_unit['teacher_name'];
+			}
+		  	return implode(',', $teachName);
+		}
+    }
 	
 }

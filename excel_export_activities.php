@@ -10,7 +10,7 @@ $cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
 $module = isset($_POST['module'])?$_POST['module']:'';
 $addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 
-$teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name, samap.special_activity_name, a.area_name,su.subject_name,s.case_number,s.technical_notes,s.description,r.room_name,tact.reserved_flag
+$teacher_sql = "select t.id,td.date,td.timeslot, tact.teacher_id, tact.reason, t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name, samap.special_activity_name, a.area_name,su.subject_name,s.case_number,s.technical_notes,s.description,r.room_name,tact.reserved_flag
 		 from timetable_detail td 
 		 left join teacher t on t.id = td.teacher_id 
 		 left join subject su on su.id = td.subject_id 
@@ -99,6 +99,13 @@ while($row = mysqli_fetch_array($q_res))
 	if($row['timeslot'] !=""){
 		$startTime = explode('-', $row['timeslot']);
 	}
+	$objT = new Teacher();
+	if((isset($row['reason']) && ($row['reason']!="")) && (isset($row['teacher_id']))){
+		//get teacher names for multiple teacher Ids
+		$teacherNames = $objT->getMulTeacherNameByIDs($row['teacher_id']); 
+	}else{ //display single teacher name 
+		$teacherNames = $row['teacher_name'];
+	} 
 	$data[] = array("Date" => $row['date'],
 					"Start Time" => str_convert($startTime[0]),
 					"Timeslot" => str_convert($row['timeslot']),
@@ -108,7 +115,7 @@ while($row = mysqli_fetch_array($q_res))
 					"Subject" => str_convert($row['subject_name']),
 					"Session" => str_convert($row['session_name']),
 					"Special Activity Name" => str_convert($row['special_activity_name']),
-					"Teacher Name" => str_convert($row['teacher_name']),
+					"Teacher Name" => str_convert($teacherNames),
 					"Classroom" => str_convert($row['room_name']),
 					"Case No" => str_convert($row['case_number']),
 					"Technical Notes" => str_convert($row['technical_notes']),

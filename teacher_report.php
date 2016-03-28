@@ -311,7 +311,15 @@ function resetFilter(){
 								<td><?php echo $row['area_name'];?></td>
 								<td><?php echo $row['subject_name'];?></td>
 								<td><?php echo $row['session_name'];?></td>
-								<td><?php echo $row['teacher_name'];?></td>
+								<?php if((isset($row['reason']) && $row['reason']!="") && (isset($row['teacher_id']))){
+									//get teacher names for multiple teacher Ids
+									$teacherNames = $objT->getMulTeacherNameByIDs($row['teacher_id']); ?>
+									<td><?php echo $teacherNames;?></td>
+									
+								<?php }else{ //display single teacher name ?>
+									<td><?php echo $row['teacher_name'];?></td>
+								<?php } ?>
+								<?php /*?><td><?php echo $row['teacher_name'];?></td><?php */?>
 								<td><?php echo $row['teacher_type_name'];?></td>	
 								<td><?php echo $row['room_name'];?></td>
 								<td><?php echo $row['case_number'];?></td>

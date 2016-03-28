@@ -157,7 +157,7 @@ class Timetable extends Base {
 		 $cycle_id = implode(',' , $cycle_id);
 		 $module = implode(',' , $module);
 		 $special_activity_category = implode(',' , $special_activity_category);
-		 $teacher_sql = "select t.id,td.date,td.timeslot,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name,tact.reserved_flag, sam.special_activity_name, sam.special_activity_category
+		 $teacher_sql = "select t.id,td.date,td.timeslot, tact.teacher_id, tact.reason, t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name,p.company,u.name as unit,t.payrate,s.session_name,a.area_name,su.subject_name,s.case_number,s.technical_notes,r.room_name,tact.reserved_flag, sam.special_activity_name, sam.special_activity_category
 		 from timetable_detail td 
 		 left join teacher t on t.id = td.teacher_id 
 		 left join subject su on su.id = td.subject_id 
