@@ -1293,6 +1293,120 @@ class Programs extends Base {
 		}
 	}
 	
+	//function tto add/edit program cycles using calendar
+    public function addEditCyclesUsingCal()
+    {
+        $edit_id = base64_decode($_POST['programId']);
+        $slctProgram_id = $_POST['slctProgram'];
+        $slctNumcycle = $_POST['slctNumcycle'];
+        $preNumCycle = ($_POST['preNumCycle'] > 0) ? $_POST['preNumCycle'] : 0;
+        if($edit_id==$slctProgram_id)
+        {
+			if($slctNumcycle==$preNumCycle){
+				for($i=1; $i<=$slctNumcycle; $i++){
+				   $cycle_edit_id = $_POST['preCycleId'.$i];
+				   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+				   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+						$sql = "update cycle set
+								 no_of_cycle='".$slctNumcycle."',
+								 start_week='".$start_date."',
+								 end_week='".$end_date."',
+								 occurrence = '',
+								 week1='',
+								 week2='',
+								 date_update=now() WHERE id='".$cycle_edit_id."'";
+						$rel = $this->conn->query($sql);
+				}
+			  }else if($slctNumcycle < $preNumCycle){
+				for($j=1; $j<=$preNumCycle; $j++){
+					if($j <= $slctNumcycle)
+					{
+					   $cycle_edit_id = $_POST['preCycleId'.$j];
+					   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$j]));
+					   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$j]));
+						$sql = "update cycle set
+									 no_of_cycle='".$slctNumcycle."',
+									 start_week='".$start_date."',
+									 end_week='".$end_date."',
+									 occurrence = '',
+									 week1='',
+									 week2='',
+									 date_update=now() WHERE id='".$cycle_edit_id."'";
+						$rel = $this->conn->query($sql);
+					}else{
+						 $cycle_edit_id = $_POST['preCycleId'.$j];
+						 // delete all cycle which are not need
+						 $py_rel =  $this->conn->query("SELECT id FROM cycle WHERE id='".$cycle_edit_id."'");
+						 $py_row_cnt = $py_rel->num_rows;
+						 if($py_row_cnt > 0){
+							  $row = $py_rel->fetch_assoc();
+							  $this->deleteAssociateCycles($row['id']);
+						 }
+						//delete program exception as well
+						$query="delete from program_cycle_exception where program_year_id='".$slctProgram_id."' AND cycle_id='".$j."'";
+						$qry = $this->conn->query($query);
+						//delete program additional days as well
+						$queryAdditional="delete from program_cycle_additional_day_time where program_year_id='".$slctProgram_id."' AND cycle_id='".$j."'";
+						$qryAdnl = $this->conn->query($queryAdditional);
+					}
+				}
+			  }else if($slctNumcycle > $preNumCycle){
+				 for($i=1; $i<=$slctNumcycle; $i++){
+					 if($i<=$preNumCycle)
+					 {
+						   $cycle_edit_id = $_POST['preCycleId'.$i];
+						   $start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+						   $end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+								$sql = "update cycle set
+										 no_of_cycle='".$slctNumcycle."',
+										 start_week='".$start_date."',
+										 end_week='".$end_date."',
+										 occurrence = '',
+										 week1='',
+										 week2='',
+										 date_update=now() WHERE id='".$cycle_edit_id."'";
+								$rel = $this->conn->query($sql);
+					 }else{
+						$start_date = date("Y-m-d", strtotime($_POST['startweek'.$i]));
+						$end_date = date("Y-m-d", strtotime($_POST['endweek'.$i]));
+						$sql = "INSERT INTO cycle (program_year_id, start_week, end_week, occurrence, week1, week2, date_add, date_update) VALUES ('".$slctProgram_id."', '".$start_date."', '".$end_date."', '', '','', now(), now())";
+						$rel = $this->conn->query($sql);
+					 }
+				 }
+			  }
+			  //finally set all the similar program with current selected number of cycles
+			$sql = "update cycle set no_of_cycle='".$slctNumcycle."' WHERE program_year_id='".$slctProgram_id."'";
+			$rel = $this->conn->query($sql);
+			$message="Record has been saved successfully";
+			$_SESSION['succ_msg'] = $message;
+			return 0;
+		}else{
+			$message="Record could not be saved. Please Try again.";
+			$_SESSION['error_msg'] = $message;
+			return 1;
+		}
+    }
 	
+	//get the data of all availability through calendar for a program.
+	public function getCalAvailabillityDatabyProgId($programId){
+		$finalDataArr = array();
+		if($programId!="" && $programId>0){
+			$query="select dta.id, dta.program_year_id, dta.day, dta.template_id, dst.color_identifier_code from day_template_association dta 
+			LEFT JOIN day_schedule_template as dst
+			ON dst.id = dta.template_id
+			where dta.program_year_id='".$programId."'";
+			$arrDays = $arrColorCode = $arrtemplateIds = array();
+			$result= $this->conn->query($query);		
+			while($data = $result->fetch_assoc()){
+				$arrDays[] = $data['day'];
+				$arrColorCode[] = $data['color_identifier_code'];
+				$arrtemplateIds[] = $data['template_id'];
+			}
+			$finalDataArr[] = $arrDays;
+			$finalDataArr[] = $arrColorCode;
+			$finalDataArr[] = $arrtemplateIds;
+		}
+		return $finalDataArr;
+	}
 }
 

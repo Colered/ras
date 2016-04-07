@@ -117,6 +117,26 @@ class Timeslot extends Base {
 		}
 		return $tslot_dropDwn;
 	}
+	
+	public function getTimeSlotStartDateDropDwnNew(){
+		$tslot_dropDwn = '';
+		$slqTS="SELECT id, start_time FROM timeslot";
+		$relTS = mysqli_query($this->conn, $slqTS);
+		while($tsdata= mysqli_fetch_array($relTS)){
+			$tslot_dropDwn .= '<option value="'.$tsdata['start_time'].'">'.$tsdata['start_time'].'</option>';
+		}
+		return $tslot_dropDwn;
+	}
+	//function to get time slot End date
+	public function getTimeSlotEndDateDropDwn(){
+		$tslot_dropDwn = '';
+		$slqTS="SELECT id, end_time FROM timeslot";
+		$relTS = mysqli_query($this->conn, $slqTS);
+		while($tsdata= mysqli_fetch_array($relTS)){
+			$tslot_dropDwn .= '<option value="'.$tsdata['end_time'].'">'.$tsdata['end_time'].'</option>';
+		}
+		return $tslot_dropDwn;
+	}
 	public function getTSbyIDsForProgramAvailbility($tsids) {
 			$tsbyids_query="select * from timeslot where id IN $tsids; ";
 			$q_res = mysqli_query($this->conn, $tsbyids_query);

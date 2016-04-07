@@ -9,7 +9,7 @@ $cycle_id = isset($_POST['cycle'])?$_POST['cycle']:'';
 $module = isset($_POST['module'])?$_POST['module']:'';
 $addSpecialAct = isset($_POST['addSpecialAct'])?$_POST['addSpecialAct']:'';
 //$q_res= $objTime->getTeachersActivityInRange($teacher_id,$program_id,$area_id,$profesor_id,$cycle_id,$module,$addSpecialAct);
-$teacher_sql = "select t.id,ta.id as act_id,ta.cycle_id,ta.name as act_name,ta.act_date,ta.timeslot_id,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name, p.company, u.name as unit,t.payrate, s.session_name, a.area_name, su.subject_name, su.subject_code, s.case_number, s.technical_notes, s.description, r.room_name, sam.special_activity_name, ta.program_year_id from teacher_activity ta 
+$teacher_sql = "select t.id,ta.id as act_id,ta.cycle_id,ta.name as act_name,ta.act_date,ta.timeslot_id,t.teacher_name,t.teacher_type,tt.teacher_type_name,py.id as program_id,py.name, p.company, u.name as unit,t.payrate, s.session_name, s.order_number, a.area_name, su.subject_name, su.subject_code, s.case_number, s.technical_notes, s.description, r.room_name, sam.special_activity_name, ta.program_year_id from teacher_activity ta 
 		left join teacher t on t.id = ta.teacher_id 
 		left join subject su on su.id = ta.subject_id 
 		left join program_years py on py.id = ta.program_year_id 
@@ -112,7 +112,7 @@ while($row = mysqli_fetch_array($q_res))
 	$objPHPExcel->getActiveSheet()->SetCellValue('C'.$count, $row['subject_name']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('D'.$count, $row['subject_code']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('E'.$count, $row['session_name']);
-	$objPHPExcel->getActiveSheet()->SetCellValue('F'.$count, $row['session_name']);
+	$objPHPExcel->getActiveSheet()->SetCellValue('F'.$count, $row['order_number']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('G'.$count, $duration);
 	$objPHPExcel->getActiveSheet()->SetCellValue('H'.$count, $row['teacher_name']);
 	$objPHPExcel->getActiveSheet()->SetCellValue('I'.$count, $row['room_name']);

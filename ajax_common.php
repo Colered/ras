@@ -2703,5 +2703,24 @@ switch ($codeBlock) {
 					echo 0;
 				}	
 	 break;
+	 case "del_avail_template":
+		if(isset($_POST['avail_template_id']) && $_POST['avail_template_id']!=""){
+			//check if the tempplate is not being used for any date
+			$query = "select id from day_template_association where template_id = '".$_POST['avail_template_id']."'";
+			$q_res = mysqli_query($db, $query);
+			if(mysqli_affected_rows($db)<=0)
+			{
+				//delete template usages
+				$delUsages="delete from day_template_timeslots_usages where template_id='".$_POST['avail_template_id']."'";
+				$qry = mysqli_query($db, $delUsages);
+				//delete the template
+				$delRule="delete from day_schedule_template where id='".$_POST['avail_template_id']."'";
+				$qry = mysqli_query($db, $delRule);
+				echo 1;
+			}else{
+				echo 0;
+			}
+	}
+	break;
 }
 ?>

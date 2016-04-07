@@ -70,4 +70,14 @@ class Holidays extends Base {
 				return 0;
 			}
     }
+	/*function for listing Area*/
+	public function getHolidaysDates() {
+			$area_query="select holiday_date from holidays order by holiday_date ASC";
+			$q_res = mysqli_query($this->conn, $area_query);
+			$arrDays = array();
+			while($data = $q_res->fetch_assoc()){
+				$arrDays[] = $data['holiday_date'];
+			}
+			return $arrDays;
+	}
 }

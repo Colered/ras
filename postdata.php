@@ -490,7 +490,6 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			 }
 
 		 }
-
 		break;
 		case "forgotPwd":
 		 if(isset($_POST['email']) && $_POST['email']!=""){
@@ -691,6 +690,66 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 			$resp = $obj->createSessions();
 			}
 			header('Location: subjects.php?edit='.$_POST['subIdEncrypt'].'&rule=1');
+		break;
+		case "addCalAvailRule":
+			//echo "<pre>";
+			//print_r($_POST); die;
+			$total = 10;
+			if(isset($_POST['totalTsOption']) && $_POST['totalTsOption']!=""){
+				$total = $_POST['totalTsOption'];
+			}
+			if($_POST['templatename']!="" && $_POST['txtAColor'] != "")
+			{
+				$templatename = $_POST['templatename'];
+				$txtAColor = $_POST['txtAColor'];
+				$objSpcAct=new SpecialActivity();
+				//add sched template detail
+				$addTemplateId = $objSpcAct->addCalTemplate($templatename, $txtAColor);
+				//add the associated timeslots and detials
+				if($addTemplateId!=0){
+					for($i=1; $i<=$total; $i++){
+						//check if selected valued are non empty and start time is less than the end time then insert
+						if((isset($_POST['st_tslot'.$i]) && $_POST['st_tslot'.$i] !="") && (isset($_POST['end_tslot_id'.$i]) && $_POST['end_tslot_id'.$i] !="") && (isset($_POST['usage_id'.$i]) && $_POST['usage_id'.$i] !="") && ($_POST['st_tslot'.$i] < $_POST['end_tslot_id'.$i])){
+							$resp = $objSpcAct->addCalAvailRule( $_POST['st_tslot'.$i], $_POST['end_tslot_id'.$i], $_POST['usage_id'.$i], $addTemplateId);
+						}
+					}
+				}
+			}else{
+				//return back data to the form
+					echo "<html><head></head><body>";
+					echo "<form name='addingRule' method='post' action='calendar_availability.php?edit=".$_POST['programId']."'>";
+					reset($_POST);
+					while(list($iname,$ival) = each($_POST)) {
+						echo "<input type='hidden' name='$iname' value='$ival'>";
+					}
+					echo "</form>";
+					echo "</body></html>";
+					echo"<script language='JavaScript'>function submit_back(){ window.document.addingRule.submit();}submit_back();</script>";
+					exit();
+					//end return back
+			
+			}
+			header('Location: calendar_availability.php?edit='.$_POST['programId']);
+		break;
+		
+		case "add_edit_cycles_using_cal":
+		 if(isset($_POST['programId']) && $_POST['programId']!=""){
+			$programId = base64_decode($_POST['programId']);
+			$programName = "";
+			$objProgram = new Programs();
+			$programName = $objProgram->getProgramYearName($programId);
+			$totNumCycle = $_POST['slctNumcycle'];
+			//$ruleAppliedId = $_POST['ruleval'];
+			$selectedDays = $_POST['DaysSelect'];
+			//add-edit program cycle data
+			$programsObj = new Programs();
+			$programsObj->addEditCyclesUsingCal();
+			//insert data in day_template_association table
+			$objSpecialActivity = new SpecialActivity();
+			$resp = $objSpecialActivity->addAssociation($programId, $selectedDays, $programName);
+			$_SESSION['succ_msg'] = "Data has been saved successfully";
+			header('Location: calendar_availability.php?edit='.$_POST['programId']);
+		 }
 		break;
 	}
 }

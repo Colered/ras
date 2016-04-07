@@ -291,7 +291,7 @@ function activityFilter()
 										$actUnallocatnReason[] = "No normal session/activity has been allocated bafore this recess activity on the selected day";
 								}
 								//check if program is available on the given date and time
-								if(($row['reason']=="") && (!in_array($row['id'], $actIdWithAssignReason)) && ($row['program_year_id'] !="") && ($row['act_date'] !="" && $row['timeslot_id']!="")){
+								if(($row['reason']=="") && (!in_array($row['id'], $actIdWithAssignReason)) && ($row['program_year_id'] !=0) && ($row['program_year_id'] !="") && ($row['act_date'] !="" && $row['timeslot_id']!="" && $row['timeslot_id']!=0)){
 										$finalDate  = str_replace('-', '', $row['act_date']);
 										$getProgramAvailability = $objPrograms->getAvailabilityOfProgram($row['program_year_id'], $finalDate, $row['timeslot_id']);
 										if(count($getProgramAvailability)==0){

@@ -532,13 +532,16 @@ function deleteProgram($id){
 function show_hide_cycle(selval){
 	if(selval==1){
 	  $('#firstCycle').show();
+	  //$('#cycle1').show();
 	}else if(selval==2){
 	  $('#firstCycle').show();
 	  $('#secondCycle').show();
+	   //$('#cycle1, #cycle2').show();
 	}else if(selval==3){
 	  $('#firstCycle').show();
 	  $('#secondCycle').show();
 	  $('#thirdCycle').show();
+	 // $('#cycle1, #cycle2, #cycle3').show();
 	}
 }
 //Ajax delete the room function 
@@ -2006,6 +2009,10 @@ function stripslashes(str) {
 function changeExceptionData(pid){
 	window.location.href = 'program_cycles.php?edit='+window.btoa(pid);
 }
+function changeExceptionDataCal(pid){
+	window.location.href = 'calendar_availability.php?edit='+window.btoa(pid);
+	//$('#programId').val(pid);
+}
 //function do add exception date in program cycles
 $(function() {
 	var start_date1 = $('#program_start_date').val();
@@ -2030,6 +2037,15 @@ $(function() {
 			$("#exceptnProgAval1").datepicker("option", "minDate", selectedDate);
 			$("#additionalDayCal1").datepicker("option", "minDate", selectedDate);			
 			$('#exceptnProgAval1').val('');
+			
+			//ravin
+			if($('#startweek1').val() !="" && $('#endweek1').val() !=""){
+				$('#slctNumcycleCount').val($('#slctNumCycle').val());
+				$('#startweek1Post').val($('#startweek1').val());
+				$('#endweek1Post').val($('#endweek1').val());
+				//$('#cycle1').show();
+				$( "#addingRule" ).submit();
+			}
 		}
 	});
 	$("#endweek1").datepicker({
@@ -2047,6 +2063,14 @@ $(function() {
 			$("#exceptnProgAval1").datepicker("option", "maxDate", selectedDate);
 			$("#additionalDayCal1").datepicker("option", "maxDate", selectedDate);
 			$('#exceptnProgAval1').val('');
+			//ravin
+			if($('#startweek1').val() !="" && $('#endweek1').val() !=""){
+				$('#slctNumcycleCount').val($('#slctNumCycle').val());
+				$('#startweek1Post').val($('#startweek1').val());
+				$('#endweek1Post').val($('#endweek1').val());
+				//$('#cycle1').show();
+				$( "#addingRule" ).submit();
+			}
 		}
 	});
 	$("#exceptnProgAval1, #additionalDayCal1").datepicker({
@@ -2084,6 +2108,14 @@ $(function() {
 			$("#exceptnProgAval2").datepicker("option", "minDate", selectedDate);
 			$("#additionalDayCal2").datepicker("option", "minDate", selectedDate);
 			$('#exceptnProgAval2').val('');
+			
+			if($('#startweek2').val() !="" && $('#endweek2').val() !=""){
+				$('#slctNumcycleCount').val($('#slctNumCycle').val());
+				$('#startweek2Post').val($('#startweek2').val());
+				$('#endweek2Post').val($('#endweek2').val());
+				//$('#cycle1').show();
+				$( "#addingRule" ).submit();
+			}
 		}
 	});
 	$("#endweek2").datepicker({
@@ -2100,6 +2132,13 @@ $(function() {
 			$("#exceptnProgAval2").datepicker("option", "maxDate", selectedDate);
 			$("#additionalDayCal2").datepicker("option", "maxDate", selectedDate);
 			$('#exceptnProgAval2').val('');
+			if($('#startweek2').val() !="" && $('#endweek2').val() !=""){
+				$('#slctNumcycleCount').val($('#slctNumCycle').val());
+				$('#startweek2Post').val($('#startweek2').val());
+				$('#endweek2Post').val($('#endweek2').val());
+				//$('#cycle1').show();
+				$( "#addingRule" ).submit();
+			}
 		}
 	});
 	$("#exceptnProgAval2, #additionalDayCal2").datepicker({
@@ -2129,6 +2168,13 @@ $(function() {
 			$("#additionalDayCal3").datepicker("option", "minDate", selectedDate);
 			//$("#endweek3").datepicker("option", "maxDate", end_date1);
 			$('#exceptnProgAval3').val('');
+			if($('#startweek3').val() !="" && $('#endweek3').val() !=""){
+				$('#slctNumcycleCount').val($('#slctNumCycle').val());
+				$('#startweek3Post').val($('#startweek3').val());
+				$('#endweek3Post').val($('#endweek3').val());
+				//$('#cycle1').show();
+				$( "#addingRule" ).submit();
+			}
 		}
 	});
 	$("#endweek3").datepicker({
@@ -2142,6 +2188,13 @@ $(function() {
 			$("#exceptnProgAval3").datepicker("option", "maxDate", selectedDate);
 			$("#additionalDayCal3").datepicker("option", "maxDate", selectedDate);
 			$('#exceptnProgAval3').val('');
+			if($('#startweek3').val() !="" && $('#endweek3').val() !=""){
+				$('#slctNumcycleCount').val($('#slctNumCycle').val());
+				$('#startweek3Post').val($('#startweek3').val());
+				$('#endweek3Post').val($('#endweek3').val());
+				//$('#cycle1').show();
+				$( "#addingRule" ).submit();
+			}
 		}
 	});
 	$("#exceptnProgAval3, #additionalDayCal3").datepicker({
@@ -4448,3 +4501,65 @@ function forceSwap2Act(){
 	}
 }
 
+function deleteAvailTemplate($id, $programId){
+	if($id==""){
+		alert("Please select a template to delete");
+		return false;
+	}else if(confirm("Are you sure you want to delete the Template?")) {
+	    $.ajax({
+                type: "POST",
+                url: "ajax_common.php",
+                data: {
+					'avail_template_id': $id,
+					'codeBlock': 'del_avail_template',
+				},
+                success: function($succ){
+					if($succ==1){
+						if($programId==0){
+                       		window.location.href = 'calendar_availability.php';
+						}else{
+							window.location.href = 'calendar_availability.php?edit='+$programId;
+						}
+					}else{
+						alert("Cannot delete the selected Template, as it is associated to some dates of a program.");
+					}
+                }
+        });
+    }
+    return false;
+}
+function resetcycles(){
+		$('#slctNumcycleCount').val($('#slctNumCycle').val());
+		if($('#slctNumCycle').val() == 1){
+			$('#startweek1Post').val($('#startweek1').val());
+			$('#endweek1Post').val($('#endweek1').val());
+			$('#startweek2Post').val('');
+			$('#endweek2Post').val('');
+			$('#startweek3Post').val('');
+			$('#endweek3Post').val('');
+		}else if($('#slctNumCycle').val() == 2){
+			$('#startweek1Post').val($('#startweek1').val());
+			$('#endweek1Post').val($('#endweek1').val());
+			$('#startweek2Post').val($('#startweek2').val());
+			$('#endweek2Post').val($('#endweek2').val());
+			$('#startweek3Post').val('');
+			$('#endweek3Post').val('');
+		}else if($('#slctNumCycle').val() == 3){
+			$('#startweek1Post').val($('#startweek1').val());
+			$('#endweek1Post').val($('#endweek1').val());
+			$('#startweek2Post').val($('#startweek2').val());
+			$('#endweek2Post').val($('#endweek2').val());
+			$('#startweek3Post').val($('#startweek3').val());
+			$('#endweek3Post').val($('#endweek3').val());
+		}
+			$( "#addingRule" ).submit();
+	}
+function rgb2hex(rgb) {
+    if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+
+    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    function hex(x) {
+        return ("0" + parseInt(x).toString(16)).slice(-2);
+    }
+    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+}

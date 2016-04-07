@@ -542,5 +542,197 @@ class SpecialActivity extends Base {
 		$result1 = $result->fetch_assoc();
 		return $result1;				
 	}
+	public function addCalTemplate($templatename, $txtAColor){
+				$currentDateTime = date("Y-m-d H:i:s");
+				$last_id = 0;
+				//check if template with same name already exist.
+				$sql_pgm_exp = $this->conn->query("select id from day_schedule_template where template_name='".$templatename."'");
+				//echo mysqli_num_rows($sql_pgm_exp); die;
+				if(mysqli_num_rows($sql_pgm_exp) == 0)
+				{
+					$result = mysqli_query($this->conn, "INSERT INTO day_schedule_template(template_name, color_identifier_code, date_add, date_update) VALUES ('".$templatename."', '".$txtAColor."','".$currentDateTime."','".$currentDateTime."')");
+					$last_id = mysqli_insert_id($this->conn);
+				}
+				return $last_id;		
+	}
+	public function addCalAvailRule($st_tslot, $end_tslot_id, $usage_id, $addTemplateId){
+				$currentDateTime = date("Y-m-d H:i:s");
+				$used_timeslot_ids = 1;
+				if($addTemplateId!=0){
+				//check if template with same name already exist.
+				$sql_pgm_exp = $this->conn->query("select id from day_template_timeslots_usages where template_id='".$addTemplateId."' AND sch_start_time = '".$st_tslot."' AND sch_end_time = '".$end_tslot_id."' AND usage_name = '".$usage_id."'");
+				if(mysqli_num_rows($sql_pgm_exp) == 0)
+				{
+					$result_mapping = mysqli_query($this->conn, "INSERT INTO day_template_timeslots_usages(template_id, sch_start_time, sch_end_time, used_timeslot_ids	, usage_id, usage_name, date_add, date_update) VALUES ('".$addTemplateId."','".$st_tslot."','".$end_tslot_id."','".$used_timeslot_ids."', '', '".$usage_id."','".$currentDateTime."','".$currentDateTime."') ");
+				}else{
+					//update the record
+				}
+				}
+	}
+	public function getAllDayTemplate(){
+				$sql = "SELECT dst.id, dst.template_name, dst.color_identifier_code FROM day_schedule_template dst";
+				$resultTemplate = $this->conn->query($sql);
+				return $resultTemplate;			
+	}
+	public function getAllDayTempTSUsages($templateId){
+				$sql = "SELECT sch_start_time, sch_end_time, used_timeslot_ids, usage_name FROM day_template_timeslots_usages WHERE template_id='".$templateId."'";
+				$resultUsage = $this->conn->query($sql);
+				return $resultUsage;			
+	}
+	
+	public function addAssociation($programId, $selectedDays, $programName){
+				//get all timeslots used in a template using template id
+				$idtemplate= array();
+				$currentDateTime = date("Y-m-d H:i:s");
+				$sql = "SELECT id FROM day_schedule_template order by id ASC"; 
+				$resultTemplate = $this->conn->query($sql);
+				while($templateData = $resultTemplate->fetch_assoc()){
+					$idtemplate[] = $templateData['id'];
+				}
+				$allAssocbyId = array();
+				foreach($idtemplate as $key){
+					$sqlAssoc = "SELECT template_id, sch_start_time, sch_end_time, used_timeslot_ids, usage_name FROM day_template_timeslots_usages where template_id = '".$key."'";
+					$resultTemplateData = $this->conn->query($sqlAssoc);
+					while($assocData = $resultTemplateData->fetch_assoc()){
+						$allAssocbyId[$key][] = $assocData;
+					}
+				}
+				//end
+				//get all day_template_association for the selected program in an array, match it with the new array, remove the deleted entries , update matched entries and add new entried
+				$allOldUsedDates = $allNewUsedDates = array();
+				$sqldate = "SELECT day FROM day_template_association where program_year_id ='".$programId."'"; 
+				$resultDatesData = $this->conn->query($sqldate);
+				while($allDatesData = $resultDatesData->fetch_assoc()){
+					$allOldUsedDates[] = $allDatesData['day'];
+				}
+				//get all program availability in program_cycle_additional_day_time table if doesnt exist match it with the new array, remove the deleted entries , update matched entries and add new entried
+				$objTimeslot = new Timeslot();
+				for($i=0; $i<count($selectedDays); $i++){
+					$daytemp = explode('--', $selectedDays[$i]);  //Cy1--2016-03-11__1
+					$cycleNo = substr($daytemp[0], 2);
+					$templateIds = explode('__', $daytemp[1]);
+					$daydate = $templateIds[0];
+					$allNewUsedDates[] = $daydate;
+					$ruleAppliedId = $templateIds[1];
+					//get all activities of the above rule id
+					$detailRule = $allAssocbyId[$ruleAppliedId];
+					$alltimeslots = $allRecessTs = $allGroupMeetTs = array();
+					foreach($detailRule as $templateData){
+						$alltimeslots[] = $templateData['sch_start_time'].'-'.$templateData['sch_end_time'];
+						//collect timeslots for recess
+						if(($templateData['usage_name']=='Recess') || ($templateData['usage_name']=='Lunch')){
+							$allRecessTs[] = $templateData['sch_start_time'].'-'.$templateData['sch_end_time'];
+						}
+						if($templateData['usage_name']=='Group-Meeting'){
+							$allGroupMeetTs[] = $templateData['sch_start_time'].'-'.$templateData['sch_end_time'];
+						}
+					}
+					
+					$alltimeslotsUnique = array_unique($alltimeslots);
+					$allTimeslotsIds = implode(',',$alltimeslotsUnique);
+					$actualTSIdAvailable  = $objTimeslot->getTimeslotIds($allTimeslotsIds);
+					//add association if doesnt exist
+					if(in_array($daydate, $allOldUsedDates)){
+						//update the record
+						$resultAssoc = mysqli_query($this->conn, "UPDATE day_template_association set template_id='".$ruleAppliedId."', date_update=".$currentDateTime."' WHERE day='".$daydate."' and 	program_year_id='".$programId."'");
+					}else{
+						//add the record
+						$resultAssoc = mysqli_query($this->conn, "INSERT INTO day_template_association(program_year_id, day, template_id, date_add, date_update) VALUES ('".$programId."', '".$daydate."', '".$ruleAppliedId."', '".$currentDateTime."','".$currentDateTime."')");
+					}
+					
+					
+					//add program availability in program_cycle_additional_day_time table if doesnt exist
+					$sql_chkAddDayExist = $this->conn->query("select id from program_cycle_additional_day_time where program_year_id='".$programId."' AND additional_date = '".$daydate."'");
+					if(mysqli_num_rows($sql_chkAddDayExist) == 0)
+					{
+						//add new record
+						$resultProgAvail = mysqli_query($this->conn, "INSERT INTO program_cycle_additional_day_time(program_year_id, cycle_id, additional_date, timeslot_id, actual_timeslot_id, date_add, date_update) VALUES ('".$programId."', '".$cycleNo."', '".$daydate."', '".$allTimeslotsIds."', '".$actualTSIdAvailable."', '".$currentDateTime."','".$currentDateTime."')");
+					}else{ //nothing to update data already exists
+						//update record
+						$resultUpdatePCADT = mysqli_query($this->conn, "UPDATE program_cycle_additional_day_time set timeslot_id='".$allTimeslotsIds."', actual_timeslot_id='".$actualTSIdAvailable."', date_update=".$currentDateTime."' WHERE additional_date='".$daydate."' and program_year_id='".$programId."'");
+					}
+					
+					//add recess activity and group meeting into teacher_activity and special_activity_mapping
+					//get the name of last activity
+					$resultTeachAct = $this->conn->query("SELECT name FROM teacher_activity ORDER BY id DESC LIMIT 1");
+					$dRow = $resultTeachAct->fetch_assoc();
+					$actCnt = substr($dRow['name'],1);
+					
+					if(count($allRecessTs)>0){
+					//insert recess if not already exists
+						for($j=0; $j<count($allRecessTs); $j++){
+							$reserveFlag = 3;
+							$actualTSIdAvailable  = $objTimeslot->getTimeslotIds($allRecessTs[$j]);
+							 
+							$startTime = explode(',', $actualTSIdAvailable);
+							$actStartTime = $startTime[0];
+							$duration = count($startTime)*15;
+							$sql_chkTeachrActExist = $this->conn->query("select id from teacher_activity where program_year_id = '".$programId."' AND timeslot_id='".$actualTSIdAvailable."' AND start_time = '".$actStartTime."' AND act_date = '".$daydate."' AND reserved_flag = '".$reserveFlag."'");
+							if(mysqli_num_rows($sql_chkTeachrActExist) == 0)
+							{
+								//insert data as it doesnt exists
+								$actName = 'A'.($actCnt+1);
+								$resultTeacherActivityRec = mysqli_query($this->conn, "INSERT INTO teacher_activity(name, program_year_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update) VALUES ('".$actName."', '".$programId."', '".$actualTSIdAvailable."', '".$actStartTime."', '".$daydate."', '".$reserveFlag."', '".$currentDateTime."','".$currentDateTime."')");
+								$lastIdActRecess = mysqli_insert_id($this->conn);
+								//special_activity_mapping
+								$resultSpecialActivityRec = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_type, duration, special_activity_name, date_add, date_update) VALUES ('".$lastIdActRecess."', '".$reserveFlag."', '".$duration."', '".$programName."-Recess', '".$currentDateTime."','".$currentDateTime."')");
+								$actCnt = $actCnt+1;
+							}
+						}
+					}
+					//print_r($allGroupMeetTs); die;
+					if(count($allGroupMeetTs)>0){
+					//insert group meeting if not already exists
+						for($k=0; $k<count($allGroupMeetTs); $k++){
+							$reserveFlag = 4;
+							$actualTSIdAvailable  = $objTimeslot->getTimeslotIds($allGroupMeetTs[$k]);
+							$startTime = explode(',', $actualTSIdAvailable);
+							$actStartTime = $startTime[0];
+							$durationRec = count($startTime)*15;
+							$sql_chkTeachrActExist = $this->conn->query("select id from teacher_activity where program_year_id = '".$programId."' AND timeslot_id='".$actualTSIdAvailable."' AND start_time = '".$actStartTime."' AND act_date = '".$daydate."' AND reserved_flag = '".$reserveFlag."'");
+							if(mysqli_num_rows($sql_chkTeachrActExist) == 0)
+							{
+								$actName = 'A'.($actCnt+1);
+								$resultTeacherActivityGM = mysqli_query($this->conn, "INSERT INTO teacher_activity(name, program_year_id, timeslot_id, start_time, act_date, reserved_flag, date_add, date_update) VALUES ('".$actName."', '".$programId."', '".$actualTSIdAvailable."', '".$actStartTime."', '".$daydate."', '".$reserveFlag."', '".$currentDateTime."','".$currentDateTime."')");
+								$lastIdActGM = mysqli_insert_id($this->conn);
+								//special_activity_mapping
+								$resultSpecialActivityGM = mysqli_query($this->conn, "INSERT INTO special_activity_mapping(teacher_activity_id, special_activity_type, duration, special_activity_name, date_add, date_update) VALUES ('".$lastIdActGM."', '".$reserveFlag."', '".$durationRec."', '".$programName."-Group Meeting', '".$currentDateTime."','".$currentDateTime."')");
+								$actCnt = $actCnt+1;
+							}
+						}
+					}
+				}
+				//delete the old records which has been deselected
+					$arrDelDates = array();
+					$arrDelDates = array_diff($allOldUsedDates, $allNewUsedDates);
+					//echo "<pre>";
+					//print_r($arrDelDates); 
+					if(count($arrDelDates) >0){
+						foreach($arrDelDates as $daydate){
+							//delete all the activities from different tables for the deleted date on selected program
+							//echo "DELETE from day_template_association where program_year_id ='".$programId."' AND day ='".$daydate."'";
+							$resultAssocDel = mysqli_query($this->conn, "DELETE from day_template_association where program_year_id ='".$programId."' AND day ='".$daydate."'");
+							
+							//echo "DELETE from program_cycle_additional_day_time where program_year_id ='".$programId."' AND additional_date = '".$daydate."' AND timeslot_id = '".$allTimeslotsIds."'";
+							$resultPCADDel = mysqli_query($this->conn, "DELETE from program_cycle_additional_day_time where program_year_id ='".$programId."' AND additional_date = '".$daydate."'");
+							
+							/*$resultTeaActDel = $this->conn->query("DELETE from teacher_activity where program_year_id = '".$programId."' AND timeslot_id='".$actualTSIdAvailable."' AND start_time = '".$actStartTime."' AND act_date = '".$daydate."' AND reserved_flag IN(3, 4)");*/
+							/*echo "DELETE ta.*, sam.* 
+												FROM teacher_activity ta 
+												LEFT JOIN special_activity_mapping sam 
+												ON sam.teacher_activity_id = ta.id 
+												where ta.program_year_id = '".$programId."' AND ta.timeslot_id='".$actualTSIdAvailable."' AND ta.start_time = '".$actStartTime."' AND ta.act_date = '".$daydate."' AND ta.reserved_flag IN(3, 4)"; */
+							$resultTeaActDel = mysqli_query($this->conn, "DELETE ta.*, sam.* 
+												FROM teacher_activity ta 
+												LEFT JOIN special_activity_mapping sam 
+												ON sam.teacher_activity_id = ta.id 
+												where ta.program_year_id = '".$programId."' AND ta.act_date = '".$daydate."' AND ta.reserved_flag IN(3, 4)");
+						 
+							/*$resultTeaActDel = $this->conn->query("DELETE from special_activity_mapping where program_year_id = '".$programId."' AND timeslot_id='".$actualTSIdAvailable."' AND start_time = '".$actStartTime."' AND act_date = '".$daydate."' AND reserved_flag IN(3, 4)");*/
+						}
+					}
+					 //die;
+				return 1;
+	}
 	
 }

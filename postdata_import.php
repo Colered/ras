@@ -775,16 +775,16 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				$from = date("Y-m-d",strtotime($_POST['fromGenrtWPR']));
 				$to = date("Y-m-d",strtotime($_POST['toGenrtWPR']));
 				$dateStr='Desde '.$from.' hasta '.$to;
-				$arraySessionNo = array(0 => 'Primera Sesión:',
-										1 => 'Segunda Sesión:',
-										2 => 'Tercera Sesión:',
-										3 => 'Cuarta Sesión:',
-										4 => 'Quinta Sesión:',
-										5 => 'Sexta Sesión:',
-										6 => 'Séptima Sesión:',
-										7 => 'Octava Sesion:',
-										8 => 'Novena Sesion:',
-										9 => 'Decima Sesion:'
+				$arraySessionNo = array(0 => 'Primera Sesión: ',
+										1 => 'Segunda Sesión: ',
+										2 => 'Tercera Sesión: ',
+										3 => 'Cuarta Sesión: ',
+										4 => 'Quinta Sesión: ',
+										5 => 'Sexta Sesión: ',
+										6 => 'Séptima Sesión: ',
+										7 => 'Octava Sesion: ',
+										8 => 'Novena Sesion: ',
+										9 => 'Decima Sesion: '
 										);
 				if(isset($_POST['slctProgram']) && $_POST['slctProgram'] !="" ){
 					$programNameArr = explode('|', $_POST['slctProgram']);
@@ -939,8 +939,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								$textArea = utf8_encode('Área: ');
 								$textSubName = utf8_encode('Módulo: ');
 								$contentColumE = "Caso: ".$dataArr['case_number']."\n".$textTechNote.$dataArr['technical_notes'];
-								$contentColumF = 'Prof: '.$dataArr['teacher_name']."\n".$textSubName.$dataArr['subject_name']."\n".$textArea.$dataArr['area_name']."\n".$sessionNoText.$dataArr['session_name']."\n".$dataArr['room_name'];
-								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo,utf8_encode($arraySessionNo[$sesNo]));
+								$contentColumF = 'Prof: '.$dataArr['teacher_name']."\n".$textSubName.$dataArr['subject_name']."\n".$textArea.$dataArr['area_name']."\n".$sessionNoText.$dataArr['order_number']."\n".$dataArr['room_name'];
+								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo,utf8_encode($arraySessionNo[$sesNo].$dataArr['session_name']));
 								$objPHPExcel->getActiveSheet()->getStyle('E'.$rowNo)->getFont()->setBold(true);
 								$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowNo, $contentColumE);
 								$objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowNo, $contentColumF);
