@@ -535,7 +535,7 @@ class Timetable extends Base {
 																{
 																	$adh_start_time = $allTimeslots[$adh_act_detail['start_time']]['start_time'];
 																	$adh_end_time = date("h:i A", strtotime($adh_start_time." +		".$duration." minutes"));
-																	$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);			
+																	$unreserved_timeslots = array_diff($total_timeslots,$reserved_timeslots);
 																	if(!$this->isTimeslotReservedAdhoc($date,$adh_start_time,$adh_end_time,$reserved_rooms, $edit_room_id))
 																	{
 																		if($edit_room_id==0){
@@ -3678,7 +3678,7 @@ class Timetable extends Base {
 		}
 	}
 	//Function to check if timeslot is free ir not
-	public function isTimeslotReservedAdhoc($date,$start_time,$end_time,$reserved_rooms = array(), $reserved_rooms = array(), $edit_room_id)
+	public function isTimeslotReservedAdhoc($date,$start_time,$end_time,$reserved_rooms = array(), $edit_room_id)
 	{
 		if(array_key_exists($date, $reserved_rooms))
 		{
@@ -3689,16 +3689,17 @@ class Timetable extends Base {
 				$et = DateTime::createFromFormat('H:i a', trim($ts_array['1']));
 				$s_time = DateTime::createFromFormat('H:i a', $start_time);
 				$e_time = DateTime::createFromFormat('H:i a', $end_time);					
-				if(($s_time >= $st && $s_time < $et) || ($e_time > $st && $e_time <= $et))
+				if(($s_time >= $st && $s_time < $et) || ($e_time > $st && $e_time <= $et) || ($s_time <= $st && $e_time >= $et))
 				{												
-					if((!empty($reserved_rooms[$date][$key])) && ($reserved_rooms[$date][$key][0]!= $edit_room_id))
+					if(in_array($edit_room_id, $reserved_rooms[$date][$key]))
 					{
-						return 1;
-					}else{
-						return 0;
+						return true;
 					}
 				}
 			}
+			return false;
+		}else{
+			return false;
 		}
 	}
 
