@@ -72,7 +72,23 @@ $option_duration='<option value="">--Select--</option>
                   <option value="435">07:15</option>
                   <option value="450">07:30</option>
                   <option value="465">07:45</option>
-                  <option value="480">08:00</option>';			
+                  <option value="480">08:00</option>
+				  <option value="495">08:15</option>
+				  <option value="510">08:30</option>
+				  <option value="525">08:45</option>
+				  <option value="540">09:00</option>
+				  <option value="555">09:15</option>
+				  <option value="570">09:30</option>
+				  <option value="585">09:45</option>
+				  <option value="600">10:00</option>
+				  <option value="615">10:15</option>
+				  <option value="630">10:30</option>
+				  <option value="645">10:45</option>
+				  <option value="660">11:00</option>
+				  <option value="675">11:15</option>
+				  <option value="690">11:30</option>
+				  <option value="705">11:45</option>
+				  <option value="720">12:00</option>';			
 	$name="";
 	$teachId = ""; $decodeTeachId=$ad_hoc_fix_date="";
 	$mappedruleids = array();
