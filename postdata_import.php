@@ -940,8 +940,8 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 								$textSubName = utf8_encode('Módulo: ');
 								$contentColumE = "Caso: ".$dataArr['case_number']."\n".$textTechNote.$dataArr['technical_notes'];
 								$contentColumF = 'Prof: '.$dataArr['teacher_name']."\n".$textSubName.$dataArr['subject_name']."\n".$textArea.$dataArr['area_name']."\n".$sessionNoText.$dataArr['order_number']."\n".$dataArr['room_name'];
-								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo,utf8_encode($arraySessionNo[$sesNo].$dataArr['session_name']));
-								$objPHPExcel->getActiveSheet()->getStyle('E'.$rowNo)->getFont()->setBold(true);
+								$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowNo,utf8_encode($arraySessionNo[$sesNo].$dataArr['description']));
+								//$objPHPExcel->getActiveSheet()->getStyle('E'.$rowNo)->getFont()->setBold(true);
 								$objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowNo, $contentColumE);
 								$objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowNo, $contentColumF);
 								$sesNo++;
