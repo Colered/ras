@@ -144,7 +144,7 @@ class Timetable extends Base {
 		{
 			$teacher_sql .= " and p.unit = '".$module."'";
 		}
-		$teacher_sql .= " and tact.reserved_flag IN(1, 2, 5)"; // excluding 3- recess and 4 for group meeting
+		$teacher_sql .= " and (tact.reserved_flag IN(1, 2, 5) OR tact.reserved_flag IS NULL )"; // excluding 3- recess and 4 for group meeting
 		$teacher_sql .= " order by td.teacher_id";
 		$q_res = mysqli_query($this->conn, $teacher_sql);
 		return $q_res;
@@ -212,7 +212,7 @@ class Timetable extends Base {
 		}
 		if($addSpecialAct == '')
 		{
-			$teacher_sql .= " and tact.reserved_flag IN(1, 2, 5)"; // excluding 3- recess and 4 for group meeting
+			$teacher_sql .= " and  (tact.reserved_flag IN(1, 2, 5) OR tact.reserved_flag IS NULL)"; // excluding 3- recess and 4 for group meeting
 		}
 
 		$teacher_sql .= " order by td.teacher_id";
@@ -3996,7 +3996,7 @@ class Timetable extends Base {
 		 LEFT JOIN area a on a.id = su.area_id 
 		 LEFT JOIN room r on r.id = td.room_id 
 		 LEFT JOIN teacher_type tt on tt.id = t.teacher_type 
-		 where ta.reserved_flag IN(1, 2, 5)
+		 where (ta.reserved_flag IN(1, 2, 5) OR ta.reserved_flag IS NULL)
 		 AND td.date between '".$from."' and '".$to."'";
 		$teacher_sql .= " order by td.teacher_id";
 		$q_res = mysqli_query($this->conn, $teacher_sql);
@@ -4096,7 +4096,8 @@ class Timetable extends Base {
 		}
 		if($addSpecialAct == '')
 		{
-			$teacher_sql .= " and ta.reserved_flag IN(1, 2, 5)";
+			$teacher_sql .= " and (ta.reserved_flag IN(1, 2, 5) OR ta.reserved_flag IS NULL )";
+			
 		}
 
 		$teacher_sql .= " order by ta.id";
