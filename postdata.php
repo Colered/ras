@@ -709,7 +709,7 @@ if (isset($_POST['form_action']) && $_POST['form_action']!=""){
 				if($addTemplateId!=0){
 					for($i=1; $i<=$total; $i++){
 						//check if selected valued are non empty and start time is less than the end time then insert
-						if((isset($_POST['st_tslot'.$i]) && $_POST['st_tslot'.$i] !="") && (isset($_POST['end_tslot_id'.$i]) && $_POST['end_tslot_id'.$i] !="") && (isset($_POST['usage_id'.$i]) && $_POST['usage_id'.$i] !="") && ($_POST['st_tslot'.$i] < $_POST['end_tslot_id'.$i])){
+						if((isset($_POST['st_tslot'.$i]) && $_POST['st_tslot'.$i] !="") && (isset($_POST['end_tslot_id'.$i]) && $_POST['end_tslot_id'.$i] !="") && (isset($_POST['usage_id'.$i]) && $_POST['usage_id'.$i] !="")){
 							$resp = $objSpcAct->addCalAvailRule( $_POST['st_tslot'.$i], $_POST['end_tslot_id'.$i], $_POST['usage_id'.$i], $addTemplateId);
 						}
 					}
