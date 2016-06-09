@@ -339,7 +339,8 @@ class Timetable extends Base {
 		//get all recess activities
 		$recess_activities = $this->searchRecessActivities();
 		//get all group meetings
-		$group_meetings = $this->searchGroupMeetings();
+		//$group_meetings = $this->searchGroupMeetings();
+		$group_meetings  = array();
 		//get all adhoc activities
 		$adhoc_activities = $this->searchAdhocActivities();
 		//prepare timeslot array in advance
