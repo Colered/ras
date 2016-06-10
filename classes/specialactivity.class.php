@@ -684,7 +684,9 @@ class SpecialActivity extends Base {
 					if(count($allGroupMeetTs)>0){
 					//insert group meeting if not already exists
 						for($k=0; $k<count($allGroupMeetTs); $k++){
-							$reserveFlag = 4;
+							/*$reserveFlag = 4;*/
+							//group meetings will behave like recess activity
+							$reserveFlag = 3;
 							$actualTSIdAvailable  = $objTimeslot->getTimeslotIds($allGroupMeetTs[$k]);
 							$startTime = explode(',', $actualTSIdAvailable);
 							$actStartTime = $startTime[0];
